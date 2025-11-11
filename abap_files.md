@@ -28,16 +28,16 @@
 - [x] src/#zak#afa_idegyezteto.prog.screen_9001.abap
 - [x] src/#zak#afa_idosz_move.prog.abap
 - [x] src/#zak#afa_mgr_bset.prog.abap
-- [ ] src/#zak#afa_packdel.prog.abap
-- [ ] src/#zak#afa_sap_selmigr.prog.abap
-- [ ] src/#zak#afa_sap_selmigr.prog.screen_9000.abap
+- [x] src/#zak#afa_packdel.prog.abap
+- [x] src/#zak#afa_sap_selmigr.prog.abap
+- [x] src/#zak#afa_sap_selmigr.prog.screen_9000.abap
 - [ ] src/#zak#afa_sap_seln.prog.abap
 - [ ] src/#zak#afa_sap_seln.prog.screen_9000.abap
-- [ ] src/#zak#afa_szla_belnr_conv.prog.abap
-- [ ] src/#zak#afa_szla_noneed.prog.abap
-- [ ] src/#zak#afa_szla_noneed.prog.screen_9000.abap
-- [ ] src/#zak#afa_top.prog.abap
-- [ ] src/#zak#afa_xml_download.prog.abap
+- [x] src/#zak#afa_szla_belnr_conv.prog.abap
+- [x] src/#zak#afa_szla_noneed.prog.abap
+- [x] src/#zak#afa_szla_noneed.prog.screen_9000.abap
+- [x] src/#zak#afa_top.prog.abap
+- [x] src/#zak#afa_xml_download.prog.abap
 - [ ] src/#zak#alv_bevallb_mod.prog.abap
 - [ ] src/#zak#alv_grid_alap.prog.abap
 - [ ] src/#zak#alv_list_definitions.prog.abap

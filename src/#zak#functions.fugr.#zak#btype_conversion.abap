@@ -1,6 +1,6 @@
 FUNCTION /ZAK/BTYPE_CONVERSION.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE_FROM) TYPE  /ZAK/BTYPE
@@ -16,7 +16,7 @@ FUNCTION /ZAK/BTYPE_CONVERSION.
   data: i_btype   type /zak/t_btype.
   data: v_subrc   like sy-subrc.
 
-* Érvényességek ellenőrzése
+* Validity checks
   perform check_validities using i_bukrs
                                  i_btype_from
                                  i_btype_to
@@ -37,10 +37,10 @@ FUNCTION /ZAK/BTYPE_CONVERSION.
                                   i_btype_to.
 
 
-* Bevallb beolvasása
+* Read BEVALLB
   perform read_all_bevallb using I_BTYPE_TO.
 
-* Sorok feldolgozása
+* Process rows
   loop at t_bevallo into v_bevallo.
 
 
@@ -52,13 +52,13 @@ FUNCTION /ZAK/BTYPE_CONVERSION.
                                    v_bevallo-abevaz_disp.
 
 
-* Új ABEV kód megnevezése
+* New ABEV code description
     perform get_abev_text using v_bevallo-btype_disp
                                 v_bevallo-abevaz_disp
                           changing v_bevallo-ABEVTEXT_DISP.
 
 
-* Új BEVALLB adatok
+* New BEVALLB data
     READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
        WITH KEY BTYPE  = v_bevallo-btype_disp
                 ABEVAZ = v_bevallo-abevaz_disp.

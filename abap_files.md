@@ -68,16 +68,16 @@
 - [x] src/#zak#evvalt_corr.prog.screen_9000.abap
 - [x] src/#zak#functions.fugr.#zak#abev_contact.abap
 - [x] src/#zak#functions.fugr.#zak#afa_alap_verify.abap
-- [ ] src/#zak#functions.fugr.#zak#afa_ness_szla_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#afa_sap_sel_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#afa_xml_download.abap
-- [ ] src/#zak#functions.fugr.#zak#afar_book_excel.abap
-- [ ] src/#zak#functions.fugr.#zak#analitika_conversion.abap
-- [ ] src/#zak#functions.fugr.#zak#atv_book_excel.abap
-- [ ] src/#zak#functions.fugr.#zak#atv_post_adonsza.abap
-- [ ] src/#zak#functions.fugr.#zak#btype_conversion.abap
-- [ ] src/#zak#functions.fugr.#zak#calc_potlek.abap
-- [ ] src/#zak#functions.fugr.#zak#check_adoazon.abap
+- [x] src/#zak#functions.fugr.#zak#afa_ness_szla_exit.abap
+- [x] src/#zak#functions.fugr.#zak#afa_sap_sel_exit.abap
+- [x] src/#zak#functions.fugr.#zak#afa_xml_download.abap
+- [x] src/#zak#functions.fugr.#zak#afar_book_excel.abap
+- [x] src/#zak#functions.fugr.#zak#analitika_conversion.abap
+- [x] src/#zak#functions.fugr.#zak#atv_book_excel.abap
+- [x] src/#zak#functions.fugr.#zak#atv_post_adonsza.abap
+- [x] src/#zak#functions.fugr.#zak#btype_conversion.abap
+- [x] src/#zak#functions.fugr.#zak#calc_potlek.abap
+- [x] src/#zak#functions.fugr.#zak#check_adoazon.abap
 - [ ] src/#zak#functions.fugr.#zak#conv_adoazon.abap
 - [ ] src/#zak#functions.fugr.#zak#conv_date_user_2_internal.abap
 - [ ] src/#zak#functions.fugr.#zak#convert_string_to_packed.abap

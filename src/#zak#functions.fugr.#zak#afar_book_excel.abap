@@ -1,6 +1,6 @@
 FUNCTION /ZAK/AFAR_BOOK_EXCEL.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE OPTIONAL
@@ -58,14 +58,14 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
 
   DATA V_NEXT_MONTH(6).
 
-* Ha bármelyik paraméter üres hiba
+* If any parameter is empty raise an error
   IF I_BUKRS IS INITIAL OR
      I_BTYPE IS INITIAL OR
      I_GJAHR IS INITIAL OR
      I_MONAT IS INITIAL OR
      I_INDEX IS INITIAL.
     MESSAGE E251(/ZAK/ZAK) RAISING MISSING_INPUT.
-*   Hiányzó import paraméter arányosítás könyveléséhez!
+*   Missing import parameter for proportional posting!
   ELSE.
 *++S4HANA#01.
 *    SELECT * INTO TABLE I_AFA_ARBOOK FROM  /ZAK/AFA_ARBOOK
@@ -101,7 +101,7 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
     ENDIF.
   ENDIF.
 
-* Első és utolsó nap meghatározása
+* Determine the first and last day
   CONCATENATE I_GJAHR I_MONAT '01' INTO V_FIRST_DAY.
   CALL FUNCTION 'LAST_DAY_OF_MONTHS'  "#EC CI_USAGE_OK[2296016]
     EXPORTING
@@ -114,10 +114,10 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
 
   IF SY-SUBRC <> 0.
     MESSAGE E252(/ZAK/ZAK) WITH V_FIRST_DAY RAISING ERROR_DATUM.
-*   Hiba a hónap utolsó napjának meghatározásánál! (&)
+*   Error while determining the last day of the month! (&)
   ENDIF.
 
-* Meghatározzuk van e beállítás az ellenszámlához:
+* Determine whether a setting exists for the offset account:
 *++S4HANA#01.
 *  SELECT SINGLE * INTO W_/ZAK/BEVALL
 *                  FROM /ZAK/BEVALL
@@ -134,10 +134,10 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
 *--S4HANA#01.
   IF SY-SUBRC NE 0 OR W_/ZAK/BEVALL-ARKONT IS INITIAL.
     MESSAGE E253(/ZAK/ZAK) RAISING ERROR_AFAR_BOOK.
-*   Hiányzó beállítás ÁFA arány könyveléséhez!
+*   Missing configuration for VAT proportion posting!
   ENDIF.
 
-* Ha december, akkor a következő időszak meghatározása
+* If December, determine the next period
   IF I_MONAT EQ '12'.
     V_NEXT_MONTH = I_GJAHR + 1.
     V_NEXT_MONTH+4(2) = '01'.
@@ -150,18 +150,18 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
   LOOP AT LT_I_BOOK INTO W_BOOK.
 *--S4HANA#01.
     CLEAR: W_EXCEL1, W_EXCEL2.
-*   Bizonylat azonosító
+*   Document identifier
     MOVE C_BIZ_AZON TO W_EXCEL1-BIZ_AZON.
     MOVE C_BIZ_AZON TO W_EXCEL2-BIZ_AZON.
-*   Bizonylat/Tételszám
+*   Document/Item number
     ADD 1 TO V_BIZ_TETEL.
     MOVE V_BIZ_TETEL TO W_EXCEL1-BIZ_TETEL.
     ADD 1 TO V_BIZ_TETEL.
     MOVE V_BIZ_TETEL TO W_EXCEL2-BIZ_TETEL.
-*   Bizonylatdátum
+*   Document date
     WRITE V_LAST_DAY TO W_EXCEL1-BIZ_DATUM.
     WRITE V_LAST_DAY TO W_EXCEL2-BIZ_DATUM.
-*   Könyvelési dátum
+*   Posting date
     WRITE SY-DATUM TO  W_EXCEL1-KONYV_DAT.
     WRITE SY-DATUM TO  W_EXCEL2-KONYV_DAT.
 *   Bizonylat fajta
@@ -172,25 +172,25 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
       MOVE C_BF_SA TO  W_EXCEL1-BF.
       MOVE C_BF_SA TO  W_EXCEL2-BF.
     ENDIF.
-*   Periódus
+*   Period
     MOVE SY-DATUM+4(2) TO W_EXCEL1-HO.
     MOVE SY-DATUM+4(2) TO W_EXCEL2-HO.
-*   Pénznem
+*   Currency
     MOVE W_BOOK-WAERS TO W_EXCEL1-PENZNEM.
     MOVE W_BOOK-WAERS TO W_EXCEL2-PENZNEM.
-*   Fej és tétel szöveg:
+*   Header and item text:
     MOVE C_SZOVEG TO W_EXCEL1-FEJSZOVEG.
     MOVE C_SZOVEG TO W_EXCEL2-FEJSZOVEG.
     MOVE C_SZOVEG TO W_EXCEL1-SZOVEG.
     MOVE C_SZOVEG TO W_EXCEL2-SZOVEG.
 
-*   Összeg
+*   Amount
     WRITE W_BOOK-FIELD_N CURRENCY W_BOOK-WAERS  TO W_EXCEL1-OSSZEG
                              NO-GROUPING
                              NO-SIGN.
     W_EXCEL2-OSSZEG = W_EXCEL1-OSSZEG.
 
-*   T/K kód
+*   D/C code
     IF W_BOOK-FIELD_N > 0.
       MOVE '40' TO W_EXCEL1-KK.
       MOVE W_/ZAK/BEVALL-ARKONT TO W_EXCEL1-FOKONYV.
@@ -211,22 +211,22 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
       MOVE W_BOOK-HKONT TO W_EXCEL1-FOKONYV.
     ENDIF.
 
-*   sorok mentése
+*   Save rows
     APPEND W_EXCEL1 TO I_EXCEL.
     APPEND W_EXCEL2 TO I_EXCEL.
   ENDLOOP.
 
 *++1065 2010.02.04 BG
-* Könyvelés fájl forgatás (költséghely, rendelés, PC)
+* Rotate the posting file (cost center, order, PC)
   PERFORM ROTATION_DATA(/ZAK/SZJA_SAP_SEL)
                         TABLES I_EXCEL
                         USING  I_BUKRS.
 *--1065 2010.02.04 BG
 
 
-* Ha van adat letöltés
+* If there is data, download it
   IF NOT I_EXCEL[] IS INITIAL.
-*   Excel fájl készítése
+*   Create Excel file
     PERFORM DOWNLOAD_FILE_ARBOOK TABLES I_EXCEL
                                  USING  I_BUKRS
                                         I_BTYPE
@@ -236,7 +236,7 @@ FUNCTION /ZAK/AFAR_BOOK_EXCEL.
                                  CHANGING V_SUBRC.
     IF NOT V_SUBRC IS INITIAL.
       MESSAGE E175(/ZAK/ZAK) WITH '&'  RAISING ERROR_DOWNLOAD_FILE.
-*     Hiba a & fájl letöltésénél.
+*     Error while downloading the & file.
     ENDIF.
 
   ENDIF.

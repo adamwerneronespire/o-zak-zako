@@ -1,6 +1,6 @@
 ***INCLUDE /ZAK/AFA_TOP .
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
  TABLES: BKPF,
          BSEG,
@@ -10,7 +10,7 @@
          /ZAK/BSET.
 
 *&---------------------------------------------------------------------*
-*& MUNKATERÜLETEK                                                      *
+*& WORK AREAS                                                          *
 *&---------------------------------------------------------------------*
  DATA: W_BSEG     TYPE BSEG,
        W_BKPF     TYPE BKPF,
@@ -24,7 +24,7 @@
        W_ITEM2    TYPE /ZAK/EGY2_TETALV.
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK                                                        *
+*& INTERNAL TABLES                                                     *
 *&---------------------------------------------------------------------*
 
  DATA: I_BSEG   TYPE STANDARD TABLE OF BSEG              INITIAL SIZE 0,
@@ -45,7 +45,7 @@
        I_ITEM2  TYPE STANDARD TABLE OF /ZAK/EGY2_TETALV INITIAL SIZE 0
        .
 *++BG 2007.10.15
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling ranges
  DEFINE M_DEF.
    MOVE: &2      TO &1-SIGN,
          &3      TO &1-OPTION,

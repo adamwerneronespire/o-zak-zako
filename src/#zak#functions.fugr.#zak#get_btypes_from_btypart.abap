@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_BTYPES_FROM_BTYPART.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPART) TYPE  /ZAK/BTYPART
@@ -13,7 +13,7 @@ FUNCTION /ZAK/GET_BTYPES_FROM_BTYPART.
 
   DATA L_BTYPE TYPE /ZAK/BTYPE.
 
-*Összes bevallás típus meghatározása
+* Determine all declaration types
   SELECT BTYPE INTO L_BTYPE
                FROM /ZAK/BEVALL
               WHERE BUKRS   EQ I_BUKRS
@@ -23,7 +23,7 @@ FUNCTION /ZAK/GET_BTYPES_FROM_BTYPART.
   ENDSELECT.
   IF SY-SUBRC NE 0.
     MESSAGE E114(/ZAK/ZAK) RAISING ERROR_BTYPE.
-*   Bevallás típus meghatározás hiba!
+*   Declaration type determination error!
   ELSE.
     SORT T_BTYPE.
     DELETE ADJACENT DUPLICATES FROM T_BTYPE.

@@ -78,16 +78,16 @@
 - [x] src/#zak#functions.fugr.#zak#btype_conversion.abap
 - [x] src/#zak#functions.fugr.#zak#calc_potlek.abap
 - [x] src/#zak#functions.fugr.#zak#check_adoazon.abap
-- [ ] src/#zak#functions.fugr.#zak#conv_adoazon.abap
-- [ ] src/#zak#functions.fugr.#zak#conv_date_user_2_internal.abap
-- [ ] src/#zak#functions.fugr.#zak#convert_string_to_packed.abap
-- [ ] src/#zak#functions.fugr.#zak#gen_afa_szla.abap
-- [ ] src/#zak#functions.fugr.#zak#get_afcs.abap
-- [ ] src/#zak#functions.fugr.#zak#get_btypart_from_btype.abap
-- [ ] src/#zak#functions.fugr.#zak#get_btype_from_btypart.abap
-- [ ] src/#zak#functions.fugr.#zak#get_btype_from_btypart_m.abap
-- [ ] src/#zak#functions.fugr.#zak#get_btypes_from_btypart.abap
-- [ ] src/#zak#functions.fugr.#zak#get_bukrs_from_bukcs.abap
+- [x] src/#zak#functions.fugr.#zak#conv_adoazon.abap
+- [x] src/#zak#functions.fugr.#zak#conv_date_user_2_internal.abap
+- [x] src/#zak#functions.fugr.#zak#convert_string_to_packed.abap
+- [x] src/#zak#functions.fugr.#zak#gen_afa_szla.abap
+- [x] src/#zak#functions.fugr.#zak#get_afcs.abap
+- [x] src/#zak#functions.fugr.#zak#get_btypart_from_btype.abap
+- [x] src/#zak#functions.fugr.#zak#get_btype_from_btypart.abap
+- [x] src/#zak#functions.fugr.#zak#get_btype_from_btypart_m.abap
+- [x] src/#zak#functions.fugr.#zak#get_btypes_from_btypart.abap
+- [x] src/#zak#functions.fugr.#zak#get_bukrs_from_bukcs.abap
 - [ ] src/#zak#functions.fugr.#zak#get_fi_szamlasz.abap
 - [ ] src/#zak#functions.fugr.#zak#get_mm_szamlasz.abap
 - [ ] src/#zak#functions.fugr.#zak#get_re_szamlasz.abap

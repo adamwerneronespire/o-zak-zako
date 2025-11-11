@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GEN_AFA_SZLA.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  TABLES
 *"      T_ANALITIKA STRUCTURE  /ZAK/ANALITIKA OPTIONAL
 *"      T_AFA_SZLA STRUCTURE  /ZAK/AFA_SZLA OPTIONAL
@@ -40,7 +40,7 @@ FUNCTION /ZAK/GEN_AFA_SZLA.
   ENDLOOP.
 
   SORT T_AFA_SZLA.
-* Eredeti sorok meghatározása
+* Determine original rows
   LOOP AT T_AFA_SZLA INTO W_/ZAK/AFA_SZLA WHERE  SZAMLASZA IS INITIAL
                                            AND  SZAMLASZE IS INITIAL.
     W_/ZAK/AFA_SZLA-SZAMLASZA = W_/ZAK/AFA_SZLA-SZAMLASZ.
@@ -48,8 +48,8 @@ FUNCTION /ZAK/GEN_AFA_SZLA.
     MODIFY T_AFA_SZLA FROM W_/ZAK/AFA_SZLA.
   ENDLOOP.
 
-* Korrekciós sorok meghatározása (végrehajtjuk kétszer, hogy ha a módosítások
-* nem sorrendben következnek akkor is megtaláljuk)
+* Determine correction rows (run twice to catch modifications even if they are out of order)
+* so corrections are found even when they arrive out of sequence
   DO 2 TIMES.
     LOOP AT T_AFA_SZLA INTO W_/ZAK/AFA_SZLA WHERE      SZAMLASZA IS INITIAL
                                              AND  NOT SZAMLASZE IS INITIAL.
@@ -68,10 +68,10 @@ FUNCTION /ZAK/GEN_AFA_SZLA.
     ENDLOOP.
   ENDDO.
 
-* Megpróbáljuk az üreseket keresni az adatbázisban is
+* Also try to find the empty ones in the database
   LOOP AT T_AFA_SZLA INTO W_/ZAK/AFA_SZLA WHERE      SZAMLASZA IS INITIAL
                                            AND  NOT SZAMLASZE IS INITIAL.
-*   Keressük a 4 hosszú NYLAPAZON-t is
+*   Also search for NYLAPAZON values with length 4
     CONCATENATE W_/ZAK/AFA_SZLA-NYLAPAZON(3) '*' INTO L_TEXT.
     M_DEF LS_NYLAPAZON 'I' 'CP' L_TEXT SPACE.
 
@@ -95,7 +95,7 @@ FUNCTION /ZAK/GEN_AFA_SZLA.
     ENDIF.
   ENDLOOP.
 
-* Ha még mindig marad üres az hiba:
+* Remaining empty entries are treated as errors:
   LOOP AT T_AFA_SZLA INTO W_/ZAK/AFA_SZLA WHERE    SZAMLASZA IS INITIAL
                                          AND  NOT SZAMLASZE IS INITIAL.
     LM_SET_MESSAGE '/ZAK/ZAK' 'E' '353' W_/ZAK/AFA_SZLA-SZAMLASZE SPACE SPACE SPACE.

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/JOVO</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>WERTV8</DOMNAME>
+    <HEADLEN>24</HEADLEN>
+    <SCRLEN2>16</SCRLEN2>
+    <SCRLEN3>24</SCRLEN3>
+    <DDTEXT>bevallásban nem szereplő érték</DDTEXT>
+    <REPTEXT>Bevallásban nem szereplő</REPTEXT>
+    <SCRTEXT_M>bevalláson kívül</SCRTEXT_M>
+    <SCRTEXT_L>Bevallásban nem szereplő</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

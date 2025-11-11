@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/AFA</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>DEC3_2</DOMNAME>
+    <HEADLEN>06</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>ÁFA %</DDTEXT>
+    <REPTEXT>ÁFA %</REPTEXT>
+    <SCRTEXT_S>ÁFA %</SCRTEXT_S>
+    <SCRTEXT_M>ÁFA %</SCRTEXT_M>
+    <SCRTEXT_L>ÁFA %</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>MWST %</DDTEXT>
+     <REPTEXT>MWST %</REPTEXT>
+     <SCRTEXT_S>MWST %</SCRTEXT_S>
+     <SCRTEXT_M>MWST %</SCRTEXT_M>
+     <SCRTEXT_L>MWST %</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

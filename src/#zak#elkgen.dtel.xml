@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ELKGEN</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>34</HEADLEN>
+    <SCRLEN1>09</SCRLEN1>
+    <SCRLEN2>09</SCRLEN2>
+    <SCRLEN3>34</SCRLEN3>
+    <DDTEXT>Előleg kezelés generált tétel flag</DDTEXT>
+    <REPTEXT>Előleg kezelés generált tétel flag</REPTEXT>
+    <SCRTEXT_S>Ellk.gen.</SCRTEXT_S>
+    <SCRTEXT_M>Elk.gen.f</SCRTEXT_M>
+    <SCRTEXT_L>Előleg kezelés generált tétel flag</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

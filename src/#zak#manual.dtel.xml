@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/MANUAL</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <LOGFLAG>X</LOGFLAG>
+    <HEADLEN>36</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>36</SCRLEN3>
+    <DDTEXT>Bevallás mező manuálisan módosítható</DDTEXT>
+    <REPTEXT>Bevallás mező manuálisan módosítható</REPTEXT>
+    <SCRTEXT_S>Manuális</SCRTEXT_S>
+    <SCRTEXT_M>Manuálisan mód.</SCRTEXT_M>
+    <SCRTEXT_L>Bevallás mező manuálisan módosítható</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Erklärungsfeld manuell modif.</DDTEXT>
+     <REPTEXT>Erklärungsfeld manuell modif.</REPTEXT>
+     <SCRTEXT_S>Man.modif</SCRTEXT_S>
+     <SCRTEXT_M>Manuell.modif</SCRTEXT_M>
+     <SCRTEXT_L>Erklärungsfeld manuell modif.</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

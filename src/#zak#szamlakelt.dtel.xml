@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/SZAMLAKELT</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>DATE</DOMNAME>
+    <HEADLEN>12</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>24</SCRLEN3>
+    <DDTEXT>Számla kibocsátás dátuma</DDTEXT>
+    <REPTEXT>Sz.kib.dátum</REPTEXT>
+    <SCRTEXT_S>Kib.dátum.</SCRTEXT_S>
+    <SCRTEXT_M>Sz.kib.dátum</SCRTEXT_M>
+    <SCRTEXT_L>Számla kibácsátás dátuma</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

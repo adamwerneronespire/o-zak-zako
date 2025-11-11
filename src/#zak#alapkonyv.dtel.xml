@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ALAPKONYV</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>15</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Alap is könyvelendő</DDTEXT>
+    <REPTEXT>Alap is könyv.</REPTEXT>
+    <SCRTEXT_S>Alap.könyv</SCRTEXT_S>
+    <SCRTEXT_M>Alap.könyv.</SCRTEXT_M>
+    <SCRTEXT_L>Alap is könyvelendő</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Basis zu buchen</DDTEXT>
+     <REPTEXT>Basis zu buchen</REPTEXT>
+     <SCRTEXT_S>Basis buch</SCRTEXT_S>
+     <SCRTEXT_M>Basis zu buchen</SCRTEXT_M>
+     <SCRTEXT_L>Basis zu buchen</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

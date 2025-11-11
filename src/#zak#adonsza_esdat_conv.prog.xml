@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_PROG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <PROGDIR>
+    <NAME>/ZAK/ADONSZA_ESDAT_CONV</NAME>
+    <SUBC>1</SUBC>
+    <APPL>*</APPL>
+    <RSTAT>K</RSTAT>
+    <RLOAD>H</RLOAD>
+    <FIXPT>X</FIXPT>
+    <UCCHECK>X</UCCHECK>
+   </PROGDIR>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>101</KEY>
+     <ENTRY>ADONSZA eredeti esedékesség dátum FELTÖLTÉSE!</ENTRY>
+     <LENGTH>75</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P01</KEY>
+     <ENTRY>/ZAK/BEVALL konverzió</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P02</KEY>
+     <ENTRY>/ZAK/BEVALLSZ, /ZAK/BEVALLI konverzió</ENTRY>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P03</KEY>
+     <ENTRY>/ZAK/ANALITIKA konverzió</ENTRY>
+     <LENGTH>24</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P04</KEY>
+     <ENTRY>/ZAK/ANALITIKA  BTYPE konvertálás</ENTRY>
+     <LENGTH>33</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P05</KEY>
+     <ENTRY>/ZAK/BEVALLO konverzió</ENTRY>
+     <LENGTH>22</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P06</KEY>
+     <ENTRY>/ZAK/BEVALLO  BTYPE konvertálás</ENTRY>
+     <LENGTH>32</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>P07</KEY>
+     <ENTRY>Adatbázis módosítások</ENTRY>
+     <LENGTH>25</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>T01</KEY>
+     <ENTRY>Szelekció</ENTRY>
+     <LENGTH>9</LENGTH>
+    </item>
+    <item>
+     <ID>R</ID>
+     <LENGTH>37</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_BUKRS</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>16</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+   </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>D</LANGUAGE>
+     <TEXTPOOL>
+      <item>
+       <ID>I</ID>
+       <KEY>101</KEY>
+       <ENTRY>UPLOAD von ADONSZA originale Fälligkeitsdatum!</ENTRY>
+       <LENGTH>75</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P01</KEY>
+       <ENTRY>/ZAK/BEVALL Konvers.</ENTRY>
+       <LENGTH>20</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P02</KEY>
+       <ENTRY>/ZAK/BEVALLSZ, /ZAK/BEVALLI Konvers.</ENTRY>
+       <LENGTH>36</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P03</KEY>
+       <ENTRY>/ZAK/ANALITIKA Konvers.</ENTRY>
+       <LENGTH>23</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P04</KEY>
+       <ENTRY>/ZAK/ANALITIKA  BTYPE Konversion</ENTRY>
+       <LENGTH>32</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P05</KEY>
+       <ENTRY>/ZAK/BEVALLO Konvers.</ENTRY>
+       <LENGTH>21</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P06</KEY>
+       <ENTRY>/ZAK/BEVALLO  BTYPE Konversion</ENTRY>
+       <LENGTH>32</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>P07</KEY>
+       <ENTRY>Datenbank Modifikationen</ENTRY>
+       <LENGTH>25</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>T01</KEY>
+       <ENTRY>Selektion</ENTRY>
+       <LENGTH>9</LENGTH>
+      </item>
+      <item>
+       <ID>R</ID>
+       <ENTRY>Upload von ADONSZA Fälligkeitsdatum</ENTRY>
+       <LENGTH>70</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>S_BUKRS</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>16</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
+  </asx:values>
+ </asx:abap>
+</abapGit>

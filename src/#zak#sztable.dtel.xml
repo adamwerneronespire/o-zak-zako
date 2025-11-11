@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/SZTABLE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>AS4TAB</DOMNAME>
+    <HEADLEN>27</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>18</SCRLEN2>
+    <SCRLEN3>27</SCRLEN3>
+    <DDTEXT>Adatszolgáltatás tábla neve</DDTEXT>
+    <REPTEXT>Adatszolgáltatás tábla neve</REPTEXT>
+    <SCRTEXT_S>tábla</SCRTEXT_S>
+    <SCRTEXT_M>Adatsz. tábla neve</SCRTEXT_M>
+    <SCRTEXT_L>Adatszolgáltatás tábla neve</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Datendienst Tabellenname</DDTEXT>
+     <REPTEXT>Datendienst Tabellenname</REPTEXT>
+     <SCRTEXT_S>Tabelle</SCRTEXT_S>
+     <SCRTEXT_M>Datendienst Tabell</SCRTEXT_M>
+     <SCRTEXT_L>Datendienst Tabellenname</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

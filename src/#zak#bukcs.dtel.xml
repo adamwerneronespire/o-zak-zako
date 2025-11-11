@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/BUKCS</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>BUKRS</DOMNAME>
+    <HEADLEN>16</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>16</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Csoport vállalat</DDTEXT>
+    <REPTEXT>Csoport vállalat</REPTEXT>
+    <SCRTEXT_S>Csop.váll.</SCRTEXT_S>
+    <SCRTEXT_M>Csoport vállalat</SCRTEXT_M>
+    <SCRTEXT_L>Csoport vállalat</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Gruppe Buchungskreis</DDTEXT>
+     <REPTEXT>Gruppe Buchungsk</REPTEXT>
+     <SCRTEXT_S>Gruppe BuK</SCRTEXT_S>
+     <SCRTEXT_M>Gruppe Buchungsk</SCRTEXT_M>
+     <SCRTEXT_L>Gruppe Buchungskreis</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

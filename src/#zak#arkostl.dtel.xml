@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ARKOSTL</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>KOSTL</DOMNAME>
+    <HEADLEN>13</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>23</SCRLEN3>
+    <DDTEXT>Arányosítás költséghely</DDTEXT>
+    <REPTEXT>Arány.költsh.</REPTEXT>
+    <SCRTEXT_S>Ar.költsh.</SCRTEXT_S>
+    <SCRTEXT_M>Arány.költsh.</SCRTEXT_M>
+    <SCRTEXT_L>Arányosítás költséghely</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Skalierung Kostenstelle</DDTEXT>
+     <REPTEXT>Skalierung Ko</REPTEXT>
+     <SCRTEXT_S>Skalierung</SCRTEXT_S>
+     <SCRTEXT_M>Skalierung Kost</SCRTEXT_M>
+     <SCRTEXT_L>Skalierung Kostenstelle</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

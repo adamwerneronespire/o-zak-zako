@@ -1,0 +1,8 @@
+PROCESS BEFORE OUTPUT.
+module pbo9010.
+module mod_screen.
+* MODULE STATUS_9010.
+*
+PROCESS AFTER INPUT.
+module pai9010.
+* MODULE USER_COMMAND_9010.

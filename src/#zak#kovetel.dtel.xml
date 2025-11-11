@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/KOVETEL</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>SAKNR</DOMNAME>
+    <HEADLEN>13</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>23</SCRLEN3>
+    <DDTEXT>Követel főkönyvi számla</DDTEXT>
+    <REPTEXT>Köv. fők.szla</REPTEXT>
+    <SCRTEXT_S>Köv.fők.sz</SCRTEXT_S>
+    <SCRTEXT_M>Köv. fők.szla</SCRTEXT_M>
+    <SCRTEXT_L>Követel főkönyvi számla</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Sachkonto - Haben</DDTEXT>
+     <REPTEXT>Sachk. Haben</REPTEXT>
+     <SCRTEXT_S>SachK.Hab</SCRTEXT_S>
+     <SCRTEXT_M>Sachkonto Haben</SCRTEXT_M>
+     <SCRTEXT_L>Sachkonto - Haben</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ONYBF</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>15</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>27</SCRLEN3>
+    <DDTEXT>Összesítő jelentés releváns</DDTEXT>
+    <REPTEXT>Össz. jel. rel.</REPTEXT>
+    <SCRTEXT_S>Össz.jel.r</SCRTEXT_S>
+    <SCRTEXT_M>Össz. jel. rel.</SCRTEXT_M>
+    <SCRTEXT_L>Összesítő jelentés releváns</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Zusammenfassungsbericht Relevant</DDTEXT>
+     <REPTEXT>Zus.Ber.Relevan</REPTEXT>
+     <SCRTEXT_S>Zus.Ber.Re</SCRTEXT_S>
+     <SCRTEXT_M>Zus.Ber.Relevan</SCRTEXT_M>
+     <SCRTEXT_L>Zus.Ber.Relevan</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

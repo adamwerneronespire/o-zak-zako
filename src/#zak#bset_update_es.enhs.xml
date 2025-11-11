@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_ENHS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <TOOL>HOOK_DEF</TOOL>
+   <BADI_DATA>
+    <PGMID>R3TR</PGMID>
+    <OBJ_NAME>/ZAK/BSET_UPDATE</OBJ_NAME>
+    <OBJ_TYPE>PROG</OBJ_TYPE>
+    <MAIN_TYPE>PROG</MAIN_TYPE>
+    <MAIN_NAME>/ZAK/BSET_UPDATE</MAIN_NAME>
+    <PROGRAM>/ZAK/BSET_UPDATE</PROGRAM>
+    <DEF_HOOKS>
+     <ENH_HOOK_DEF_EXT>
+      <EXTID>1</EXTID>
+      <FULL_NAME>\PR:/ZAK/BSET_UPDATE\EX:/ZAK/ZAK_AUDI_UPD_01</FULL_NAME>
+      <ENHMODE>D</ENHMODE>
+      <DEF_UNIT>
+       <INT_TYPE>PU</INT_TYPE>
+       <INT_NAME>GET_DATA</INT_NAME>
+       <INCLUDE>/ZAK/BSET_UPDATE</INCLUDE>
+      </DEF_UNIT>
+     </ENH_HOOK_DEF_EXT>
+    </DEF_HOOKS>
+   </BADI_DATA>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/FIELDA</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>WERTV9</DOMNAME>
+    <HEADLEN>30</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>30</SCRLEN3>
+    <DDTEXT>Mezőérték (arányosított)</DDTEXT>
+    <REPTEXT>Mezőérték (arányosított)</REPTEXT>
+    <SCRTEXT_S>Mezőért.a</SCRTEXT_S>
+    <SCRTEXT_M>Mezőérték (arany.)</SCRTEXT_M>
+    <SCRTEXT_L>Mezőérték (arányosított)</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

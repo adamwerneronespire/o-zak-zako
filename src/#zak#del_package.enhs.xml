@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_ENHS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <TOOL>HOOK_DEF</TOOL>
+   <BADI_DATA>
+    <PGMID>R3TR</PGMID>
+    <OBJ_NAME>/ZAK/AFA_PACKDEL</OBJ_NAME>
+    <OBJ_TYPE>PROG</OBJ_TYPE>
+    <MAIN_TYPE>PROG</MAIN_TYPE>
+    <MAIN_NAME>/ZAK/AFA_PACKDEL</MAIN_NAME>
+    <PROGRAM>/ZAK/AFA_PACKDEL</PROGRAM>
+    <DEF_HOOKS>
+     <ENH_HOOK_DEF_EXT>
+      <EXTID>1</EXTID>
+      <FULL_NAME>\PR:/ZAK/AFA_PACKDEL\EX:/ZAK/ZAK_DEL_TELEKOM</FULL_NAME>
+      <ENHMODE>D</ENHMODE>
+      <DEF_UNIT>
+       <INT_TYPE>PE</INT_TYPE>
+       <INT_NAME>AT SELECTION-SCREEN</INT_NAME>
+       <INCLUDE>/ZAK/AFA_PACKDEL</INCLUDE>
+      </DEF_UNIT>
+     </ENH_HOOK_DEF_EXT>
+    </DEF_HOOKS>
+   </BADI_DATA>
+   <SOTR>
+    <item>
+     <HEADER>
+      <CONCEPT>6615CF07C8031EDB9DC35B16BA6F403B</CONCEPT>
+      <CREA_LAN>H</CREA_LAN>
+      <TRALA_TYPE>1</TRALA_TYPE>
+      <OBJID_VEC>AAE=</OBJID_VEC>
+     </HEADER>
+     <ENTRIES>
+      <SOTR_TEXT>
+       <CONCEPT>6615CF07C8031EDB9DC35B16BA6F403B</CONCEPT>
+       <LANGU>H</LANGU>
+       <LFD_NUM>0001</LFD_NUM>
+       <FLAG_CNTXT>X</FLAG_CNTXT>
+       <STATUS>R</STATUS>
+       <LENGTH>022</LENGTH>
+       <TEXT>Felh.bővítés</TEXT>
+      </SOTR_TEXT>
+     </ENTRIES>
+    </item>
+   </SOTR>
+   <SOTR_USE>
+    <SOTR_USE>
+     <PGMID>R3TR</PGMID>
+     <OBJECT>ENHS</OBJECT>
+     <OBJ_NAME>/ZAK/DEL_PACKAGE</OBJ_NAME>
+     <CONCEPT>6615CF07C8031EDB9DC35B16BA6F403B</CONCEPT>
+     <LFD_NUM>0001</LFD_NUM>
+    </SOTR_USE>
+   </SOTR_USE>
+  </asx:values>
+ </asx:abap>
+</abapGit>

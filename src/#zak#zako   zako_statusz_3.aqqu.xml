@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <CLAS>/ZAK/ST3</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>Adatfeltöltések listája</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00003</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Feltöltés azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00004</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Utolsó módosítás dátuma</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00005</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Az utolsó módosítás időpontja</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00006</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Utolsó módosító felhasználó ne</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00007</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Tétel törölve</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00008</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Felülírt feltöltés azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00009</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Fájlnév</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00010</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás fajta</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_3</QNUM>
+     <TINDX>00011</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Áttöltött feltöltés azonosító</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

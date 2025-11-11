@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/NYLAPAZON</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/NYLAPAZON</DOMNAME>
+    <HEADLEN>12</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>25</SCRLEN3>
+    <DDTEXT>Nyomtatvány lap azonosító</DDTEXT>
+    <REPTEXT>Ny.lap.azon.</REPTEXT>
+    <SCRTEXT_S>NyLap.</SCRTEXT_S>
+    <SCRTEXT_M>Ny.lap.azon.</SCRTEXT_M>
+    <SCRTEXT_L>Nyomtatvány lap azonosító</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Formular SeitenID</DDTEXT>
+     <REPTEXT>Formular Sei</REPTEXT>
+     <SCRTEXT_S>Formular S</SCRTEXT_S>
+     <SCRTEXT_M>Formular Seiten</SCRTEXT_M>
+     <SCRTEXT_L>Formular SeitenID</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/EVES</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/EVES</DOMNAME>
+    <HEADLEN>04</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Év végen kell figyelembe venni</DDTEXT>
+    <REPTEXT>Éves</REPTEXT>
+    <SCRTEXT_S>Éves</SCRTEXT_S>
+    <SCRTEXT_M>Éves</SCRTEXT_M>
+    <SCRTEXT_L>Éves</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Am Ende des Jahres zu berüchsichtigen</DDTEXT>
+     <REPTEXT>Jahr</REPTEXT>
+     <SCRTEXT_S>Jährlich</SCRTEXT_S>
+     <SCRTEXT_M>Jährlich</SCRTEXT_M>
+     <SCRTEXT_L>Jährlich</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <CLAS>/ZAK/BSET_LIST</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>Bizonylat adatok, eltérő adódátum periódus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00003</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Könyvelési bizonylat bizonylat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00004</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Gazdasági év</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00005</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Könyvelési periódus ÉÉÉÉHH for</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00006</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás sorszáma időszakon be</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_BSET_LIST</QNUM>
+     <TINDX>00007</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adódátum</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

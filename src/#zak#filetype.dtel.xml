@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/FILETYPE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/FILETYPE</DOMNAME>
+    <HEADLEN>31</HEADLEN>
+    <SCRLEN1>08</SCRLEN1>
+    <SCRLEN2>13</SCRLEN2>
+    <SCRLEN3>23</SCRLEN3>
+    <DDTEXT>Adatszolgáltatás fájl formátuma</DDTEXT>
+    <REPTEXT>Adatszolgáltatás fájl formátuma</REPTEXT>
+    <SCRTEXT_S>formátum</SCRTEXT_S>
+    <SCRTEXT_M>fájl formátum</SCRTEXT_M>
+    <SCRTEXT_L>Adatsz. fájl formátuma</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Datendienst Filetyp</DDTEXT>
+     <REPTEXT>Datendienst Filetyp</REPTEXT>
+     <SCRTEXT_S>Filetyp</SCRTEXT_S>
+     <SCRTEXT_M>Datendienst F</SCRTEXT_M>
+     <SCRTEXT_L>Datendienst Filetyp</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_ENHS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <TOOL>HOOK_DEF</TOOL>
+   <BADI_DATA>
+    <PGMID>R3TR</PGMID>
+    <OBJ_NAME>/ZAK/GET_XX_DATA</OBJ_NAME>
+    <OBJ_TYPE>PROG</OBJ_TYPE>
+    <MAIN_TYPE>PROG</MAIN_TYPE>
+    <MAIN_NAME>/ZAK/GET_XX_DATA</MAIN_NAME>
+    <PROGRAM>/ZAK/GET_XX_DATA</PROGRAM>
+    <DEF_HOOKS>
+     <ENH_HOOK_DEF_EXT>
+      <EXTID>1</EXTID>
+      <FULL_NAME>\PR:/ZAK/GET_XX_DATA\EX:/ZAK/ZAK_GET_ZF_DATA_01</FULL_NAME>
+      <ENHMODE>D</ENHMODE>
+      <DEF_UNIT>
+       <INT_TYPE>PU</INT_TYPE>
+       <INT_NAME>SET_RFC_DESTINATION</INT_NAME>
+       <INCLUDE>/ZAK/GET_XX_DATA</INCLUDE>
+      </DEF_UNIT>
+     </ENH_HOOK_DEF_EXT>
+    </DEF_HOOKS>
+   </BADI_DATA>
+  </asx:values>
+ </asx:abap>
+</abapGit>

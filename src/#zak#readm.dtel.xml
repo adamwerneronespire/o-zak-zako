@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/READM</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>WERT7</DOMNAME>
+    <LOGFLAG>X</LOGFLAG>
+    <HEADLEN>16</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>28</SCRLEN3>
+    <DDTEXT>Reprezentáció adómentes rész</DDTEXT>
+    <REPTEXT>Rep.adm.rész.</REPTEXT>
+    <SCRTEXT_S>Rep.adm.</SCRTEXT_S>
+    <SCRTEXT_M>Rep.adm.rész.</SCRTEXT_M>
+    <SCRTEXT_L>Reprezentáció adómentes rész</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Representation Steuerfreies Teil</DDTEXT>
+     <REPTEXT>Rep.StFr.Teil</REPTEXT>
+     <SCRTEXT_S>Rep.StFr.T</SCRTEXT_S>
+     <SCRTEXT_M>Rep.StFr.Teil</SCRTEXT_M>
+     <SCRTEXT_L>Rep.StFr.Teil</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

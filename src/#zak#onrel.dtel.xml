@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ONREL</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>10</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>21</SCRLEN3>
+    <DDTEXT>Önellenőrzés releváns</DDTEXT>
+    <REPTEXT>Önell.rel.</REPTEXT>
+    <SCRTEXT_S>Önell.rel.</SCRTEXT_S>
+    <SCRTEXT_M>Önell.rel.</SCRTEXT_M>
+    <SCRTEXT_L>Önellenőrzés releváns</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Selbstrev.Relevant</DDTEXT>
+     <REPTEXT>Selbstrev.</REPTEXT>
+     <SCRTEXT_S>Selbstrev.</SCRTEXT_S>
+     <SCRTEXT_M>Selbstrev.Relev</SCRTEXT_M>
+     <SCRTEXT_L>Selbstrev.Relevant</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

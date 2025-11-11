@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_TABL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD02V>
+    <TABNAME>/ZAK/TARS_001</TABNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <TABCLASS>INTTAB</TABCLASS>
+    <DDTEXT>Társasház / egyéb kifizetés - adatszolgáltatás</DDTEXT>
+   </DD02V>
+   <DD03P_TABLE>
+    <DD03P>
+     <FIELDNAME>DATUM</FIELDNAME>
+     <ROLLNAME>/ZAK/PERIOD</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>NEV</FIELDNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <INTTYPE>C</INTTYPE>
+     <INTLEN>000160</INTLEN>
+     <DATATYPE>CHAR</DATATYPE>
+     <LENG>000080</LENG>
+     <MASK>  CHAR</MASK>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>ADOAZON</FIELDNAME>
+     <ROLLNAME>/ZAK/ADOAZON</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>BRUTTO</FIELDNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <INTTYPE>N</INTTYPE>
+     <INTLEN>000060</INTLEN>
+     <DATATYPE>NUMC</DATATYPE>
+     <LENG>000030</LENG>
+     <MASK>  NUMC</MASK>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>ELOLEG</FIELDNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <INTTYPE>N</INTTYPE>
+     <INTLEN>000060</INTLEN>
+     <DATATYPE>NUMC</DATATYPE>
+     <LENG>000030</LENG>
+     <MASK>  NUMC</MASK>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>BSEG_BELNR</FIELDNAME>
+     <ROLLNAME>BELNR_D</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+    <DD03P>
+     <FIELDNAME>HKONT</FIELDNAME>
+     <ROLLNAME>HKONT</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
+   </DD03P_TABLE>
+  </asx:values>
+ </asx:abap>
+</abapGit>

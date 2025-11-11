@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/FIELDNRK</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/ZWERTV9</DOMNAME>
+    <HEADLEN>42</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>20</SCRLEN2>
+    <SCRLEN3>30</SCRLEN3>
+    <DDTEXT>Mezőérték (numerikus) kerekített kibontott</DDTEXT>
+    <REPTEXT>Mezőérték (numerikus) kerekített kibontott</REPTEXT>
+    <SCRTEXT_S>Ker.kibont</SCRTEXT_S>
+    <SCRTEXT_M>Kerekített kibontott</SCRTEXT_M>
+    <SCRTEXT_L>Mezőérték kerekített kibontott</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Feldwert(Numerisch) gerundet, ausgepackt</DDTEXT>
+     <REPTEXT>Feldwert(Numerisch) gerundet, ausgepackt</REPTEXT>
+     <SCRTEXT_S>Rund.ausp.</SCRTEXT_S>
+     <SCRTEXT_M>Gerundet,ausgepackt</SCRTEXT_M>
+     <SCRTEXT_L>Feldwert gerundet,ausgepackt</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

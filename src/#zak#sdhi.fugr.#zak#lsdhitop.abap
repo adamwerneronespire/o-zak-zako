@@ -1,0 +1,16 @@
+FUNCTION-POOL /ZAK/SDHI.                         "MESSAGE-ID ..
+TYPE-POOLS SHLP.
+TYPE-POOLS F4TYP.  "Brücke zu alten F4-Bausteinen
+TABLES: DDSHDEFSH.  "Tabelle der Default-Suchhilfen
+
+
+DATA %SHLPNAME LIKE DD30V-SHLPNAME.    " für Übergabe an Callback-Form
+                                       " von F4TOOL_SUBSHLP_BY_HOTKEY
+CONSTANTS: par%domname LIKE DDSHFPROP-FIELDNAME VALUE 'DOMNAME',
+           par%value LIKE DDSHFPROP-FIELDNAME VALUE 'VALUE',
+           par%text LIKE DDSHFPROP-FIELDNAME VALUE 'TEXT',
+           par%_low LIKE DDSHFPROP-FIELDNAME VALUE'_LOW',
+           par%_high LIKE DDSHFPROP-FIELDNAME VALUE'_HIGH',
+           par%_text LIKE DDSHFPROP-FIELDNAME VALUE'_TEXT',
+           PAR%ROLLNAME LIKE DDSHFPROP-FIELDNAME VALUE 'ROLLNAME',
+           PAR%TABNAME LIKE DDSHFPROP-FIELDNAME VALUE 'TABNAME'.

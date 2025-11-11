@@ -1,0 +1,619 @@
+*&---------------------------------------------------------------------*
+*& Program: a bevallás áttöltéséhez ellenőrző és végrehajtó program
+*&---------------------------------------------------------------------*
+
+REPORT  /ZAK/AFA_SZLA_NONEED MESSAGE-ID /ZAK/ZAK.
+
+*&---------------------------------------------------------------------*
+*& Funkció leírás: A program a szelekción megadott feltételek alapján
+*& megjeleníti (ill. éles esetén módosítja) távoli RFC hívás segítségével
+*& az átvehető bevallásokat ill. kiírja ami már átvételre került.
+*&---------------------------------------------------------------------*
+*& Szerző            : Bana G. Péter - Ness
+*& Létrehozás dátuma : 2014.09.04
+*& Funkc.spec.készítő: ________
+*& SAP modul neve    :
+*& Program  típus    : Riport
+*& SAP verzió        :
+*&---------------------------------------------------------------------*
+*&---------------------------------------------------------------------*
+*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*&
+*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& ----   ----------   ----------    ----------------------- -----------
+*& 0001   2014.09.04   Bana G. Péter  Inicializált verzió
+*& 0002   2014.09.08   Bana G. Péter  Éles üzem hozzáadása
+*&---------------------------------------------------------------------*
+*++S4HANA#01.
+DATA L_SAVE_OK TYPE OK.
+*--S4HANA#01.
+INCLUDE /ZAK/COMMON_STRUCT.
+
+CLASS LCL_EVENT_HANDLER DEFINITION DEFERRED.
+
+*&---------------------------------------------------------------------*
+*& Egyszerű alv alapok
+*&---------------------------------------------------------------------*
+*&---------------------------------------------------------------------*
+*& Típusdeklarációk
+*&---------------------------------------------------------------------*
+TYPES: TY_DATA TYPE TABLE OF /ZAK/AFA_SZLA.
+
+INCLUDE /ZAK/ALV_GRID_ALAP.
+
+*&---------------------------------------------------------------------*
+*& TÁBLÁK                                                              *
+*&---------------------------------------------------------------------*
+TABLES: /ZAK/AFA_SZLA.
+*&---------------------------------------------------------------------*
+*  PROGRAM VÁLTOZÓK                                                    *
+*      Belső tábla         -   (I_xxx...)                              *
+*      FORM paraméter      -   ($xxxx...)                              *
+*      Konstans            -   (C_xxx...)                              *
+*      Paraméter változó   -   (P_xxx...)                              *
+*      Szelekciós opció    -   (S_xxx...)                              *
+*      Sorozatok (Range)   -   (R_xxx...)                              *
+*      Globális változók   -   (G_xxx...)                              *
+*      Lokális változók    -   (L_xxx...)                              *
+*      Munkaterület        -   (W_xxx...)                              *
+*      Típus               -   (T_xxx...)                              *
+*      Makrók              -   (M_xxx...)                              *
+*      Field-symbol        -   (FS_xxx...)                             *
+*      Methodus            -   (METH_xxx...)                           *
+*      Objektum            -   (O_xxx...)                              *
+*      Osztály             -   (CL_xxx...)                             *
+*      Esemény             -   (E_xxx...)                              *
+*&---------------------------------------------------------------------*
+DATA G_SUBRC TYPE SYSUBRC.
+
+DATA G_ANSWER.
+
+*&---------------------------------------------------------------------*
+*& SELECTION-SCREEN
+*&---------------------------------------------------------------------*
+SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
+* Vállalat.
+  PARAMETERS: P_BUKRS     LIKE /ZAK/AFA_SZLA-BUKRS VALUE CHECK OBLIGATORY.
+*++2065 #05.
+* Adóazonosító
+  SELECT-OPTIONS S_ADOAZ  FOR  /ZAK/AFA_SZLA-ADOAZON.
+*--2065 #05.
+* Év
+  SELECT-OPTIONS S_GJAHR  FOR  /ZAK/AFA_SZLA-GJAHR.
+* Hónap
+  SELECT-OPTIONS S_MONAT  FOR  /ZAK/AFA_SZLA-MONAT.
+* Index
+  SELECT-OPTIONS S_ZINDEX FOR  /ZAK/AFA_SZLA-ZINDEX.
+* Package
+  SELECT-OPTIONS S_PACK   FOR  /ZAK/AFA_SZLA-PACK.
+* Bizonylat
+  SELECT-OPTIONS S_BELNR  FOR  /ZAK/AFA_SZLA-BSEG_BELNR.
+* Közös számla azonosító
+  SELECT-OPTIONS S_SZA    FOR  /ZAK/AFA_SZLA-SZAMLASZA.
+* Számla azonosító
+  SELECT-OPTIONS S_SZ     FOR  /ZAK/AFA_SZLA-SZAMLASZ.
+* Előzmény Számla azonosító
+  SELECT-OPTIONS S_SZE    FOR  /ZAK/AFA_SZLA-SZAMLASZE.
+* Számla típus
+  SELECT-OPTIONS S_SZT    FOR  /ZAK/AFA_SZLA-SZLATIP.
+
+SELECTION-SCREEN: END OF BLOCK BL01.
+
+
+*&---------------------------------------------------------------------*
+* INITALIZATION
+*&---------------------------------------------------------------------*
+INITIALIZATION.
+*++1765 #19.
+* Jogosultság vizsgálat
+  AUTHORITY-CHECK OBJECT 'S_TCODE'
+                  ID 'TCD'  FIELD SY-TCODE.
+*++1865 #03.
+*  IF SY-SUBRC NE 0.
+  IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
+*--1865 #03.
+    MESSAGE E152(/ZAK/ZAK).
+*   Önnek nincs jogosultsága a program futtatásához!
+  ENDIF.
+*--1765 #19.
+*&---------------------------------------------------------------------*
+* AT SELECTION-SCREEN ON VALUE-REQUEST
+*&---------------------------------------------------------------------*
+
+*&---------------------------------------------------------------------*
+* AT SELECTION-SCREEN
+*&---------------------------------------------------------------------*
+AT SELECTION-SCREEN.
+
+
+*&---------------------------------------------------------------------*
+* START-OF-SELECTION
+*&---------------------------------------------------------------------*
+START-OF-SELECTION.
+*Adatok meghatározása
+*++S4HANA#01.
+*  PERFORM GET_DATA USING G_SUBRC.
+  PERFORM GET_DATA CHANGING G_SUBRC.
+*--S4HANA#01.
+  IF NOT G_SUBRC IS INITIAL.
+    MESSAGE I141.
+*   Nincs a feltételnek megfelelő analitika rekord!
+    EXIT.
+  ENDIF.
+
+*&---------------------------------------------------------------------*
+* END-OF-SELECTION
+*&---------------------------------------------------------------------*
+END-OF-SELECTION.
+
+  IF NOT GT_DATA IS INITIAL.
+    GT_DATA_TMP[] = GT_DATA[].
+    CALL SCREEN 9000.
+  ENDIF.
+
+
+*&---------------------------------------------------------------------*
+*&      Form  HANDLE_HOTSPOT_CLICK
+*&---------------------------------------------------------------------*
+*++S4HANA#01.
+*FORM HANDLE_HOTSPOT_CLICK  USING    UV_COLUMN_NAME
+*                                    UV_ROW_INDEX.
+FORM HANDLE_HOTSPOT_CLICK  USING    UV_COLUMN_NAME TYPE LVC_S_COL
+                                    UV_ROW_INDEX TYPE LVC_S_ROW-INDEX.
+*--S4HANA#01.
+
+** példa implementálása a hotspot kattintásnak
+*  CASE uv_column_name.
+*    WHEN 'EBELN'.
+*      READ TABLE gt_data INTO gs_data INDEX uv_row_index.
+*      IF sy-subrc EQ 0.
+*        ASSIGN COMPONENT uv_column_name OF STRUCTURE gs_data TO <fs_any>.
+*        IF sy-subrc EQ 0.
+*          SET PARAMETER ID 'BES' FIELD gs_data-ebeln.
+*          CALL TRANSACTION 'ME23' AND SKIP FIRST SCREEN.
+*        ENDIF.
+*
+*      ENDIF.
+*
+*  ENDCASE.
+ENDFORM.                    " HANDLE_HOTSPOT_CLICK
+*&---------------------------------------------------------------------*
+*&      Form  HANDLE_BUTTON_CLICK
+*&---------------------------------------------------------------------*
+*++S4HANA#01.
+*FORM HANDLE_BUTTON_CLICK  USING    UV_COLUMN_NAME
+*                                   UV_ROW_INDEX.
+FORM HANDLE_BUTTON_CLICK  USING    UV_COLUMN_NAME TYPE LVC_S_COL-FIELDNAME
+                                   UV_ROW_INDEX TYPE LVC_S_ROID-ROW_ID.
+*--S4HANA#01.
+ENDFORM.                    " HANDLE_BUTTON_CLICK
+*&---------------------------------------------------------------------*
+*&      Form  HANDLE_DOUBLE_CLICK
+*&---------------------------------------------------------------------*
+*++S4HANA#01.
+*FORM HANDLE_DOUBLE_CLICK  USING UV_COLUMN_NAME
+*                                UV_ROW_INDEX.
+FORM HANDLE_DOUBLE_CLICK  USING UV_COLUMN_NAME TYPE LVC_S_COL-FIELDNAME
+                                UV_ROW_INDEX TYPE LVC_S_ROID-ROW_ID.
+*--S4HANA#01.
+
+ENDFORM.                    " HANDLE_DOUBLE_CLICK
+*&---------------------------------------------------------------------*
+*&      Form  GET_SELECTED_ROWS
+*&---------------------------------------------------------------------*
+FORM GET_SELECTED_ROWS  USING    UO_ALV TYPE REF TO CL_GUI_ALV_GRID
+                        CHANGING CT_ROWS TYPE LVC_T_ROID.
+
+  DATA LW_ROWS TYPE LVC_S_ROID.
+  DATA LW_DATA TYPE /ZAK/AFA_SZLA.
+  DATA LS_STABLE TYPE LVC_S_STBL.
+
+  FREE: CT_ROWS.
+* kiválasztott sorok lekérése
+  CALL METHOD UO_ALV->GET_SELECTED_ROWS
+    IMPORTING
+*     et_index_rows =
+      ET_ROW_NO = CT_ROWS.
+
+  LOOP AT CT_ROWS INTO LW_ROWS.
+    READ TABLE GT_DATA INDEX LW_ROWS-ROW_ID INTO LW_DATA.
+    LW_DATA-NONEED = 'X'.
+    MODIFY GT_DATA FROM LW_DATA INDEX LW_ROWS-ROW_ID TRANSPORTING NONEED.
+  ENDLOOP.
+  IF SY-SUBRC NE 0.
+    MESSAGE W186.
+*   Kérem jelölje ki a feldolgozandó sort vagy sorokat!
+  ELSE.
+*    get position
+    LS_STABLE-ROW = 'X'.
+    LS_STABLE-COL = 'X'.
+
+    CALL METHOD GO_ALV->REFRESH_TABLE_DISPLAY
+      EXPORTING
+        IS_STABLE = LS_STABLE
+      EXCEPTIONS
+        FINISHED  = 1
+        OTHERS    = 2.
+  ENDIF.
+
+ENDFORM.                    " GET_SELECTED_ROWS
+*&---------------------------------------------------------------------*
+*&      Form  GET_UNSELECTED_ROWS
+*&---------------------------------------------------------------------*
+FORM GET_UNSELECTED_ROWS  USING    UO_ALV TYPE REF TO CL_GUI_ALV_GRID
+                        CHANGING CT_ROWS TYPE LVC_T_ROID.
+
+  DATA LW_ROWS TYPE LVC_S_ROID.
+  DATA LW_DATA TYPE /ZAK/AFA_SZLA.
+  DATA LS_STABLE TYPE LVC_S_STBL.
+
+  FREE: CT_ROWS.
+* kiválasztott sorok lekérése
+  CALL METHOD UO_ALV->GET_SELECTED_ROWS
+    IMPORTING
+*     et_index_rows =
+      ET_ROW_NO = CT_ROWS.
+
+  LOOP AT CT_ROWS INTO LW_ROWS.
+    READ TABLE GT_DATA INDEX LW_ROWS-ROW_ID INTO LW_DATA.
+    CLEAR LW_DATA-NONEED.
+    MODIFY GT_DATA FROM LW_DATA INDEX LW_ROWS-ROW_ID TRANSPORTING NONEED.
+  ENDLOOP.
+  IF SY-SUBRC NE 0.
+    MESSAGE W186.
+*   Kérem jelölje ki a feldolgozandó sort vagy sorokat!
+  ELSE.
+*    get position
+    LS_STABLE-ROW = 'X'.
+    LS_STABLE-COL = 'X'.
+
+    CALL METHOD GO_ALV->REFRESH_TABLE_DISPLAY
+      EXPORTING
+        IS_STABLE = LS_STABLE
+      EXCEPTIONS
+        FINISHED  = 1
+        OTHERS    = 2.
+  ENDIF.
+
+ENDFORM.                    " GET_UNSELECTED_ROWS
+*&---------------------------------------------------------------------*
+*&---------------------------------------------------------------------*
+*&      Form  SHOW_SELECTED_ROWS
+*&---------------------------------------------------------------------*
+FORM SHOW_SELECTED_ROWS  USING    UT_ROWS TYPE LVC_T_ROID.
+
+*  DATA: lv_rows TYPE i.
+*
+*  lv_rows = lines( ut_rows ).
+*  MESSAGE i001(00) WITH 'Kiválasztott sorok száma: ' lv_rows.
+
+ENDFORM.                    " SHOW_SELECTED_ROWS
+*&---------------------------------------------------------------------*
+*&      Form  GET_DATA
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+*++S4HANA#01.
+*FORM GET_DATA USING $SUBRC.
+FORM GET_DATA CHANGING $SUBRC TYPE SYSUBRC.
+*--S4HANA#01.
+
+  CLEAR $SUBRC.
+
+  SELECT * INTO TABLE GT_DATA
+           FROM /ZAK/AFA_SZLA
+          WHERE BUKRS      EQ P_BUKRS
+*++2065 #05.
+            AND ADOAZON    IN S_ADOAZ
+*--2065 #05.
+            AND GJAHR      IN S_GJAHR
+            AND MONAT      IN S_MONAT
+            AND ZINDEX     IN S_ZINDEX
+            AND PACK       IN S_PACK
+            AND BSEG_BELNR IN S_BELNR
+            AND SZAMLASZA  IN S_SZA
+            AND SZAMLASZ   IN S_SZ
+            AND SZAMLASZE  IN S_SZE
+            AND SZLATIP    IN S_SZT
+*++S4HANA#01.
+          ORDER BY PRIMARY KEY.
+*--S4HANA#01.
+*            AND NONEED     NE 'X'.
+  IF NOT SY-SUBRC IS INITIAL.
+    MOVE SY-SUBRC TO $SUBRC.
+  ENDIF.
+
+ENDFORM.                    " GET_DATA
+*&---------------------------------------------------------------------*
+*&      Module  STATUS_9000  OUTPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+MODULE STATUS_9000 OUTPUT.
+  SET PF-STATUS '9000'.
+  SET TITLEBAR  '9000'.
+ENDMODULE.                 " STATUS_9000  OUTPUT
+*&---------------------------------------------------------------------*
+*&      Module  INIT_ALV_9000  OUTPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+MODULE INIT_ALV_9000 OUTPUT.
+  IF NOT GO_CONT IS BOUND.
+* nem háttérfutás
+    IF CL_GUI_ALV_GRID=>OFFLINE( ) EQ ABAP_FALSE.
+      CREATE OBJECT GO_CONT
+        EXPORTING
+          CONTAINER_NAME              = 'CONT1'
+        EXCEPTIONS
+          CNTL_ERROR                  = 1
+          CNTL_SYSTEM_ERROR           = 2
+          CREATE_ERROR                = 3
+          LIFETIME_ERROR              = 4
+          LIFETIME_DYNPRO_DYNPRO_LINK = 5
+          OTHERS                      = 6.
+      IF SY-SUBRC <> 0.
+      ENDIF.
+      IF NOT GO_ALV IS BOUND.
+        CREATE OBJECT GO_ALV
+          EXPORTING
+            I_PARENT          = GO_CONT
+          EXCEPTIONS
+            ERROR_CNTL_CREATE = 1
+            ERROR_CNTL_INIT   = 2
+            ERROR_CNTL_LINK   = 3
+            ERROR_DP_CREATE   = 4
+            OTHERS            = 5.
+        IF SY-SUBRC <> 0.
+        ENDIF.
+      ENDIF.
+    ELSE.
+* háttérfutás
+      CREATE OBJECT GO_ALV
+        EXPORTING
+          I_PARENT          = GO_BACKCONT
+        EXCEPTIONS
+          ERROR_CNTL_CREATE = 1
+          ERROR_CNTL_INIT   = 2
+          ERROR_CNTL_LINK   = 3
+          ERROR_DP_CREATE   = 4
+          OTHERS            = 5.
+      IF SY-SUBRC <> 0.
+      ENDIF.
+
+    ENDIF.
+* fieldcatalog generálás
+    M_CREATE_FCAT '/ZAK/AFA_SZLA' GT_FCAT.
+* Checkbox-á alakítás
+    M_CHECKBOX 'NONEED'.
+
+* hotspottá alakítás
+*    m_hotspot gt_fcat 'EBELN'.
+
+* zebra és optimális mezőszélesség
+    M_TYPICAL_LAYO GS_LAYO.
+
+* módosíthatóság beállítása
+*    m_modify_field gt_fcat 'ERNAM' 'EDIT' 'X'.
+* eseménykezelő példányosítása
+    CREATE OBJECT GO_EVT.
+
+* hotspot eseményre regisztrálás
+    SET HANDLER GO_EVT->HANDLE_HOTSPOT_CLICK FOR GO_ALV.
+
+    SET HANDLER GO_EVT->HANDLE_BUTTON_CLICK FOR GO_ALV.
+
+* menthető layoutok
+    GS_VARI-REPORT    = SY-CPROG.
+    GS_VARI-USERNAME  = SY-UNAME.
+
+* kiválasztható sorok
+    GS_LAYO-SEL_MODE = 'A'.
+
+
+* módosíthatóság beállítása
+    CALL METHOD GO_ALV->REGISTER_EDIT_EVENT
+      EXPORTING
+        I_EVENT_ID = CL_GUI_ALV_GRID=>MC_EVT_ENTER.
+    IF GV_MOD IS INITIAL.
+      CALL METHOD GO_ALV->SET_READY_FOR_INPUT
+        EXPORTING
+          I_READY_FOR_INPUT = 0.
+    ELSE.
+      CALL METHOD GO_ALV->SET_READY_FOR_INPUT
+        EXPORTING
+          I_READY_FOR_INPUT = 1.
+    ENDIF.
+* megjelenítés
+    CALL METHOD GO_ALV->SET_TABLE_FOR_FIRST_DISPLAY
+      EXPORTING
+        IS_VARIANT                    = GS_VARI
+        I_SAVE                        = 'U' "felhasználó szintű layout mentés
+*       i_default                     = 'X'
+        IS_LAYOUT                     = GS_LAYO
+      CHANGING
+        IT_OUTTAB                     = GT_DATA
+        IT_FIELDCATALOG               = GT_FCAT
+*       it_sort                       =
+*       it_filter                     =
+      EXCEPTIONS
+        INVALID_PARAMETER_COMBINATION = 1
+        PROGRAM_ERROR                 = 2
+        TOO_MANY_LINES                = 3
+        OTHERS                        = 4.
+    IF SY-SUBRC <> 0.
+    ENDIF.
+
+
+  ELSE.
+    IF GO_ALV IS BOUND.
+
+* módosíthatóság beállítása
+      IF GV_MOD IS INITIAL.
+        CALL METHOD GO_ALV->SET_READY_FOR_INPUT
+          EXPORTING
+            I_READY_FOR_INPUT = 0.
+      ELSE.
+        CALL METHOD GO_ALV->SET_READY_FOR_INPUT
+          EXPORTING
+            I_READY_FOR_INPUT = 1.
+      ENDIF.
+
+      CALL METHOD GO_ALV->REFRESH_TABLE_DISPLAY
+        EXCEPTIONS
+          FINISHED = 1
+          OTHERS   = 2.
+      IF SY-SUBRC <> 0.
+      ENDIF.
+
+    ENDIF.
+  ENDIF.
+ENDMODULE.                 " INIT_ALV_9000  OUTPUT
+*&---------------------------------------------------------------------*
+*&      Module  EXIT  INPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+MODULE EXIT INPUT.
+
+*++S4HANA#01.
+*  PERFORM CHECK_SAVE USING G_ANSWER.
+  PERFORM CHECK_SAVE CHANGING G_ANSWER.
+*--S4HANA#01.
+
+  PERFORM EXIT USING G_ANSWER.
+
+ENDMODULE.                 " EXIT  INPUT
+*&---------------------------------------------------------------------*
+*&      Module  USER_COMMAND_9000  INPUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+MODULE USER_COMMAND_9000 INPUT.
+*++S4HANA#01.
+*  DATA L_SAVE_OK TYPE OK.
+*--S4HANA#01.
+
+  L_SAVE_OK = GV_OK_9000.
+  CLEAR GV_OK_9000.
+
+  CASE L_SAVE_OK.
+    WHEN 'BACK'.
+*++S4HANA#01.
+*      PERFORM CHECK_SAVE USING G_ANSWER.
+      PERFORM CHECK_SAVE CHANGING G_ANSWER.
+*--S4HANA#01.
+      PERFORM EXIT USING G_ANSWER.
+    WHEN 'NONEED'.
+      PERFORM GET_SELECTED_ROWS USING    GO_ALV
+                                CHANGING GT_ROWS.
+    WHEN 'NEED'.
+      PERFORM GET_UNSELECTED_ROWS USING    GO_ALV
+                                  CHANGING GT_ROWS.
+
+    WHEN 'SAVE'.
+      PERFORM SAVE_DATA.
+      PERFORM EXIT USING G_ANSWER.
+  ENDCASE.
+ENDMODULE.                 " USER_COMMAND_9000  INPUT
+*&---------------------------------------------------------------------*
+*&      Form  CHECK_SAVE
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+*++S4HANA#01.
+*FORM CHECK_SAVE USING $ANSWER.
+FORM CHECK_SAVE CHANGING $ANSWER LIKE G_ANSWER.
+*--S4HANA#01.
+  IF GT_DATA_TMP[] NE GT_DATA[].
+    CLEAR $ANSWER.
+*++MOL_UPG_ChangeImp # E09324753 # Balázs Gábor (Ness) - 2016.07.12
+*    CALL FUNCTION 'POPUP_TO_CONFIRM_LOSS_OF_DATA'
+*      EXPORTING
+*        TEXTLINE1     = 'Folytatja?'(901)
+**      TEXTLINE2     = ' '
+*        TITEL         = 'Megerősítés'(902)
+**      START_COLUMN  = 25
+**      START_ROW     = 6
+*        DEFAULTOPTION = 'N'
+*      IMPORTING
+*        ANSWER        = $ANSWER.
+    DATA L_QUESTION TYPE STRING.
+
+    CONCATENATE 'Adatok elvesznek!' 'Folytatja?'(901) INTO L_QUESTION SEPARATED BY SPACE.
+*
+    CALL FUNCTION 'POPUP_TO_CONFIRM'
+      EXPORTING
+        TITLEBAR              = 'Megerősítés'(902)
+*       DIAGNOSE_OBJECT       = ' '
+        TEXT_QUESTION         = L_QUESTION
+*       TEXT_BUTTON_1         = 'Ja'(001)
+*       ICON_BUTTON_1         = ' '
+*       TEXT_BUTTON_2         = 'Nein'(002)
+*       ICON_BUTTON_2         = ' '
+        DEFAULT_BUTTON        = '2'
+        DISPLAY_CANCEL_BUTTON = ' '
+*       USERDEFINED_F1_HELP   = ' '
+        START_COLUMN          = 25
+        START_ROW             = 6
+*       POPUP_TYPE            =
+*       IV_QUICKINFO_BUTTON_1 = ' '
+*       IV_QUICKINFO_BUTTON_2 = ' '
+      IMPORTING
+        ANSWER                = $ANSWER
+*   TABLES
+*       PARAMETER             =
+*   EXCEPTIONS
+*       TEXT_NOT_FOUND        = 1
+*       OTHERS                = 2
+      .
+    IF $ANSWER EQ '1'.
+      $ANSWER = 'J'.
+    ELSE.
+      $ANSWER = 'N'.
+    ENDIF.
+*--MOL_UPG_ChangeImp # E09324753 # Balázs Gábor (Ness) - 2016.07.12
+
+  ENDIF.
+ENDFORM.                    " CHECK_SAVE
+*&---------------------------------------------------------------------*
+*&      Form  EXIT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_G_ANSWER  text
+*----------------------------------------------------------------------*
+*++S4HANA#01.
+*FORM EXIT  USING    $ANSWER.
+FORM EXIT  USING    $ANSWER LIKE G_ANSWER.
+*--S4HANA#01.
+
+  IF $ANSWER NE 'N'.
+    LEAVE TO SCREEN 0.
+  ENDIF.
+
+ENDFORM.                    " EXIT
+*&---------------------------------------------------------------------*
+*&      Form  SAVE_DATA
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+FORM SAVE_DATA .
+
+  MODIFY /ZAK/AFA_SZLA FROM TABLE GT_DATA.
+  COMMIT WORK AND WAIT.
+  MESSAGE I223.
+  CLEAR G_ANSWER.
+* Az adatok mentése sikeresen megtörtént!
+  PERFORM EXIT USING G_ANSWER.
+
+ENDFORM.                    " SAVE_DATA

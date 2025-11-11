@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ACTREAD</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>14</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>39</SCRLEN3>
+    <DDTEXT>Csak aktuális időszak figyelembe vétele</DDTEXT>
+    <REPTEXT>Akt.idősz.olv.</REPTEXT>
+    <SCRTEXT_S>Akt.idősz.</SCRTEXT_S>
+    <SCRTEXT_M>Akt.idősz.olv.</SCRTEXT_M>
+    <SCRTEXT_L>Csak aktuális időszak figyelembe vétele</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Nur aktuelle Periode</DDTEXT>
+     <REPTEXT>Nur aktuelle P</REPTEXT>
+     <SCRTEXT_S>Nur aktuel</SCRTEXT_S>
+     <SCRTEXT_M>Nur aktuelle Pe</SCRTEXT_M>
+     <SCRTEXT_L>Nur aktuelle Periode</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,369 @@
+FUNCTION /ZAK/XML_ONYB_UPLOAD.
+*"----------------------------------------------------------------------
+*"*"Lokális interfész:
+*"  IMPORTING
+*"     REFERENCE(FILENAME) LIKE  RLGRAP-FILENAME
+*"     REFERENCE(I_BUKRS) TYPE  T001-BUKRS
+*"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
+*"     REFERENCE(I_BSZNUM) TYPE  /ZAK/BSZNUM
+*"  TABLES
+*"      T_/ZAK/ANALITIKA STRUCTURE  /ZAK/ANALITIKA
+*"      T_HIBA STRUCTURE  /ZAK/ADAT_HIBA
+*"  EXCEPTIONS
+*"      ERROR_OPEN_FILE
+*"      ERROR_XML
+*"      EMPTY_FILE
+*"----------------------------------------------------------------------
+  DATA L_SUBRC LIKE SY-SUBRC.
+
+* /zak/zak_analitikához
+  DATA: L_ADOAZON LIKE /ZAK/ANALITIKA-ADOAZON,
+        L_GJAHR   LIKE /ZAK/ANALITIKA-GJAHR,
+        L_MONAT   LIKE /ZAK/ANALITIKA-MONAT,
+        L_NYOMT   TYPE /ZAK/ANALITIKA-BTYPE,
+        L_ABEVAZ  TYPE /ZAK/ANALITIKA-ABEVAZ.
+
+  DATA: L_ITEM    LIKE /ZAK/ANALITIKA-ITEM.
+
+  DATA: L_TABIX   LIKE SY-TABIX.
+  DATA: L_INDEX   LIKE SY-TABIX.
+  DATA: L_ELOJEL.
+  DATA: L_SOR      TYPE NUMC4.
+  DATA: L_SOR_SAVE TYPE NUMC4.
+  DATA: L_SORVEG(2) TYPE C.
+  DATA: L_ONELL TYPE XFELD.
+
+  DATA: L_BEGIN TYPE I.
+
+* Fejléc mezők:
+  RANGES LR_NO_ABEV FOR /ZAK/ANALITIKA-ABEVAZ.
+  RANGES LR_NO_SORVEG_01 FOR RANGE_C2-LOW.
+  RANGES LR_NO_SORVEG_02 FOR RANGE_C2-LOW.
+  RANGES LR_NO_SORVEG_03 FOR RANGE_C2-LOW.
+  RANGES LR_NO_SORVEG_04 FOR RANGE_C2-LOW.
+
+
+
+* ABEVAZ konvertálás
+  DEFINE LM_CONV_/ZAK/ABEVAZ.
+    IF &1(2) EQ '0A'.
+      &2(1) = 'A'.
+    ELSE.
+      &2(1) = 'M'.
+    ENDIF.
+    CONCATENATE &2 &1(2) &1+6 INTO &2.
+    IF &2(1) EQ 'M'.
+      &3 = &1+7(4).
+    ELSE.
+      CLEAR &3.
+    ENDIF.
+  END-OF-DEFINITION.
+
+  DEFINE LM_SAVE_ANALITIKA.
+    IF NOT W_ANALITIKA IS INITIAL.
+      W_ANALITIKA-BUKRS  = I_BUKRS.
+      W_ANALITIKA-BTYPE  = I_BTYPE.
+      W_ANALITIKA-BSZNUM = I_BSZNUM.
+      W_ANALITIKA-GJAHR  = L_GJAHR.
+      W_ANALITIKA-MONAT  = L_MONAT.
+*      W_ANALITIKA-ADOAZON = L_ADOAZON.
+      W_ANALITIKA-ITEM   = L_TABIX.
+      W_ANALITIKA-ABEVAZ = C_ABEVAZ_DUMMY.
+      APPEND W_ANALITIKA TO T_/ZAK/ANALITIKA.
+      CLEAR: W_ANALITIKA, L_SOR, L_SOR_SAVE.
+    ENDIF.
+  END-OF-DEFINITION.
+
+* Fejléc ABEV mezők kihagyása
+* 01
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB001A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB002A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB003A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB004A' SPACE.
+*++1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB005A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB006A' SPACE.
+*--1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BC0025CA' SPACE.
+  M_DEF LR_NO_SORVEG_01 'I' 'EQ' 'FA' SPACE.
+  M_DEF LR_NO_SORVEG_01 'I' 'EQ' 'GA' SPACE.
+  M_DEF LR_NO_SORVEG_01 'I' 'EQ' 'HA' SPACE.
+  M_DEF LR_NO_SORVEG_01 'I' 'EQ' 'IA' SPACE.
+  M_DEF LR_NO_SORVEG_01 'I' 'EQ' 'JA' SPACE.
+* 02
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CB001A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CB002A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CB003A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CB004A' SPACE.
+*++1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CB005A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CB006A' SPACE.
+*--1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0CC0025CA' SPACE.
+  M_DEF LR_NO_SORVEG_02 'I' 'EQ' 'FA' SPACE.
+  M_DEF LR_NO_SORVEG_02 'I' 'EQ' 'GA' SPACE.
+  M_DEF LR_NO_SORVEG_02 'I' 'EQ' 'HA' SPACE.
+  M_DEF LR_NO_SORVEG_02 'I' 'EQ' 'IA' SPACE.
+  M_DEF LR_NO_SORVEG_02 'I' 'EQ' 'JA' SPACE.
+
+
+* 03
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DB001A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DB002A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DB003A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DB004A' SPACE.
+*++1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DB005A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DB006A' SPACE.
+*--1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0DC0025CA' SPACE.
+  M_DEF LR_NO_SORVEG_03 'I' 'EQ' 'EA' SPACE.
+  M_DEF LR_NO_SORVEG_03 'I' 'EQ' 'FA' SPACE.
+  M_DEF LR_NO_SORVEG_03 'I' 'EQ' 'GA' SPACE.
+
+* 04
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EB001A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EB002A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EB003A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EB004A' SPACE.
+*++1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EB005A' SPACE.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EB006A' SPACE.
+*--1765 #07.
+  M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0EC0025CA' SPACE.
+  M_DEF LR_NO_SORVEG_04 'I' 'EQ' 'EA' SPACE.
+  M_DEF LR_NO_SORVEG_04 'I' 'EQ' 'FA' SPACE.
+  M_DEF LR_NO_SORVEG_04 'I' 'EQ' 'GA' SPACE.
+
+
+* XML fájl beolvasása
+  PERFORM UPLOAD_XML_TO_TABLE TABLES I_DATA_TABLE
+                              USING  FILENAME
+                                     L_SUBRC.
+* Fájl megnyitás hiba
+  IF L_SUBRC EQ 1.
+    MESSAGE E082(/ZAK/ZAK) WITH FILENAME RAISING ERROR_OPEN_FILE.
+*   Hiba & fájl megnyitásánál!
+* XML fájl hiba
+  ELSEIF L_SUBRC EQ 2.
+    MESSAGE E172(/ZAK/ZAK) WITH FILENAME RAISING ERROR_XML.
+*   Hibás az XML fájl (&)!
+  ENDIF.
+
+* Nincs adat
+  IF I_DATA_TABLE[] IS INITIAL.
+    MESSAGE E100(/ZAK/ZAK) RAISING EMPTY_FILE.
+  ENDIF.
+
+* Vállalat törzsadat
+  SELECT SINGLE * FROM T001
+                 WHERE BUKRS EQ I_BUKRS.
+
+* A nyomtatvány adatokban ellenőrizük az ABEV azonosítót!
+  SELECT * INTO TABLE I_/ZAK/BEVALLB
+           FROM /ZAK/BEVALLB
+          WHERE BTYPE EQ  I_BTYPE.
+
+  SELECT * INTO TABLE I_/ZAK/BEVALLBT
+           FROM /ZAK/BEVALLBT
+          WHERE LANGU EQ  SY-LANGU
+            AND BTYPE EQ  I_BTYPE.
+
+  SORT I_/ZAK/BEVALLB  BY BTYPE ABEVAZ.
+  SORT I_/ZAK/BEVALLBT BY LANGU BTYPE ABEVAZ.
+
+  CLEAR L_INDEX.
+
+* Adatok feldolgozása
+  LOOP AT I_DATA_TABLE INTO W_DATA_LINE.
+* DIALÓGUS FUTÁS BIZTOSÍTÁSHOZ
+    PERFORM PROCESS_IND_ITEM USING '10000'
+                                   L_INDEX
+                                   TEXT-P01.
+
+    CLEAR: W_HIBA.
+*   Adószám
+    IF W_DATA_LINE-ELEMENT = 'adoszam'(004).
+      CLEAR L_ADOAZON.
+      L_ADOAZON = W_DATA_LINE-VALUE.
+    ENDIF.
+*   Nyomtatvanyazonosito
+    IF W_DATA_LINE-ELEMENT = 'nyomtatvanyazonosito'(005).
+      CLEAR L_NYOMT.
+      L_NYOMT = W_DATA_LINE-VALUE.
+    ENDIF.
+
+*   Tol
+    IF W_DATA_LINE-ELEMENT = 'ig'(006).
+      CLEAR: L_GJAHR,L_MONAT.
+      L_GJAHR = W_DATA_LINE-VALUE(4).
+      L_MONAT = W_DATA_LINE-VALUE+4(2).
+    ENDIF.
+
+    ADD 1 TO L_TABIX.
+*   eazon
+    IF W_DATA_LINE-ELEMENT = 'eazon'(003).
+
+      CLEAR L_ABEVAZ.
+*     ABEVAZ konvertálás
+      LM_CONV_/ZAK/ABEVAZ  W_DATA_LINE-ATTRIB L_ABEVAZ L_SOR.
+      IF L_ABEVAZ IN LR_NO_ABEV.
+        LM_SAVE_ANALITIKA.
+        DELETE I_DATA_TABLE.
+        CONTINUE.
+      ENDIF.
+
+
+      IF L_SOR_SAVE IS INITIAL.
+        L_SOR_SAVE = L_SOR.
+      ENDIF.
+      IF L_ABEVAZ(1) EQ 'A'.
+        IF L_ABEVAZ EQ 'A0AD003A' AND  NOT W_DATA_LINE-VALUE IS INITIAL.
+          MOVE 'X' TO L_ONELL.
+        ENDIF.
+        DELETE I_DATA_TABLE.
+        CONTINUE.
+      ENDIF.
+
+      IF L_SOR_SAVE NE L_SOR AND NOT L_SOR IS INITIAL.
+        LM_SAVE_ANALITIKA.
+      ENDIF.
+
+      MOVE L_ABEVAZ TO W_ANALITIKA-ABEVAZ.
+      MOVE  W_DATA_LINE-VALUE TO W_ANALITIKA-FIELD_C.
+*     A nyomtatvány adatokban ellenőrizük az ABEV azonosítót!
+      READ TABLE I_/ZAK/BEVALLB INTO W_BEVALLB
+                           WITH KEY BTYPE  = I_BTYPE
+                                    ABEVAZ = W_ANALITIKA-ABEVAZ
+                                    BINARY SEARCH.
+      IF SY-SUBRC EQ 0.
+        IF W_BEVALLB-FIELDTYPE EQ 'N'.
+          IF NOT W_ANALITIKA-FIELD_C CO '-0123456789., '.
+            READ TABLE I_/ZAK/BEVALLBT INTO W_BEVALLBT
+                       WITH KEY LANGU  = SY-LANGU
+                                BTYPE  = I_BTYPE
+                                ABEVAZ = W_ANALITIKA-ABEVAZ.
+            W_HIBA-ZA_HIBA = 'Csak numerikus lehet!'(008).
+            W_HIBA-SOR          = L_TABIX.
+*           W_HIBA-OSZLOP       = 'Nem tudjuk'.
+            W_HIBA-/ZAK/F_VALUE  = W_ANALITIKA-FIELD_C.
+            CONCATENATE W_ANALITIKA-ABEVAZ W_BEVALLBT-ABEVTEXT
+                        INTO W_HIBA-FIELDNAME SEPARATED BY '-'.
+            APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
+          ELSE.
+*         Negatív érték kezelése
+            CLEAR L_ELOJEL.
+            MOVE W_ANALITIKA-FIELD_C TO W_ANALITIKA-FIELD_N.
+*++BG 2006/11/29
+            W_ANALITIKA-FIELD_N = W_ANALITIKA-FIELD_N *
+                                  ( 10 ** W_BEVALLB-ROUND ).
+*--BG 2006/11/29
+
+            IF W_ANALITIKA-FIELD_N < 0.
+              W_ANALITIKA-FIELD_N = ABS( W_ANALITIKA-FIELD_N ).
+              MOVE '-' TO L_ELOJEL.
+            ENDIF.
+          ENDIF.
+
+          CALL FUNCTION 'Z_2_CONVERT_STRING_TO_PACKED'
+            EXPORTING
+              I_AMOUNT        = W_ANALITIKA-FIELD_N
+              I_CURRENCY_CODE = T001-WAERS
+            IMPORTING
+              E_AMOUNT        = W_ANALITIKA-FIELD_N
+            EXCEPTIONS
+              NOT_NUMERIC     = 1
+              OTHERS          = 2.
+          IF SY-SUBRC <> 0.
+            MESSAGE E173(/ZAK/ZAK) WITH W_ANALITIKA-FIELD_C.
+*            Összeg konvertálás hiba & !
+          ENDIF.
+*         Ha ez előjel '-' volt.
+          IF L_ELOJEL EQ '-'.
+            MULTIPLY W_ANALITIKA-FIELD_N BY -1.
+          ENDIF.
+          MOVE T001-WAERS TO W_ANALITIKA-WAERS.
+          CLEAR W_ANALITIKA-FIELD_C.
+        ENDIF.
+*     Nem létezik az abev azonosító
+      ELSE.
+        W_HIBA-ZA_HIBA = 'Abev azonosító nem létezik'(007).
+        W_HIBA-SOR          = L_TABIX.
+        W_HIBA-/ZAK/F_VALUE  = W_ANALITIKA-ABEVAZ.
+        APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
+      ENDIF.
+      L_BEGIN = STRLEN( W_ANALITIKA-ABEVAZ ).
+      SUBTRACT 2 FROM L_BEGIN.
+      L_SORVEG = W_ANALITIKA-ABEVAZ+L_BEGIN(2).
+
+*     NYLAPAZON
+      IF W_ANALITIKA-ABEVAZ(1) EQ 'M'.
+        CASE W_ANALITIKA-ABEVAZ+1(2).
+          WHEN '0B'.
+            W_ANALITIKA-NYLAPAZON = '01'.
+            IF L_SORVEG IN LR_NO_SORVEG_01.
+              CLEAR W_ANALITIKA-FIELD_C.
+            ENDIF.
+          WHEN '0C'.
+            W_ANALITIKA-NYLAPAZON = '02'.
+            IF L_SORVEG IN LR_NO_SORVEG_02.
+              CLEAR W_ANALITIKA-FIELD_C.
+            ENDIF.
+          WHEN '0D'.
+            W_ANALITIKA-NYLAPAZON = '03'.
+            IF L_SORVEG IN LR_NO_SORVEG_03.
+              CLEAR W_ANALITIKA-FIELD_C.
+            ENDIF.
+          WHEN '0E'.
+            W_ANALITIKA-NYLAPAZON = '04'.
+            IF L_SORVEG IN LR_NO_SORVEG_04.
+              CLEAR W_ANALITIKA-FIELD_C.
+            ENDIF.
+        ENDCASE.
+      ENDIF.
+*     Adóazonosító
+      IF L_SORVEG EQ 'AA' OR L_SORVEG EQ 'BA'.
+        IF  W_ANALITIKA-ADOAZON IS INITIAL.
+          W_ANALITIKA-ADOAZON = W_DATA_LINE-VALUE.
+        ELSE.
+          CONCATENATE W_ANALITIKA-ADOAZON W_DATA_LINE-VALUE INTO W_ANALITIKA-ADOAZON.
+        ENDIF.
+        CLEAR W_ANALITIKA-FIELD_C.
+      ENDIF.
+*     HRSZU:
+      IF ( W_ANALITIKA-NYLAPAZON EQ '01' OR W_ANALITIKA-NYLAPAZON EQ '02' ) AND L_SORVEG EQ 'DA'.
+        W_ANALITIKA-HSZU = W_DATA_LINE-VALUE.
+        CLEAR  W_ANALITIKA-FIELD_C.
+      ENDIF.
+
+*     Önrevízió kezelése:
+      IF NOT L_ONELL IS INITIAL.
+*       01,02 lapon EA végű
+        IF W_ANALITIKA-NYLAPAZON EQ '01' OR W_ANALITIKA-NYLAPAZON EQ '02'.
+          IF L_SORVEG EQ 'EA'.
+            IF W_ANALITIKA-FIELD_C EQ 'T'.
+              MULTIPLY W_ANALITIKA-FIELD_N BY -1.
+            ENDIF.
+            CLEAR W_ANALITIKA-FIELD_C.
+          ENDIF.
+        ENDIF.
+*       01,02 lapon DA végű
+        IF W_ANALITIKA-NYLAPAZON EQ '03' OR W_ANALITIKA-NYLAPAZON EQ '04'.
+          IF L_SORVEG EQ 'DA'.
+            IF W_ANALITIKA-FIELD_C EQ 'T'.
+              MULTIPLY W_ANALITIKA-FIELD_N BY -1.
+            ENDIF.
+            CLEAR W_ANALITIKA-FIELD_C.
+          ENDIF.
+
+        ENDIF.
+      ENDIF.
+    ENDIF.
+    DELETE I_DATA_TABLE.
+  ENDLOOP.
+* Utolsó rekord mentése:
+  LM_SAVE_ANALITIKA.
+
+  FREE I_DATA_TABLE.
+
+ENDFUNCTION.

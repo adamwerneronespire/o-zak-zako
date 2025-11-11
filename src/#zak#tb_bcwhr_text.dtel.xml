@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/TB_BCWHR_TEXT</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>CHAR26</DOMNAME>
+    <LOGFLAG>X</LOGFLAG>
+    <HEADLEN>18</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>17</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Elszámolási összeg szövegmezőként</DDTEXT>
+    <REPTEXT>Elszámolási összeg</REPTEXT>
+    <SCRTEXT_S>Elsz.össz.</SCRTEXT_S>
+    <SCRTEXT_M>Elszám. összeg</SCRTEXT_M>
+    <SCRTEXT_L>Elszámolási összeg</SCRTEXT_L>
+    <DTELMASTER>E</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>4</LANGU>
+    <LANGU>8</LANGU>
+    <LANGU>D</LANGU>
+    <LANGU>E</LANGU>
+    <LANGU>R</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>4</DDLANGUAGE>
+     <DDTEXT>Sumă decontare ca şi câmp text</DDTEXT>
+     <REPTEXT>Sumă decontare</REPTEXT>
+     <SCRTEXT_S>Smă.decont</SCRTEXT_S>
+     <SCRTEXT_M>Sumă decontare</SCRTEXT_M>
+     <SCRTEXT_L>Sumă decontare</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DDTEXT>Сума розрахунку як текстове поле</DDTEXT>
+     <REPTEXT>Сума розрахунку</REPTEXT>
+     <SCRTEXT_S>Сума розр.</SCRTEXT_S>
+     <SCRTEXT_M>Сума розрахунку</SCRTEXT_M>
+     <SCRTEXT_L>Сума розрахунку</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Abrechnungsbetrag als Textfeld</DDTEXT>
+     <REPTEXT>Abrechnungsbetrag</REPTEXT>
+     <SCRTEXT_S>Abrech.Bet</SCRTEXT_S>
+     <SCRTEXT_M>Abrechnungsbetrag</SCRTEXT_M>
+     <SCRTEXT_L>Abrechnungsbetrag</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DDTEXT>Settlement amount as text field</DDTEXT>
+     <REPTEXT>Settlement amount</REPTEXT>
+     <SCRTEXT_S>Settl.amnt</SCRTEXT_S>
+     <SCRTEXT_M>Settlement amount</SCRTEXT_M>
+     <SCRTEXT_L>Settlement amount</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>R</DDLANGUAGE>
+     <DDTEXT>Сумма расчета как поле текста</DDTEXT>
+     <REPTEXT>Сумма расчета</REPTEXT>
+     <SCRTEXT_S>СуммаРасчт</SCRTEXT_S>
+     <SCRTEXT_M>Сумма расчета</SCRTEXT_M>
+     <SCRTEXT_L>Сумма расчета</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

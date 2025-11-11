@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <CLAS>/ZAK/ST1</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>Bevallás státuszok adatszolgáltatásonként</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00003</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás típus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00004</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Gazdasági év</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00005</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Gazdasági hónap</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00006</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás sorszáma időszakon be</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00007</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Feltöltés azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00008</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Státusz</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00009</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Utolsó futás ideje - timestamp</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00010</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Utolsó módosítás dátuma</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00011</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Utolsó módosító felhasználó ne</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00012</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adatszolgáltatás azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_STATUSZ_1</QNUM>
+     <TINDX>00013</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Az utolsó módosítás időpontja</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/LIFKUN</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>KUNNR</DOMNAME>
+    <HEADLEN>17</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>17</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Szállító/Vevő kód</DDTEXT>
+    <REPTEXT>Szállító/Vevő kód</REPTEXT>
+    <SCRTEXT_S>Száll/Vevő</SCRTEXT_S>
+    <SCRTEXT_M>Szállító/Vevő kód</SCRTEXT_M>
+    <SCRTEXT_L>Szállító/Vevő kód</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Liefer/Kunde</DDTEXT>
+     <REPTEXT>Liefer/Kunde</REPTEXT>
+     <SCRTEXT_S>Liefer/Kun</SCRTEXT_S>
+     <SCRTEXT_M>Liefer/Kunde</SCRTEXT_M>
+     <SCRTEXT_L>Liefer/Kunde</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

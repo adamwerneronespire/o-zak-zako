@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_ANAL_DDATE</QNUM>
+     <CLAS>/ZAK/ANAL_DL_DATE</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_ANAL_DDATE</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>ZAKO ANALITIKA adatok letöltés dátuma szerint</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_ANAL_DDATE</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_ANAL_DDATE</QNUM>
+     <TINDX>00003</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás típus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_ANAL_DDATE</QNUM>
+     <TINDX>00004</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>LOG információk</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_ANAL_DDATE</QNUM>
+     <TINDX>00005</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás letöltésének dátuma</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/VPOPAR</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>CHAR17</DOMNAME>
+    <HEADLEN>17</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>32</SCRLEN3>
+    <DDTEXT>VPOP arányosított ABEV azonosító</DDTEXT>
+    <REPTEXT>VPOP ar. abev</REPTEXT>
+    <SCRTEXT_S>VPOP abev</SCRTEXT_S>
+    <SCRTEXT_M>VPOP ar. abev</SCRTEXT_M>
+    <SCRTEXT_L>VPOP arányosított ABEV azonosító</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>VPOP gradieret ABEV ID</DDTEXT>
+     <REPTEXT>VPOP grad.ABEV</REPTEXT>
+     <SCRTEXT_S>VPOP grad.</SCRTEXT_S>
+     <SCRTEXT_M>VPOP grad.ABEV</SCRTEXT_M>
+     <SCRTEXT_L>VPOP grad.ABEV</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

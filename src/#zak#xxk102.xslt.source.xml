@@ -1,0 +1,76 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates" xmlns:ddic="http://www.sap.com/abapxml/types/dictionary" xmlns:def="http://www.sap.com/abapxml/types/defined">
+  <tt:root name="NYOMTA" type="?"/>
+  <tt:root name="NYOMTM" type="?"/>
+  <tt:root name="BUKRSTEXT" type="?"/>
+  <tt:root name="ADOSZAM" type="?"/>
+  <tt:root name="I_A_XXK102" type="?"/>
+  <tt:root name="I_MS_XXK102" type="?"/>
+  <tt:template>
+    <nyomtatvanyok xmlns="http://www.apeh.hu/abev/nyomtatvanyok/2005/01">
+      <abev>
+        <hibakszama>0</hibakszama>
+        <hash>b5d9b4ac51fa1a9d5d61a5e8ec8f03cc1f1a777a</hash>
+        <programverzio>v.3.3.0</programverzio>
+      </abev>
+      <nyomtatvany>
+        <nyomtatvanyinformacio>
+          <nyomtatvanyazonosito>
+            <tt:value ref=".NYOMTA"/>
+          </nyomtatvanyazonosito>
+          <nyomtatvanyverzio>1.0</nyomtatvanyverzio>
+          <adozo>
+            <nev>
+              <tt:value ref=".BUKRSTEXT"/>
+            </nev>
+            <adoszam>
+              <tt:value ref=".ADOSZAM"/>
+            </adoszam>
+          </adozo>
+        </nyomtatvanyinformacio>
+        <mezok>
+          <tt:loop ref=".I_A_XXK102">
+            <mezo>
+              <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+              <tt:value ref="VALUE"/>
+            </mezo>
+          </tt:loop>
+        </mezok>
+      </nyomtatvany>
+      <tt:loop ref=".I_MS_XXK102">
+        <nyomtatvany>
+          <nyomtatvanyinformacio>
+            <nyomtatvanyazonosito>
+              <tt:value ref=".NYOMTM"/>
+            </nyomtatvanyazonosito>
+            <nyomtatvanyverzio>1.0</nyomtatvanyverzio>
+            <adozo>
+              <nev>
+                <tt:value ref=".BUKRSTEXT"/>
+              </nev>
+              <adoszam>
+                <tt:value ref=".ADOSZAM"/>
+              </adoszam>
+            </adozo>
+            <albizonylatazonositas>
+                <megnevezes>
+                  <tt:value ref="NAME"/>
+                </megnevezes>
+                <azonosito>
+                 <tt:value ref="ADOAZON"/>
+                </azonosito>
+            </albizonylatazonositas>
+          </nyomtatvanyinformacio>
+          <mezok>
+            <tt:loop ref="MDATA">
+              <mezo>
+                <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+                <tt:value ref="VALUE"/>
+              </mezo>
+            </tt:loop>
+          </mezok>
+        </nyomtatvany>
+      </tt:loop>
+    </nyomtatvanyok>
+  </tt:template>
+</tt:transform>

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ONYBPACK</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/PACK</DOMNAME>
+    <HEADLEN>15</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>24</SCRLEN3>
+    <DDTEXT>ONYB feltöltés azonosító</DDTEXT>
+    <REPTEXT>ONYB felt.az.</REPTEXT>
+    <SCRTEXT_S>ONYB felt.</SCRTEXT_S>
+    <SCRTEXT_M>ONYB felt.az.</SCRTEXT_M>
+    <SCRTEXT_L>ONYB feltöltés azonosító</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

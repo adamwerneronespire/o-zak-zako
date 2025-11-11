@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/TAXDIFF</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>22</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>12</SCRLEN2>
+    <SCRLEN3>22</SCRLEN3>
+    <DDTEXT>ÁFA különbözet kezelés</DDTEXT>
+    <REPTEXT>ÁFA különbözet kezelés</REPTEXT>
+    <SCRTEXT_S>ÁFA kül.k.</SCRTEXT_S>
+    <SCRTEXT_M>ÁFA kül.kez.</SCRTEXT_M>
+    <SCRTEXT_L>ÁFA különbözet kezelés</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

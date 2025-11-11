@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_TOBJ" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <OBJH>
+    <OBJECTNAME>/ZAK/START_V</OBJECTNAME>
+    <OBJECTTYPE>V</OBJECTTYPE>
+    <CLIDEP>X</CLIDEP>
+    <OBJCATEG>APPL</OBJCATEG>
+   </OBJH>
+   <OBJT>
+    <LANGUAGE>H</LANGUAGE>
+    <OBJECTNAME>/ZAK/START_V</OBJECTNAME>
+    <OBJECTTYPE>V</OBJECTTYPE>
+    <DDTEXT>Adó: Kezdődátum vállalatonként</DDTEXT>
+   </OBJT>
+   <OBJS>
+    <OBJS>
+     <OBJECTNAME>/ZAK/START_V</OBJECTNAME>
+     <OBJECTTYPE>V</OBJECTTYPE>
+     <TABNAME>/ZAK/START</TABNAME>
+     <DDIC>X</DDIC>
+     <PRIM_TABLE>X</PRIM_TABLE>
+    </OBJS>
+   </OBJS>
+   <TOBJ>
+    <TDDAT>
+     <TABNAME>/ZAK/START_V</TABNAME>
+     <CCLASS>/ZAK</CCLASS>
+    </TDDAT>
+    <TVDIR>
+     <TABNAME>/ZAK/START_V</TABNAME>
+     <AREA>/ZAK/START_MV</AREA>
+     <TYPE>1</TYPE>
+     <LISTE>0001</LISTE>
+     <FLAG>X</FLAG>
+    </TVDIR>
+    <TVIMF>
+     <TVIMF>
+      <TABNAME>/ZAK/START_V</TABNAME>
+      <EVENT>05</EVENT>
+      <FORMNAME>GET_CHANGE_DATA</FORMNAME>
+     </TVIMF>
+     <TVIMF>
+      <TABNAME>/ZAK/START_V</TABNAME>
+      <EVENT>21</EVENT>
+      <FORMNAME>GET_CHANGE_DATA</FORMNAME>
+     </TVIMF>
+    </TVIMF>
+   </TOBJ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

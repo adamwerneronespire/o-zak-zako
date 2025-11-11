@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ARANY</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>DEC3_0</DOMNAME>
+    <HEADLEN>10</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>ÁFA arány %-ban</DDTEXT>
+    <REPTEXT>Arány %</REPTEXT>
+    <SCRTEXT_S>Arány %</SCRTEXT_S>
+    <SCRTEXT_M>Arány %</SCRTEXT_M>
+    <SCRTEXT_L>Arány %</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>MWSt Ant. %</DDTEXT>
+     <REPTEXT>MWSt Ant.%</REPTEXT>
+     <SCRTEXT_S>MWSt Ant.%</SCRTEXT_S>
+     <SCRTEXT_M>MWSt Ant.%</SCRTEXT_M>
+     <SCRTEXT_L>MWSt Ant.%</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

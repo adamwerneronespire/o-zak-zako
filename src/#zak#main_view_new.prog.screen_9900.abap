@@ -1,0 +1,8 @@
+PROCESS BEFORE OUTPUT.
+ MODULE STATUS_9900.
+ module set_9900.
+*
+PROCESS AFTER INPUT.
+ module user_command at exit-command.
+
+ MODULE USER_COMMAND_9900.

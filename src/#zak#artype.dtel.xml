@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ARTYPE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/ARTYPE</DOMNAME>
+    <HEADLEN>11</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>21</SCRLEN3>
+    <DDTEXT>ÁFA arányosítás típus</DDTEXT>
+    <REPTEXT>Arány.típus</REPTEXT>
+    <SCRTEXT_S>Arány.típ.</SCRTEXT_S>
+    <SCRTEXT_M>Arány.típ.</SCRTEXT_M>
+    <SCRTEXT_L>ÁFA arányosítás típus</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>MWSt Skalierungstyp</DDTEXT>
+     <REPTEXT>MWSt Skal.t</REPTEXT>
+     <SCRTEXT_S>Skal.typ</SCRTEXT_S>
+     <SCRTEXT_M>MWSt Skal.typ</SCRTEXT_M>
+     <SCRTEXT_L>MWSt Skalierungstyp</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+   <LONGTEXTS>
+    <item>
+     <DOKIL>
+      <ID>DE</ID>
+      <OBJECT>/ZAK/ARTYPE</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0008</VERSION>
+      <TXTLINES>00016</TXTLINES>
+      <DOKSTATE>A</DOKSTATE>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ARTYPE</TDNAME>
+      <TDID>DE</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00008</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEFINITION&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Az alkalmazott ÁFA arányosítás típusa.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;USE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Amennyiben a vállalatnak az Áfa bevallását arányosítás módszerével kell</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>elkészítenie, itt kell megadni, hogy teljes vagy részleges arányosítást</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>alkalmaz.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;ZU&gt;&lt;ZH&gt;Teljes arányosítás esetén:&lt;/&gt;&lt;/&gt; a vállalat a bejövő számlák</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>teljes körét bevonja az arányosításba, azaz a bevallásnak csak az</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>&quot;Arányosítás alkalmazásával levonható adórész&quot; sora tartalmaz adatot a</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>beszerzést terhelő, levonható adók között.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;ZU&gt;&lt;ZH&gt;Részleges arányosítás esetén:&lt;/&gt;&lt;/&gt; a vállalat bizonyos</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>beszerzéseit el tudja különíteni, amelyek egyértelműen csak adólevonási</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>joggal rendelkező értékesítéseihez tartoznak, és csak egy másik rész az,</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>amelyet bevon az arányosítás körébe. Ebben az esetben a bevallás</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>tartalmazhat adatot az &quot;Arányosítás alkalmazásával levonható adórész&quot;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>soron kívül is (a beszerzést terhelő, levonható adók között), azon</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>beszerzések tekintetében, amelyek egyértelműen csak adólevonási joggal</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>rendelkező értékesítéseihez tartoznak.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEPENDENCIES&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;EXAMPLE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+   </LONGTEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

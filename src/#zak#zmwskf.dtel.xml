@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ZMWSKF</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>19</HEADLEN>
+    <SCRLEN1>07</SCRLEN1>
+    <SCRLEN2>12</SCRLEN2>
+    <SCRLEN3>19</SCRLEN3>
+    <DDTEXT>Halasztott ÁFA flag</DDTEXT>
+    <REPTEXT>Halasztott ÁFA flag</REPTEXT>
+    <SCRTEXT_S>Hal.ÁFA</SCRTEXT_S>
+    <SCRTEXT_M>Hal.ÁFA flag</SCRTEXT_M>
+    <SCRTEXT_L>Halasztott ÁFA flag</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

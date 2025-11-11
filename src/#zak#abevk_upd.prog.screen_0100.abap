@@ -1,0 +1,47 @@
+
+PROCESS BEFORE OUTPUT.
+
+  MODULE STATUS_0100.
+
+*&spwizard: pbo flow logic for tablecontrol 'TC_ABEVK'
+  MODULE TC_ABEVK_CHANGE_TC_ATTR.
+*&spwizard: module TC_ABEVK_change_col_attr.
+  LOOP AT   I_ABEVK
+       INTO W_ABEVK
+       WITH CONTROL TC_ABEVK
+       CURSOR TC_ABEVK-CURRENT_LINE.
+
+    MODULE TC_ABEVK_GET_LINES.
+*&spwizard:   module TC_ABEVK_change_field_attr
+  ENDLOOP.
+
+*
+PROCESS AFTER INPUT.
+
+*Kilépés
+  MODULE EXIT AT EXIT-COMMAND.
+
+*&spwizard: pai flow logic for tablecontrol 'TC_ABEVK'
+  LOOP AT I_ABEVK.
+    CHAIN.
+      FIELD W_ABEVK-BTYPE MODULE CHECK_BTYPE.
+      FIELD W_ABEVK-ABEVAZ.
+      FIELD W_ABEVK-BTYPEE.
+      FIELD W_ABEVK-ABEVAZE.
+      FIELD W_ABEVK-DATUM.
+      FIELD W_ABEVK-UZEIT.
+      FIELD W_ABEVK-UNAME.
+
+
+      MODULE TC_ABEVK_MODIFY ON CHAIN-REQUEST.
+    ENDCHAIN.
+    FIELD W_ABEVK-MARK
+      MODULE TC_ABEVK_MARK ON REQUEST.
+  ENDLOOP.
+
+  MODULE TC_ABEVK_USER_COMMAND.
+*&spwizard: module TC_ABEVK_change_tc_attr.
+*&spwizard: module TC_ABEVK_change_col_attr.
+
+
+* MODULE USER_COMMAND_0100.

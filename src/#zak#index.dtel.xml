@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/INDEX</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>CHAR3</DOMNAME>
+    <HEADLEN>33</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>17</SCRLEN2>
+    <SCRLEN3>33</SCRLEN3>
+    <DDTEXT>Bevallás sorszáma időszakon belül</DDTEXT>
+    <REPTEXT>Bevallás sorszáma időszakon belül</REPTEXT>
+    <SCRTEXT_S>Bevall ID</SCRTEXT_S>
+    <SCRTEXT_M>Bevallás sorszáma</SCRTEXT_M>
+    <SCRTEXT_L>Bevallás sorszáma időszakon belül</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Zeilennumer der Erkläerung in Period</DDTEXT>
+     <REPTEXT>Zeilennumer der Erkläerung in Per</REPTEXT>
+     <SCRTEXT_S>Zeilennume</SCRTEXT_S>
+     <SCRTEXT_M>Zeilennumer der E</SCRTEXT_M>
+     <SCRTEXT_L>Zeilennumer der Erkläerung in Per</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

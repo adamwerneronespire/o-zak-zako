@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/VMSZA</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>TEXT20</DOMNAME>
+    <HEADLEN>20</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Vámtarifaszám</DDTEXT>
+    <REPTEXT>Vámtarifaszám</REPTEXT>
+    <SCRTEXT_S>Vámtar.</SCRTEXT_S>
+    <SCRTEXT_M>Vámtarifaszám</SCRTEXT_M>
+    <SCRTEXT_L>Vámtarifaszám</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Zolltarifnummer</DDTEXT>
+     <REPTEXT>Zolltarifnummer</REPTEXT>
+     <SCRTEXT_S>Zolltarifn</SCRTEXT_S>
+     <SCRTEXT_M>Zolltarifnummer</SCRTEXT_M>
+     <SCRTEXT_L>Zolltarifnummer</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

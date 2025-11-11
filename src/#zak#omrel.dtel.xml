@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/OMREL</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>13</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>24</SCRLEN3>
+    <DDTEXT>Összesítő jelentés aktív</DDTEXT>
+    <REPTEXT>Össz.jel.akt.</REPTEXT>
+    <SCRTEXT_S>Össz.jel.a</SCRTEXT_S>
+    <SCRTEXT_M>Össz.jel.akt.</SCRTEXT_M>
+    <SCRTEXT_L>Összesítő jelentés aktív</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Zusammenfassungsbericht ist Aktiv</DDTEXT>
+     <REPTEXT>Zus.Ber.Akti</REPTEXT>
+     <SCRTEXT_S>Zus.Ber.ak</SCRTEXT_S>
+     <SCRTEXT_M>Zus.Bericht Akt</SCRTEXT_M>
+     <SCRTEXT_L>Zus.Bericht Aktiv</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+   <LONGTEXTS>
+    <item>
+     <DOKIL>
+      <ID>DE</ID>
+      <OBJECT>/ZAK/OMREL</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0012</VERSION>
+      <TXTLINES>00010</TXTLINES>
+      <DOKSTATE>A</DOKSTATE>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/OMREL</TDNAME>
+      <TDID>DE</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00012</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEFINITION&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AN</TDFORMAT>
+       <TDLINE>&lt;ZH&gt;!!!!!!!!!!!!!! FIGYELEM !!!!!!!!!!!!!!&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AN</TDFORMAT>
+       <TDLINE>&lt;ZH&gt;Különböző működés különböző táblákban!&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AN</TDFORMAT>
+       <TDLINE>&lt;ZH&gt;!!!!!!!!!!!!!! FIGYELEM !!!!!!!!!!!!!!&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Működése &lt;ZH&gt;/ZAK/BEVALL&lt;/&gt; táblában:</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>ÁFA-nál 1365-től kezdődően be kell jelölni, hogy a letöltés .xml legyen</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>.imp helyett, valamint az M-es lapokat is kezeli.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Működése &lt;ZH&gt;/ZAK/BEVALLD&lt;/&gt; táblában:</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Ha be van jelölve, akkor a READ_FILE-os adatfeltöltésnél a beolvasás</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>során a 1365-től (ÁFA) bevezetett M-es lapokhoz eltárolja a rendszer a</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>számlánkénti tételes adatokat.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;USE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEPENDENCIES&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;EXAMPLE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+   </LONGTEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

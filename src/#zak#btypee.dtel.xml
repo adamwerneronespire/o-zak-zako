@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/BTYPEE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/BTYPE</DOMNAME>
+    <HEADLEN>12</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>21</SCRLEN3>
+    <DDTEXT>Előző bevallás típus</DDTEXT>
+    <REPTEXT>El.bev.típ.</REPTEXT>
+    <SCRTEXT_S>E.b.típ.</SCRTEXT_S>
+    <SCRTEXT_M>El.bev.típ.</SCRTEXT_M>
+    <SCRTEXT_L>Előző bevallás típus</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Vorige Erklärungstyp</DDTEXT>
+     <REPTEXT>Vor.Erkl.typ</REPTEXT>
+     <SCRTEXT_S>Vor.Erkl.t</SCRTEXT_S>
+     <SCRTEXT_M>Vor.Erkl.typ</SCRTEXT_M>
+     <SCRTEXT_L>Vor.Erkl.typ</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+   <LONGTEXTS>
+    <item>
+     <DOKIL>
+      <ID>DE</ID>
+      <OBJECT>/ZAK/BTYPEE</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0006</VERSION>
+      <TXTLINES>00014</TXTLINES>
+      <DOKSTATE>A</DOKSTATE>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/BTYPEE</TDNAME>
+      <TDID>DE</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00006</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEFINITION&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>A megelőző nyomtatvány azonosítója (bevallástípus), amely az adott</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>bevallás érvényességi idejét megelőzően érvényben volt.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;USE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Azért van erre szükség, hogy a korábbi évekre vonatkozó önrevíziók</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>alkalmával vissza lehessen találni az eredeti bevallástípushoz.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>A /ZAK/ZAKO modul indulásakor elsőnek felvett bevallástípus esetén önmag</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>kell a megelőző bevallástípusba beállítani.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEPENDENCIES&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;EXAMPLE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>A 0765-ös bevallástípus megelőző bevallástípusa a 0665-ös. Ha azonban</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>0765-ös bevallástípussal indítjuk a /ZAK/ZAKO modult, akkor annak a mege</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>bevallástípusa önmaga, azaz 0765.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Valamint, ha év közben pl.: áprilisi érvényességgel negyedéves</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>bevallóból havi bevalló lesz a vállalat, akkor az áprilistól érvényes</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>0765-ös bejegyzésnek (ami havi gyakoriságú), szintén 0765-ös lesz a</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>megelőző bevallástípusa, hiszen ezt megelőzően (márciusig) szintén egy</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>0765-ös bevallástípus (negyedéves gyakorisággal) volt érvényben.</TDLINE>
+      </TLINE>
+     </LINES>
+    </item>
+   </LONGTEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

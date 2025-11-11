@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_ENHS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <TOOL>HOOK_DEF</TOOL>
+   <BADI_DATA>
+    <PGMID>R3TR</PGMID>
+    <OBJ_NAME>/ZAK/READ_FILE</OBJ_NAME>
+    <OBJ_TYPE>PROG</OBJ_TYPE>
+    <MAIN_TYPE>PROG</MAIN_TYPE>
+    <MAIN_NAME>/ZAK/READ_FILE</MAIN_NAME>
+    <PROGRAM>/ZAK/READ_FILE</PROGRAM>
+    <DEF_HOOKS>
+     <ENH_HOOK_DEF_EXT>
+      <EXTID>1</EXTID>
+      <FULL_NAME>\PR:/ZAK/READ_FILE\EX:/ZAK/ZAK_READ_TELENOR_01</FULL_NAME>
+      <ENHMODE>S</ENHMODE>
+      <DEF_UNIT>
+       <INT_TYPE>PN</INT_TYPE>
+       <INT_NAME>N-&gt;/ZAK/READ_FILE</INT_NAME>
+       <INCLUDE>/ZAK/READ_FILE</INCLUDE>
+      </DEF_UNIT>
+     </ENH_HOOK_DEF_EXT>
+     <ENH_HOOK_DEF_EXT>
+      <EXTID>2</EXTID>
+      <FULL_NAME>\PR:/ZAK/READ_FILE\EX:/ZAK/ZAK_TELENOR_READ_01</FULL_NAME>
+      <ENHMODE>D</ENHMODE>
+      <DEF_UNIT>
+       <INT_TYPE>PU</INT_TYPE>
+       <INT_NAME>FILENAME_GET_APPL</INT_NAME>
+       <INCLUDE>/ZAK/READ_FILE</INCLUDE>
+      </DEF_UNIT>
+     </ENH_HOOK_DEF_EXT>
+     <ENH_HOOK_DEF_EXT>
+      <EXTID>3</EXTID>
+      <FULL_NAME>\PR:/ZAK/READ_FILE\EX:/ZAK/ZAK_TELENOR_READ_02</FULL_NAME>
+      <ENHMODE>D</ENHMODE>
+      <DEF_UNIT>
+       <INT_TYPE>PU</INT_TYPE>
+       <INT_NAME>FILL_DATATAB</INT_NAME>
+       <INCLUDE>/ZAK/READ_FILE</INCLUDE>
+      </DEF_UNIT>
+     </ENH_HOOK_DEF_EXT>
+    </DEF_HOOKS>
+   </BADI_DATA>
+  </asx:values>
+ </asx:abap>
+</abapGit>

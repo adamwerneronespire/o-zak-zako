@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/UMSKZ_FROM</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>UMSKZ</DOMNAME>
+    <HEADLEN>10</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>17</SCRLEN2>
+    <SCRLEN3>30</SCRLEN3>
+    <DDTEXT>Speciális főkönyv kódja -tól</DDTEXT>
+    <REPTEXT>SFKód tól</REPTEXT>
+    <SCRTEXT_S>SFKód tól</SCRTEXT_S>
+    <SCRTEXT_M>Spec. fők.kód tól</SCRTEXT_M>
+    <SCRTEXT_L>Speciális főkönyv kódja -tól</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Von spezielles Sachkonto</DDTEXT>
+     <REPTEXT>Von SpSKon</REPTEXT>
+     <SCRTEXT_S>Von SpSKon</SCRTEXT_S>
+     <SCRTEXT_M>Von Spez. Sachkon</SCRTEXT_M>
+     <SCRTEXT_L>Von Spez. Sachkonto</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

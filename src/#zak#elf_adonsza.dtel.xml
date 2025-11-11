@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ELF_ADONSZA</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <LOGFLAG>X</LOGFLAG>
+    <HEADLEN>24</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>31</SCRLEN3>
+    <DDTEXT>Adófolyószámlán előjel fordítás</DDTEXT>
+    <REPTEXT>Adó.folyósz.előjel ford.</REPTEXT>
+    <SCRTEXT_S>El.ford.</SCRTEXT_S>
+    <SCRTEXT_M>A.f.sz. el.ford</SCRTEXT_M>
+    <SCRTEXT_L>Adófolyószámlán előjel fordítás</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Vorzeichen wechsel an Steuerkonto</DDTEXT>
+     <REPTEXT>Vorzeichen wechsel an St</REPTEXT>
+     <SCRTEXT_S>Vorzeichen</SCRTEXT_S>
+     <SCRTEXT_M>Vorzeichen wech</SCRTEXT_M>
+     <SCRTEXT_L>Vorzeichen wechsel an Steuerkon</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/AFA_FOSOR</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>09</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>ÁFA fősor</DDTEXT>
+    <REPTEXT>ÁFA fősor</REPTEXT>
+    <SCRTEXT_S>ÁFA fősor</SCRTEXT_S>
+    <SCRTEXT_M>ÁFA fősor</SCRTEXT_M>
+    <SCRTEXT_L>ÁFA fősor</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>MWSt Basis</DDTEXT>
+     <REPTEXT>MWSt Basi</REPTEXT>
+     <SCRTEXT_S>MWSt Basis</SCRTEXT_S>
+     <SCRTEXT_M>MWSt Basis</SCRTEXT_M>
+     <SCRTEXT_L>MWSt Basis</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

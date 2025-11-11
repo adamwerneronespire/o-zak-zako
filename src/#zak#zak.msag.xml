@@ -1,0 +1,4645 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>/ZAK/ZAK</ARBGB>
+    <MASTERLANG>H</MASTERLANG>
+    <STEXT>Adózást támogató fejlesztések üzenetosztálya</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>000</MSGNR>
+     <TEXT>&amp; &amp; &amp; &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Feltöltés azonosító számkör hiba!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>&amp; tábla módosítása sikertelen!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Régi adatszolgáltatás törlése, új adatszolgáltatás feltöltése!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>&amp; file nem lehet megnyitni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Nincsen hibás tétel a bevallásban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>SAP adatszolgáltatás jelenleg nem engedélyezett !</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>Tábla módosítások elvégezve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Tábla törlések elvégezve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>&amp; fájl sikeresen letöltve</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>&amp; vállalathoz &amp; bevallás típushoz /ZAK/BEVALLC táblát tartsa karban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>&amp; vállalat &amp; bevallás típ. &amp; azonosító adatszerkezet nem meghatározható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>&amp; Könyvelési periódus nem megengedett</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>&amp; év &amp; periódusában &amp; sorszámmal adatok nem találhatók</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>A periódus (év és hó) valamint a sorszám kiválasztása kötelező</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Normál bevallás csak nyitott 000 időszakra lehetséges</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Önrevíziós bevallás csak nyitott időszakra lehetséges</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Bevallás megjelenítése csak lezárt időszakra lehetséges</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Kérem jelöljön ki egy tételt.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Kérem SZJA típusú bevallás azonosítót adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Kérem a periódus értékét 01-16 között adja meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Feltöltés azonosító figyelmen kívül hagyva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Kérem adja meg a feltöltés azonosítót!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>&amp; &amp; időszakra csak önrevízió adható fel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>024</MSGNR>
+     <TEXT>&amp; &amp; Önrevíziós bevallás csak nyitott, nem 000 időszakra lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>025</MSGNR>
+     <TEXT>&amp; &amp; Normál bevallás a periódusra már megnyitva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>026</MSGNR>
+     <TEXT>&amp; &amp; periódusra a könyvelés már feladva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>027</MSGNR>
+     <TEXT>&amp; &amp; periódusra nem tölthet fel adatot!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>028</MSGNR>
+     <TEXT>&amp; &amp; Ismételt feladásnál a korábbi adatok törlésre kerülnek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>029</MSGNR>
+     <TEXT>Ez a program a  &amp; adatszolgáltatáshoz nem használható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>030</MSGNR>
+     <TEXT>Kérem ÁFA típusú bevallás azonosítót adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>031</MSGNR>
+     <TEXT>Adatbázis nem tartalmaz feldolgozható rekordot!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>032</MSGNR>
+     <TEXT>Hiba az ÁFA beállítások meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>033</MSGNR>
+     <TEXT>Feltöltés &amp; package számmal megtörtént!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>034</MSGNR>
+     <TEXT>Felülírás &amp; package számmal megtörtént!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>035</MSGNR>
+     <TEXT> &amp; &amp; periódusban könyvelés előző futásról már feladásra került!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>036</MSGNR>
+     <TEXT>Hiba a &amp; vállalati adatok meghatározásánál! (T001 tábla)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>037</MSGNR>
+     <TEXT>&amp; &amp; időszak NAV ált.ell. vagy arch., feladás a köv. nyitott időszakra!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>038</MSGNR>
+     <TEXT>&amp; package azonosító nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>039</MSGNR>
+     <TEXT>&amp; package azonosító zárolva, ismételt feladás nem lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>040</MSGNR>
+     <TEXT>Adatszerkezet tartalmi hibás, feltöltés nem lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>041</MSGNR>
+     <TEXT>Normál bevallás - adatszolgáltatás még nem teljeskörű.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>042</MSGNR>
+     <TEXT>Fedőlap az önrevízióhoz nem létezik.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>043</MSGNR>
+     <TEXT>A kijelölt sor manuálisan nem módosítható.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>044</MSGNR>
+     <TEXT>Egyidejűleg egy szöveg lehet csak alapértelmezett.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>045</MSGNR>
+     <TEXT>Normál bevallás - NAV állomány már letöltve.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>046</MSGNR>
+     <TEXT>Bevallás adatok másolása nem lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>047</MSGNR>
+     <TEXT>&amp; év &amp; periódusában nyomtatvány adatok nem találhatók!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>048</MSGNR>
+     <TEXT>&amp; év &amp; periódusában normál bevallás NAV fájlkészítés nem futott!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>049</MSGNR>
+     <TEXT>&amp; év &amp; periódusában önrevízió NAV fájlkészítés nem futott!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>050</MSGNR>
+     <TEXT>&amp; struktúra aktív verzióban nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>051</MSGNR>
+     <TEXT>&amp; vállalat &amp; típusra bevallás nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>052</MSGNR>
+     <TEXT>&amp; vállalat &amp; típusra nyomtatvány még nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>053</MSGNR>
+     <TEXT>&amp; vállalat &amp; típusra NAV állomány még nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>054</MSGNR>
+     <TEXT>&amp; vállalat &amp; típusra bevallás zárolva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>055</MSGNR>
+     <TEXT>&amp; év &amp; periódusában normál bevallásra nyomtatvány már elkészült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>056</MSGNR>
+     <TEXT>&amp; év &amp; periódusában önrevízióra nyomtatvány már elkészült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>057</MSGNR>
+     <TEXT>&amp; év &amp; periódusában nyomtatvány még nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>058</MSGNR>
+     <TEXT>&amp; év &amp; periódusában NAV ellenőrzés már megtörtént!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>059</MSGNR>
+     <TEXT>&amp; Ismeretlen adatszolgáltatás nem megengedett!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>060</MSGNR>
+     <TEXT>&amp; év &amp; periódusában adatszolgáltatás már feltöltve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>061</MSGNR>
+     <TEXT>&amp; év &amp; periódusában elengedett adatszolgáltatás már beállítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>062</MSGNR>
+     <TEXT>Adatfeltöltés nem lehetséges!  (lásd hibanapló)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>063</MSGNR>
+     <TEXT>&amp; bevallás &amp; vállalatban negyedéves, helyes periódus &amp;.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>064</MSGNR>
+     <TEXT>&amp; bevallás &amp; vállalatban éves, helyes periódus &amp;.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>065</MSGNR>
+     <TEXT>Speciális adatszolgáltatás azonosító itt nem használható! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>066</MSGNR>
+     <TEXT>&amp; &amp; periódusban önrevíziós időszak nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>067</MSGNR>
+     <TEXT>&amp; feltöltés azonosító &amp; adatszolgáltatáshoz nem választható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>068</MSGNR>
+     <TEXT>&amp; vállalat nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>069</MSGNR>
+     <TEXT>&amp; vállalathoz &amp; bevallás típus nincs létrehozva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>070</MSGNR>
+     <TEXT>Érvényesség dátuma bevallás típushoz nincs létrehozva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>071</MSGNR>
+     <TEXT>Az érvényesség kezdete nagyobb a vége dátumnál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>072</MSGNR>
+     <TEXT>Adatbázis táblák másolása befejezve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>073</MSGNR>
+     <TEXT>&amp; &amp; periódusra elengedett adatszolgáltatás beállítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>074</MSGNR>
+     <TEXT>&amp; vállalat &amp; azonosítóval feltöltés nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>075</MSGNR>
+     <TEXT>&amp; &amp; periódusra NAV fájlkészítés már futott!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>076</MSGNR>
+     <TEXT>&amp; &amp; periódusra könyvelési feladás elkészült! Gondoskodjon a stórnójáról</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>077</MSGNR>
+     <TEXT>&amp; &amp; periódus lezárva, nyomtatvány elkészült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>078</MSGNR>
+     <TEXT>&amp; &amp; periódus zárolva NAV ellenőrzés megtörtént!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>079</MSGNR>
+     <TEXT>Adatok törlése nem lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>080</MSGNR>
+     <TEXT>&amp; feltöltés azonosítóval létrehozott analitika törlésre került!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>081</MSGNR>
+     <TEXT>A kijelölt sor számított. Analitika megjelenítése nem lehetséges</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>082</MSGNR>
+     <TEXT>Hiba &amp; fájl megnyitásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>083</MSGNR>
+     <TEXT>Kérem adja meg a &quot;Üzleti ajándék adómentes rész&quot; mező értékét!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>084</MSGNR>
+     <TEXT>Kérem adja meg a &quot;Reprezentáció adómentes rész&quot; mező értékét!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>085</MSGNR>
+     <TEXT>Bizonylatszám számkör hiba!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>086</MSGNR>
+     <TEXT>A NAV állománykészítő programot kérem, futtassa.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>087</MSGNR>
+     <TEXT>Könyvelési dátum megadása kötelező.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>088</MSGNR>
+     <TEXT>Adónem megadása kötelező</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>089</MSGNR>
+     <TEXT>Hiba az SZJA beállítások meghatározásánál! -&gt; &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>090</MSGNR>
+     <TEXT>&amp; vállalatban &amp; adónem nem definiált. Kérem ellenőrizze.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>091</MSGNR>
+     <TEXT>Esedékesség dátumának megadása kötelező</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>092</MSGNR>
+     <TEXT>Összeg megadása kötelező</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>093</MSGNR>
+     <TEXT>Összeg típusának megadása kötelező.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>094</MSGNR>
+     <TEXT>&amp; &amp; &amp; bizonylat sikeresen lekönyvelve.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>095</MSGNR>
+     <TEXT>&amp; &amp; Adatok már fetöltésre kerültek! Vezérlő táblákat nem törölhet!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>096</MSGNR>
+     <TEXT>&amp;  &amp; bevallás típus! Vezérlő táblák bejegyzései törölve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>097</MSGNR>
+     <TEXT>Fájl szerkezet nem határozható meg &amp; bevallás típushoz!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>098</MSGNR>
+     <TEXT>Kifizető azonosító meghatározás hiba &amp; vállalatnál! (T001Z tábla)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>099</MSGNR>
+     <TEXT>&amp; vállalat &amp; bevallástípusa jelenleg feldolgozás alatt áll.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>100</MSGNR>
+     <TEXT>Nincs betölthető adat! (Üres file)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>101</MSGNR>
+     <TEXT>Adatbetöltés megs/zak/zakítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>102</MSGNR>
+     <TEXT>&amp; &amp; &amp; időszakra &amp; adatszolgáltatás hiánya miatt zárolás nem lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>103</MSGNR>
+     <TEXT>Helyes az összeg előjele? K (kötelezettség)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>104</MSGNR>
+     <TEXT>Helyes az összeg előjele? T (Pénzügyi teljesítés)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>105</MSGNR>
+     <TEXT>&amp; &amp; &amp; &amp; időszakra a normál bevallás még nincs lezárva.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>106</MSGNR>
+     <TEXT>A kijelölt sor adószám köteles, manuálisan nem módosítható.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>107</MSGNR>
+     <TEXT>Kérem ATV típusú bevallás azonosítót adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>108</MSGNR>
+     <TEXT>&amp; &amp; &amp; időszakra a bevallás már le van zárva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>109</MSGNR>
+     <TEXT>&amp; bevallás típus &amp; vállalatban nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>110</MSGNR>
+     <TEXT>Hónap megadás hiba! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>111</MSGNR>
+     <TEXT>Hiányzó beállítás &amp; bevallás fajtához &amp; évben!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>112</MSGNR>
+     <TEXT>&amp; bevallás &amp; ABEV azonosító nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>113</MSGNR>
+     <TEXT>Önrevíziós bevallás 000 időszakra nem lehetséges</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>114</MSGNR>
+     <TEXT>Bevallás típus meghatározás hiba!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>115</MSGNR>
+     <TEXT>Bevallás fajta üres!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>116</MSGNR>
+     <TEXT>Könyvelési periódus megadása kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>117</MSGNR>
+     <TEXT>IDŐSZAK megadása kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>118</MSGNR>
+     <TEXT>Konverziós hiba: &amp; forrás &amp; típus érvényessége későbbi, mint a &amp; célé.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>119</MSGNR>
+     <TEXT>Bevallás fajta vagy bevallás típus megadása kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>120</MSGNR>
+     <TEXT>&amp; bevallás típus nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>121</MSGNR>
+     <TEXT>Bevallás típus megadása kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>122</MSGNR>
+     <TEXT>&amp; Költséghely nem létezik.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>123</MSGNR>
+     <TEXT>&amp; Rendelés nem létezik.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>124</MSGNR>
+     <TEXT>&amp; vállalatban &amp; bevallás típus &amp; bevallás fajta nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>125</MSGNR>
+     <TEXT>Kérem &amp; fajtájú bevallás típust adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>126</MSGNR>
+     <TEXT>&amp; vállalatban &amp; fajtához &amp; napon érvényes bevallástípus nem létezik</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>127</MSGNR>
+     <TEXT>Kérem dátum szerint előző bevallás típust adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>128</MSGNR>
+     <TEXT>Már létezik bejegyzés &amp; bevallás típus &amp; ABEVAZ értékkel! (&amp; &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>129</MSGNR>
+     <TEXT>&amp; &amp; időszakban tétel könyvelésre kijelölve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>130</MSGNR>
+     <TEXT>Előző bevallás típus csak &amp; lehet! (&amp; &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>131</MSGNR>
+     <TEXT>Kérem ne adjon meg átfedő intervallumot! (&amp; &amp; &amp; &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>132</MSGNR>
+     <TEXT>Kérem korrigálja az átszámítási árfolyamot &amp; értékre!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>133</MSGNR>
+     <TEXT>Érvényesség kezdete nagyobb, mint az érvényesség vége! (&amp; &amp; &amp; &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>134</MSGNR>
+     <TEXT>Kérem &amp; fajtájú bevallás típust adjon meg előzőként! (&amp; &amp; &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>135</MSGNR>
+     <TEXT>Előző bevallás típust, megelőző időszakból adjon meg! (&amp; &amp; &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>136</MSGNR>
+     <TEXT>&amp; Vállalatban &amp; adónem nem definiált (Sorszám: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>137</MSGNR>
+     <TEXT>&amp; adónem: átvezetés összege &amp; meghaladja a rendelkezésre állót &amp; (Sor: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>138</MSGNR>
+     <TEXT>Forrás adónem összege &amp; kisebb, mint a cél adónemé &amp; (Sorszám: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>139</MSGNR>
+     <TEXT>Kérem adjon meg forrás adónemet &amp; célhoz. (Sorszám: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>140</MSGNR>
+     <TEXT>Kérem adjon meg cél adónemet &amp; forráshoz. (Sorszám: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>141</MSGNR>
+     <TEXT>Nincs a feltételnek megfelelő analitika rekord!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>142</MSGNR>
+     <TEXT>Nincs /ZAK/SZJA_ABEV beállítás: &amp; &amp; &amp; - ABEVAZON : &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>143</MSGNR>
+     <TEXT>Nincs /ZAK/SZJA_ABEV TART/KÖV beáll.: &amp; &amp; &amp; - ABEVAZON : &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>144</MSGNR>
+     <TEXT>Bevallás adatok sikeresen rögzítve: &amp; / &amp; / &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>145</MSGNR>
+     <TEXT>Feldolgozandó rekordszám: &amp; . Kérem futtassa a programot háttérben!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>146</MSGNR>
+     <TEXT>Kérem adja meg a könyvelési fájl nevét!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>147</MSGNR>
+     <TEXT>A megadott táblában ellentmondásos rekordok szerepelnek.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>148</MSGNR>
+     <TEXT>Átvezetési adatok letöltése nem sikerült</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>149</MSGNR>
+     <TEXT>Átvezetési adatok alapján adófolyószámla aktulizálása nem sikerült</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>150</MSGNR>
+     <TEXT>Aktuális nyitott sorszám &amp; / &amp; időszakra &amp;. Kérem erre rögzítsen.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>151</MSGNR>
+     <TEXT>Új - nyitható - sorszám &amp; / &amp; időszakra &amp;. Kérem erre rögzítsen.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>152</MSGNR>
+     <TEXT>Önnek nincs jogosultsága a program futtatásához!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>153</MSGNR>
+     <TEXT>Hiba &amp; tábla másolásnál! Másolás megs/zak/zakítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>154</MSGNR>
+     <TEXT>Önellenőrzési pótlék könyvelés beállítás hiba! Fájl nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>155</MSGNR>
+     <TEXT>Önellenőrzési pótlék könyvelési fájl létrehozás hiba!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>156</MSGNR>
+     <TEXT>Kérem csak lezárt időszakot adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>157</MSGNR>
+     <TEXT>Nincs meghatározható adat! Fájl nem készült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>158</MSGNR>
+     <TEXT>Önrevízió: esedékességi dátum hiányzik - &amp; ABEV.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>159</MSGNR>
+     <TEXT>Ehhez az ABEV azonosítóhoz csak dátum rögzítése lehetséges.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>160</MSGNR>
+     <TEXT>Súlyos hiba az adófolyószámla tételek könyvelésénél! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>161</MSGNR>
+     <TEXT>Kérem adjon meg adatszolgáltatás azonosítót!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>162</MSGNR>
+     <TEXT>&amp; bevallás típusnál egynél több esedékességi dátum mező van bejelölve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>163</MSGNR>
+     <TEXT>&amp; év &amp; periódusában nyomtatvány még nem lezárt!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>164</MSGNR>
+     <TEXT>Nincs a következő hónapnak megfelelő adat a /ZAK/BEVALLI táblában</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>165</MSGNR>
+     <TEXT>Nincs a következő hónapnak megfelelő adat a /ZAK/BEVALLO táblában</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>166</MSGNR>
+     <TEXT>Csak a 12. könyvelési periódusnál lehet beállítani</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>167</MSGNR>
+     <TEXT>Hiba az fájl megnyitásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>168</MSGNR>
+     <TEXT>&amp; vállaltban &amp; bevallástípusuhoz elkészített bevallás nem található.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>169</MSGNR>
+     <TEXT>&amp; vállalatban &amp; azonosítóval feltöltés nem törölhető!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>170</MSGNR>
+     <TEXT>Bevallás adatok &amp; vállalatra &amp; bevallásfajtára törölve.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>171</MSGNR>
+     <TEXT>Bevallás adatok törlése &amp; vállalatra &amp; bevallásfajtára nem sikerült.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>172</MSGNR>
+     <TEXT>Hibás az XML fájl (&amp;)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>173</MSGNR>
+     <TEXT>Összeg konvertálás hiba &amp; !</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>174</MSGNR>
+     <TEXT>Memória túlcsordulás miatt megjelenítés &amp; tételre korlátozva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>175</MSGNR>
+     <TEXT>Hiba a &amp; fájl letöltésénél.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>176</MSGNR>
+     <TEXT>Dolgozói adatok megjelenítéséhez adóadozonsító szükséges</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>177</MSGNR>
+     <TEXT>Ezzel a programmal csak &amp; típusú bevallás készíthető!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>178</MSGNR>
+     <TEXT>Ezzel a programmal &amp; típusú bevallás nem készíthető!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>179</MSGNR>
+     <TEXT>Hiba a bevallás beadás dátum konvertálásnál! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>180</MSGNR>
+     <TEXT>Hiba a &amp; bevallás típus fajtájának meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>181</MSGNR>
+     <TEXT>A program már futott! Csak egyszeri futtatás lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>182</MSGNR>
+     <TEXT>Program rendben lefutott!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>183</MSGNR>
+     <TEXT>Kérem ne jelöljön ki negatív vagy zárolt tételt!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>184</MSGNR>
+     <TEXT>Bevallás típus megadása kötelező</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>185</MSGNR>
+     <TEXT>&amp; bevallás típus &amp; napon nem érvényes</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>186</MSGNR>
+     <TEXT>Kérem jelölje ki a feldolgozandó sort vagy sorokat!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>187</MSGNR>
+     <TEXT>Kérem csak egy sort jelöljön ki!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>188</MSGNR>
+     <TEXT>Hiba a tétel mentésénél! (/ZAK/ADONSZA hibakód: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>189</MSGNR>
+     <TEXT>NAV által lezárt időszakra további önrevízió nem lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>190</MSGNR>
+     <TEXT>A kijelölésben van pénzügyileg teljesített biz., ami már nem módosítható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>191</MSGNR>
+     <TEXT>Kérem adja meg a bevallás beadás dátum értékét a szelekción!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>192</MSGNR>
+     <TEXT>Kérem adja meg a vállalat kódot!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>193</MSGNR>
+     <TEXT>Kérem az intervallumot egy éven belül adja meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>194</MSGNR>
+     <TEXT>Helytelen fájl! A fájl név nem a vállalat kóddal kezdődik! (&amp;1)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>195</MSGNR>
+     <TEXT>Nem lehet ABEV azonosítókat meghatározni a fizetendő adó összesenhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>196</MSGNR>
+     <TEXT>Nem lehet ABEV azonosítókat meghatározni a levonandó adó összesenhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>197</MSGNR>
+     <TEXT>Hiányzó import paraméter bevallás fajta meghatározásnál!(Váll.vagy típus)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>198</MSGNR>
+     <TEXT>Hiányzó import paraméter XML fájl letöltéshez! (Év vagy Hónap)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>199</MSGNR>
+     <TEXT>Hibás tételek vannak, lásd  a &quot;Hiba listát&quot;.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>200</MSGNR>
+     <TEXT>Nincs érvényes bevallás típus beállítva &amp; évben! (/ZAK/BEVALL)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>201</MSGNR>
+     <TEXT>Nem található olyan rekord, amit konvertálni kell! (/ZAK/ANALITIKA)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>202</MSGNR>
+     <TEXT>&amp; vállalat &amp; időszak nem módosítható mert lezárásra került!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>203</MSGNR>
+     <TEXT>Konvertált tételek adatbázisban módosítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>204</MSGNR>
+     <TEXT>Felhasználó dátum formátuma nem &apos;ÉÉÉÉ.HH.NN&apos;-ra van beállítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>205</MSGNR>
+     <TEXT>&amp; adatszolgáltatás speciálisra van beállítva! (/ZAK/BEVALLD)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>206</MSGNR>
+     <TEXT>Súlyos hiba a FELDOLGOZÁS rutinban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>207</MSGNR>
+     <TEXT>A megadott fájl sorok száma (&amp;), nagyobb a max.megengedettnél (&amp;)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>208</MSGNR>
+     <TEXT>Bevallás típus nem hatrározható meg!(Fajta: &amp;, Év: &amp;, Hónap: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>209</MSGNR>
+     <TEXT>Hiba az adatbázis módosításkor!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>210</MSGNR>
+     <TEXT>Nem található megfelelő bevallás adatszolgáltatás index (/ZAK/BEVALLI)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>211</MSGNR>
+     <TEXT>Nincs az időszaknak megfelelő analitika rekord.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>212</MSGNR>
+     <TEXT>Nem áll rendelkezésre mentett adat &amp; vállalat &amp; év &amp; hónapra!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>213</MSGNR>
+     <TEXT>Kérem a hónapot 01 és 12 között adja meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>214</MSGNR>
+     <TEXT>Kérem érvényes értéket adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>215</MSGNR>
+     <TEXT>&amp; bevallás fajtánál nem megengedett a manuális rögzítés!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>216</MSGNR>
+     <TEXT>Adatmódosítások elmentve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>217</MSGNR>
+     <TEXT>&amp; év &amp; hónaphoz ÁFA típusú bevallás nincs beállítva! (Biz: &amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>218</MSGNR>
+     <TEXT>Esedékességi dátum vagy zárolás flag értéke eltérő a kij. tételekben!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>219</MSGNR>
+     <TEXT>Nincs beállítás a /ZAK/ADONEM táblában! (Vállalat: &amp;, adónem: &amp; ).</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>220</MSGNR>
+     <TEXT>Nincs beállítás a /ZAK/BNYLAP táblában! (Vállalat: &amp;, típus: &amp;, dátum: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>221</MSGNR>
+     <TEXT>Nincs &quot;Sor / oszlop azonosító&quot; beállítás a &amp; bevallás fajtához!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>222</MSGNR>
+     <TEXT>Hiba az utolsó lezárt időszak meghatározásánál! (&amp;/&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>223</MSGNR>
+     <TEXT>Az adatok mentése sikeresen megtörtént!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>224</MSGNR>
+     <TEXT>Súlyos adatbázis hiba a statisztikai flag jelölésnél!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>225</MSGNR>
+     <TEXT>Bevallás beadás dátuma következő munkanapra konvertálva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>226</MSGNR>
+     <TEXT>Hiba a beadás dátum következő munkanapra konvertálásánál!(&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>227</MSGNR>
+     <TEXT>Hiba az ÁFA összeg ellenőrzés funkciónál! (/ZAK/AFA_ALAP_VERIFY)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>228</MSGNR>
+     <TEXT>&amp; abev azonosító adóalap korrigálása szükséges! (összeg: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>229</MSGNR>
+     <TEXT>ÁFA összegek konzisztensek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>230</MSGNR>
+     <TEXT>A program csak teszt rendszerben futtatható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>231</MSGNR>
+     <TEXT>Hiba a &amp; vállalat forgatás meghatározásnál! (/ZAK/ROTATE_BUKRS_OUTPUT)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>232</MSGNR>
+     <TEXT>Hiba a &amp; vállalat forgatás meghatározásnál! (/ZAK/ROTATE_BUKRS_INPUT)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>233</MSGNR>
+     <TEXT>Hiba a &amp; vállalat időszak forgatás meghatározásnál! (/ZAK/ROTATE_IDSZ)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>234</MSGNR>
+     <TEXT>Mentett adatok feldolgozásánál, nem készíthető LOG!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>235</MSGNR>
+     <TEXT>Figyelem! Ön az éles rendszerben akar adatokat törlni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>236</MSGNR>
+     <TEXT>Hiba a bevallás adatok meghatározásánál!(&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>237</MSGNR>
+     <TEXT>A megadott adatokkal nem lehet arányosított bevallás típust meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>238</MSGNR>
+     <TEXT>A program &amp; vállalatra csak &amp; hónapra futtatható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>239</MSGNR>
+     <TEXT>&amp; részben arányositott vállalathoz nincs beállítva adókód!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>240</MSGNR>
+     <TEXT>Nem található előző időszakhoz adat az arány kiszámításához! (&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>241</MSGNR>
+     <TEXT>Súlyos hiba az ÁFA arány számításnál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>242</MSGNR>
+     <TEXT>Hiba a &amp; összeg kerekítésénél!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>243</MSGNR>
+     <TEXT>A feldolgozásban &amp; pénznem, nem egyezik meg a vállalat &amp; pénznemével!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>244</MSGNR>
+     <TEXT>Nem határozható meg &amp; bevallás típushoz arányosított ABEV azonosítók!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>245</MSGNR>
+     <TEXT>Nem határozható meg időszak arányosított ÁFA kezeléshez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>246</MSGNR>
+     <TEXT>Nem határozható meg arány szám a &amp; év &amp; hónaphoz!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>247</MSGNR>
+     <TEXT>Nincs beállítás a /ZAK/BNYLAP táblában VPOP arányosított abevhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>248</MSGNR>
+     <TEXT>Hiányzik a &amp; abev azonosító a /ZAK/BEVALLB táblában!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>249</MSGNR>
+     <TEXT>Nincs beállítva &amp; abev azonosítóhoz &quot;átvétel abev&quot; azonosítóból érték!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>250</MSGNR>
+     <TEXT>Nem leheta meghatározni az &amp; abev azonosító értékét!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>251</MSGNR>
+     <TEXT>Hiányzó import paraméter arányosítás könyveléséhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>252</MSGNR>
+     <TEXT>Hiba a hónap utolsó napjának meghatározásánál! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>253</MSGNR>
+     <TEXT>Hiányzó beállítás ÁFA arány könyveléséhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>254</MSGNR>
+     <TEXT>Az analitikia tartalmaz &amp; bevallás típustól eltérő tételt!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>255</MSGNR>
+     <TEXT>Nincs beállítva igazolást igénylő feltöltés azonosító!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>256</MSGNR>
+     <TEXT>Nem található beállítás a &amp; vállalatra az igazolás adataihoz!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>257</MSGNR>
+     <TEXT>A feldolgozás nem tartalmaz hibát!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>258</MSGNR>
+     <TEXT>&amp; adóazonosító cím adatai nem találhatók!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>259</MSGNR>
+     <TEXT>A program háttérben nem futtatható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>260</MSGNR>
+     <TEXT>A &amp; állomány nem tartalmaz feldolgozható rekordot!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>261</MSGNR>
+     <TEXT>Adatok feltöltve!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>262</MSGNR>
+     <TEXT>Éles futás hibák miatt nem indítható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>263</MSGNR>
+     <TEXT>Hiba a &amp; űrlap beolvasásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>264</MSGNR>
+     <TEXT>&amp; igazolás sor azonosító szöveg adatai nem található!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>265</MSGNR>
+     <TEXT>Hiba a &amp; űrlap &amp; adószám &amp; sorszám kivitelénél! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>266</MSGNR>
+     <TEXT>&amp; igazolás sor azonosító adatai nem található!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>267</MSGNR>
+     <TEXT>Nincs nyomtatvány lap azonosító beállítás a &amp; bevallás fajtához!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>268</MSGNR>
+     <TEXT>Nincsenek beállítva a BEVALLB táblában az összesítő jelentés ABEV-ei!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>269</MSGNR>
+     <TEXT>Nem határozható meg a bevallás fajta!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>270</MSGNR>
+     <TEXT>Nem található adat a bevalláshoz (/ZAK/BEVALLO)! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>271</MSGNR>
+     <TEXT>Hiba az adófolyószámla adatok meghatározásánál! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>272</MSGNR>
+     <TEXT>Hiba a &amp; bevallás esedékességi dátum meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>273</MSGNR>
+     <TEXT>Nem lehet meghatározni az eredeti esedékesség dátumát! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>274</MSGNR>
+     <TEXT>Kérem válasszon ki egy szövegelemet!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>275</MSGNR>
+     <TEXT>Kérem adjon meg a tételekhez szöveg hozzárendelést!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>276</MSGNR>
+     <TEXT>Hiba a &amp; űrlap &amp; azonosító kivitelénél!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>277</MSGNR>
+     <TEXT>Mentés hibák miatt nem lehetséges! Lásd üzenetek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>278</MSGNR>
+     <TEXT>Kérem minden tételhez adjon meg szöveg hozzárendelést!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>279</MSGNR>
+     <TEXT>Kérem adjon meg egy dátumot a &quot;Készült&quot; paraméterhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>280</MSGNR>
+     <TEXT>Kérem önellenőrzéses adónemmel rendelkező sort válasszon ki!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>281</MSGNR>
+     <TEXT>Hiányzó beállítás &amp; vállalat kezdődátum meghatározásához!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>282</MSGNR>
+     <TEXT>Nem lehet feldolgozási időszakot meghatározni! &amp; &amp; &amp; &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>283</MSGNR>
+     <TEXT>Kérem minden tételhez adjon meg egy dátumot a &quot;Készült&quot; paraméterhez!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>284</MSGNR>
+     <TEXT>Nincs beállítva ÁFA kód WL mezőhöz /ZAK/SZJA_ABEV-ben (Váll.: &amp;, típ.: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>285</MSGNR>
+     <TEXT>Kérem ellenőrizze a feltételt, mivel nem csak kizáró biz.sz. van megadva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>286</MSGNR>
+     <TEXT>A vállalatok ebben az időszakban nem léteznek a forgató táblában!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>287</MSGNR>
+     <TEXT>Nincs beállítva ÁFA kód WL mezőhöz /ZAK/SZJA_CUST-ban (&amp;/&amp;/&amp;)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>288</MSGNR>
+     <TEXT>Kérem adjon meg főkönyvi számlát a szelekción!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>289</MSGNR>
+     <TEXT>Nem áll rendelkezésre menetett adat &amp; vállalatra!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>290</MSGNR>
+     <TEXT>Nem sikerült lap azonosítót meghatározni! (&amp;/&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>291</MSGNR>
+     <TEXT>Nem sikerült meghatározni a VPOP kivetés értékét (/ZAK/BNYLAP)! (&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>292</MSGNR>
+     <TEXT>Kérem adjon meg további értéket a szelekción!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>293</MSGNR>
+     <TEXT>Csoport vállalat megegyezik a normál vállalattal! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>294</MSGNR>
+     <TEXT>&amp; vállalat NAV fájl készítés még nem futott a megadott időszakra!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>295</MSGNR>
+     <TEXT>&amp; csoport vállalatnál nem megengedett a manuális rögzítés!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>296</MSGNR>
+     <TEXT>Ez a funkció csoport vállalatnál nem megengedett!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>297</MSGNR>
+     <TEXT>Ez a funkció csak csoport vállalatra (&amp;) megengedett!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>298</MSGNR>
+     <TEXT>Önkormányzat KSH azonosító megadása kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>299</MSGNR>
+     <TEXT>Az &amp; önkormányzat KSH azonosító nem található!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>301</MSGNR>
+     <TEXT>Kérem ellenpár rögzítésénél eltérő időszakot adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>302</MSGNR>
+     <TEXT>Kérem ne használja a sztornó előjegyzés és ellenpár könyvelést egyszerre!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>303</MSGNR>
+     <TEXT>Kérem ellenpár könyvelésnél adjon meg minden értéket!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>304</MSGNR>
+     <TEXT>Kérem numerikus típusú ABEV azonosítót válasszon!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>305</MSGNR>
+     <TEXT>Hiba a &amp;/&amp;/&amp; számla adatainak meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>307</MSGNR>
+     <TEXT>Nem a feltételnek megfelelő rekordot meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>308</MSGNR>
+     <TEXT>Jobok beütemezve, kérem ellenőrizze a JOB naplót!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>310</MSGNR>
+     <TEXT>Kérem ONYB típusú bevallás azonosítót adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>311</MSGNR>
+     <TEXT>Kérem csak XML típusú adatszolgáltatás azonosítót válasszon!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>315</MSGNR>
+     <TEXT>Hiba a KATA beállítások meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>316</MSGNR>
+     <TEXT>Adószám üres &amp; &amp; &amp; &amp;!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>317</MSGNR>
+     <TEXT>Feldolgozás során előfordultak üzenetek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>318</MSGNR>
+     <TEXT>Mező konverzió hiba! (&amp;: &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>319</MSGNR>
+     <TEXT>Kritikus hiba: &amp;1 mező hiányzik az adatbázis struktúrából!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>320</MSGNR>
+     <TEXT>Kritikus hiba: a fej nem tartalmaz elégendő mezőt!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>321</MSGNR>
+     <TEXT>Fájlban &amp; vállalat nem egyezik meg a szelekcióban megadott &amp; vállalattal!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>322</MSGNR>
+     <TEXT>Fájlban kötelező mező nincs megadva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>323</MSGNR>
+     <TEXT>&amp; package már KATA feldolgozásban szerepel ezért nem törölhető!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>330</MSGNR>
+     <TEXT>Package &amp;/&amp;/&amp;/&amp; időszak lezárva státusz miatt már nem törölhető!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>331</MSGNR>
+     <TEXT>Package &amp;/&amp;/&amp;/&amp; időszak nyitott státusz miatt nem törölhető!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>350</MSGNR>
+     <TEXT>************************** 1365 üzenetek ********************************</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>351</MSGNR>
+     <TEXT>&amp; abev-ből nem lehet érvényes nyomtatvány lap azonosítót meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>352</MSGNR>
+     <TEXT>Hiba az XML konvertálásnál! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>353</MSGNR>
+     <TEXT>&amp; előzmény számlának nem sikerült meghatározni az eredeti számla számát!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>354</MSGNR>
+     <TEXT>Nem lehet meghatározni vagy hibás referenciakulcs! (AWKEY &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>355</MSGNR>
+     <TEXT>Hiba a &amp; követő bizonylatok meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>356</MSGNR>
+     <TEXT>Nem lehet közös számla azonosítót meghatározni! (&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>357</MSGNR>
+     <TEXT>Szállítás tervhez nem lehet meghatározni kiszállítást (számla: &amp;)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>358</MSGNR>
+     <TEXT>Előzmény számlaszám megegyezik a saját számlaszámmal! &amp;</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>359</MSGNR>
+     <TEXT>Üres referencia, számlaszámot nem lehet meghatározni! (&amp;/&amp;/&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>360</MSGNR>
+     <TEXT>&amp; vállalat &amp; bevallás típushoz &amp; adatszolgáltatás nincs beállítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>361</MSGNR>
+     <TEXT>A költséghely mező kitöltése kötelező</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>362</MSGNR>
+     <TEXT>&amp; vállalat &amp; értékhez nem lehet meghatározni költséghelyet!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>363</MSGNR>
+     <TEXT>&amp; package átadásra került másik rendszerbe, kérem először ott törölje!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>364</MSGNR>
+     <TEXT>Kérem ONYB vagy ÁFA bevallás típust adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>365</MSGNR>
+     <TEXT>&amp; vámtarifaszámnak nem határozható meg a megnevezése!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>366</MSGNR>
+     <TEXT>Hiba a &amp;/&amp;/&amp; bizonylat vevői láb meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>367</MSGNR>
+     <TEXT>Hibás sor az űrlapon.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>370</MSGNR>
+     <TEXT>Egymásra mutató referenciák (biz: &amp;/&amp;/&amp;)! Futás megs/zak/zakítva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>371</MSGNR>
+     <TEXT>Nem található végszámla (&amp;/&amp;) az előleg elszámoláshoz (&amp;/&amp;)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>372</MSGNR>
+     <TEXT>&amp; vállalat &amp;/&amp; idősz. KATA könyvelésre kijelölt tétel nincs feldolgozva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>373</MSGNR>
+     <TEXT>Speciális időszak nem megfelelő!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>374</MSGNR>
+     <TEXT>A beállítások alapján erre az időszakra nem választható spec.időszak!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>375</MSGNR>
+     <TEXT>A megadott időszakra jelenleg NAV ellenőrzés van folyamatban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>400</MSGNR>
+     <TEXT>************************ PTGSZLAA üzenetek ******************************</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>401</MSGNR>
+     <TEXT>&amp; pénztárvételi hely nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>402</MSGNR>
+     <TEXT>Kérem a periódus értékét 01-52 között adja meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>700</MSGNR>
+     <TEXT>************************* HELYI ADÓ ÜZENETEK ***********-****************</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>701</MSGNR>
+     <TEXT>Helyszín meghatározás a helyrajzi szám alapján nem sikerült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>702</MSGNR>
+     <TEXT>Nincs input rekord!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>703</MSGNR>
+     <TEXT>&amp; partner alapján nem lehet önkormányzatot meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>704</MSGNR>
+     <TEXT>&amp; arch.objektumtíp. alapján nem határozható meg a bevallás típus!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>705</MSGNR>
+     <TEXT>&amp; &amp; arch.objektumfunkció alapján nem határozható meg épület/telek kat.!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>706</MSGNR>
+     <TEXT>&amp; önkormányzat alapján nem lehet a partnert meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>707</MSGNR>
+     <TEXT>&amp; &amp; épület/telek kat. alapján nem határozható meg az arch.obj. funkció!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>708</MSGNR>
+     <TEXT>Kérem hogy Épület vagy Telek bevallás típust adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>709</MSGNR>
+     <TEXT>Kérem kizárólag kalkulált sor(oka)t jelöljön ki!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>710</MSGNR>
+     <TEXT>Önkormányzat szelekcióhoz nem határozható meg partner!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>711</MSGNR>
+     <TEXT>Éles feldolgozás hibák miatt nem lehetséges! Lásd üzenetek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>712</MSGNR>
+     <TEXT>&amp; bevallás típushoz nem határozható meg esedékesség!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>713</MSGNR>
+     <TEXT>&amp; / &amp; / &amp; kategóriához nem határozható meg adó mérték!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>714</MSGNR>
+     <TEXT>RE-FX mértékegység &amp; eltér az adómérték mértékegységétől &amp;!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>715</MSGNR>
+     <TEXT>Kérem éves érték rögzítésnél ne töltse ki az esedékesség típ. mezőket!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>716</MSGNR>
+     <TEXT>A kalkulált adatok megtekintése közben hiba lépett fel! Lásd üzenetek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>717</MSGNR>
+     <TEXT>A RE-DAT adat nem határozható meg: &amp; &amp; &amp; &amp;!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>718</MSGNR>
+     <TEXT>Kérem töltse ki az esedékesség mezőket!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>719</MSGNR>
+     <TEXT>A file készítése közben hiba merül fel! Lásd üzenetek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>720</MSGNR>
+     <TEXT>A(z) &amp; (&amp;) önkormányzat, &amp; bevallás típussal a bankszámlaszám üres!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>721</MSGNR>
+     <TEXT>Itt csak speciális adatszolgáltatás azonosító használható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>722</MSGNR>
+     <TEXT>Adatok átvétele nem lehetséges, kérem először törlje a &amp; package-t!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>723</MSGNR>
+     <TEXT>Ez a program &amp; bevallás fajtához nem használható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>724</MSGNR>
+     <TEXT>Kérem futassa a BEVALLO aktualizálást vagy töltse le a nyomtatványt!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>725</MSGNR>
+     <TEXT>BEVALLO aktualizálás lefutott.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>726</MSGNR>
+     <TEXT>Az alsó v. felső érték kitöltése kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>727</MSGNR>
+     <TEXT>A százalék mező kitöltése kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>728</MSGNR>
+     <TEXT>Kérem iparűzési bevallás típust adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>729</MSGNR>
+     <TEXT>Kérem ne adjon meg kapcsolt vállalat kódot a szelekción!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>730</MSGNR>
+     <TEXT>Nincs a szelekciónak megfelelő alapadat!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>731</MSGNR>
+     <TEXT>Kategória tábla üres! Kérem tölse fel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>732</MSGNR>
+     <TEXT>Árbevétel 0, adóalap kalkuláció nem készül!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>733</MSGNR>
+     <TEXT>Árbevétel kategória nem határozható meg a beállító táblából!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>734</MSGNR>
+     <TEXT>Nem lehet meghatározni a &amp; vállalat IPA számítási módszerét!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>735</MSGNR>
+     <TEXT>Nem lehet meghatározni a &amp; vállalathoz az adóalapot &amp; évre!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>736</MSGNR>
+     <TEXT>Szelekció alapján nem lehet előfizetői adatokat meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>737</MSGNR>
+     <TEXT>Szelekció alapján nem lehet komplex adatokat meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>738</MSGNR>
+     <TEXT>Szelekció alapján nem lehet személyi jellegű értéket meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>739</MSGNR>
+     <TEXT>Szelekció alapján nem lehet eszköz jellegű értéket meghatározni!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>740</MSGNR>
+     <TEXT>Az XLS file betöltése közben hiba merült fel! Lásd üzenetek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>741</MSGNR>
+     <TEXT>Az évszám nem egységes az XLS fájlban (&amp; &amp; &amp;.sor)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>742</MSGNR>
+     <TEXT>Az önkormányzat azonosító (&amp;) nem található a rendszerben (&amp;. sor)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>743</MSGNR>
+     <TEXT>A cellában lévő &amp; érték nem megfelelő az XLS fájlban (&amp;. sor)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>744</MSGNR>
+     <TEXT>Az XLS (&amp;) fájl betöltése közben hiba lépett fel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>745</MSGNR>
+     <TEXT>A filenévben nem a kiválasztott (&amp;) komplex sz. mód. szerepel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>746</MSGNR>
+     <TEXT>Már létezik önk. azon, év és hónap az adatbázisban (&amp; &amp; &amp;)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>747</MSGNR>
+     <TEXT>&amp; esedékesség ebben a programban nem használható!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>748</MSGNR>
+     <TEXT>Nem határozható meg önkormányzat a szelekció alapján!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>749</MSGNR>
+     <TEXT>&amp; önkormányzat bejelentkezés dátuma nincs megadva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>750</MSGNR>
+     <TEXT>&amp; önkormányzat bejelentkezés dátuma a jövőbe mutat, kérem javítsa!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>751</MSGNR>
+     <TEXT>&amp;/&amp;/&amp;/&amp; adóalap 0, nem lehet megállapítani adót!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>752</MSGNR>
+     <TEXT>&amp;/&amp; adómérték 0, nem lehet megállapítani az adó mértékét!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>753</MSGNR>
+     <TEXT>Nincs előleg flag beállítva esedékességekben!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>754</MSGNR>
+     <TEXT>A letöltés a szerverre az alábbi mappa alá (&amp;1) nem sikerült!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>755</MSGNR>
+     <TEXT>A megadott adatokhoz tartozó előállt fájl(ok) már feltöltésre kerültek!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>756</MSGNR>
+     <TEXT>A fájlok sikeresen letöltésre kerültek a szerverre &apos;&amp;1&apos; mappába!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>757</MSGNR>
+     <TEXT>Hiba a &amp; önkormányzat adatainak meghatározásánál (/ZAK/ZAKT_ONK)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>758</MSGNR>
+     <TEXT>A fájlnévben a nem választott (&amp;) év szerepel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>759</MSGNR>
+     <TEXT>Az év és hónap megadása kötelező!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>760</MSGNR>
+     <TEXT>Fájlnévben nem a választott (&amp;) bevallás típus szerepel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>761</MSGNR>
+     <TEXT>&amp; rendszám nem szerepel a törzsadatokban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>762</MSGNR>
+     <TEXT>Kérem töltse ki a mezőt!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>763</MSGNR>
+     <TEXT>&amp; önkormányzathoz nem határozható meg szállító!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>764</MSGNR>
+     <TEXT>Nem határozható meg státusz az analitikához!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>765</MSGNR>
+     <TEXT>Kérem idegenforgalmi adó bevallás típust adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>766</MSGNR>
+     <TEXT>Esedékesség dátuma következő munkanapra konvertálva!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>767</MSGNR>
+     <TEXT>Hiba a &amp; üdülő törzsadatainak meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>768</MSGNR>
+     <TEXT>Hiba a &amp; önkrormányzat IFA adómérték meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>769</MSGNR>
+     <TEXT>Hiba a &amp; IFA kategória kedvezmény meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>770</MSGNR>
+     <TEXT>&amp; adatszolgáltatással már van feltöltés az adott időszakra!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>771</MSGNR>
+     <TEXT>A sor már szerepel a táblában (&amp;1 )!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>772</MSGNR>
+     <TEXT>Sikertelen művelet, kérem töltse ki megfelelően a mezőket!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>773</MSGNR>
+     <TEXT>Az önk. azon (&amp;) nincs a rendszerben v. nem telephelyes (&amp;. sor)!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>774</MSGNR>
+     <TEXT>&amp; rendszám zárolva a törzsadatokban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>775</MSGNR>
+     <TEXT>Szerkesztési módban nem csatolható üzleti dokumentum!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>776</MSGNR>
+     <TEXT>Kérem érvényes évet adjon meg!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>777</MSGNR>
+     <TEXT>IDŐSZAK lezárva csak megjelenítés lehetséges!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>778</MSGNR>
+     <TEXT>A(z) &amp; fájl archiválása sikertelen! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>779</MSGNR>
+     <TEXT>Az XLS fájlban duplikált érték található! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>780</MSGNR>
+     <TEXT>Kerekítési differencia: &amp; Ft.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>781</MSGNR>
+     <TEXT>Az önk. azon (&amp;) már található a HIPA önkormányzat bejelentő táblában!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>782</MSGNR>
+     <TEXT>&amp; önkormányzathoz nem határozható meg hozzárendelés a banki torzs.ban!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>783</MSGNR>
+     <TEXT>&amp; bankszámla már szerepel a beállító táblában!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>784</MSGNR>
+     <TEXT>&amp;/&amp; önkormányzat nincs beállítva telephelyként!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>785</MSGNR>
+     <TEXT>&amp; bevallás &amp; adatszolgáltatás beállítás hiányzik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>786</MSGNR>
+     <TEXT>&amp; vállalathoz &amp; évben &amp; verzió után csak önrevíziós adatok vihetők fel!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>787</MSGNR>
+     <TEXT>A(z) &amp; (&amp;) önkormányzat, &amp; bevallás típussal a szállító üres!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>788</MSGNR>
+     <TEXT>Önkormányzat alap kalkuláció régebbi mint az adóalap kalkuláció! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>789</MSGNR>
+     <TEXT>&amp; dátum formátum nem megfelelő (YYYY.HH.NN).</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>790</MSGNR>
+     <TEXT>&amp; kivezetés oka nem létezik!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>791</MSGNR>
+     <TEXT>&amp; önkrományzat ID-nél nincs érvényes módosítható rekord!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>792</MSGNR>
+     <TEXT>Kérem adjon meg a kivezetés okát! (&amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>799</MSGNR>
+     <TEXT>Kérem adja meg az önrevízió pótlék számítás határnapját!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>800</MSGNR>
+     <TEXT>Hiba a &amp; esedékességi ID kezdő dátum meghatározásánál!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>900</MSGNR>
+     <TEXT>Ellenpár rögzítés időszaka már letöltésre került!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>H</SPRSL>
+     <ARBGB>/ZAK/ZAK</ARBGB>
+     <MSGNR>901</MSGNR>
+    </T100>
+   </T100>
+   <LONGTEXTS>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK001</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00004</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK001</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>A feltöltés azonosítót az ÉVHÓNAP és a /ZAK/PACK számkörobjektum alapján</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>határozza meg a rendszer.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem ellenőrizze a /ZAK/PACK számkörobjektum konzisztenciáját.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/PACK&gt;Számkörobjektum karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK029</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK029</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem ellenőrizze, hogy az adatszolgáltatáshoz állítsa be a megfelelő</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>SAP szelekciós programot.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/BEVALLD_V&gt;Adatszolgáltatások definiálása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK032</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK032</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem ellenőrizze az ÁFA beállítások tábláját (/ZAK/AFA_CUST).</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/AFA_CUST_V&gt;ÁFA beállítások&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK035</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK035</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Könyvelés előző futásról már feladásra került!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Gondoskodjon a feladott könyvelés sztornójáról!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK097</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK097</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem határozza meg a beavallás típushoz a fájl szerkezetet!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/KFILE_V&gt;Fájl szerkezet meghatározása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK153</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK153</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>A hiba a tábla bejegyzés beszúrásánál keletkezett, valószínű duplikált</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>kulcs okozza a problémát. Ellenőrizze,hogy a cél tartományba ne legyen</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>bejegyzés!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK154</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK154</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem tartsa karban az önellenőrzési pótlék könyvelés beállítását adott</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>vállalatra!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ONELL_BOOKV&gt;Önellenőrzési pótlék beállítása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK178</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00001</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK178</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem futtassa a /ZAK/MAIN_VIEW_NEW programot.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK207</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK207</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>Kérem darabolja fel úgy az input fájlt, hogy fejléc nélkül ne haladja</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>meg a</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>maximálisan megengedett rekordszámot!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK220</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK220</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem állítsa be a megfelelő értéket a &quot;Bevallás nyomtatvány lap</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>azonosító beállítás&quot; (/ZAK/BNYLAP) táblában.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/BNYLAP_V&gt;Nyomtatvány lap azonosító beállítás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK224</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00001</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK224</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem futtassa újra a funkciót!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK239</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0004</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK239</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00004</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Hiányzó beállítás!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/AFA_RARANYV&gt;Részben arányosított vállalat adókódok</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>beállítása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK255</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK255</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem állítsa be a megfelelő feltöltés azonosítónál, ha az</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>magánszemély igazolást igénylő.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/BEVALLD_V&gt;Feltöltés azonosítók karbantartás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK256</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK256</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem hozzon létre beállítást az igazolás adataihoz!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/IGABEV_V&gt;Igazolás adatok beállítása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK258</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK258</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem adja meg a cím adatokat!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/MGCIM_V&gt;Címadatok karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK264</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK264</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem tartsa karban az igazolás sor szöveg adatait!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/IGSOR_V&gt;Sor azonosítók karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK282</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00004</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK282</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>A feldolgozási időszaknak  a /ZAK/START-ban beállított vagy az</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>/ZAK/UREPI_LOG-ban elmentett</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>/</TDFORMAT>
+       <TDLINE>utolsó futás év hónapjánál  nagyobbnak kell lennie, és kisebb egyenlőnek</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>a szelekción megadott értéknél!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK284</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK284</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem állítson be egy ÁFA kódot a könyvelési feladáshoz!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/SZJA_ABEV_V&gt;ÁFA kód beállítása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK290</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00001</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK290</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ONY_NYLAP_V&gt;Lap azonosító beállítása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK365</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK365</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem adja meg a vámtarifa szövegét! &lt;DS:TRAN./ZAK/AFA_VAMT_V&gt;Vámtarifa</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>karbantartása.&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK710</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0003</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK710</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00003</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem ellenőrizze az önkormányzat törzsadatokat!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_ONK_V&gt;Karbantartás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK712</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK712</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem ellenőrizze a beállítást! &lt;DS:TRAN./ZAK/ZAKT_ESED_V&gt;Esedékesség</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK713</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK713</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem adja meg az adó mértékét! &lt;DS:TRAN./ZAK/ZAKT_EPTEL_ADO_V&gt;Adómérték</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK714</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK714</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem adj meg megfelelő mértékegységben az adó mértékét!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_EPTEL_ADO_V&gt;Adómérték karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK721</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK721</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem állítsa speciális típusra az adatszolgáltatás azonosítót!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/BEVALLD_V&gt;Adatszolgáltatás azonosítók karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK730</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK730</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem adjon meg alap adatokat! &lt;DS:TRAN./ZAK/ZAKT_HIPA_ALAP_V&gt;Alap adato</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>karbanartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK731</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00003</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK731</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Nem lehe meghatározni az ELÁBÉ és közvetített szolgáltatás levonható</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>részét, mert a kategóriák nincsenek megadva!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_KTGA_V&gt;Kategóriák karbantartása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK734</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK734</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem állítsa be a vállalat számítási módszerét!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_TYPE_V&gt;Számítási módszer beállítása&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK735</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK735</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem futtassa az adóalap meghatározást éles módban!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_ACALC&gt;Iparűzési adó alap meghatározás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK749</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK749</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem adja meg az önkormányzat bejelentkezés dátumát!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_BEJ_V&gt;Karbantartás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK750</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00001</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK750</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_BEJ_V&gt;Karbantartás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK753</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK753</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérm állítsa be az előéeg típusú esedékességeket!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_ESED_V&gt;Karbantartás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK770</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0001</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00001</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK770</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00001</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem ellenőrizze és a nm helyes feltöltés törölje!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK785</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK785</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem hozza létre az adatszolgáltatást! &lt;DS:TRAN./ZAK/BEVALLD_V&gt;Bevallás</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>adatszolgáltatás&lt;/&gt;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+    <item>
+     <DOKIL>
+      <ID>NA</ID>
+      <OBJECT>/ZAK/ZAK788</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <MASTERLANG>X</MASTERLANG>
+      <TXTLINES>00002</TXTLINES>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/ZAK788</TDNAME>
+      <TDID>NA</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;OK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZER_VÁLASZ&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;TEENDŐK&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Kérem futtassa a Önkormányzatonkénti iparűzési adó alap kalkulációt!</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&lt;DS:TRAN./ZAK/ZAKT_HIPA_OCALC&gt;Önkormányzati adóalap kalkuláció futtatása</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;RENDSZ_ADMIN&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+     </LINES>
+    </item>
+   </LONGTEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

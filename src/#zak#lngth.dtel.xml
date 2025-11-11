@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/LNGTH</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>NUMC3</DOMNAME>
+    <HEADLEN>10</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Mező hossza</DDTEXT>
+    <REPTEXT>Mező hossz</REPTEXT>
+    <SCRTEXT_S>Mező hossz</SCRTEXT_S>
+    <SCRTEXT_M>Mező hossz</SCRTEXT_M>
+    <SCRTEXT_L>Mező hossza</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Feldlänge</DDTEXT>
+     <REPTEXT>Feldlänge</REPTEXT>
+     <SCRTEXT_S>Feldlänge</SCRTEXT_S>
+     <SCRTEXT_M>Feldlänge</SCRTEXT_M>
+     <SCRTEXT_L>Feldlänge</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,2 @@
+FUNCTION-POOL /ZAK/MESSAGE.                 "MESSAGE-ID ..
+

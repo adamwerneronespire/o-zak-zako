@@ -1,0 +1,57 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates" xmlns:ddic="http://www.sap.com/abapxml/types/dictionary" xmlns:def="http://www.sap.com/abapxml/types/defined">
+  <tt:root name="NYOMTA" type="?"/>
+  <tt:root name="BUKRSTEXT" type="?"/>
+  <tt:root name="ADOSZAM" type="?"/>
+  <tt:root name="IDTOL" type="?"/>
+  <tt:root name="IDIG" type="?"/>
+  <tt:root name="I_A_XXA60" type="?"/>
+  <tt:root name="I_M_XXA60" type="?"/>
+  <tt:template>
+    <nyomtatvanyok xmlns="http://www.apeh.hu/abev/nyomtatvanyok/2005/01">
+      <abev>
+        <hibakszama>0</hibakszama>
+        <hash>8439ed7ef37cb32d8bd470337464c0a1090dbe72</hash>
+        <programverzio>v.2.57.0</programverzio>
+      </abev>
+      <nyomtatvany>
+        <nyomtatvanyinformacio>
+          <nyomtatvanyazonosito>
+            <tt:value ref=".NYOMTA"/>
+          </nyomtatvanyazonosito>
+          <nyomtatvanyverzio>1.0</nyomtatvanyverzio>
+          <adozo>
+            <nev>
+              <tt:value ref=".BUKRSTEXT"/>
+            </nev>
+            <adoszam>
+              <tt:value ref=".ADOSZAM"/>
+            </adoszam>
+          </adozo>
+          <idoszak>
+            <tol>
+              <tt:value ref=".IDTOL"/>
+            </tol>
+            <ig>
+              <tt:value ref=".IDIG"/>
+            </ig>
+          </idoszak>
+        </nyomtatvanyinformacio>
+        <mezok>
+          <tt:loop ref=".I_A_XXA60">
+            <mezo>
+              <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+              <tt:value ref="VALUE"/>
+            </mezo>
+          </tt:loop>
+          <tt:loop ref=".I_M_XXA60">
+            <mezo>
+              <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+              <tt:value ref="VALUE"/>
+            </mezo>
+          </tt:loop>
+        </mezok>
+      </nyomtatvany>
+    </nyomtatvanyok>
+  </tt:template>
+</tt:transform>

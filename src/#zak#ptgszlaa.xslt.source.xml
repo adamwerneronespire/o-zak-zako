@@ -1,0 +1,51 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates">
+  <tt:root name="NYOMTA" type="?"/>
+  <tt:root name="BUKRSTEXT" type="?"/>
+  <tt:root name="ADOSZAM" type="?"/>
+  <tt:root name="FROM" type="?"/>
+  <tt:root name="TO" type="?"/>
+  <tt:root name="I_A_PTGSZLAA" type="?"/>
+  <tt:root name="ROOT"/>
+  <tt:template>
+    <nyomtatvanyok xmlns="http://www.apeh.hu/abev/nyomtatvanyok/2005/01">
+      <abev>
+        <hibakszama>0</hibakszama>
+        <hash>6376a6ca2afb641a3b4911b6a6d9e4c3c934ef6b</hash>
+        <programverzio>v.2.57.0</programverzio>
+      </abev>
+      <nyomtatvany>
+        <nyomtatvanyinformacio>
+          <nyomtatvanyazonosito>
+            <tt:value ref=".NYOMTA"/>
+          </nyomtatvanyazonosito>
+          <nyomtatvanyverzio>2.0</nyomtatvanyverzio>
+          <adozo>
+            <nev>
+              <tt:value ref=".BUKRSTEXT"/>
+            </nev>
+            <adoszam>
+              <tt:value ref=".ADOSZAM"/>
+            </adoszam>
+          </adozo>
+          <idoszak>
+            <tol>
+              <tt:value ref=".FROM"/>
+            </tol>
+            <ig>
+              <tt:value ref=".TO"/>
+            </ig>
+          </idoszak>
+        </nyomtatvanyinformacio>
+        <mezok>
+          <tt:loop ref=".I_A_PTGSZLAA">
+            <mezo>
+              <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+              <tt:value ref="VALUE"/>
+            </mezo>
+          </tt:loop>
+        </mezok>
+      </nyomtatvany>
+    </nyomtatvanyok>
+  </tt:template>
+</tt:transform>

@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <CLAS>/ZAK/BEVALLB</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>Bevallások ABEV kódjai és beállításai</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás típus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00003</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>ABEV azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00004</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás mező manuálisan módos</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00005</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Számított mező</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00006</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adószám köteles</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00007</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>ABEV-be nem szabad letölteni</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00008</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Előjel negatív</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00009</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adónem</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00010</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Önrevízió adónem</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00011</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Adófolyószámlán előjel fordítá</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00012</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Esedékességi dátum jelölő mező</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00013</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Mező típus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00014</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Kerekítési faktor</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00015</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Főkönyvi számla száma</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00016</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Öszesítő ABEV azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00017</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adatátvétel ABEV azonosítóból</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00018</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Sor / oszlop azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00019</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Alkalmazás minősége ABEV azono</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00020</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Nyomtatvány lap azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_BEVALLB</QNUM>
+     <TINDX>00021</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Csak aktuális időszak figyelem</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_NROB" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <ATTRIBUTES>
+    <OBJECT>/ZAK/BELNR</OBJECT>
+    <DTELSOBJ>BUKRS</DTELSOBJ>
+    <YEARIND>X</YEARIND>
+    <DOMLEN>CHAR10</DOMLEN>
+    <PERCENTAGE>10.0</PERCENTAGE>
+    <CODE>/ZAK/BELNR</CODE>
+    <BUFFER>X</BUFFER>
+    <UNAME>DDIC</UNAME>
+    <UDATE>2025-07-02</UDATE>
+    <UTIME>20:52:03</UTIME>
+   </ATTRIBUTES>
+   <TEXT>
+    <LANGU>H</LANGU>
+    <OBJECT>/ZAK/BELNR</OBJECT>
+    <TXT>Adófolyószámla bizonylatszám</TXT>
+    <TXTSHORT>Bizonylatszám</TXTSHORT>
+   </TEXT>
+  </asx:values>
+ </asx:abap>
+</abapGit>

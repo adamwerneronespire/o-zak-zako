@@ -1,0 +1,361 @@
+FUNCTION /ZAK/GET_MM_SZAMLASZ.
+*"----------------------------------------------------------------------
+*"*"Lokális interfész:
+*"  IMPORTING
+*"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
+*"     VALUE(I_BELNR) TYPE  BELNR_D OPTIONAL
+*"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
+*"     VALUE(I_AWKEY) TYPE  AWKEY OPTIONAL
+*"  EXPORTING
+*"     VALUE(E_SZAMLASZA) TYPE  /ZAK/SZAMLASZA
+*"     VALUE(E_SZAMLASZ) TYPE  /ZAK/SZAMLASZ
+*"     VALUE(E_SZAMLASZE) TYPE  /ZAK/SZAMLASZE
+*"     VALUE(E_SZLATIP) TYPE  /ZAK/SZLATIP
+*"     VALUE(E_STORNO) TYPE  XFELD
+*"  TABLES
+*"      T_RETURN STRUCTURE  BAPIRET2 OPTIONAL
+*"      T_SZAMLA TYPE  /ZAK/SZAMLA_T OPTIONAL
+*"  EXCEPTIONS
+*"      ERROR_AWKEY
+*"      ERROR_OTHER
+*"----------------------------------------------------------------------
+
+  TYPES: BEGIN OF LT_EBELN,
+         EBELN TYPE EBELN,
+         EBELP TYPE EBELP,
+         END OF LT_EBELN.
+* MM AWKEY
+  TYPES: BEGIN OF LT_AWKEY_DECODE,
+         BELNR TYPE RE_BELNR,
+         GJAHR TYPE GJAHR,
+         END OF LT_AWKEY_DECODE.
+
+
+  DATA L_SUBRC LIKE SY-SUBRC.
+  DATA LW_SZLA_GROUP TYPE T_SZLA_GROUP.
+  DATA LS_AWKDEC TYPE LT_AWKEY_DECODE.
+  DATA LI_EBELN TYPE STANDARD TABLE OF LT_EBELN.
+  DATA LW_EBELN TYPE LT_EBELN.
+  DATA L_VGABE_SHKZG TYPE CHAR2.
+
+  DATA LI_EKBE TYPE STANDARD TABLE OF EKBE.
+  DATA LW_EKBE TYPE EKBE.
+*++1365 #21.
+  DATA LI_EKBZ TYPE STANDARD TABLE OF EKBZ.
+  DATA LW_EKBZ TYPE EKBZ.
+*--1365 #21.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_AUDI_02 SPOTS /ZAK/FUNCTIONS_ES STATIC .
+
+* Sztornó adatok
+  DATA L_STBLG TYPE RE_STBLG.
+  DATA L_STJAH TYPE RE_STJAH.
+
+* Számla csoport
+*  DATA LW_SZLA_GROUP TYPE T_SZLA_GROUP.
+
+* Range meghatározás tételekhez
+  RANGES LR_VGABE_SHKZG   FOR RANGE_C2-LOW.
+  RANGES LR_VGABE_SHKZG_N FOR RANGE_C2-LOW.
+
+* 2 Számlabeérkezés és  'S' normál szállítói számla
+  M_DEF LR_VGABE_SHKZG_N 'I' 'EQ' '2S' SPACE.
+* 2 Számlabeérkezés és  'H' Jóváíró számla
+* 3 Utólagos terhelés  és 'S'  Utólagos terhelés
+* 3 Utólagos terhelés  és 'H'  Utólagos jóváírás
+  M_DEF LR_VGABE_SHKZG   'I' 'EQ' '2S' SPACE.
+  M_DEF LR_VGABE_SHKZG   'I' 'EQ' '2H' SPACE.
+  M_DEF LR_VGABE_SHKZG   'I' 'EQ' '3S' SPACE.
+  M_DEF LR_VGABE_SHKZG   'I' 'EQ' '3H' SPACE.
+
+  DEFINE M_CONV_ALPHA_INPUT.
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+      EXPORTING
+        INPUT  = &1
+      IMPORTING
+        OUTPUT = &1.
+  END-OF-DEFINITION.
+
+  DEFINE LM_GET_XBLNR.
+    IF NOT &1 IS INITIAL.
+      LS_AWKDEC = &1.
+      CLEAR &1.
+      SELECT SINGLE XBLNR INTO &1
+               FROM RBKP
+              WHERE BELNR EQ LS_AWKDEC-BELNR
+                AND GJAHR EQ LS_AWKDEC-GJAHR.
+    ENDIF.
+  END-OF-DEFINITION.
+*++1665 #05.
+*++2465 #05.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_MATE_07 SPOTS /ZAK/FUNCTIONS_ES .
+*--2465 #05.
+  DATA L_LIFNR1 TYPE LIFRE.
+  DATA L_LIFNR2 TYPE LIFRE.
+
+  DEFINE LM_GET_LIFNR.
+    CLEAR &2.
+    LS_AWKDEC = &1.
+    SELECT SINGLE LIFNR INTO &2
+             FROM RBKP
+              WHERE BELNR EQ LS_AWKDEC-BELNR
+                AND GJAHR EQ LS_AWKDEC-GJAHR.
+  END-OF-DEFINITION.
+*--665 #05.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_ZF_01 SPOTS /ZAK/FUNCTIONS_ES .
+
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_FGSZ_01 SPOTS /ZAK/FUNCTIONS_ES .
+
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
+
+*++2065 #16.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_INVITEL_01 SPOTS /ZAK/FUNCTIONS_ES .
+*--2065 #16.
+
+*Meghatározzuk a referencia kulcsot
+  IF I_AWKEY IS INITIAL.
+    M_CONV_ALPHA_INPUT I_BELNR.
+    SELECT SINGLE AWKEY INTO I_AWKEY
+                        FROM BKPF
+                       WHERE BUKRS EQ I_BUKRS
+                         AND BELNR EQ I_BELNR
+                         AND GJAHR EQ I_GJAHR.
+*  ELSE.
+*    M_CONV_ALPHA_INPUT I_AWKEY.
+  ENDIF.
+
+  IF I_AWKEY IS INITIAL.
+*++1665 #08.
+*    MESSAGE E354(/ZAK/ZAK) RAISING ERROR_AWKEY.
+**   Nem lehet meghatározni vagy hibás referenciakulcs! (AWKEY)
+    PERFORM ADD_MESSAGE TABLES T_RETURN
+                        USING  '/ZAK/ZAK'
+                               'E'
+                               '354'
+                               I_AWKEY
+                               ''
+                               ''
+                               ''.
+*--1665 #08.
+  ENDIF.
+
+  REFRESH I_SZLA_GROUP.
+  CLEAR   V_SZAMLASZA.
+
+  LS_AWKDEC = I_AWKEY.
+* Beszerzési bizonylat gyűjtése
+  SELECT EBELN EBELP INTO (LW_EBELN-EBELN,
+                           LW_EBELN-EBELP)
+                     FROM RSEG
+                    WHERE BELNR EQ LS_AWKDEC-BELNR
+                      AND GJAHR EQ LS_AWKDEC-GJAHR.
+    COLLECT LW_EBELN INTO LI_EBELN.
+  ENDSELECT.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_AUDI_03 SPOTS /ZAK/FUNCTIONS_ES .
+*++2365 #06.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_OTP_01 SPOTS /ZAK/FUNCTIONS_ES .
+*--2365 #06.
+*++2465 #02.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_TELEN_01 SPOTS /ZAK/FUNCTIONS_ES .
+*--2465 #02.
+*++1365 #8.
+* Ha nincs akkor XBLNR lesz a számlaszám és eredetinek tekintjük.
+  IF SY-SUBRC NE 0.
+*++1765 #27.
+*    SELECT SINGLE XBLNR INTO E_SZAMLASZ
+*                        FROM RBKP
+*                       WHERE BELNR EQ LS_AWKDEC-BELNR
+*                         AND GJAHR EQ LS_AWKDEC-GJAHR.
+*    E_SZAMLASZA = E_SZAMLASZ.
+*    E_SZLATIP   = C_SZLATIP_E.
+    PERFORM GET_PREV_RBKP_XBLNR  USING  LS_AWKDEC-BELNR
+                                        LS_AWKDEC-GJAHR
+                                        E_SZAMLASZ
+                                        E_SZAMLASZE
+                                        E_SZAMLASZA
+                                        E_SZLATIP.
+    IF E_SZAMLASZE IS INITIAL.
+      E_SZLATIP = C_SZLATIP_E.
+    ENDIF.
+
+* Sztornó meghatározása
+  SELECT SINGLE STBLG STJAH INTO (L_STBLG, L_STJAH)
+                            FROM RBKP
+                           WHERE BELNR EQ LS_AWKDEC-BELNR
+                             AND GJAHR EQ LS_AWKDEC-GJAHR
+                             AND IVTYP EQ '5'.
+  IF SY-SUBRC EQ 0.
+    E_STORNO = 'X'.
+  ENDIF.
+  CLEAR T_SZAMLA.
+  T_SZAMLA-SZAMLASZA = E_SZAMLASZA.
+  T_SZAMLA-SZAMLASZ  = E_SZAMLASZ.
+  T_SZAMLA-SZAMLASZE = E_SZAMLASZE.
+  T_SZAMLA-SZLATIP   = E_SZLATIP.
+  T_SZAMLA-STORNO    = E_STORNO.
+  APPEND T_SZAMLA.
+*--1765 #27.
+*++1465 #15.
+    FREE: LI_EBELN, LI_EKBE, LI_EKBZ.
+*--1465 #15.
+    EXIT.
+  ENDIF.
+*--1365 #8.
+*++1865 #09.
+  FREE: LI_EKBE, LI_EKBZ.
+  SELECT * INTO TABLE LI_EKBE
+           FROM EKBE
+           FOR ALL ENTRIES IN LI_EBELN
+          WHERE EBELN EQ LI_EBELN-EBELN
+            AND EBELP EQ LI_EBELN-EBELP.
+  SELECT * INTO TABLE LI_EKBZ
+           FROM EKBZ
+           FOR ALL ENTRIES IN LI_EBELN
+          WHERE EBELN EQ LI_EBELN-EBELN
+            AND EBELP EQ LI_EBELN-EBELP.
+  IF NOT LI_EKBZ[] IS INITIAL.
+    LOOP AT LI_EKBZ INTO LW_EKBZ.
+      CLEAR LW_EKBE.
+      MOVE-CORRESPONDING LW_EKBZ TO LW_EKBE.
+      APPEND LW_EKBE TO LI_EKBE.
+    ENDLOOP.
+    SORT LI_EKBE.
+  ENDIF.
+*--1865 #09.
+* Feldolgozás tételenként
+  LOOP AT LI_EBELN INTO LW_EBELN.
+*++1865 #09.
+*    FREE LI_EKBE.
+*--1865 #09.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_AUDI_04 SPOTS /ZAK/FUNCTIONS_ES .
+*++1865 #09.
+*    CALL FUNCTION 'ME_READ_HISTORY'
+*      EXPORTING
+*        EBELN = LW_EBELN-EBELN
+*        EBELP = LW_EBELN-EBELP
+*        WEBRE = ''
+*      TABLES
+*        XEKBE = LI_EKBE
+**++1365 #21.
+*        XEKBZ = LI_EKBZ.
+*
+*    IF NOT LI_EKBZ[] IS INITIAL.
+*      LOOP AT LI_EKBZ INTO LW_EKBZ.
+*        CLEAR LW_EKBE.
+*        MOVE-CORRESPONDING LW_EKBZ TO LW_EKBE.
+*        APPEND LW_EKBE TO LI_EKBE.
+*      ENDLOOP.
+*      SORT LI_EKBE.
+*    ENDIF.
+**--1365 #21.
+*--1865 #09.
+ENHANCEMENT-POINT /ZAK/ZAK_AUDI_MM_01 SPOTS /ZAK/FUNCTIONS_ES .
+
+*++1865 #09.
+*    LOOP AT LI_EKBE INTO LW_EKBE.
+    LOOP AT LI_EKBE INTO LW_EKBE WHERE EBELN EQ LW_EBELN-EBELN
+                                   AND EBELP EQ LW_EBELN-EBELP.
+*--1865 #09.
+      CLEAR LW_SZLA_GROUP.
+      CONCATENATE LW_EKBE-VGABE LW_EKBE-SHKZG INTO L_VGABE_SHKZG.
+*     Csak ha megfelelő típus
+      CHECK L_VGABE_SHKZG IN LR_VGABE_SHKZG.
+      CLEAR LW_SZLA_GROUP.
+*     Normál számla
+      IF L_VGABE_SHKZG IN LR_VGABE_SHKZG_N.
+        CONCATENATE LW_EKBE-BELNR LW_EKBE-GJAHR INTO V_SZAMLASZA.
+        LW_SZLA_GROUP-SZLATIP = C_SZLATIP_E.
+*++2065 #14.
+*     Sztornó számla
+      ELSE.
+        SELECT SINGLE STBLG STJAH INTO (L_STBLG, L_STJAH)
+                                  FROM RBKP
+                                 WHERE BELNR EQ LW_EKBE-BELNR
+                                   AND GJAHR EQ LW_EKBE-GJAHR.
+        IF SY-SUBRC EQ 0 AND NOT L_STBLG IS INITIAL.
+          CONCATENATE L_STBLG L_STJAH INTO V_SZAMLASZA.
+        ENDIF.
+*--2065 #14.
+      ENDIF.
+      LW_SZLA_GROUP-SZAMLASZA = V_SZAMLASZA.
+      CONCATENATE LW_EKBE-BELNR LW_EKBE-GJAHR
+             INTO LW_SZLA_GROUP-SZAMLASZ.
+*++1665 #05.
+*      APPEND LW_SZLA_GROUP TO I_SZLA_GROUP.
+      COLLECT LW_SZLA_GROUP INTO I_SZLA_GROUP.
+*--1665 #05.
+    ENDLOOP.
+  ENDLOOP.
+
+* Meghatározzuk a kimeneti adatokat:
+  READ TABLE I_SZLA_GROUP INTO LW_SZLA_GROUP
+                          WITH KEY SZAMLASZ = I_AWKEY.
+  IF SY-SUBRC NE 0.
+*++1665 #08.
+*    MESSAGE E355(/ZAK/ZAK) WITH I_AWKEY RAISING ERROR_OTHER.
+**   Hiba a & követő bizonylatok meghatározásánál!
+    PERFORM ADD_MESSAGE TABLES T_RETURN
+                        USING  '/ZAK/ZAK'
+                               'E'
+                               '354'
+                               I_AWKEY
+                               ''
+                               ''
+                               ''.
+*--1665 #08.
+  ENDIF.
+*++1665 #05.
+* Fuvarszámlák miatt ha nem azonos a szállító, akkor nem korrekció:
+  LM_GET_LIFNR LW_SZLA_GROUP-SZAMLASZA L_LIFNR1.
+  LM_GET_LIFNR LW_SZLA_GROUP-SZAMLASZ  L_LIFNR2.
+
+  IF L_LIFNR1 NE L_LIFNR2.
+    E_SZAMLASZA = LW_SZLA_GROUP-SZAMLASZ.
+    E_SZAMLASZ  = LW_SZLA_GROUP-SZAMLASZ.
+    E_SZLATIP   = C_SZLATIP_E.
+  ELSE.
+*--1665 #05.
+    E_SZAMLASZA = LW_SZLA_GROUP-SZAMLASZA.
+    E_SZAMLASZ  = LW_SZLA_GROUP-SZAMLASZ.
+    E_SZLATIP   = LW_SZLA_GROUP-SZLATIP.
+*++1665 #05.
+  ENDIF.
+*--1665 #05.
+  LS_AWKDEC = LW_SZLA_GROUP-SZAMLASZ.
+
+* Sztornó meghatározása
+  SELECT SINGLE STBLG STJAH INTO (L_STBLG, L_STJAH)
+                            FROM RBKP
+                           WHERE BELNR EQ LS_AWKDEC-BELNR
+                             AND GJAHR EQ LS_AWKDEC-GJAHR
+                             AND IVTYP EQ '5'.
+  IF SY-SUBRC EQ 0.
+    CONCATENATE L_STBLG L_STJAH INTO E_SZAMLASZE.
+    E_STORNO = 'X'.
+*++1665 #05.
+*  ELSEIF LW_SZLA_GROUP-SZLATIP NE C_SZLATIP_E.
+  ELSEIF E_SZLATIP NE C_SZLATIP_E.
+*--1665 #05.
+    E_SZAMLASZE = LW_SZLA_GROUP-SZAMLASZA.
+  ENDIF.
+*++2465 #05.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_MATE_05 SPOTS /ZAK/FUNCTIONS_ES .
+*--2465 #05.
+* Számlaszámok meghatározása
+  LM_GET_XBLNR: E_SZAMLASZA, E_SZAMLASZ, E_SZAMLASZE.
+*++2465 #05.
+ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_MATE_06 SPOTS /ZAK/FUNCTIONS_ES .
+*--2465 #05.
+*++1465 #15.
+  FREE: LI_EBELN, LI_EKBE, LI_EKBZ.
+*--1465 #15.
+*++1865 #04.
+  CLEAR T_SZAMLA.
+  T_SZAMLA-SZAMLASZA = E_SZAMLASZA.
+  T_SZAMLA-SZAMLASZ  = E_SZAMLASZ.
+  T_SZAMLA-SZAMLASZE = E_SZAMLASZE.
+  T_SZAMLA-SZLATIP   = E_SZLATIP.
+  T_SZAMLA-STORNO    = E_STORNO.
+  APPEND T_SZAMLA.
+*--1865 #04.
+
+ENDFUNCTION.

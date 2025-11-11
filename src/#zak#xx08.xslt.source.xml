@@ -1,0 +1,92 @@
+<?sap.transform simple?>
+<tt:transform xmlns:tt="http://www.sap.com/transformation-templates" xmlns:ddic="http://www.sap.com/abapxml/types/dictionary" xmlns:def="http://www.sap.com/abapxml/types/defined">
+  <tt:root name="NYOMTA" type="?"/>
+  <tt:root name="NYOMTM" type="?"/>
+  <tt:root name="BUKRSTEXT" type="?"/>
+  <tt:root name="ADOSZAM" type="?"/>
+  <tt:root name="IDTOL" type="?"/>
+  <tt:root name="IDIG" type="?"/>
+  <tt:root name="I_A_XX08" type="?"/>
+  <tt:root name="I_MS_XX08" type="?"/>
+  <tt:template>
+    <nyomtatvanyok xmlns="http://www.apeh.hu/abev/nyomtatvanyok/2005/01">
+      <nyomtatvany>
+        <nyomtatvanyinformacio>
+          <nyomtatvanyazonosito>
+            <tt:value ref=".NYOMTA"/>
+          </nyomtatvanyazonosito>
+          <nyomtatvanyverzio>2.0</nyomtatvanyverzio>
+          <adozo>
+            <nev>
+              <tt:value ref=".BUKRSTEXT"/>
+            </nev>
+            <adoszam>
+              <tt:value ref=".ADOSZAM"/>
+            </adoszam>
+            <adoazonosito/>
+          </adozo>
+          <idoszak>
+            <tol>
+              <tt:value ref=".IDTOL"/>
+            </tol>
+            <ig>
+              <tt:value ref=".IDIG"/>
+            </ig>
+          </idoszak>
+        </nyomtatvanyinformacio>
+        <mezok>
+          <tt:loop ref=".I_A_XX08">
+            <mezo>
+              <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+              <tt:value ref="VALUE"/>
+            </mezo>
+          </tt:loop>
+        </mezok>
+      </nyomtatvany>
+      <tt:loop ref=".I_MS_XX08">
+        <nyomtatvany>
+          <nyomtatvanyinformacio>
+            <nyomtatvanyazonosito>
+              <tt:value ref=".NYOMTM"/>
+            </nyomtatvanyazonosito>
+            <nyomtatvanyverzio>2.0</nyomtatvanyverzio>
+            <adozo>
+              <nev>
+                <tt:value ref=".BUKRSTEXT"/>
+              </nev>
+              <adoszam>
+                <tt:value ref=".ADOSZAM"/>
+              </adoszam>
+            </adozo>
+            <munkavallalo>
+              <nev>
+                <tt:value ref="NAME"/>
+              </nev>
+              <adoazonosito>
+                <tt:value ref="ADOAZON"/>
+              </adoazonosito>
+            </munkavallalo>
+            <idoszak>
+              <tol>
+                <tt:value ref=".IDTOL"/>
+              </tol>
+              <ig>
+                <tt:value ref=".IDIG"/>
+              </ig>
+            </idoszak>
+            <megjegyzes/>
+          </nyomtatvanyinformacio>
+          <mezok>
+            <tt:loop ref="MDATA">
+              <mezo>
+                <tt:attribute name="eazon" value-ref="ABEVAZ"/>
+                <tt:value ref="VALUE"/>
+              </mezo>
+            </tt:loop>
+          </mezok>
+        </nyomtatvany>
+      </tt:loop>
+    </nyomtatvanyok>
+  </tt:template>
+</tt:transform>
+

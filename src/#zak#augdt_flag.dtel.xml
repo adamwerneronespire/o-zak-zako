@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/AUGDT_FLAG</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/AUGDT_FLAG</DOMNAME>
+    <HEADLEN>10</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>27</SCRLEN3>
+    <DDTEXT>Kiegyenlítés dátum kezelése</DDTEXT>
+    <REPTEXT>Kiegy.d.k.</REPTEXT>
+    <SCRTEXT_S>Kiegy.d.k.</SCRTEXT_S>
+    <SCRTEXT_M>Kiegy.dát.kez.</SCRTEXT_M>
+    <SCRTEXT_L>Kiegyenlítés dátum kezelése</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Ausgleichsdatum</DDTEXT>
+     <REPTEXT>Ausgl.dat</REPTEXT>
+     <SCRTEXT_S>Ausgl.dat</SCRTEXT_S>
+     <SCRTEXT_M>Ausgleichsdatum</SCRTEXT_M>
+     <SCRTEXT_L>Ausgleichsdatum</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

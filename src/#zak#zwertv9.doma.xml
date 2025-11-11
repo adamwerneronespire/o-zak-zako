@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DOMA" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD01V>
+    <DOMNAME>/ZAK/ZWERTV9</DOMNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DATATYPE>CURR</DATATYPE>
+    <LENG>000023</LENG>
+    <OUTPUTLEN>000031</OUTPUTLEN>
+    <DECIMALS>000002</DECIMALS>
+    <SIGNFLAG>X</SIGNFLAG>
+    <DDTEXT>PL9 értékmező előjellel</DDTEXT>
+    <APPLCLASS>SAP</APPLCLASS>
+   </DD01V>
+   <I18N_LANGS>
+    <LANGU>4</LANGU>
+    <LANGU>8</LANGU>
+    <LANGU>D</LANGU>
+    <LANGU>E</LANGU>
+    <LANGU>R</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>4</DDLANGUAGE>
+     <DDTEXT>Câmp valoare PL9 cu semn +/-</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>8</DDLANGUAGE>
+     <DDTEXT>Поле значения PL9 со знаком +/-</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Wertfeld PL9 mit Vorzeichen</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DDTEXT>Value field PL9 with +/- sign</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>R</DDLANGUAGE>
+     <DDTEXT>Поле значения PL9 со знаком +/-</DDTEXT>
+    </item>
+   </DD01_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

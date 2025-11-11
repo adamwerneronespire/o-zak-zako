@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SCVI" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <SCVI>
+    <SHDSVCI>
+     <SCVARIANT>/ZAK/TEXT_1100</SCVARIANT>
+     <PROGNAME>SAPMSSCE</PROGNAME>
+     <DYNPRO>1100</DYNPRO>
+     <VERSION>3</VERSION>
+    </SHDSVCI>
+    <SHDSVTXCI>
+     <SHDSVTXCI>
+      <LANGU>H</LANGU>
+      <SCVARIANT>/ZAK/TEXT_1100</SCVARIANT>
+      <SCVTEXT>/ZAK/O szöveg kezelés</SCVTEXT>
+     </SHDSVTXCI>
+    </SHDSVTXCI>
+    <SHDSVFVCI>
+     <SHDSVFVCI>
+      <SCVARIANT>/ZAK/TEXT_1100</SCVARIANT>
+      <FIELDNAME>RSSCE-TDID</FIELDNAME>
+      <FIELDVALUE>/zak/o</FIELDVALUE>
+      <ACTIVE>X</ACTIVE>
+      <INPUT_OFF>X</INPUT_OFF>
+      <ITYPE>C</ITYPE>
+     </SHDSVFVCI>
+     <SHDSVFVCI>
+      <SCVARIANT>/ZAK/TEXT_1100</SCVARIANT>
+      <FIELDNAME>RSSCE-TDSPRAS</FIELDNAME>
+      <FIELDVALUE>HU</FIELDVALUE>
+      <ACTIVE>X</ACTIVE>
+      <INPUT_OFF>X</INPUT_OFF>
+      <ITYPE>C</ITYPE>
+     </SHDSVFVCI>
+    </SHDSVFVCI>
+   </SCVI>
+  </asx:values>
+ </asx:abap>
+</abapGit>

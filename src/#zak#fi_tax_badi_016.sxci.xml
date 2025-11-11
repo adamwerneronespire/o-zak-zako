@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SXCI" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <SXCI>
+    <IMPLEMENTATION_DATA>
+     <IMP_NAME>/ZAK/FI_TAX_BADI_016</IMP_NAME>
+     <TEXT>/ZAK/FI_TAX_BADI_015</TEXT>
+     <IMP_CLASS>/ZAK/CL_IM_AK_FI_TAX_BADI_016</IMP_CLASS>
+     <EXIT_NAME>FI_TAX_BADI_016</EXIT_NAME>
+     <INTER_NAME>IF_EX_FI_TAX_BADI_016</INTER_NAME>
+     <ACTIVE>X</ACTIVE>
+    </IMPLEMENTATION_DATA>
+    <FILTERS>
+     <item>
+      <FLT_VAL>HU</FLT_VAL>
+     </item>
+    </FILTERS>
+   </SXCI>
+  </asx:values>
+ </asx:abap>
+</abapGit>

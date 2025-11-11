@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ADON_TXT</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>TEXT40</DOMNAME>
+    <HEADLEN>40</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>17</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Adónem megnevezés</DDTEXT>
+    <REPTEXT>Adónem megnevezés</REPTEXT>
+    <SCRTEXT_S>Megnevezés</SCRTEXT_S>
+    <SCRTEXT_M>Adónem megnevezés</SCRTEXT_M>
+    <SCRTEXT_L>Adónem megnevezés</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Benennung Steuergattung</DDTEXT>
+     <REPTEXT>Benennung Steuergattung</REPTEXT>
+     <SCRTEXT_S>Benennung</SCRTEXT_S>
+     <SCRTEXT_M>Benennung Steuerg</SCRTEXT_M>
+     <SCRTEXT_L>Benennung Steuergatt</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

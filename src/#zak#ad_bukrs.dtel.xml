@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/AD_BUKRS</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>BUKRS</DOMNAME>
+    <HEADLEN>12</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Adó vállalat</DDTEXT>
+    <REPTEXT>Adó vállalat</REPTEXT>
+    <SCRTEXT_S>Adó váll.</SCRTEXT_S>
+    <SCRTEXT_M>Adó vállalat</SCRTEXT_M>
+    <SCRTEXT_L>Adó vállalat</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <LONGTEXTS>
+    <item>
+     <DOKIL>
+      <ID>DE</ID>
+      <OBJECT>/ZAK/AD_BUKRS</OBJECT>
+      <LANGU>H</LANGU>
+      <TYP>E</TYP>
+      <VERSION>0002</VERSION>
+      <TXTLINES>00010</TXTLINES>
+      <DOKSTATE>A</DOKSTATE>
+     </DOKIL>
+     <HEAD>
+      <TDOBJECT>DOKU</TDOBJECT>
+      <TDNAME>/ZAK/AD_BUKRS</TDNAME>
+      <TDID>DE</TDID>
+      <TDSPRAS>H</TDSPRAS>
+      <TDFORM>S_DOCU_SHOW</TDFORM>
+      <TDSTYLE>S_DOCUS1</TDSTYLE>
+      <TDVERSION>00002</TDVERSION>
+      <TDLINESIZE>072</TDLINESIZE>
+     </HEAD>
+     <LINES>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEFINITION&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Az a vállalat kód, amelyre a bevallást elkészítjük a /ZAK/ZAKO modulban.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;USE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>Normál esetben ez megegyezik azzal a vállalattal, amelyben a</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>bizonylatokat könyvelik az FI modulban, ha azonban be-, vagy</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>összeolvadás történt, akkor a jogelődös bevallás esetén ez a két</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>vállalat eltérhet.</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;DEPENDENCIES&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>U1</TDFORMAT>
+       <TDLINE>&amp;EXAMPLE&amp;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDFORMAT>AS</TDFORMAT>
+       <TDLINE>&quot;A&quot; vállalat beolvad &quot;B&quot; vállalatba. Ha a beolvadás után a korábbi &quot;A&quot;</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>vállalat tevékenységét érintően keletkezik önrevízió a beolvadás előtti</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>időszakra, akkor az FI modulban már a &quot;B&quot; vállalat bizonylatai közül</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>kerül szelektálásra az &quot;A&quot; vállalat jogelődös bevallásához (/ZAK/ZAKO mo</TDLINE>
+      </TLINE>
+      <TLINE>
+       <TDLINE>az adat.</TDLINE>
+      </TLINE>
+     </LINES>
+    </item>
+   </LONGTEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

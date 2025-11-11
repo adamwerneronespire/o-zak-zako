@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <CLAS>/ZAK/ANALITIKA</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>Bevallási adatok analitikájának megjelenítése.</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00003</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás típus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00004</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Gazdasági év</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00005</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Gazdasági hónap</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00006</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Bevallás sorszáma időszakon be</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00007</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>ABEV azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00008</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adóazonosító/adószám</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00009</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adatszolgáltatás azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00010</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Feltöltés azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00011</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Dinamikus lapszám</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00012</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Manuális rögzítés</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00013</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Előjegyzés/sztornózás</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00014</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Tétel statisztikai</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00015</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Gazdasági év</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00016</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Könyvelési bizonylat bizonylat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00017</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Könyvelési sor száma könyvelés</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00018</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Könyvelési flag</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00019</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Műveletkulcs</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00020</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Forgalmi adó kódja</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00021</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bizonylatfajta</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00022</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Főkönyvi könyvelés főkönyvi sz</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00023</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Szállító/Vevő kód</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00024</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Számlatípus</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00025</TINDX>
+     <MODIF>0001</MODIF>
+     <MAXL>030</MAXL>
+     <TEXT>Általános forgalmi adó azonosí</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00026</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>1. adószám</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00027</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Referenciabizonylat száma</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00028</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Mezőérték (karakteres)</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00029</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Mezőérték (numerikus)</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00030</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Adódátum</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00031</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Üzletág</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00032</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Háromszög ügylet szereplője</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00033</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>FI vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00034</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>ÁFA arányosítás jelölő flag</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00035</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Költséghely</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00036</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>SAP könyvelési hónap</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00037</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Könyvelési dátum a bizonylaton</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00038</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Bizonylatdátum a bizonylaton</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAKO_ANALITIKA</QNUM>
+     <TINDX>00039</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>NONEED</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

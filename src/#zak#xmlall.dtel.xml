@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/XMLALL</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>15</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>31</SCRLEN3>
+    <DDTEXT>XML-be teljes időszak letöltése</DDTEXT>
+    <REPTEXT>XML telj.idősz.</REPTEXT>
+    <SCRTEXT_S>XML telj.</SCRTEXT_S>
+    <SCRTEXT_M>XML telj.idősz.</SCRTEXT_M>
+    <SCRTEXT_L>XML-be teljes időszak letöltése</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>XML für ganze Periode</DDTEXT>
+     <REPTEXT>XML für ganze P</REPTEXT>
+     <SCRTEXT_S>XML für ga</SCRTEXT_S>
+     <SCRTEXT_M>XML für ganze P</SCRTEXT_M>
+     <SCRTEXT_L>XML für ganze Periode</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

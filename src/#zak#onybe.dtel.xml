@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ONYBE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>XFELD</DOMNAME>
+    <HEADLEN>14</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>ONY előjel forgatás</DDTEXT>
+    <REPTEXT>ONY előj.forg.</REPTEXT>
+    <SCRTEXT_S>ONY előj.f</SCRTEXT_S>
+    <SCRTEXT_M>ONY előj.forg.</SCRTEXT_M>
+    <SCRTEXT_L>ONY előjel forgatás</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>ONY Vorz.wechs</DDTEXT>
+     <REPTEXT>ONY Vorz.wechs</REPTEXT>
+     <SCRTEXT_S>ONY Vorz.w</SCRTEXT_S>
+     <SCRTEXT_M>ONY Vorz.wechs</SCRTEXT_M>
+     <SCRTEXT_L>ONY Vorz.wechs</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

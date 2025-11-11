@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/LWSTE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>/ZAK/WERTV7</DOMNAME>
+    <HEADLEN>16</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>20</SCRLEN3>
+    <DDTEXT>Adóösszeg az ország pénznemében</DDTEXT>
+    <REPTEXT>AdóOrszágPnem</REPTEXT>
+    <SCRTEXT_S>AdóOrszPn</SCRTEXT_S>
+    <SCRTEXT_M>AdóOrszPnem</SCRTEXT_M>
+    <SCRTEXT_L>AdóOrszágPnem</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+    <LANGU>E</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Adóösszeg az ország pénznemében</DDTEXT>
+     <REPTEXT>AdóOrszágPnem</REPTEXT>
+     <SCRTEXT_S>AdóOrszPn</SCRTEXT_S>
+     <SCRTEXT_M>AdóOrszPnem</SCRTEXT_M>
+     <SCRTEXT_L>AdóOrszágPnem</SCRTEXT_L>
+    </item>
+    <item>
+     <DDLANGUAGE>E</DDLANGUAGE>
+     <DDTEXT>Tax Amount in Country Currency</DDTEXT>
+     <REPTEXT>Country currency tax</REPTEXT>
+     <SCRTEXT_S>Curr.tax</SCRTEXT_S>
+     <SCRTEXT_M>Cntry curr.tax</SCRTEXT_M>
+     <SCRTEXT_L>Country currency tax</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

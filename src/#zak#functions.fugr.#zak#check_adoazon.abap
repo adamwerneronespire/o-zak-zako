@@ -1,0 +1,58 @@
+FUNCTION /ZAK/CHECK_ADOAZON.
+*"----------------------------------------------------------------------
+*"*"Lokális interfész:
+*"  EXPORTING
+*"     REFERENCE(E_HIBA) TYPE  /ZAK/ADAT_HIBA
+*"  TABLES
+*"      INTERN STRUCTURE  ALSMEX_TABLINE
+*"      CHECK_TAB STRUCTURE  DD03P
+*"----------------------------------------------------------------------
+  DATA L_TABIX LIKE SY-TABIX.
+  DATA L_INPUT TYPE STRING.
+  DATA L_SZIDO TYPE DATUM.
+  DATA L_RETURN TYPE CHAR_55.
+  DATA LW_XLS TYPE ALSMEX_TABLINE.
+
+* Adóazonosító
+  CONSTANTS LC_ADOAZON TYPE ROLLNAME VALUE '/ZAK/ADOAZON'.
+* Születési dátum
+  CONSTANTS LC_SZULDAT TYPE ROLLNAME VALUE '/ZAK/SZULDAT'.
+
+
+  DEFINE LM_GET_DATA.
+    READ TABLE CHECK_TAB
+               WITH KEY ROLLNAME = &1.
+    IF SY-SUBRC EQ 0.
+      L_TABIX = SY-TABIX.
+      READ TABLE INTERN INTO LW_XLS
+           WITH KEY COL = L_TABIX.
+      IF SY-SUBRC EQ 0.
+        MOVE LW_XLS-VALUE TO &2.
+      ENDIF.
+    ENDIF.
+  END-OF-DEFINITION.
+
+* Adatok meghatározása
+  LM_GET_DATA LC_ADOAZON L_INPUT.
+  LM_GET_DATA LC_SZULDAT L_SZIDO.
+
+* Adóazonosító ellenőrzés
+  CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
+    EXPORTING
+      INPUT  = L_INPUT
+      SZIDO  = L_SZIDO
+    IMPORTING
+      RETURN = L_RETURN.
+* Hiba feltöltése
+  IF NOT L_RETURN IS INITIAL.
+    CLEAR: E_HIBA.
+    E_HIBA-SOR          = LW_XLS-ROW.
+    E_HIBA-OSZLOP       = LW_XLS-COL.
+    E_HIBA-/ZAK/F_VALUE  = LW_XLS-VALUE.
+    E_HIBA-TABNAME      = CHECK_TAB-TABNAME.
+    E_HIBA-FIELDNAME    = CHECK_TAB-FIELDNAME.
+    E_HIBA-ZA_HIBA      = L_RETURN.
+    E_HIBA-/ZAK/ATTRIB   = CHECK_TAB-DDTEXT.
+  ENDIF.
+
+ENDFUNCTION.

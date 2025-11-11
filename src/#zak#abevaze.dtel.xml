@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/ABEVAZE</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>CHAR17</DOMNAME>
+    <HEADLEN>17</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>21</SCRLEN3>
+    <DDTEXT>Előző ABEV azonosító</DDTEXT>
+    <REPTEXT>El.ABEV.az.</REPTEXT>
+    <SCRTEXT_S>E.ABEV.az.</SCRTEXT_S>
+    <SCRTEXT_M>El.ABEV.az.</SCRTEXT_M>
+    <SCRTEXT_L>Előző ABEV azonosító</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Vorige ABEV ID</DDTEXT>
+     <REPTEXT>Vorige ABEV ID</REPTEXT>
+     <SCRTEXT_S>Vorige ABE</SCRTEXT_S>
+     <SCRTEXT_M>Vorige ABEV ID</SCRTEXT_M>
+     <SCRTEXT_L>Vorige ABEV ID</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

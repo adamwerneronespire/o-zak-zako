@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_AQQU" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AQGQCAT>
+    <AQGQCAT>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <CLAS>/ZAK/SZJA_ELL_LOG</CLAS>
+    </AQGQCAT>
+   </AQGQCAT>
+   <AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00001</TINDX>
+     <HEAD>X</HEAD>
+     <MAXL>060</MAXL>
+     <TEXT>SZJA egyeztető LOG megjelenítés</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00002</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Vállalat</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00003</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>Főkönyvi számla száma</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00004</TINDX>
+     <MAXL>030</MAXL>
+     <TEXT>ABEV azonosító</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00008</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Főkönyvi számla száma &lt;__________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00009</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Összeg Főkönyvi számla száma &lt;__________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00010</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Mennyiség Főkönyvi számla száma &lt;__________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00011</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>ABEV azonosító &lt;_________________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00012</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Összeg ABEV azonosító &lt;_________________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00013</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Mennyiség ABEV azonosító &lt;_________________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00014</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Adóazonosító/adószám &lt;_________________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00015</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Összeg Adóazonosító/adószám &lt;_________________&gt;</TEXT>
+    </AQGTQ>
+    <AQGTQ>
+     <SPRSL>H</SPRSL>
+     <NUM>/ZAK/ZAKO</NUM>
+     <QNUM>ZAK_SZJA_ELL</QNUM>
+     <TINDX>00016</TINDX>
+     <MAXL>255</MAXL>
+     <TEXT>Mennyiség Adóazonosító/adószám &lt;_________________&gt;</TEXT>
+    </AQGTQ>
+   </AQGTQ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

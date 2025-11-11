@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>/ZAK/LWBAS_NMT</ROLLNAME>
+    <DDLANGUAGE>H</DDLANGUAGE>
+    <DOMNAME>WERTV13</DOMNAME>
+    <HEADLEN>25</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>16</SCRLEN2>
+    <SCRLEN3>30</SCRLEN3>
+    <DDTEXT>Összeg nem ÁFA mentes adó alap</DDTEXT>
+    <REPTEXT>Nem ÁFA mentes adó alap</REPTEXT>
+    <SCRTEXT_S>ÁFA NMT.</SCRTEXT_S>
+    <SCRTEXT_M>Nem ÁFA ment.aa.</SCRTEXT_M>
+    <SCRTEXT_L>Összeg nem ÁFA mentes adó alap</SCRTEXT_L>
+    <DTELMASTER>H</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+   <I18N_LANGS>
+    <LANGU>D</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>D</DDLANGUAGE>
+     <DDTEXT>Betrag nicht MWStfreies Steuerbasis</DDTEXT>
+     <REPTEXT>Betrag nicht MWStfreies S</REPTEXT>
+     <SCRTEXT_S>Betrag nic</SCRTEXT_S>
+     <SCRTEXT_M>Betrag nicht MWS</SCRTEXT_M>
+     <SCRTEXT_L>Betrag nicht MWStfreies Steuer</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

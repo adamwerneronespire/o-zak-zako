@@ -2,38 +2,38 @@
 *& Report  /ZAK/BUKRS_CORR
 *&
 *&---------------------------------------------------------------------*
-*& A program a /ZAK/AFA_SZLA BELNR mezőt tölti fel vezető 0-val
+*& The program fills the /ZAK/AFA_SZLA BELNR field with a leading 0
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/AFA_SZLA_BELNR_CONV MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/AFA_SZLA.
 
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for range upload
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -61,12 +61,12 @@ PARAMETERS P_SIZE TYPE I DEFAULT '100000' OBLIGATORY.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Eligibility check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
   IF SY-SUBRC NE 0.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -84,7 +84,7 @@ AT SELECTION-SCREEN OUTPUT.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok feldolgozása
+* Data processing
   PERFORM PROCESS_DATA.
 
 *&---------------------------------------------------------------------*
@@ -121,7 +121,7 @@ FORM PROCESS_DATA .
   IF SY-SUBRC EQ 0.
     COMMIT WORK AND WAIT.
     MESSAGE I216.
-* Adatmódosítások elmentve!
+* Data changes saved!
   ENDIF.
 
 ENDFORM.                    " PROCESS_DATA

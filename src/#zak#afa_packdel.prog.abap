@@ -9,61 +9,61 @@
 REPORT  /zak/afa_packdel MESSAGE-ID /zak/zak.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A SAP Hungary a BSET tábla töltését átírta de
-*& előtte már futtatásra került a AFA_SAP_SEL program ebből adódóan
-*& törölni kell a rekordokat a /ZAK/ANALITIKA és a /ZAK/BSET táblákból
+*& Function description: SAP Hungary has rewritten the filling of the BSET table but
+*& before that, the AFA_SAP_SEL program was already run as a result
+*& records must be deleted from the /ZAK/ANALITIKA and /ZAK/BSET tables
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2007.04.16
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Balazs Gabor - FMC
+*& Created on        : 2007.04.16
+*& Functional spec by: ________
+*& SAP module        : ADO
+*& Program  type     : Report
+*& SAP version        : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIED BY             DESCRIPTION        TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2008/02/09   Balázs G.     /ZAK/BSET vállalat az FI_BUKRS
-*&                                   alapján.
+*& 0001   2008/02/09   Balazs G.     /ZAK/BSET company based on FI_BUKRS
+*&                                   field.
 *&---------------------------------------------------------------------*
 INCLUDE /zak/common_struct.
 
 TYPE-POOLS: slis.
 
-*ALV közös rutinok
+*ALV common routines
 INCLUDE /zak/alv_list_forms.
 
 
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 DATA i_alv_data LIKE /zak/afa_packdel OCCURS 0.
 DATA w_alv_data LIKE /zak/afa_packdel.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for range upload
 DEFINE m_def.
   MOVE: &2      TO &1-sign,
         &3      TO &1-option,
@@ -105,7 +105,7 @@ INITIALIZATION.
 * M_DEF S_PACK 'I' 'EQ' '20070412_001430' SPACE.
 * M_DEF S_PACK 'I' 'EQ' '20070418_001455' SPACE.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Eligibility check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2265 #02.
 *                  ID 'TCD'  FIELD SY-TCODE.
@@ -116,7 +116,7 @@ INITIALIZATION.
   IF sy-subrc NE 0 AND sy-batch IS INITIAL.
 *--1865 #03.
     MESSAGE e152(/zak/zak).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -152,7 +152,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_DEL_TELEKOM SPOTS /ZAK/DEL_PACKAGE .
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatszelekció:
+* Data selection:
   PERFORM sel_data.
 
 *&---------------------------------------------------------------------*
@@ -160,7 +160,7 @@ START-OF-SELECTION.
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
 
-* Adatfeldolgozása
+* Data processing
   PERFORM process_data.
 
 
@@ -215,11 +215,11 @@ FORM sel_data .
 
   IF sy-subrc NE 0.
     MESSAGE e031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain a record that can be processed!
   ENDIF.
 
 *++1365 #7.
-* ÁFA számlák beolvasása
+* Reading VAT invoices
   SELECT * INTO TABLE i_/zak/afa_szla
            FROM /zak/afa_szla
           WHERE pack IN s_pack
@@ -260,7 +260,7 @@ FORM process_data .
 
   IF i_alv_data[] IS INITIAL.
     MESSAGE e031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain a record that can be processed!
   ENDIF.
 
   CHECK p_test IS INITIAL.
@@ -295,7 +295,7 @@ FORM process_data .
   COMMIT WORK AND WAIT.
 
   MESSAGE i216.
-*   Adatmódosítások elmentve!
+*   Data changes saved!
 
 
 

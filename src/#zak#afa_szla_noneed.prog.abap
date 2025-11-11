@@ -1,28 +1,28 @@
 *&---------------------------------------------------------------------*
-*& Program: a bevallás áttöltéséhez ellenőrző és végrehajtó program
+*& Program: verification and execution program for transferring the return
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/AFA_SZLA_NONEED MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& megjeleníti (ill. éles esetén módosítja) távoli RFC hívás segítségével
-*& az átvehető bevallásokat ill. kiírja ami már átvételre került.
+*& Function description: The program based on the conditions specified in the selection
+*& displays (or modifies in production) using a remote RFC call
+*& the returns that can be received or it lists what has already been received.
 *&---------------------------------------------------------------------*
-*& Szerző            : Bana G. Péter - Ness
-*& Létrehozás dátuma : 2014.09.04
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    :
-*& Program  típus    : Riport
-*& SAP verzió        :
+*& Author            : Bana G. Peter - Ness
+*& Created on        : 2014.09.04
+*& Functional spec by: ________
+*& SAP module        :
+*& Program  type     : Report
+*& SAP version        :
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG# DATE MODIFIER DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2014.09.04   Bana G. Péter  Inicializált verzió
-*& 0002   2014.09.08   Bana G. Péter  Éles üzem hozzáadása
+*& 0001 2014.09.04 Bana G. Peter Initialized version
+*& 0002 09/08/2014 Bana G. Peter Add live plant
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 DATA L_SAVE_OK TYPE OK.
@@ -32,37 +32,37 @@ INCLUDE /ZAK/COMMON_STRUCT.
 CLASS LCL_EVENT_HANDLER DEFINITION DEFERRED.
 
 *&---------------------------------------------------------------------*
-*& Egyszerű alv alapok
+*& Simple sleep basics
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& Típusdeklarációk
+*& Type Declarations
 *&---------------------------------------------------------------------*
 TYPES: TY_DATA TYPE TABLE OF /ZAK/AFA_SZLA.
 
 INCLUDE /ZAK/ALV_GRID_ALAP.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/AFA_SZLA.
 *&---------------------------------------------------------------------*
-*  PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (G_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*  PROGRAM VARIABLES *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables - (G_xxx...) *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA G_SUBRC TYPE SYSUBRC.
 
@@ -72,29 +72,29 @@ DATA G_ANSWER.
 *& SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-* Vállalat.
+* Company.
   PARAMETERS: P_BUKRS     LIKE /ZAK/AFA_SZLA-BUKRS VALUE CHECK OBLIGATORY.
 *++2065 #05.
-* Adóazonosító
+* Tax ID
   SELECT-OPTIONS S_ADOAZ  FOR  /ZAK/AFA_SZLA-ADOAZON.
 *--2065 #05.
-* Év
+* Year
   SELECT-OPTIONS S_GJAHR  FOR  /ZAK/AFA_SZLA-GJAHR.
-* Hónap
+* Month
   SELECT-OPTIONS S_MONAT  FOR  /ZAK/AFA_SZLA-MONAT.
 * Index
   SELECT-OPTIONS S_ZINDEX FOR  /ZAK/AFA_SZLA-ZINDEX.
 * Package
   SELECT-OPTIONS S_PACK   FOR  /ZAK/AFA_SZLA-PACK.
-* Bizonylat
+* Evidence
   SELECT-OPTIONS S_BELNR  FOR  /ZAK/AFA_SZLA-BSEG_BELNR.
-* Közös számla azonosító
+* Joint account identifier
   SELECT-OPTIONS S_SZA    FOR  /ZAK/AFA_SZLA-SZAMLASZA.
-* Számla azonosító
+* Account ID
   SELECT-OPTIONS S_SZ     FOR  /ZAK/AFA_SZLA-SZAMLASZ.
-* Előzmény Számla azonosító
+* History Account ID
   SELECT-OPTIONS S_SZE    FOR  /ZAK/AFA_SZLA-SZAMLASZE.
-* Számla típus
+* Account type
   SELECT-OPTIONS S_SZT    FOR  /ZAK/AFA_SZLA-SZLATIP.
 
 SELECTION-SCREEN: END OF BLOCK BL01.
@@ -105,7 +105,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Eligibility check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -113,7 +113,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -130,14 +130,14 @@ AT SELECTION-SCREEN.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-*Adatok meghatározása
+*Definition of data
 *++S4HANA#01.
 *  PERFORM GET_DATA USING G_SUBRC.
   PERFORM GET_DATA CHANGING G_SUBRC.
 *--S4HANA#01.
   IF NOT G_SUBRC IS INITIAL.
     MESSAGE I141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   There is no analytics record matching the condition!
     EXIT.
   ENDIF.
 
@@ -162,7 +162,7 @@ FORM HANDLE_HOTSPOT_CLICK  USING    UV_COLUMN_NAME TYPE LVC_S_COL
                                     UV_ROW_INDEX TYPE LVC_S_ROW-INDEX.
 *--S4HANA#01.
 
-** példa implementálása a hotspot kattintásnak
+** example implementation of hotspot click
 *  CASE uv_column_name.
 *    WHEN 'EBELN'.
 *      READ TABLE gt_data INTO gs_data INDEX uv_row_index.
@@ -209,7 +209,7 @@ FORM GET_SELECTED_ROWS  USING    UO_ALV TYPE REF TO CL_GUI_ALV_GRID
   DATA LS_STABLE TYPE LVC_S_STBL.
 
   FREE: CT_ROWS.
-* kiválasztott sorok lekérése
+* get selected rows
   CALL METHOD UO_ALV->GET_SELECTED_ROWS
     IMPORTING
 *     et_index_rows =
@@ -222,7 +222,7 @@ FORM GET_SELECTED_ROWS  USING    UO_ALV TYPE REF TO CL_GUI_ALV_GRID
   ENDLOOP.
   IF SY-SUBRC NE 0.
     MESSAGE W186.
-*   Kérem jelölje ki a feldolgozandó sort vagy sorokat!
+*   Please select the row or rows to be processed!
   ELSE.
 *    get position
     LS_STABLE-ROW = 'X'.
@@ -248,7 +248,7 @@ FORM GET_UNSELECTED_ROWS  USING    UO_ALV TYPE REF TO CL_GUI_ALV_GRID
   DATA LS_STABLE TYPE LVC_S_STBL.
 
   FREE: CT_ROWS.
-* kiválasztott sorok lekérése
+* get selected rows
   CALL METHOD UO_ALV->GET_SELECTED_ROWS
     IMPORTING
 *     et_index_rows =
@@ -261,7 +261,7 @@ FORM GET_UNSELECTED_ROWS  USING    UO_ALV TYPE REF TO CL_GUI_ALV_GRID
   ENDLOOP.
   IF SY-SUBRC NE 0.
     MESSAGE W186.
-*   Kérem jelölje ki a feldolgozandó sort vagy sorokat!
+*   Please select the row or rows to be processed!
   ELSE.
 *    get position
     LS_STABLE-ROW = 'X'.
@@ -285,7 +285,7 @@ FORM SHOW_SELECTED_ROWS  USING    UT_ROWS TYPE LVC_T_ROID.
 *  DATA: lv_rows TYPE i.
 *
 *  lv_rows = lines( ut_rows ).
-*  MESSAGE i001(00) WITH 'Kiválasztott sorok száma: ' lv_rows.
+*  MESSAGE i001(00) WITH 'Number of rows selected: ' lv_rows.
 
 ENDFORM.                    " SHOW_SELECTED_ROWS
 *&---------------------------------------------------------------------*
@@ -343,7 +343,7 @@ ENDMODULE.                 " STATUS_9000  OUTPUT
 *----------------------------------------------------------------------*
 MODULE INIT_ALV_9000 OUTPUT.
   IF NOT GO_CONT IS BOUND.
-* nem háttérfutás
+* not background running
     IF CL_GUI_ALV_GRID=>OFFLINE( ) EQ ABAP_FALSE.
       CREATE OBJECT GO_CONT
         EXPORTING
@@ -371,7 +371,7 @@ MODULE INIT_ALV_9000 OUTPUT.
         ENDIF.
       ENDIF.
     ELSE.
-* háttérfutás
+* background running
       CREATE OBJECT GO_ALV
         EXPORTING
           I_PARENT          = GO_BACKCONT
@@ -385,36 +385,36 @@ MODULE INIT_ALV_9000 OUTPUT.
       ENDIF.
 
     ENDIF.
-* fieldcatalog generálás
+* fieldcatalog generation
     M_CREATE_FCAT '/ZAK/AFA_SZLA' GT_FCAT.
-* Checkbox-á alakítás
+* Convert to checkbox
     M_CHECKBOX 'NONEED'.
 
-* hotspottá alakítás
+* turning it into a hotspot
 *    m_hotspot gt_fcat 'EBELN'.
 
-* zebra és optimális mezőszélesség
+* zebra and optimal field width
     M_TYPICAL_LAYO GS_LAYO.
 
-* módosíthatóság beállítása
+* modifiability setting
 *    m_modify_field gt_fcat 'ERNAM' 'EDIT' 'X'.
-* eseménykezelő példányosítása
+* event handler instantiation
     CREATE OBJECT GO_EVT.
 
-* hotspot eseményre regisztrálás
+* hotspot event registration
     SET HANDLER GO_EVT->HANDLE_HOTSPOT_CLICK FOR GO_ALV.
 
     SET HANDLER GO_EVT->HANDLE_BUTTON_CLICK FOR GO_ALV.
 
-* menthető layoutok
+* saveable layouts
     GS_VARI-REPORT    = SY-CPROG.
     GS_VARI-USERNAME  = SY-UNAME.
 
-* kiválasztható sorok
+* selectable lines
     GS_LAYO-SEL_MODE = 'A'.
 
 
-* módosíthatóság beállítása
+* modifiability setting
     CALL METHOD GO_ALV->REGISTER_EDIT_EVENT
       EXPORTING
         I_EVENT_ID = CL_GUI_ALV_GRID=>MC_EVT_ENTER.
@@ -427,11 +427,11 @@ MODULE INIT_ALV_9000 OUTPUT.
         EXPORTING
           I_READY_FOR_INPUT = 1.
     ENDIF.
-* megjelenítés
+* display
     CALL METHOD GO_ALV->SET_TABLE_FOR_FIRST_DISPLAY
       EXPORTING
         IS_VARIANT                    = GS_VARI
-        I_SAVE                        = 'U' "felhasználó szintű layout mentés
+        I_SAVE                        = 'U' "user-level layout save
 *       i_default                     = 'X'
         IS_LAYOUT                     = GS_LAYO
       CHANGING
@@ -451,7 +451,7 @@ MODULE INIT_ALV_9000 OUTPUT.
   ELSE.
     IF GO_ALV IS BOUND.
 
-* módosíthatóság beállítása
+* modifiability setting
       IF GV_MOD IS INITIAL.
         CALL METHOD GO_ALV->SET_READY_FOR_INPUT
           EXPORTING
@@ -536,9 +536,9 @@ FORM CHECK_SAVE CHANGING $ANSWER LIKE G_ANSWER.
 *++MOL_UPG_ChangeImp # E09324753 # Balázs Gábor (Ness) - 2016.07.12
 *    CALL FUNCTION 'POPUP_TO_CONFIRM_LOSS_OF_DATA'
 *      EXPORTING
-*        TEXTLINE1     = 'Folytatja?'(901)
+*        TEXTLINE1 = 'Continue?'(901)
 **      TEXTLINE2     = ' '
-*        TITEL         = 'Megerősítés'(902)
+*        TITLE = 'Confirmation'(902)
 **      START_COLUMN  = 25
 **      START_ROW     = 6
 *        DEFAULTOPTION = 'N'
@@ -613,7 +613,7 @@ FORM SAVE_DATA .
   COMMIT WORK AND WAIT.
   MESSAGE I223.
   CLEAR G_ANSWER.
-* Az adatok mentése sikeresen megtörtént!
+* The data has been saved successfully!
   PERFORM EXIT USING G_ANSWER.
 
 ENDFORM.                    " SAVE_DATA

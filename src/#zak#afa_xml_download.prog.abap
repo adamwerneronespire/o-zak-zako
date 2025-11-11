@@ -1,25 +1,25 @@
 *&---------------------------------------------------------------------*
-*& Program: ÁFA XML fájl letöltése
+*& Program: VAT XML file download
 *&---------------------------------------------------------------------*
 REPORT /ZAK/AFA_XML_DOWNLOAD .
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program az ÁFA bevallás XML fájlt állítja elő a
-*& /ZAK/BEVALLO tábla alapján
+*& Function description: The program generates the VAT return XML file
+*& based on /ZAK/BEVALLO table
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - Ness
-*& Létrehozás dátuma : 2013.07.21
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : /ZAK/ZAKO
-*& Program  típus    : Riport
-*& SAP verzió        : 6.0
+*& Author            : Balazs Gabor - Ness
+*& Created on        : 2013.07.21
+*& Functional spec by: ________
+*& SAP module        : /ZAK/ZAKO
+*& Program  type     : Report
+*& SAP version        : 6.0
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIED BY             DESCRIPTION        TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0001   2006/05/27   CserhegyiT    CL_GUI_FRONTEND_SERVICES xxxxxxxxxx
-*&                                   cseréje hagyományosra
+*& replace it with a conventional one
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 *++1465 #18.
@@ -27,7 +27,7 @@ TYPE-POOLS: SHLP.
 *--1465 #18.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 *TABLES: D020S, /ZAK/XMLDOWNLOAD.
@@ -47,23 +47,23 @@ DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA V_SUBRC LIKE SY-SUBRC.
 
@@ -115,7 +115,7 @@ SELECTION-SCREEN: BEGIN OF BLOCK BL03 WITH FRAME TITLE TEXT-T03.
 SELECTION-SCREEN: END OF BLOCK BL03.
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Eligibility check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -123,7 +123,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -147,19 +147,19 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR S_INDEX1-LOW.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-*  Jogosultság vizsgálat
+*  Eligibility check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 P_BTART
                                 C_ACTVT_01.
 
-* Bevallás típus meghatározása
+* Definition of declaration type
   PERFORM GET_BTYPE USING P_BUKRS
                           P_BTART
                           S_GJAHR1-LOW
                           S_MONAT1-LOW
                     CHANGING P_BTYPE.
 
-* Adatbázis szelekció
+* Database selection
 *++S4HANA#01.
 *  PERFORM SEL_DATA USING V_SUBRC.
   PERFORM SEL_DATA CHANGING V_SUBRC.
@@ -168,7 +168,7 @@ START-OF-SELECTION.
     EXIT.
   ENDIF.
 
-* Esedékességi dátum kihagyása normál időszaknál
+* Omit due date for normal period
   PERFORM DEL_ESDAT USING P_BUKRS
                           P_BTYPE
                           S_GJAHR1-LOW
@@ -176,13 +176,13 @@ START-OF-SELECTION.
                           S_INDEX1-LOW.
 
 
-* XML fájl létrehozás
+* XML file creation
 *++S4HANA#01.
 *  PERFORM CALL_DOWNLOAD_XML USING V_SUBRC.
   PERFORM CALL_DOWNLOAD_XML CHANGING V_SUBRC.
 *--S4HANA#01.
 
-* Státusz állítás
+* Status statement
   IF V_SUBRC IS INITIAL.
     PERFORM STATUS_UPDATE.
   ENDIF.
@@ -220,7 +220,7 @@ ENDFORM.                    " set_screen_attributes
 *&---------------------------------------------------------------------*
 *&      Form  filename_get
 *&---------------------------------------------------------------------*
-*       Elérési útvonal bevitele
+*       Enter path
 *----------------------------------------------------------------------*
 FORM FILENAME_GET.
 
@@ -236,7 +236,7 @@ FORM FILENAME_GET.
         L_ACTION       TYPE I.
 
 
-* Értékek leolvasása dynpro-ról
+* Reading values from dynpro
   DATA: BEGIN OF DYNP_VALUE_TAB OCCURS 0.
           INCLUDE STRUCTURE DYNPREAD.
   DATA: END   OF DYNP_VALUE_TAB.
@@ -260,7 +260,7 @@ FORM FILENAME_GET.
   APPEND DYNP_VALUE_TAB.
 
 
-* Dynpróról az éretékek leolvasása
+* Reading the grades from Dynpro
   CALL FUNCTION 'DYNP_VALUES_READ'
     EXPORTING
 *++S4HANA#01.
@@ -279,7 +279,7 @@ FORM FILENAME_GET.
       INVALID_REQUEST      = 20
       NO_FIELDDESCRIPTION  = 24
       UNDEFIND_ERROR       = 28.
-* Értékek visszaírása a változókba
+* Writing values back to variables
   READ TABLE DYNP_VALUE_TAB INDEX 1.
   MOVE: DYNP_VALUE_TAB-FIELDVALUE TO P_BUKRS.
   READ TABLE DYNP_VALUE_TAB INDEX 2.
@@ -349,7 +349,7 @@ FORM FILENAME_GET.
 *
 *  CALL FUNCTION 'GUI_FILE_SAVE_DIALOG'
 *    EXPORTING
-*      WINDOW_TITLE      = 'Output fájl'
+*      WINDOW_TITLE = 'Output file'
 **     DEFAULT_EXTENSION =
 **++1765 #07.
 *      DEFAULT_FILE_NAME = L_DEF_FILENAME
@@ -441,7 +441,7 @@ FORM SEL_DATA CHANGING $SUBRC TYPE SY-SUBRC.
   IF SY-SUBRC NE 0.
     MOVE SY-SUBRC TO $SUBRC.
     MESSAGE I031(/ZAK/ZAK).
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain a record that can be processed!
   ENDIF.
 
 ENDFORM.                    " sel_data
@@ -510,7 +510,7 @@ FORM CALL_DOWNLOAD_XML CHANGING    $SUBRC TYPE SY-SUBRC.
 
   L_FILENAME = P_FILE.
 
-* XML készítés
+* XML preparation
   CALL FUNCTION '/ZAK/AFA_XML_DOWNLOAD'
     EXPORTING
       I_FILE            = L_FILENAME
@@ -526,7 +526,7 @@ FORM CALL_DOWNLOAD_XML CHANGING    $SUBRC TYPE SY-SUBRC.
 * Implement suitable error handling here
     $SUBRC = SY-SUBRC.
     MESSAGE E352(/ZAK/ZAK) WITH SY-SUBRC.
-*        Hiba az XML konvertálásnál! (&)
+*        Error in XML conversion! (&)
   ELSE.
     MESSAGE I009(/ZAK/ZAK) WITH L_FILENAME.
     $SUBRC = 0.
@@ -544,8 +544,8 @@ ENDFORM.                    " CALL_DOWNLOAD_XML
 FORM STATUS_UPDATE.
 
 *++BG 2006/07/19
-* Meghatározzuk a jelenlegi státuszt, mibel lezárt vagy APEH
-* által ellenőrzött időszakra már nem kell státusz állítás
+* We determine the current status, whether it is closed or APEH
+* for a period controlled by
 *++S4HANA#01.
 *  SELECT SINGLE * INTO W_/ZAK/BEVALLI
   SELECT SINGLE FLAG INTO CORRESPONDING FIELDS OF W_/ZAK/BEVALLI
@@ -618,10 +618,10 @@ FORM DEL_ESDAT USING    $BUKRS TYPE /ZAK/XMLDOWNLOAD-BUKRS
   DATA L_ABEVAZ TYPE /ZAK/ABEVAZ.
 
 
-*Csak normál időszaknál
+*Only during normal periods
   CHECK $INDEX EQ '000'.
 
-*Meghatározzuk az esedékesség dátum abev azonosítót
+*We define the due date abev identifier
 *++S4HANA#01.
 *  SELECT SINGLE ABEVAZ INTO L_ABEVAZ
 *                       FROM /ZAK/BEVALLB
@@ -693,7 +693,7 @@ FORM SUB_F4_ON_INDEX USING    $SH_TYPE.
   MOVE: 'P_BTART' TO LI_DYNPFIELDS-FIELDNAME.
   APPEND LI_DYNPFIELDS.
 
-* Értékek leolvasása DYNPRO-ról:
+* Reading values from DYNPRO:
   CALL FUNCTION 'DYNP_VALUES_READ'
     EXPORTING
       DYNAME               = SY-CPROG

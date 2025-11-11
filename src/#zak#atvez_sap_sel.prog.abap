@@ -1,22 +1,22 @@
 *&---------------------------------------------------------------------*
-*& Program: SAP adatok meghatározása átvezetési nyomtatványhoz
+*& Program: Determine SAP data for the transfer form
 *&---------------------------------------------------------------------*
 REPORT /ZAK/ATVEZ_SAP_SEL .
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& adatokat rögzít és tölti a /ZAK/ANALITIKA táblát.
+*& Function description: Based on the selection criteria the program records data
+*& and populates table /ZAK/ANALITIKA.
 *&---------------------------------------------------------------------*
-*& Szerző            : Cserhegyi Tímea - FMC
-*& Létrehozás dátuma : 2006.03.08
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Tímea Cserhegyi - FMC
+*& Creation date     : 2006.03.08
+*& Functional spec by: ________
+*& SAP module name   : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER        DESCRIPTION             TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
@@ -26,35 +26,35 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                             *
 *&---------------------------------------------------------------------*
 
 
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS (C_XXXXXXX..)                                             *
 *&---------------------------------------------------------------------*
 CONSTANTS: C_NUM         TYPE C VALUE 'N'.
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES *
+*      Internal table     -   (I_xxx...)                              *
+*      FORM parameter     -   ($xxxx...)                              *
+*      Constant           -   (C_xxx...)                              *
+*      Parameter variable -   (P_xxx...)                              *
+*      Selection option   -   (S_xxx...)                              *
+*      Ranges             -   (R_xxx...)                              *
+*      Global variables   -   (V_xxx...)                              *
+*      Local variables    -   (L_xxx...)                              *
+*      Work area          -   (W_xxx...)                              *
+*      Type               -   (T_xxx...)                              *
+*      Macros             -   (M_xxx...)                              *
+*      Field-symbol       -   (FS_xxx...)                             *
+*      Method             -   (METH_xxx...)                           *
+*      Object             -   (O_xxx...)                              *
+*      Class              -   (CL_xxx...)                             *
+*      Event              -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 CONTROLS: TC_9000 TYPE TABLEVIEW USING SCREEN 9000.
@@ -85,7 +85,7 @@ DATA: V_OK_CODE LIKE SY-UCOMM,
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
 
-* Vállalat
+* Company
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(31) TEXT-101.
 PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALLSZ-BUKRS VALUE CHECK
@@ -94,7 +94,7 @@ SELECTION-SCREEN POSITION 50.
 PARAMETERS: P_BUTXT LIKE T001-BUTXT MODIF ID DIS.
 SELECTION-SCREEN END OF LINE.
 
-* Bevallás fajta
+* Tax return category
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(31) TEXT-103 FOR FIELD P_BTART.
 PARAMETERS: P_BTART LIKE /ZAK/BEVALL-BTYPART OBLIGATORY.
@@ -102,7 +102,7 @@ SELECTION-SCREEN POSITION 50.
 PARAMETERS: P_BTTEXT(40) TYPE C MODIF ID DIS.
 SELECTION-SCREEN END OF LINE.
 
-* Bevallás típus
+* Tax return type
 SELECTION-SCREEN BEGIN OF LINE.
 *SELECTION-SCREEN COMMENT 01(31) text-102.
 PARAMETERS: P_BTYPE  LIKE /ZAK/BEVALLSZ-BTYPE NO-DISPLAY.
@@ -111,10 +111,10 @@ PARAMETERS: P_BTEXT  LIKE /ZAK/BEVALLT-BTEXT MODIF ID DIS.
 SELECTION-SCREEN END OF LINE.
 
 SELECTION-SCREEN: SKIP 1.
-* Év
+* Year
 PARAMETERS: P_GJAHR LIKE BKPF-GJAHR DEFAULT SY-DATUM(4)
                                     OBLIGATORY.
-* Hónap
+* Month
 PARAMETERS: P_MONAT LIKE BKPF-MONAT DEFAULT SY-DATUM+4(2)
                                     OBLIGATORY.
 PARAMETERS: P_INDEX LIKE /ZAK/BEVALLI-ZINDEX NO-DISPLAY.
@@ -125,11 +125,11 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
   GET PARAMETER ID 'BUK' FIELD P_BUKRS.
-*  Megnevezések meghatározása
+*  Determine descriptions
   PERFORM READ_ADDITIONALS.
   PERFORM READ_COLS.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -137,24 +137,24 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
 * AT SELECTION-SCREEN OUTPUT
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
-*  Képernyő attribútomok beállítása
+*  Set screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 
 AT SELECTION-SCREEN ON P_BTART.
-*  Bevallás típus ellenőrzése
+*  Validate tax return category
   PERFORM VER_BTYPEART USING C_BTYPART_ATV.
 
 
 AT SELECTION-SCREEN ON P_MONAT.
-*  Periódus ellenőrzése
+*  Validate period
   PERFORM VER_PERIOD   USING P_MONAT.
 
 
@@ -163,31 +163,31 @@ AT SELECTION-SCREEN ON P_MONAT.
 *  AT SELECTION-SCREEN.
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN.
-*  Megnevezések meghatározása
+*  Determine descriptions
   PERFORM READ_ADDITIONALS.
 *&---------------------------------------------------------------------*
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 P_BTART
                                 C_ACTVT_01.
 
-* Zárolás beállítás
+* Set lock
   PERFORM ENQUEUE_PERIOD.
 
-* Bevallás utolsó napjának meghatározása
+* Determine the last day of the tax return period
   PERFORM GET_LAST_DAY_OF_PERIOD USING P_GJAHR
                                        P_MONAT
                                   CHANGING V_LAST_DATE.
 
-* Bevallás általános adatai
+* General data of the tax return
   PERFORM READ_BEVALL  USING P_BUKRS
                              P_BTART
                              P_BTYPE
                              V_LAST_DATE.
-* Bevallás státusza
+* Tax return status
   PERFORM READ_BEVALLI CHANGING P_INDEX.
 
   PERFORM FILL_MONAT.
@@ -207,13 +207,13 @@ END-OF-SELECTION.
 *&      Form  read_additionals
 *&---------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
-* Vállalat megnevezése
+* Company name
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
   ENDIF.
 
-* Bevallásfajta megnevezése
+* Tax return category name
   IF NOT P_BTART IS INITIAL.
     SELECT DDTEXT UP TO 1 ROWS INTO P_BTTEXT FROM DD07T
        WHERE DOMNAME = '/ZAK/BTYPART'
@@ -221,7 +221,7 @@ FORM READ_ADDITIONALS.
          AND DOMVALUE_L = P_BTART.
     ENDSELECT.
 
-* Bevallás típus meghatározása
+* Determine tax return type
     CHECK NOT P_GJAHR IS INITIAL AND
           NOT P_MONAT IS INITIAL.
 
@@ -231,7 +231,7 @@ FORM READ_ADDITIONALS.
                             P_MONAT
                       CHANGING P_BTYPE.
   ENDIF.
-* Bevallásfajta megnevezése
+* Tax return type name
   IF NOT P_BTYPE IS INITIAL.
     SELECT SINGLE BTEXT INTO P_BTEXT FROM /ZAK/BEVALLT
       WHERE LANGU = SY-LANGU
@@ -261,7 +261,7 @@ FORM VER_PERIOD USING    $MONAT.
 
   IF NOT $MONAT BETWEEN '01' AND '16'.
     MESSAGE E020(/ZAK/ZAK).
-*   Kérem a periódus értékét 01-16 között adja meg!
+*   Please enter a period value between 01 and 16!
   ENDIF.
 
 ENDFORM.                    " ver_period
@@ -316,10 +316,10 @@ ENDMODULE.                 " STATUS_9000  OUTPUT
 *----------------------------------------------------------------------*
 MODULE MODIFY_I_LINES INPUT.
 
-* Szövegek feltöltése
+* Upload texts
   PERFORM FILL_TEXTS.
 
-* ELLENŐRZÉSEK
+* CHECKS
   PERFORM CHECK_ADONEM.
   PERFORM CHECK_SOURCE.
 
@@ -342,7 +342,7 @@ FORM READ_BEVALLI CHANGING $INDEX..
        AND GJAHR = P_GJAHR
        AND MONAT = P_MONAT.
 
-* Van valami az adott periódusra?
+* Is there anything for that period?
   DESCRIBE TABLE I_/ZAK/BEVALLI LINES SY-TFILL.
   IF SY-TFILL = 0.
     $INDEX = '000'.
@@ -359,7 +359,7 @@ FORM READ_BEVALLI CHANGING $INDEX..
   ENDIF.
 
   CHECK L_FOUND = SPACE.
-* Melyik az utolsó lezárt?
+* Which one is the last one closed?
   READ TABLE I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI
     INDEX SY-TFILL.
   IF SY-SUBRC = 0.
@@ -389,19 +389,19 @@ MODULE USER_COMMAND_9000 INPUT.
     WHEN 'BACK'.
       SET SCREEN 0.
       LEAVE SCREEN.
-* Kilépés
+* Exit
     WHEN 'EXIT'.
       SET SCREEN 0.
       LEAVE SCREEN.
 
-* Mentés - analitika tábla feltöltése
+* Save - upload analytics table
     WHEN 'SAVE'.
       PERFORM SAVE.
       SET SCREEN 0.
       LEAVE SCREEN.
 
 
-* Kijelölt rekordok törlése
+* Delete selected records
     WHEN 'DELL'.
       LOOP AT I_LINES WHERE MARK = 'X'.
         DELETE I_LINES.
@@ -415,7 +415,7 @@ MODULE USER_COMMAND_9000 INPUT.
           TC_9000-LINES = TC_9000-LINES - 1.
         ENDIF.
       ENDIF.
-* Sor beszúrása kurzorpozíció fölé
+* Insert line above cursor position
     WHEN 'INSL'.
       GET CURSOR FIELD FLD LINE LINNO OFFSET OFF.
       SET CURSOR FIELD FLD LINE LINNO OFFSET OFF.
@@ -441,7 +441,7 @@ MODULE USER_COMMAND_9000 INPUT.
       ENDIF.
 
 
-* Sor appendálása - új sor
+* Append line - new line
     WHEN 'APPL'.
       CLEAR I_LINES.
       I_LINES-WAERS_SRC  = C_HUF.
@@ -479,12 +479,12 @@ FORM READ_ANALITIKA.
          AND    MONAT   = P_MONAT
          AND    ZINDEX  = P_INDEX.
 
-* Sor szerkezet szerint fel kell tölteni a belső táblát
+* The internal table must be filled according to row structure
 
 
   LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA.
 
-* Nyomtatvány adatok beolvasása abevhez
+* Scan print data for abev
     CLEAR W_/ZAK/BEVALLB.
     READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
        WITH KEY BTYPE  = W_/ZAK/ANALITIKA-BTYPE
@@ -577,7 +577,7 @@ ENDFORM.                    " GET_BTYPE
 *       text
 *----------------------------------------------------------------------*
 MODULE INIT_9000 OUTPUT.
-* Ha nincs tétel - kezdeti inicializálás
+* If no item - initial initialization
   IF TC_9000-LINES = 0.
     TC_9000-LINES = 1.
     CLEAR I_LINES.
@@ -602,14 +602,14 @@ FORM CHECK_SOURCE.
         v_wrbtr_src_c(23).
 *--S4HANA#01.
 
-* Ha van forrás, kell cél is
+* If there is a source, there must be a goal
 *  IF NOT I_LINES-ADONEM_SRC IS INITIAL AND
 *         I_LINES-ADONEM_DES IS INITIAL.
 *    MESSAGE W140(/ZAK/ZAK) WITH I_LINES-ADONEM_SRC
 *                           TC_9000-CURRENT_LINE.
 *  ENDIF.
 
-* Ha van cél, kell forrás is
+* If there is a goal, you need resources
   IF NOT I_LINES-ADONEM_DES IS INITIAL AND
          I_LINES-ADONEM_SRC IS INITIAL.
     MESSAGE W139(/ZAK/ZAK) WITH I_LINES-ADONEM_DES
@@ -617,7 +617,7 @@ FORM CHECK_SOURCE.
 
   ENDIF.
 
-* Összeg ellenőrzés: cél nagyobb, mint a forrás
+* Amount check: target is greater than source
   IF I_LINES-WRBTR_SRC < I_LINES-WRBTR_DES.
 
       WRITE I_LINES-WRBTR_DES TO V_WRBTR_C CURRENCY C_HUF.
@@ -628,7 +628,7 @@ FORM CHECK_SOURCE.
                            TC_9000-CURRENT_LINE.
   ENDIF.
 
-* Van-e a folyószámlán ennyi?
+* Do you have that much in your current account?
   IF NOT I_LINES-WRBTR_SRC IS INITIAL.
     READ TABLE I_ADO_SUM INTO W_ADO_SUM
                       WITH KEY BUKRS  = P_BUKRS
@@ -757,7 +757,7 @@ FORM SAVE.
         V_DO_INDEX LIKE SY-TABIX.
 
 
-* Teljes periódus törlése
+* Delete an entire period
   DELETE FROM /ZAK/ANALITIKA
      WHERE BUKRS = P_BUKRS     AND
            BTYPE = P_BTYPE     AND
@@ -768,7 +768,7 @@ FORM SAVE.
     COMMIT WORK.
   ENDIF.
 
-* ADATok mentése
+* Saving data
   LOOP AT I_LINES.
     V_INDEX = SY-TABIX.
 
@@ -777,7 +777,7 @@ FORM SAVE.
 
       V_DO_INDEX = SY-INDEX.
 
-* ABEV azonosító meghatározása 1. mezőre
+* Determine ABEV identifier for field 1
       CASE V_DO_INDEX.
         WHEN 1.
           PERFORM GET_ABEV USING V_INDEX
@@ -833,19 +833,19 @@ FORM SAVE.
       /ZAK/ANALITIKA-PACK    = SPACE.
       /ZAK/ANALITIKA-XMANU = 'X'.
 
-* Tételsorszám
+* Line item number
       PERFORM GET_NEXT_ITEM USING      /ZAK/ANALITIKA
                                        V_DO_INDEX
                             CHANGING L_/ZAK/ANALITIKA.
 
 
-* Dinamikus lapszám: 24 soronként lép
+* Dynamic page number: advance every 24 rows
       PERFORM GET_PAGE_NO USING    V_INDEX
                                    24
                           CHANGING L_/ZAK/ANALITIKA-LAPSZ.
 
 
-* Új tétel
+* New item
       CLEAR L_/ZAK/ANALITIKA-ZINDEX.
       APPEND L_/ZAK/ANALITIKA TO T_/ZAK/ANALITIKA.
 
@@ -853,7 +853,7 @@ FORM SAVE.
 
   ENDLOOP.
 
-* Közös update
+* Shared update
   IF NOT T_/ZAK/ANALITIKA[] IS INITIAL.
     PERFORM CALL_UPDATE TABLES I_RETURN
                                T_/ZAK/ANALITIKA
@@ -867,8 +867,8 @@ FORM SAVE.
   ENDIF.
 
 
-* Státusz
-* Amennyiben  bevallás már letöltött volt > státusz visszaállítása
+* Status
+* If the declaration has already been downloaded > restore status
   SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
      WHERE BUKRS = /ZAK/ANALITIKA-BUKRS
        AND BTYPE = /ZAK/ANALITIKA-BTYPE
@@ -911,7 +911,7 @@ FORM GET_NEXT_ITEM USING    /ZAK/ANALITIKA     TYPE /ZAK/ANALITIKA
 
   CLEAR L_/ZAK/ANALITIKA.
 
-* Utolsó Tételszám
+* Last item number
   SELECT MAX( ITEM ) INTO L_ITEM FROM /ZAK/ANALITIKA
      WHERE BUKRS   = /ZAK/ANALITIKA-BUKRS
        AND BTYPE   = /ZAK/ANALITIKA-BTYPE
@@ -1062,7 +1062,7 @@ ENDFORM.                    " CALL_UPDATE
 *----------------------------------------------------------------------*
 FORM FILL_MONAT.
 
-* E - Éves
+* E - Annual
   IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
     P_MONAT = '12'.
   ENDIF.
@@ -1073,7 +1073,7 @@ FORM FILL_MONAT.
   ENDIF.
 
 
-* N - Negyedéves
+* N - Quarterly
   IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
     IF P_MONAT <= '03'.
@@ -1156,7 +1156,7 @@ ENDFORM.                    " GET_LAST_DAY_OF_PERIOD
 *       text
 *----------------------------------------------------------------------*
 FORM FILL_TEXTS.
-* Pénznem
+* Currency
   IF I_LINES-WAERS_SRC IS INITIAL.
     I_LINES-WAERS_SRC = C_HUF.
   ENDIF.
@@ -1167,7 +1167,7 @@ FORM FILL_TEXTS.
     I_LINES-WAERS_UTAL = C_HUF.
   ENDIF.
 
-* Adónem megnevezése - forrás
+* Tax type description - source
   IF NOT I_LINES-ADONEM_SRC IS INITIAL.
 
     SELECT SINGLE ADONEM_TXT INTO I_LINES-ADONEM_SRC_TXT
@@ -1177,7 +1177,7 @@ FORM FILL_TEXTS.
            AND    ADONEM  = I_LINES-ADONEM_SRC.
   ENDIF.
 
-* Adónem megnevezése - cél
+* Tax type description - target
   IF NOT I_LINES-ADONEM_DES IS INITIAL.
 
     SELECT SINGLE ADONEM_TXT INTO I_LINES-ADONEM_DES_TXT
@@ -1187,7 +1187,7 @@ FORM FILL_TEXTS.
            AND    ADONEM  = I_LINES-ADONEM_DES.
   ENDIF.
 
-* Kiutalandó összeg
+* Amount to be paid out
   IF NOT I_LINES-WRBTR_SRC IS INITIAL.
     I_LINES-WRBTR_UTAL = I_LINES-WRBTR_SRC - I_LINES-WRBTR_DES.
   ENDIF.

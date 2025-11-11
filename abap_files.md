@@ -48,16 +48,16 @@
 - [x] src/#zak#analitika_move.prog.abap
 - [x] src/#zak#analitika_set_onybf.prog.abap
 - [x] src/#zak#analitika_szla_corr.prog.abap
-- [ ] src/#zak#atvez_sap_sel.prog.abap
-- [ ] src/#zak#atvez_sap_sel.prog.screen_9000.abap
-- [ ] src/#zak#book_file_gen.prog.abap
-- [ ] src/#zak#bset_corr.prog.abap
-- [ ] src/#zak#bset_stmdt_update.prog.abap
-- [ ] src/#zak#bset_update.prog.abap
-- [ ] src/#zak#bte.fugr.#zak#lbtetop.abap
-- [ ] src/#zak#bte.fugr.#zak#saplbte.abap
-- [ ] src/#zak#bte.fugr.#zak#tax_exchange_rate_2051.abap
-- [ ] src/#zak#bukrs_corr.prog.abap
+- [x] src/#zak#atvez_sap_sel.prog.abap
+- [x] src/#zak#atvez_sap_sel.prog.screen_9000.abap
+- [x] src/#zak#book_file_gen.prog.abap
+- [x] src/#zak#bset_corr.prog.abap
+- [x] src/#zak#bset_stmdt_update.prog.abap
+- [x] src/#zak#bset_update.prog.abap
+- [x] src/#zak#bte.fugr.#zak#lbtetop.abap
+- [x] src/#zak#bte.fugr.#zak#saplbte.abap
+- [x] src/#zak#bte.fugr.#zak#tax_exchange_rate_2051.abap
+- [x] src/#zak#bukrs_corr.prog.abap
 - [ ] src/#zak#cl_im_ak_fi_tax_badi_015.clas.abap
 - [ ] src/#zak#cl_im_ak_fi_tax_badi_016.clas.abap
 - [ ] src/#zak#cl_im_ak_invoice_update.clas.abap

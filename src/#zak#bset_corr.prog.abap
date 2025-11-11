@@ -2,12 +2,12 @@
 *& Report  /ZAK/ANALITIKA_SZLA_CORR
 *&
 *&---------------------------------------------------------------------*
-*& A program a közös számla azonosítót tölti fel a szelekció alapján
+*& The program populates the joint account ID based on the selection
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/BSET_CORR  MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                             *
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 *TABLES: /ZAK/BSET.
@@ -15,25 +15,25 @@ DATA GS_/ZAK/BSET TYPE /ZAK/BSET.
 *--S4HANA#01.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                  *
+*      Internal table     -   (I_xxx...)                              *
+*      FORM parameter     -   ($xxxx...)                              *
+*      Constant           -   (C_xxx...)                              *
+*      Parameter variable -   (P_xxx...)                              *
+*      Selection option   -   (S_xxx...)                              *
+*      Ranges             -   (R_xxx...)                              *
+*      Global variables   -   (V_xxx...)                              *
+*      Local variables    -   (L_xxx...)                              *
+*      Work area          -   (W_xxx...)                              *
+*      Type               -   (T_xxx...)                              *
+*      Macros             -   (M_xxx...)                              *
+*      Field-symbol       -   (FS_xxx...)                             *
+*      Method             -   (METH_xxx...)                           *
+*      Object             -   (O_xxx...)                              *
+*      Class              -   (CL_xxx...)                             *
+*      Event              -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for range population
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -87,7 +87,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *  M_DEF S_BTYPE 'I' 'EQ' '0765' SPACE.
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -95,7 +95,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 **&---------------------------------------------------------------------*
@@ -103,7 +103,7 @@ INITIALIZATION.
 **&---------------------------------------------------------------------*
 *AT SELECTION-SCREEN OUTPUT.
 *
-**  Képernyő attribútomok beállítása
+**  Set screen attributes
 *  PERFORM SET_SCREEN_ATTRIBUTES.
 *
 *&---------------------------------------------------------------------*
@@ -111,7 +111,7 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok feldolgozása
+* Data processing
   PERFORM PROCESS_DATA.
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I000 WITH 'Nincs a szelekciónak megfelelő adat!'.
@@ -170,7 +170,7 @@ FORM PROCESS_DATA .
   DATA LW_/ZAK/BSET TYPE /ZAK/BSET.
   DATA L_FLAG TYPE /ZAK/FLAG.
 
-*/ZAK/BSET szelekció
+*/ZAK/BSET selection
 *++S4HANA#01.
 *  SELECT * INTO LW_/ZAK/BSET
 *           FROM /ZAK/BSET
@@ -231,7 +231,7 @@ FORM PROCESS_DATA .
 *--S4HANA#01.
 
   LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA.
-*   BEVALLI ellenőrzés
+*   BEVALLI check
 *++S4HANA#01.
 *    SELECT SINGLE FLAG INTO L_FLAG
 *                       FROM /ZAK/BEVALLI
@@ -304,11 +304,11 @@ FORM PRODUCTIVE_RUN .
 
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain a record that can be processed!
     EXIT.
   ENDIF.
 
-*  Először mindig tesztben futtatjuk
+*  Always run it in test mode first
   CALL FUNCTION '/ZAK/UPDATE'
     EXPORTING
       I_BUKRS     = P_BUKRS
@@ -323,31 +323,31 @@ FORM PRODUCTIVE_RUN .
       I_ANALITIKA = I_/ZAK/ANALITIKA
       E_RETURN    = LI_RETURN.
 
-*   Üzenetek kezelése
+*   Handle messages
   IF NOT LI_RETURN[] IS INITIAL.
     CALL FUNCTION '/ZAK/MESSAGE_SHOW'
       TABLES
         T_RETURN = LI_RETURN.
   ENDIF.
 
-*  Ha nem teszt futás, akkor ellenőrizzük van ERROR
+*  If this is not a test run then check for errors
   LOOP AT LI_RETURN INTO LW_RETURN WHERE TYPE CA 'EA'.
   ENDLOOP.
   IF SY-SUBRC EQ 0.
     MESSAGE E062.
-*     Adatfeltöltés nem lehetséges!
+*     Data upload is not possible!
   ENDIF.
 
-*    Ha nem háttérben fut
+*    If it is not running in the background
   IF NOT LI_RETURN[] IS INITIAL AND SY-BATCH IS INITIAL.
-*    Szövegek betöltése
+*    Load texts
     MOVE 'Adatfeltöltés folytatása'(001) TO L_TITLE.
     MOVE 'Adatfeltöltésnél előfordultak figyelmeztető üzenetek'(002)
                                          TO L_DIAGNOSETEXT1.
     MOVE 'Folytatja  feldolgozást?'(003)
                                          TO L_TEXTLINE1.
 
-*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp - E09324753 - Gábor Balázs (Ness) - 12.07.2016
 *++S4HANA#01.
 **    CALL FUNCTION 'POPUP_TO_CONFIRM_WITH_MESSAGE'
 **      EXPORTING
@@ -425,15 +425,15 @@ FORM PRODUCTIVE_RUN .
       L_ANSWER = 'N'.
     ENDIF.
 *--S4HANA#01.
-*--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
-*    Egyébként mehet
+*--MOL_UPG_ChangeImp - E09324753 - Gábor Balázs (Ness) - 12.07.2016
+*    Otherwise continue
   ELSE.
     MOVE 'J' TO L_ANSWER.
   ENDIF.
 
-*    Mehet az adatbázis módosítása
+*    Proceed with the database update
   IF L_ANSWER EQ 'J'.
-*      Adatok módosítása
+*      Update data
     CALL FUNCTION '/ZAK/UPDATE'
       EXPORTING
         I_BUKRS     = P_BUKRS
@@ -460,6 +460,6 @@ FORM PRODUCTIVE_RUN .
 
   COMMIT WORK AND WAIT.
   MESSAGE I216.
-* Adatmódosítások elmentve!
+* Data changes saved!
 
 ENDFORM.                    " PRODUCTIVE_RUN

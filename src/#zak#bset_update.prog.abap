@@ -5,24 +5,22 @@
 
 REPORT /ZAK/BSET_UPDATE MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a standard ÁFA futás bizonylatait
-*& aktualizálja
-*& FI_TAX_BADI_015 forráskód van ide implementálva mivel a
-*& 2061805  note  megváltoztatta a standard RFUMVS00 program
-*& COMMIT WORK pontjait és a BADI futásánál nem lehet ellenőrizni
-*& a BSET-STMDT és BSET-STMTI mezőket!
+*& Function description: Updates the documents created by the standard VAT run.
+*& The FI_TAX_BADI_015 source code is implemented here because note 2061805
+*& changed the COMMIT WORK points of program RFUMVS00, therefore the
+*& BSET-STMDT and BSET-STMTI fields cannot be checked during the BAdI run.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - NESS
-*& Létrehozás dátuma : 2015.07.08
-*& Funkc.spec.készítő: ________
+*& Author            : Gábor Balázs - NESS
+*& Creation date     : 2015.07.08
+*& Functional spec by: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 6.0
+*& Program type      : Report
+*& SAP version       : 6.0
 *&--------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER        DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
 *&
 *&---------------------------------------------------------------------*
@@ -31,7 +29,7 @@ REPORT /ZAK/BSET_UPDATE MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                             *
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 *TABLES /ZAK/BSET_BELNR.
@@ -39,23 +37,23 @@ DATA GS_/ZAK/BSET_BELNR TYPE /ZAK/BSET_BELNR.
 *--S4HANA#01.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                  *
+*      Internal table     -   (I_xxx...)                              *
+*      FORM parameter     -   ($xxxx...)                              *
+*      Constant           -   (C_xxx...)                              *
+*      Parameter variable -   (P_xxx...)                              *
+*      Selection option   -   (S_xxx...)                              *
+*      Ranges             -   (R_xxx...)                              *
+*      Global variables   -   (V_xxx...)                              *
+*      Local variables    -   (L_xxx...)                              *
+*      Work area          -   (W_xxx...)                              *
+*      Type               -   (T_xxx...)                              *
+*      Macros             -   (M_xxx...)                              *
+*      Field-symbol       -   (FS_xxx...)                             *
+*      Method             -   (METH_xxx...)                           *
+*      Object             -   (O_xxx...)                              *
+*      Class              -   (CL_xxx...)                             *
+*      Event              -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA: W_AUSTE TYPE RFUMS_TAX_ITEM,
 *++S4HANA#01.
@@ -96,7 +94,7 @@ DATA: I_ZFMAVA_START TYPE STANDARD TABLE OF /ZAK/START INITIAL
 SIZE 0,
       W_ZFMAVA_START TYPE /ZAK/START.
 
-* Bevallás fajta
+* Tax return category
 CONSTANTS: C_BTYPART_AFA  TYPE /ZAK/BTYPART VALUE 'AFA',
            C_BTYPART_SZJA TYPE /ZAK/BTYPART VALUE 'SZJA',
            C_BTYPART_TARS TYPE /ZAK/BTYPART VALUE 'TARS',
@@ -124,10 +122,10 @@ DATA : I_RLDNR     TYPE RLDNR,
 *--S4HANA#01.
 
 DEFINE L_M_GET_BUPER.
-*   Ellenőrzés
+*   Check
   READ TABLE I_BUPER INTO W_BUPER
              WITH KEY BUPER_OLD = &1-BUPER.
-*   Meghatározzuk a periódust
+*   Determine the period
   IF SY-SUBRC NE 0.
     CLEAR   W_/ZAK/ANALITIKA.
     REFRESH: I_/ZAK/ANALITIKA, I_RETURN.
@@ -191,7 +189,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -199,7 +197,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -232,14 +230,14 @@ FORM GET_DATA .
   DATA LI_/ZAK/BELNR TYPE STANDARD TABLE OF /ZAK/BSET_BELNR.
   DATA LW_/ZAK/BELNR TYPE /ZAK/BSET_BELNR.
 
-* Adatszelekció:
+* Data selection:
   SELECT * INTO TABLE LI_/ZAK/BELNR
             FROM /ZAK/BSET_BELNR
            WHERE BUKRS IN S_BUKRS
              AND BELNR IN S_BELNR
              AND GJAHR IN S_GJAHR.
 
-* Adatok feldolgozása
+* Data processing
   LOOP AT LI_/ZAK/BELNR INTO LW_/ZAK/BELNR.
     CLEAR W_BSET.
 *++S4HANA#01.
@@ -263,7 +261,7 @@ FORM GET_DATA .
 *--2007.01.11 BG (FMC)
     W_/ZAK/ZAK-ZINDEX = SPACE.
 *++0001 2007.01.03 BG (FMC)
-**     Adódátum
+**     Tax date
 *        CLEAR W_/ZAK/ZAK-ADODAT.
 *        SELECT SINGLE
 *          ADODAT
@@ -288,7 +286,7 @@ FORM GET_DATA .
 ENHANCEMENT-POINT /ZAK/ZAK_AUDI_UPD_01 SPOTS /ZAK/BSET_UPDATE_ES .
     ENDIF.
 *--2007.01.11 BG (FMC)
-*     Tranzakció típus
+*     Transaction type
     CLEAR W_/ZAK/ZAK-TTIP.
 *++S4HANA#01.
 *    SELECT
@@ -347,14 +345,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_AUDI_UPD_01 SPOTS /ZAK/BSET_UPDATE_ES .
 *--S4HANA#01.
     IF SY-SUBRC NE 0.
 *++1365#24.
-*BUPER meghatározása, ha az időszak 'X'-el le van zárva, akkor
-*már itt átrakjuk az új időszakra:
+*Determine BUPER; if the period is closed with 'X' then
+*move it to the new period right here:
       L_M_GET_BUPER W_/ZAK/ZAK.
 *--1365#24.
       INSERT INTO /ZAK/BSET VALUES W_/ZAK/ZAK.
       DELETE /ZAK/BSET_BELNR FROM LW_/ZAK/BELNR.
       IF SY-SUBRC = 0.
-* LOG tábla aktualizálás
+* LOG table update
         CLEAR L_BSET_LOG.
         SELECT SINGLE * INTO L_BSET_LOG FROM /ZAK/BSET_LOG
           WHERE BUKRS = W_/ZAK/ZAK-BUKRS

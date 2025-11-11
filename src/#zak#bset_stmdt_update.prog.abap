@@ -1,31 +1,31 @@
 *&---------------------------------------------------------------------*
-*& Program: BSET tábla időbélyeg törlés
+*& Program: Delete timestamps in table BSET
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/BSET_STMDT_UPDATE MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - Ness
-*& Létrehozás dátuma : 2016.12.06
-*& Funkc.spec.készítő: ________
+*& Author            : Gábor Balázs - Ness
+*& Creation date     : 2016.12.06
+*& Functional spec by: ________
 *& SAP modul neve    :
-*& Program  típus    : Riport
-*& SAP verzió        :
+*& Program type      : Report
+*& SAP version       :
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 CLASS LCL_EVENT_HANDLER DEFINITION DEFERRED.
 *&---------------------------------------------------------------------*
-*& Egyszerű alv alapok
+*& Simple ALV basics
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& Típusdeklarációk
+*& Type declarations
 *&---------------------------------------------------------------------*
 TYPES: TY_DATA TYPE TABLE OF /ZAK/AFA_SZLA.
 INCLUDE /ZAK/ALV_GRID_ALAP.
 *&---------------------------------------------------------------------*
-*& TáBLáK                                                              *
+*& TABLES                                                             *
 *&---------------------------------------------------------------------*
 TABLES: BSET.
 *&---------------------------------------------------------------------*
-*  PROGRAM VÁLTOZÓK                                                    *
+*& PROGRAM VARIABLES                                                  *
 *&---------------------------------------------------------------------*
 DATA G_SUBRC TYPE SYSUBRC.
 DATA G_ANSWER.
@@ -34,21 +34,21 @@ DATA G_INDEX TYPE SYTABIX.
 *& SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-* Vállalat.
+* Company
 SELECT-OPTIONS S_BUKRS  FOR  BSET-BUKRS.
-* Bizonylat
+* Document
 SELECT-OPTIONS S_BELNR  FOR  BSET-BELNR.
-* Év
+* Year
 SELECT-OPTIONS S_GJAHR  FOR  BSET-GJAHR.
-* Tétel
+* Item
 SELECT-OPTIONS S_BUZEI  FOR  BSET-BUZEI.
-*ÁFA
+* VAT code
 SELECT-OPTIONS S_MWSKZ  FOR  BSET-MWSKZ.
-*Dátum
+* Date
 SELECT-OPTIONS S_STMDT  FOR  BSET-STMDT.
-*Idő
+* Time
 SELECT-OPTIONS S_STMTI  FOR  BSET-STMTI.
-*Teszt
+* Test run
 PARAMETERS P_TEST AS CHECKBOX DEFAULT 'X'.
 SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
@@ -56,7 +56,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -64,7 +64,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -78,7 +78,7 @@ AT SELECTION-SCREEN.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Adat rekordszám meghatározása
+* Determine record count
   PERFORM GET_INDEX USING G_INDEX.
   MESSAGE I000 WITH 'Szelekciónak megfelelő bejegyzések száma: '(001) G_INDEX.
 *   & & & &
@@ -106,7 +106,7 @@ END-OF-SELECTION.
 *&---------------------------------------------------------------------*
 FORM HANDLE_HOTSPOT_CLICK  USING    UV_COLUMN_NAME
                                     UV_ROW_INDEX.
-** példa implementálása a hotspot kattintásnak
+** Example implementation of hotspot click
 *  CASE uv_column_name.
 *    WHEN 'EBELN'.
 *      READ TABLE gt_data INTO gs_data INDEX uv_row_index.

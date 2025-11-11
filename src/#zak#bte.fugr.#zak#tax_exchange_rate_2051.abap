@@ -1,6 +1,6 @@
 FUNCTION /ZAK/TAX_EXCHANGE_RATE_2051.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_COMPANY_CODE) TYPE  BUKRS
 *"     VALUE(I_COUNTRY) LIKE  T005-LAND1 OPTIONAL

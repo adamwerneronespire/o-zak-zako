@@ -1,23 +1,22 @@
 *&---------------------------------------------------------------------*
-*& Program: Könyvelések feladása lezárt időszakról
+*& Program: Submit postings for a closed period
 *&---------------------------------------------------------------------*
  REPORT /ZAK/BOOK_FILE_GEN MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& a lezárt időszakból készítí el az átvzeteés valamint az önellenőrzési
-*& pótlék könyvelési feladás excel fájlt.
+*& Function description: Based on the selection criteria the program creates the transfer
+*& and self-check surcharge posting Excel files for the closed period.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2006.03.30
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Gábor Balázs - FMC
+*& Creation date     : 2006.03.30
+*& Functional spec by: ________
+*& SAP module name   : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER        DESCRIPTION             TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
@@ -27,32 +26,32 @@
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                             *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS (C_XXXXXXX..)                                             *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                  *
+*      Internal table     -   (I_xxx...)                              *
+*      FORM parameter     -   ($xxxx...)                              *
+*      Constant           -   (C_xxx...)                              *
+*      Parameter variable -   (P_xxx...)                              *
+*      Selection option   -   (S_xxx...)                              *
+*      Ranges             -   (R_xxx...)                              *
+*      Global variables   -   (V_xxx...)                              *
+*      Local variables    -   (L_xxx...)                              *
+*      Work area          -   (W_xxx...)                              *
+*      Type               -   (T_xxx...)                              *
+*      Macros             -   (M_xxx...)                              *
+*      Field-symbol       -   (FS_xxx...)                             *
+*      Method             -   (METH_xxx...)                           *
+*      Object             -   (O_xxx...)                              *
+*      Class              -   (CL_xxx...)                             *
+*      Event              -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
@@ -62,7 +61,7 @@
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
  SELECTION-SCREEN BEGIN OF BLOCK BL1 WITH FRAME TITLE TEXT-T01.
-* Vállalat.
+* Company.
  SELECTION-SCREEN BEGIN OF LINE.
  SELECTION-SCREEN COMMENT 01(31) TEXT-101.
  PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALLI-BUKRS VALUE CHECK
@@ -72,17 +71,17 @@
 
  SELECTION-SCREEN END OF LINE.
 
-* Bevallás fajta meghatározása
+* Determine tax return category
  PARAMETERS: P_BTYPAR LIKE /ZAK/BEVALL-BTYPART
                            OBLIGATORY.
-* Bevallás típus
+* Tax return type
  PARAMETERS: P_BTYPE  LIKE /ZAK/BEVALLI-BTYPE
 *                          OBLIGATORY
                            NO-DISPLAY.
-* Év
+* Year
  PARAMETERS: P_GJAHR  LIKE /ZAK/BEVALLI-GJAHR DEFAULT SY-DATUM(4).
 
-* Hónap
+* Month
  PARAMETERS: P_MONAT  LIKE /ZAK/BEVALLI-MONAT DEFAULT SY-DATUM+4(2).
 
 * Index
@@ -96,10 +95,10 @@
 *&---------------------------------------------------------------------*
  INITIALIZATION.
 
-*  Megnevezések meghatározása
+*  Determine descriptions
    PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -107,7 +106,7 @@
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -116,18 +115,18 @@
 *&---------------------------------------------------------------------*
  AT SELECTION-SCREEN OUTPUT.
 
-*  Képernyő attribútomok beállítása
+*  Set screen attributes
    PERFORM SET_SCREEN_ATTRIBUTES.
 
 *&---------------------------------------------------------------------*
 * AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
  AT SELECTION-SCREEN.
-*  Megnevezések meghatározása
+*  Determine descriptions
    PERFORM READ_ADDITIONALS.
-*  Bevallás típus meghatározása
+*  Determine tax return type
    PERFORM GET_BTYPE.
-*  Ellenőrizzük a megadott időszak lezárt-e.
+*  Check whether the specified period is closed.
    PERFORM GET_STATUS_CLOSE.
 
 
@@ -135,12 +134,12 @@
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
  START-OF-SELECTION.
-*  Jogosultság vizsgálat
+*  Authorization check
    PERFORM AUTHORITY_CHECK USING P_BUKRS
                                  P_BTYPAR
                                  C_ACTVT_01.
 
-*  Átvezetés vagy egyéb
+*  Transfer or other
    IF P_BTYPAR = C_BTYPART_ATV.
      CALL FUNCTION '/ZAK/ATV_BOOK_EXCEL'
           EXPORTING
@@ -161,7 +160,7 @@
                WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
      ELSE.
        MESSAGE I009 WITH SPACE.
-*   & fájl sikeresen letöltve
+*   & file downloaded successfully
      ENDIF.
    ELSE.
      CALL FUNCTION '/ZAK/ONELL_BOOK_EXCEL'
@@ -188,25 +187,25 @@
        CASE SY-SUBRC.
          WHEN 2.
            MESSAGE I154.
-*      Önellenőrzési pótlék könyvelés beállítás hiba! Fájl nem készült!
+*      Self-check allowance accounting setting error! File not created!
          WHEN 3.
            MESSAGE I155.
-*      Önellenőrzési pótlék könyvelési fájl létrehozás hiba!
+*      Self-check allowance accounting file creation error!
          WHEN 4.
            MESSAGE I157.
-*      Nincs meghatározható adat! Fájl nem készült!
+*      There is no identifiable data! File not created!
 *++BG 2008.04.16
          WHEN 5.
            MESSAGE I231 WITH P_BUKRS.
-*   Hiba a & vállalat forgatás meghatározásnál! (/ZAK/ROTATE_BUKRS_OUTPU
+*   Error in defining & company rotation! (/ZAK/ROTATE_BUKRS_OUTPU
 *--BG 2008.04.16
 
        ENDCASE .
      ELSE.
        MESSAGE I009 WITH SPACE.
-*   & fájl sikeresen letöltve
+*   & file downloaded successfully
      ENDIF.
-*++BG 2008.01.07 ÁFA arányosítás könyvelés feladás
+*++BG 2008.01.07 VAT apportionment posting
      IF P_BTYPAR = C_BTYPART_AFA.
        CALL FUNCTION '/ZAK/AFAR_BOOK_EXCEL'
          EXPORTING
@@ -227,10 +226,10 @@
                  WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
        ELSE.
          MESSAGE I009 WITH SPACE.
-*        & fájl sikeresen letöltve
+*        & file downloaded successfully
        ENDIF.
      ENDIF.
-*--BG 2008.01.07 ÁFA arányosítás könyvelés
+*--BG 2008.01.07 VAT apportionment posting
    ENDIF.
 
  END-OF-SELECTION.
@@ -269,7 +268,7 @@
 *----------------------------------------------------------------------*
  FORM READ_ADDITIONALS.
 
-* Vállalat megnevezése
+* Company name
    IF NOT P_BUKRS IS INITIAL.
      SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
         WHERE BUKRS = P_BUKRS.
@@ -312,7 +311,7 @@
 *----------------------------------------------------------------------*
  FORM GET_BTYPE.
 
-*  Ha a BYTPE üres, akkor meghatározzuk
+*  If BTYPE is empty, determine it
 *   IF P_BTYPE IS INITIAL AND
 *      NOT P_BUKRS IS INITIAL AND
 *      NOT P_BTYPAR IS INITIAL AND
@@ -348,16 +347,16 @@
 *----------------------------------------------------------------------*
  FORM GET_STATUS_CLOSE.
 
-*  Meghatározzuk a státuszt
+*  Determine the status
    PERFORM GET_STATUSZ USING P_BUKRS
                              P_BTYPE
                              P_GJAHR
                              P_MONAT.
 
-*  Ha a státusz nem lezárt:
+*  If the status is not closed:
    IF W_/ZAK/BEVALLI-FLAG NA 'ZX'.
      MESSAGE E156.
-*   Kérem csak lezárt időszakot adjon meg!
+*   Please enter only a closed period!
    ENDIF.
 
  ENDFORM.                    " GET_STATUS_CLOSE

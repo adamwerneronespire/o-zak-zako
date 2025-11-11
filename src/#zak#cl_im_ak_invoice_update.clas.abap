@@ -23,8 +23,8 @@ CLASS /ZAK/CL_IM_AK_INVOICE_UPDATE IMPLEMENTATION.
 
 method IF_EX_INVOICE_UPDATE~CHANGE_AT_SAVE.
 *----------------------------------------------------------------------*
-* Módosítás  Dátum          Szerző                    HelpDesk ID
-*                           Rövid leírás
+* Change      Date           Author                    HelpDesk ID
+*                           Short description
 * 001        2010.06.09     Förgeteg Csaba (IQSYS)
 *                           1. Deactivating this part of the exchange
 *                              rate determination enhancement, because
@@ -53,7 +53,7 @@ method IF_EX_INVOICE_UPDATE~CHANGE_AT_SAVE.
 * 001/01 end of modification
 
 *----------------------------------------------------------------------*
-* Adó átszámítási árfolyamának meghatározása
+* Determine the tax conversion exchange rate
 *----------------------------------------------------------------------*
 
 * 001/01 beginning of modification
@@ -63,7 +63,7 @@ method IF_EX_INVOICE_UPDATE~CHANGE_AT_SAVE.
 *  clear: v_belnr, v_bldat.
 *  check not v_rseg-ebeln is initial.
 
-** -- Keresni BKPF rekordokat
+** -- Search BKPF records
 *  select * into table i_bkpf from bkpf
 *     where blart = 'SB' and
 *           tcode = 'EUVP'.

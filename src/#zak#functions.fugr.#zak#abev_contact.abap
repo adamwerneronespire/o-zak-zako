@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ABEV_CONTACT.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -34,20 +34,20 @@ FUNCTION /ZAK/ABEV_CONTACT.
   DATA   V_BTYPEE LIKE /ZAK/BEVALL-BTYPE.
 *--1365#24.
 
-* Hónap ellenőrzése
+* Month validation
   IF NOT I_MONAT BETWEEN '01' AND '12'.
     MESSAGE E110(/ZAK/ZAK) WITH I_MONAT RAISING ERROR_MONAT.
-*   Hónap megadás hiba! (&)
+*   Invalid month input! (&)
   ENDIF.
 
-* ABEV azonosító ellenőrzése
+* Validate ABEV identifier
   SELECT SINGLE COUNT( * )
                  FROM /ZAK/BEVALLB
                 WHERE BTYPE  EQ I_BTYPE
                   AND ABEVAZ EQ I_ABEVAZ.
   IF SY-SUBRC NE 0.
     MESSAGE E112(/ZAK/ZAK) WITH I_BTYPE I_ABEVAZ RAISING ERROR_ABEVAZ.
-*   & bevallás & ABEV azonosító nem létezik!
+*   Return & with ABEV identifier & does not exist!
   ENDIF.
 
 
@@ -60,7 +60,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
   MOVE I_ABEVAZ TO T_ABEV_CONTACT-ABEVAZ.
   APPEND T_ABEV_CONTACT.
 
-* Meghatározzuk az import beszámoló típusát
+* Determine the import report type
 *++S4HANA#01.
 *  SELECT SINGLE BTYPART INTO V_BTYPART
 *                        FROM /ZAK/BEVALL
@@ -107,7 +107,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
 * Nincs adat
   IF SY-SUBRC NE 0.
 *   MESSAGE E109(/ZAK/ZAK) WITH I_BTYPE I_BUKRS RAISING ERROR_BTYPE.
-*   & bevallás típus & vállalatban nem létezik!
+*   Return type & does not exist for company &!
     EXIT.
   ENDIF.
 
@@ -117,7 +117,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
   ENDIF.
 
   M_DEF R_BTYPE 'I' 'EQ' V_BTYPE SPACE.
-* Feltöltjük a bevallás típusokat!
+* Load the return types!
   DO.
 
 *++S4HANA#01.
@@ -149,7 +149,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
     V_BTYPE = R_BTYPE-LOW.
 *--1365#24.
 
-* Konverzió meghatározása
+* Determine conversion
     SELECT ABEVAZ INTO V_ABEVAZ
                   FROM /ZAK/ABEVK
                   UP TO 1 ROWS
@@ -169,9 +169,9 @@ FUNCTION /ZAK/ABEV_CONTACT.
       MOVE V_ABEVAZ TO T_ABEV_CONTACT-ABEVAZ.
       APPEND T_ABEV_CONTACT.
 *++BG 2008.12.11
-* ha nem talál megnézzük visszafele is
+* if nothing is found, also check backwards
     ELSE.
-* Konverzió meghatározása
+* Determine conversion
       SELECT ABEVAZE INTO V_ABEVAZ
                     FROM /ZAK/ABEVK
                     UP TO 1 ROWS
@@ -191,7 +191,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
 *++1365#24.
         V_BTYPEE = V_BTYPEE.
         I_ABEVAZ = V_ABEVAZ.
-*     Ha így sincs rekord, akkor nem változott az ABEV
+*     If there is still no record, the ABEV did not change
       ELSE.
         MOVE V_BTYPE  TO T_ABEV_CONTACT-BTYPE.
         MOVE I_ABEVAZ TO T_ABEV_CONTACT-ABEVAZ.
@@ -204,7 +204,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
   ENDLOOP.
 *--1365#24.
 
-** Meghatározzuk az import beszámoló típusát
+** Determine the import report type
 *  SELECT BUKRS BTYPE BTYPART MAX( DATBI )
 *                              INTO (V_BUKRS,
 *                                    V_BTYPE,
@@ -218,13 +218,13 @@ FUNCTION /ZAK/ABEV_CONTACT.
 ** Nincs adat
 *  IF SY-SUBRC NE 0.
 *    MESSAGE E109(/ZAK/ZAK) WITH I_BTYPE I_BUKRS RAISING ERROR_BTYPE.
-**   & bevallás típus & vállalatban nem létezik!
+**   Return type & does not exist for company &!
 *  ENDIF.
 *
-** Kiinduló év
+** Starting year
 *  V_GJAHR = V_DATUM(4).
 *
-** Meghatározzuk az irányt.
+** Determine the direction.
 *  IF I_GJAHR < V_GJAHR.
 *    V_UPDN = '-'.
 *  ELSEIF I_GJAHR > V_GJAHR.
@@ -232,7 +232,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
 *  ENDIF.
 *
 *
-** Meghatározzuk a bevallás típusokat.
+** Determine the return types.
 *  DO.
 *    CLEAR: W_ABEV_CONTACT.
 *    IF V_DATUM IS INITIAL.
@@ -241,13 +241,13 @@ FUNCTION /ZAK/ABEV_CONTACT.
 *      V_DATUM+6(2) = 01.
 *    ENDIF.
 *
-**   Hónap utolsó napjának meghatározása
+**   Determine the last day of the month
 *    CALL FUNCTION 'LAST_DAY_OF_MONTHS'
 *         EXPORTING
 *              DAY_IN            = V_DATUM
 *         IMPORTING
 *              LAST_DAY_OF_MONTH = V_DATUM.
-**   Bevallás típusok meghatározása
+**   Determine the return types
 *    SELECT BTYPE INTO W_ABEV_CONTACT-BTYPE
 *                 FROM /ZAK/BEVALL
 *                      UP TO 1 ROWS
@@ -258,7 +258,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
 *    ENDSELECT.
 *    IF SY-SUBRC NE 0.
 *      MESSAGE E111(/ZAK/ZAK) WITH V_BTYPART V_DATUM(4) RAISING ERROR_BTYPE.
-**     Hiányzó beállítás & bevallás fajtához & évben!
+**     Missing setting for return kind & in year &!
 *    ELSE.
 *      APPEND W_ABEV_CONTACT TO T_ABEV_CONTACT.
 *    ENDIF.
@@ -281,7 +281,7 @@ FUNCTION /ZAK/ABEV_CONTACT.
 *
 *  MOVE I_ABEVAZ TO V_ABEVAZ.
 *
-** ABEV azonosítók meghatározása
+** Determine ABEV identifiers
 *  LOOP AT T_ABEV_CONTACT INTO W_ABEV_CONTACT.
 *
 *    PERFORM GET_ABEVAZ USING W_ABEV_CONTACT

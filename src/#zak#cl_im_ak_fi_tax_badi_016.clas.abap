@@ -18,10 +18,10 @@ CLASS /ZAK/CL_IM_AK_FI_TAX_BADI_016 IMPLEMENTATION.
 METHOD if_ex_fi_tax_badi_016~end_of_selection.
 * ...
 *&---------------------------------------------------------------------*
-*& LOG#     DÁTUM       MÓDOSÍTÓ                   LEÍRÁS
+*& LOG#     DATE        MODIFIER                   DESCRIPTION
 *& ----   ----------   ----------     ----------------------------------
-*& 0001   2007.01.03   Balázs G.(FMC) /ZAK/BSET tábla aktualizálása
-*&                                    adódátummal és tranzakció típussal
+*& 0001   2007.01.03   Balázs G.(FMC) /ZAK/BSET table update
+*&                                    with tax date and transaction type
 *&---------------------------------------------------------------------*
 
   DATA: w_auste    TYPE rfums_tax_item,
@@ -50,7 +50,7 @@ METHOD if_ex_fi_tax_badi_016~end_of_selection.
   DATA: i_/zak/start TYPE STANDARD TABLE OF /zak/start INITIAL SIZE 0,
         w_/zak/start TYPE /zak/start.
 
-* Bevallás fajta
+* Return type
   CONSTANTS: c_btypart_afa  TYPE /zak/btypart VALUE 'AFA',
              c_btypart_szja TYPE /zak/btypart VALUE 'SZJA',
              c_btypart_tars TYPE /zak/btypart VALUE 'TARS',
@@ -72,10 +72,10 @@ METHOD if_ex_fi_tax_badi_016~end_of_selection.
   DATA w_buper TYPE t_buper.
 
   DEFINE l_m_get_buper.
-*   Ellenőrzés
+*   Validation
     READ TABLE i_buper INTO w_buper
                WITH KEY buper_old = &1-buper.
-*   Meghatározzuk a periódust
+*   Determine the period
     IF sy-subrc NE 0.
       CLEAR   w_/zak/analitika.
       REFRESH: i_/zak/analitika, i_return.
@@ -144,16 +144,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_012 SPOTS /ZAK/ES_BADI_016 .
 
 ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 
-* Kezdődátum beolvasása összes vállalathoz
+* Read start date for all company codes
   SELECT * INTO TABLE i_/zak/start FROM /zak/start.
 
-* Vállalatonkénti olvasás
+* Read per company code
   LOOP AT ch_gt_alv INTO ls_gt_alv.
 
-* Áfa tételek - befizetendő
+* VAT items - payable
     LOOP AT ls_gt_alv-t_auste_ep INTO w_auste.
 
-* Dátum ellenőrzése
+* Date validation
       IF w_auste-bukrs NE w_/zak/start-bukrs.
 
         CLEAR w_/zak/start.
@@ -164,7 +164,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 
       CHECK w_auste-budat >= w_/zak/start-zbudat.
 
-* Hozzá tartozó BSET rekord kiválasztása
+* Select the corresponding BSET record
       CLEAR w_bset.
 *++S4HANA#01.
 *      REFRESH i_bset.
@@ -207,8 +207,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 *--1565 #08.
       LOOP AT i_bset INTO w_bset.
 *++1565 #08.
-** Ha a BSET már aktualizálódott, akkor a /ZAK/BSET-be
-** is be kell írni a rekordot - ha még nem volt
+** If BSET is already updated, then write it to /ZAK/BSET
+** the record must also be inserted there - if it was not present yet
 *      IF NOT W_BSET-STMDT IS INITIAL AND
 *         NOT W_BSET-STMTI IS INITIAL.
 *
@@ -224,7 +224,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 *        W_/ZAK/ZAK-ZINDEX = SPACE.
 *
 **++0001 2007.01.03 BG (FMC)
-**     Adódátum
+**     Tax date
 **        CLEAR W_/ZAK/ZAK-ADODAT.
 **        SELECT SINGLE
 **          ADODAT
@@ -241,7 +241,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 *          W_/ZAK/ZAK-BUPER = W_AUSTE-BLDAT(6).
 *        ENDIF.
 **--2007.01.11 BG (FMC)
-**     Tranzakció típus
+**     Transaction type
 *        CLEAR W_/ZAK/ZAK-TTIP.
 *        SELECT
 *          DIEKZ
@@ -264,13 +264,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 *
 *        IF SY-SUBRC NE 0.
 **++1365#24.
-**BUPER meghatározása, ha az időszak 'X'-el le van zárva, akkor
-**már itt átrakjuk az új időszakra:
+**Determine BUPER; if the period is closed with 'X' then
+**move it to the new period here:
 *          L_M_GET_BUPER W_/ZAK/ZAK.
 **--1365#24.
 *          INSERT INTO /ZAK/BSET VALUES W_/ZAK/ZAK.
 *          IF SY-SUBRC = 0.
-** LOG tábla aktualizálás
+** Log table update
 *            CLEAR L_BSET_LOG.
 *            SELECT SINGLE * INTO L_BSET_LOG FROM /ZAK/BSET_LOG
 *              WHERE BUKRS = W_/ZAK/ZAK-BUKRS
@@ -337,7 +337,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_FGSZ_BADI_001 SPOTS /ZAK/ES_BADI_016 .
 *--S4HANA#01.
 *++1565 #08.
 *++1665 #02.
-*   Csak éles futásban mentjük le az adatokat
+*   Save the data only during production runs
 *    IF NOT I_/ZAK/BELNR[] IS INITIAL.
       IF NOT i_/zak/belnr[] IS INITIAL AND NOT par_bsud IS INITIAL.
 *--1665 #02.
@@ -349,10 +349,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 *--1565 #08.
     ENDLOOP.
 
-* Áfa tételek - visszaigényelhető
+* VAT items - reclaimable
     LOOP AT ls_gt_alv-t_voste_ep INTO w_voste.
 
-* Dátum ellenőrzése
+* Date validation
       IF w_voste-bukrs NE w_/zak/start-bukrs.
 
         CLEAR w_/zak/start.
@@ -363,7 +363,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 
       CHECK w_voste-budat >= w_/zak/start-zbudat.
 
-* Hozzá tartozó BSET rekord kiválasztása
+* Select the corresponding BSET record
       CLEAR w_bset.
 *++S4HANA#01.
 *      REFRESH i_bset.
@@ -404,12 +404,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 *--1565 #08.
       LOOP AT i_bset INTO w_bset.
 *++1565 #08.
-** Ha a BSET már aktualizálódott, akkor a /ZAK/BSET-be
-** is be kell írni a rekordot - ha még nem volt
+** If BSET is already updated, then write it to /ZAK/BSET
+** the record must also be inserted there - if it was not present yet
 *      IF NOT W_BSET-STMDT IS INITIAL AND
 *         NOT W_BSET-STMTI IS INITIAL.
 *
-*** ZFBDT meghatározása
+*** Determine ZFBDT
 **        clear l_zfbdt.
 **        SELECT ZFBDT into l_zfbdt FROM  BSEG
 **               WHERE  BUKRS  = w_voste-bukrs
@@ -418,7 +418,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 **               AND    KOART  = 'K'.
 **        ENDSELECT.
 **
-*** Határnap beolvasása
+*** Read due date
 **        clear l_bday.
 **        l_datum = sy-datum.
 **
@@ -429,7 +429,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 **        ENDSELECT.
 **
 **
-*** Kalkulációs dátum
+*** Calculation date
 **        l_ev    = w_voste-bldat+0(4).
 **        l_ho    = w_voste-bldat+4(2).
 **        l_nap   = w_voste-bldat+6(2).
@@ -466,7 +466,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 *        W_/ZAK/ZAK-ZINDEX = SPACE.
 *
 **++0001 2007.01.03 BG (FMC)
-**       Adódátum
+**       Tax date
 *        CLEAR W_/ZAK/ZAK-ADODAT.
 **        SELECT SINGLE
 **          ADODAT
@@ -485,7 +485,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 **--2007.01.11 BG (FMC)
 *
 *
-**       Tranzakció típus
+**       Transaction type
 *        CLEAR W_/ZAK/ZAK-TTIP.
 *        SELECT
 *          DIEKZ
@@ -508,12 +508,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 *
 *        IF SY-SUBRC NE 0.
 **++1365#24.
-**BUPER meghatározása, ha az időszak 'X'-el le van zárva, akkor
-**már itt átrakjuk az új időszakra:
+**Determine BUPER; if the period is closed with 'X' then
+**move it to the new period here:
 *          L_M_GET_BUPER W_/ZAK/ZAK.
 **--1365#24.
 *          INSERT INTO /ZAK/BSET VALUES W_/ZAK/ZAK.
-** LOG tábla aktualizálás
+** Log table update
 *          IF SY-SUBRC = 0.
 *            CLEAR L_BSET_LOG.
 *            SELECT SINGLE * INTO L_BSET_LOG FROM /ZAK/BSET_LOG
@@ -581,7 +581,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_BADI_013 SPOTS /ZAK/ES_BADI_016 .
 *--S4HANA#01.
 *++1565 #08.
 *++1665 #02.
-*   Csak éles futásban mentjük le az adatokat
+*   Save the data only during production runs
 *    IF NOT I_/ZAK/BELNR[] IS INITIAL.
       IF NOT i_/zak/belnr[] IS INITIAL AND NOT par_bsud IS INITIAL.
 *--1665 #02.

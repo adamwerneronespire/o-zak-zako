@@ -58,16 +58,16 @@
 - [x] src/#zak#bte.fugr.#zak#saplbte.abap
 - [x] src/#zak#bte.fugr.#zak#tax_exchange_rate_2051.abap
 - [x] src/#zak#bukrs_corr.prog.abap
-- [ ] src/#zak#cl_im_ak_fi_tax_badi_015.clas.abap
-- [ ] src/#zak#cl_im_ak_fi_tax_badi_016.clas.abap
-- [ ] src/#zak#cl_im_ak_invoice_update.clas.abap
-- [ ] src/#zak#cl_im_badi_fdcb_subbas04.clas.abap
-- [ ] src/#zak#common_struct.prog.abap
-- [ ] src/#zak#del_data.prog.abap
-- [ ] src/#zak#evvalt_corr.prog.abap
-- [ ] src/#zak#evvalt_corr.prog.screen_9000.abap
-- [ ] src/#zak#functions.fugr.#zak#abev_contact.abap
-- [ ] src/#zak#functions.fugr.#zak#afa_alap_verify.abap
+- [x] src/#zak#cl_im_ak_fi_tax_badi_015.clas.abap
+- [x] src/#zak#cl_im_ak_fi_tax_badi_016.clas.abap
+- [x] src/#zak#cl_im_ak_invoice_update.clas.abap
+- [x] src/#zak#cl_im_badi_fdcb_subbas04.clas.abap
+- [x] src/#zak#common_struct.prog.abap
+- [x] src/#zak#del_data.prog.abap
+- [x] src/#zak#evvalt_corr.prog.abap
+- [x] src/#zak#evvalt_corr.prog.screen_9000.abap
+- [x] src/#zak#functions.fugr.#zak#abev_contact.abap
+- [x] src/#zak#functions.fugr.#zak#afa_alap_verify.abap
 - [ ] src/#zak#functions.fugr.#zak#afa_ness_szla_exit.abap
 - [ ] src/#zak#functions.fugr.#zak#afa_sap_sel_exit.abap
 - [ ] src/#zak#functions.fugr.#zak#afa_xml_download.abap

@@ -9,52 +9,52 @@
 REPORT  /ZAK/DEL_DATA MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekcióban megadott adatokat kitörli
+*& Function description: The program deletes the data specified on the selection screen
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2007.09.25
-*& Funkc.spec.készítő: ________
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2007.09.25
+*& Functional spec by: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program  type     : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                 DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
 *&
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES /ZAK/BEVALLI.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                  *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA V_PACK TYPE /ZAK/PACK.
 
 RANGES R_PACK FOR /ZAK/BEVALLSZ-PACK.
 
-*Adatok törlése
+*Delete data
 DEFINE M_DELETE.
   PERFORM PROCESS_IND USING &2.
   DELETE FROM &1 WHERE BUKRS EQ P_BUKRS
@@ -65,7 +65,7 @@ DEFINE M_DELETE.
   COMMIT WORK AND WAIT.
 END-OF-DEFINITION.
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling a range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -79,7 +79,7 @@ END-OF-DEFINITION.
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-B01.
-*Figyelmeztetés
+*Warning
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(71) TEXT-101.
 SELECTION-SCREEN END OF LINE.
@@ -107,7 +107,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -115,7 +115,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -136,7 +136,7 @@ AT SELECTION-SCREEN.
 
   IF SY-SYSID EQ 'MTP'.
     MESSAGE I235.
-*   Figyelem! Ön az éles rendszerben akar adatokat törlni!
+*   Warning! You are about to delete data in the productive system!
   ENDIF.
 
 
@@ -148,7 +148,7 @@ START-OF-SELECTION.
   M_DELETE /ZAK/ANALITIKA '/ZAK/ANALITIKA törlése'.
 * /ZAK/BEVALLO
   M_DELETE /ZAK/BEVALLO   '/ZAK/BEVALLO törlése'.
-* Package azonosítók gyűjtése
+* Package identifiers collection
   SELECT PACK INTO V_PACK
               FROM /ZAK/BEVALLSZ
                  WHERE BUKRS EQ P_BUKRS
@@ -163,7 +163,7 @@ START-OF-SELECTION.
   M_DELETE /ZAK/BEVALLSZ  '/ZAK/BEVALLSZ törlése'.
 * /ZAK/BEVALLI
   M_DELETE /ZAK/BEVALLI   '/ZAK/BEVALLI törlése'.
-* /ZAK/BEVALLP aktualizálás
+* /ZAK/BEVALLP update
   PERFORM PROCESS_IND USING '/ZAK/BEVALLP módosítás'.
 
   IF NOT R_PACK[] IS INITIAL.
@@ -177,7 +177,7 @@ START-OF-SELECTION.
   ENDIF.
 
   MESSAGE I008.
-* Tábla törlések elvégezve!
+* Table deletions completed!
 
 
 *&---------------------------------------------------------------------*

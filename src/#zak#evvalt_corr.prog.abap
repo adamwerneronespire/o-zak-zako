@@ -1,26 +1,26 @@
 *&---------------------------------------------------------------------*
-*& Program: Év váltás korrekció
+*& Program: Year change correction
 *&---------------------------------------------------------------------*
 
 REPORT /ZAK/EVVALT_CORR MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Mivel előző évben keletkeznek olyan rekordok az
-*& analitikában, aminél a bevallás típús még az előző évi (pld. repi
-*& könyvelések), ezért szükséges ez a konverziós program, ami ezeket
-*& a tételeket átforgatja az aktuális év ABEV azonosítóira
+*& Function description: Since there are records created in the previous year in the
+*& analytics where the return type still belongs to the previous year (e.g. representative
+*& postings), this conversion program is needed to
+*& reclassify those items to the current year's ABEV identifiers
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábr - FMC
-*& Létrehozás dátuma : 2006.12.13
-*& Funkc.spec.készítő: ________
+*& Author            : Balázs Gábr - FMC
+*& Creation date     : 2006.12.13
+*& Functional spec by: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program  type     : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION        TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
@@ -29,33 +29,33 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 TYPE-POOLS: SLIS.
 
-*ALV közös rutinok
+*Shared ALV routines
 INCLUDE /ZAK/ALV_LIST_FORMS.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                  *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA W_/ZAK/ANALITIKA_DEL TYPE /ZAK/ANALITIKA.
 DATA I_/ZAK/ANALITIKA_DEL TYPE STANDARD TABLE OF /ZAK/ANALITIKA
@@ -80,7 +80,7 @@ DATA I_REL_BEVALL TYPE STANDARD TABLE OF /ZAK/BEVALL INITIAL SIZE 0.
 *--2065 #04.
 
 *++BG 2007.04.26
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling a range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -112,7 +112,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -120,7 +120,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -149,25 +149,25 @@ INITIALIZATION.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Megállapítjuk a lezárt időszakokat az adott  évben
+* Determine the periods that are closed in the given year
   PERFORM GET_BEVALLI.
-* Megállapítjuk, hogy milyen érvényes bevallás típusok léteznek az
-* adott évben.
+* Determine which valid return types exist in the
+* given year.
   PERFORM GET_VALID_BTYPE.
-* Analitika szelekció
+* Analytics selection
   PERFORM GET_ANALITIKA.
 
 *&---------------------------------------------------------------------*
 * END-OF-SELECTION
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
-* Feldolgozás
+* Processing
   PERFORM PROCESS_DATA.
 
-* Előtérben obj.lista
+* Object list in the foreground
   IF SY-BATCH IS INITIAL.
     PERFORM LIST_DISPLAY.
-* Háttérben ALV listát.
+* ALV list in the background.
   ELSE.
     PERFORM LIST_SPOOL TABLES  I_ALV
                        USING  'I_ALV'.
@@ -223,7 +223,7 @@ FORM GET_VALID_BTYPE.
 
   IF I_/ZAK/BEVALL[] IS INITIAL.
     MESSAGE E200 WITH P_GJAHR.
-*   Nincs érvényes bevallás típus beállítva & évben! (/ZAK/BEVALL)
+*   No valid return type is configured in year &! (/ZAK/BEVALL)
   ENDIF.
 
 
@@ -242,7 +242,7 @@ FORM GET_ANALITIKA.
   RANGES LR_BTYPE FOR /ZAK/ANALITIKA-BTYPE.
   DATA L_BTYPE TYPE /ZAK/BTYPE.
 
-*BTYPART alapján meghatározzuk a BTYPE-ot
+*Determine BTYPE based on BTYPART
   SELECT BTYPE INTO L_BTYPE
                FROM /ZAK/BEVALL
               WHERE BTYPART IN S_BTYPAR.
@@ -264,10 +264,10 @@ FORM GET_ANALITIKA.
             AND BTYPE IN LR_BTYPE.
 *--BG 2007.04.26
 *++2065 #11.
-*   IDŐSZAK első napje
+*   First day of the period
     CONCATENATE W_/ZAK/ANALITIKA-GJAHR W_/ZAK/ANALITIKA-MONAT '01' INTO L_DATUM.
 *--2065 #11.
-*   Ellenőrizzük a BTYPE-ot
+*   Validate the BTYPE
     READ TABLE I_/ZAK/BEVALL INTO W_/ZAK/BEVALL
                             WITH KEY BUKRS = W_/ZAK/ANALITIKA-BUKRS
                                      BTYPE = W_/ZAK/ANALITIKA-BTYPE
@@ -278,7 +278,7 @@ FORM GET_ANALITIKA.
 *--2065 #11.
       APPEND W_/ZAK/ANALITIKA TO I_/ZAK/ANALITIKA.
 *++2065 #04.
-*     Összegyűjtjük a releváns BEVALL bejegyzésket (időszak kezelés miatt)
+*     Collect the relevant BEVALL entries (due to period handling)
       READ TABLE I_REL_BEVALL TRANSPORTING NO FIELDS
                  WITH KEY BUKRS = W_/ZAK/ANALITIKA-BUKRS
                           BTYPE = W_/ZAK/ANALITIKA-BTYPE.
@@ -302,7 +302,7 @@ FORM GET_ANALITIKA.
 
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE E201.
-*   Nem található olyan rekord, amit konvertálni kell! (/ZAK/ANALITIKA)
+*   No record found that needs conversion! (/ZAK/ANALITIKA)
   ENDIF.
 
 ENDFORM.                    " GET_ANALITIKA
@@ -341,8 +341,8 @@ FORM PROCESS_DATA.
   DATA   L_TEXT(40).
 
 *++BG 2007.04.26
-* BTYPE váltás esetén adatok gyűjtése a BEVALLI és BEVALLSZ
-* átállításához.
+* When BTYPE changes, collect data for adjusting BEVALLI and BEVALLSZ
+* for the switchover.
   DATA: BEGIN OF LI_BEVALLI OCCURS 0,
           BUKRS  TYPE BUKRS,
           BTYPE  TYPE /ZAK/BTYPE,
@@ -381,7 +381,7 @@ FORM PROCESS_DATA.
 
   LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA.
 
-*   ALV listára töltjük:
+*   Load into the ALV list:
     CLEAR W_ALV.
     MOVE W_/ZAK/ANALITIKA-BUKRS  TO W_ALV-BUKRS.
     MOVE W_/ZAK/ANALITIKA-BTYPE  TO W_ALV-BTYPE.
@@ -391,7 +391,7 @@ FORM PROCESS_DATA.
     MOVE W_/ZAK/ANALITIKA-BTYPE  TO W_ALV-BTYPE.
     MOVE W_/ZAK/ANALITIKA-ABEVAZ TO W_ALV-ABEVAZ.
 
-*  Megnézzük mi lenne a megfelelő ABEV
+*  Determine the matching ABEV
     CALL FUNCTION '/ZAK/ABEV_CONTACT'
       EXPORTING
         I_BUKRS        = W_/ZAK/ANALITIKA-BUKRS
@@ -416,14 +416,14 @@ FORM PROCESS_DATA.
       IF SY-SUBRC EQ 0 AND
          ( LI_ABEV_CONTACT-BTYPE  NE W_/ZAK/ANALITIKA-BTYPE OR
            LI_ABEV_CONTACT-ABEVAZ NE W_/ZAK/ANALITIKA-ABEVAZ ).
-*          Ellenőrizzük, hogy le van e zárva
+*          Check whether it is closed
         READ TABLE I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI
              WITH KEY BUKRS = W_/ZAK/ANALITIKA-BUKRS
                       BTYPE = W_/ZAK/ANALITIKA-BTYPE
                       GJAHR = W_/ZAK/ANALITIKA-GJAHR
                       MONAT = W_/ZAK/ANALITIKA-MONAT
                       ZINDEX = W_/ZAK/ANALITIKA-ZINDEX.
-*       IDŐSZAK lezárt nem lehet módosítani
+*       Closed periods cannot be modified
         IF SY-SUBRC EQ 0.
 *++S4HANA#01.
 *          CLEAR LI_CLOSE.
@@ -441,12 +441,12 @@ FORM PROCESS_DATA.
           MOVE W_/ZAK/ANALITIKA-ZINDEX TO LS_LI_CLOSE-ZINDEX.
           COLLECT LS_LI_CLOSE INTO LT_LI_CLOSE.
 *--S4HANA#01.
-*       Egyébként módosítjuk
+*       Otherwise update it
         ELSE.
           MOVE W_/ZAK/ANALITIKA TO W_/ZAK/ANALITIKA_DEL.
           APPEND W_/ZAK/ANALITIKA_DEL TO I_/ZAK/ANALITIKA_DEL.
 *++BG 2007.04.26
-*         BTYPE váltás
+*         BTYPE change
           IF W_/ZAK/ANALITIKA-BTYPE NE LI_ABEV_CONTACT-BTYPE.
             CLEAR LI_BEVALLI.
             MOVE-CORRESPONDING W_/ZAK/ANALITIKA TO LI_BEVALLI.
@@ -472,14 +472,14 @@ FORM PROCESS_DATA.
   ENDLOOP.
 
 *++BG 2007.04.26
-* BEVALLI és BEVALLSZ módosítása
+* Update BEVALLI and BEVALLSZ
 *++2012.01.31 BG
   IF P_TESZT IS INITIAL.
 *--2012.01.31 BG
 *++2065 #04.
-    DELETE  I_REL_BEVALL WHERE BIDOSZ EQ 'H'. "havi gyakoriság nem kell!
+    DELETE  I_REL_BEVALL WHERE BIDOSZ EQ 'H'. " monthly frequency not needed!
     LOOP AT LI_BEVALLI.
-      L_DATUM(4)   = LI_BEVALLI-GJAHR - 1. "Előző évi utolsó nap beállítása kell!
+      L_DATUM(4)   = LI_BEVALLI-GJAHR - 1. " Need to set the last day of the previous year!
       L_DATUM+4(2) = 12.
       L_DATUM+6(2) = 31.
       LOOP AT I_REL_BEVALL INTO W_/ZAK/BEVALL
@@ -513,7 +513,7 @@ FORM PROCESS_DATA.
     ENDIF.
 *--2065 #04.
     LOOP AT LI_BEVALLI.
-*   BEVALLI aktualizálás
+*   BEVALLI update
       SELECT SINGLE * INTO W_/ZAK/BEVALLI
                       FROM /ZAK/BEVALLI
                      WHERE BUKRS  EQ LI_BEVALLI-BUKRS
@@ -525,7 +525,7 @@ FORM PROCESS_DATA.
         MOVE LI_BEVALLI-BTYPEN TO W_/ZAK/BEVALLI-BTYPE.
         MODIFY /ZAK/BEVALLI FROM W_/ZAK/BEVALLI.
       ENDIF.
-*   BEVALLSZ aktualizálás
+*   BEVALLSZ update
       SELECT * INTO W_/ZAK/BEVALLSZ
                FROM /ZAK/BEVALLSZ
               WHERE BUKRS  EQ LI_BEVALLI-BUKRS
@@ -553,7 +553,7 @@ FORM PROCESS_DATA.
       ENDIF.                                               "$smart
 *--S4HANA#01.
 
-*   BEVALLI törlés
+*   BEVALLI deletion
       DELETE FROM /ZAK/BEVALLI
                      WHERE BUKRS  EQ LI_BEVALLI-BUKRS
                        AND BTYPE  EQ LI_BEVALLI-BTYPE
@@ -561,7 +561,7 @@ FORM PROCESS_DATA.
                        AND MONAT  EQ LI_BEVALLI-MONAT
                        AND ZINDEX EQ LI_BEVALLI-ZINDEX.
 
-*   BEVALLSZ törlés
+*   BEVALLSZ deletion
       DELETE FROM /ZAK/BEVALLSZ
                      WHERE BUKRS  EQ LI_BEVALLI-BUKRS
                        AND BTYPE  EQ LI_BEVALLI-BTYPE
@@ -595,7 +595,7 @@ FORM PROCESS_DATA.
       CONDENSE L_TEXT.
       MESSAGE I202 WITH LS_LI_CLOSE-BUKRS L_TEXT.
 *--S4HANA#01.
-*   & vállalat & időszak nem módosítható mert lezárásra került!
+*   Company & and period & cannot be changed because they are closed!
     ENDLOOP.
   ENDIF.
 
@@ -608,7 +608,7 @@ FORM PROCESS_DATA.
   COMMIT WORK AND WAIT.
 
   MESSAGE I203.
-* Konvertált tételek adatbázisban módosítva!
+* Converted items updated in the database!
 
 
 ENDFORM.                    " PROCESS_DATA
@@ -696,11 +696,11 @@ FORM CREATE_AND_INIT_ALV CHANGING $I_ALV LIKE I_ALV[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Exclude functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -771,7 +771,7 @@ MODULE USER_COMMAND_9000 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Kilépés
+* Exit
     WHEN 'EXIT' OR 'BACK' OR 'CANCEL'.
       PERFORM EXIT_PROGRAM USING P_TESZT.
 

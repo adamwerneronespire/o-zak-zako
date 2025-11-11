@@ -6,9 +6,9 @@
 *& KONSTANSOK  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 *++2065 #04.
-CONSTANTS C_INF_COUNT TYPE SYTABIX VALUE '10000'. "Végtelen ciklus számláló
+CONSTANTS C_INF_COUNT TYPE SYTABIX VALUE '10000'. " Infinite loop counter
 *--2065 #04.
-* Bevallás fajta
+* Return type
 CONSTANTS: C_BTYPART_AFA  TYPE /ZAK/BTYPART VALUE 'AFA',
 *++BG 2007.07.23
            C_BTYPART_AFAO TYPE /ZAK/BTYPART VALUE 'AFAO',
@@ -43,37 +43,37 @@ CONSTANTS: C_HUF   TYPE WAERS              VALUE 'HUF', "#EC CI_HARDCODE
            C_LAPSZ TYPE /ZAK/LAPSZ          VALUE '0001',
            C_X     VALUE 'X'.
 
-*Nyomtatvány lap azonosítók:
+*Form page identifiers:
 CONSTANTS: C_NYLAPAZON_04 TYPE /ZAK/NYLAPAZON VALUE '04',
            C_NYLAPAZON_06 TYPE /ZAK/NYLAPAZON VALUE '06'.
 
-*Maximális megjelnítő sorok szám ALV GRID-ben
+*Maximum number of rows displayed in the ALV GRID
 CONSTANTS: C_MAX_GRID_LINE TYPE I VALUE 5000.
 
-* Adatszolgáltatás fájl formátumai:
-* TXT fájl
+* Data supply file formats:
+* TXT file
 CONSTANTS C_FILETYPE_01  LIKE /ZAK/BEVALLD-FILETYPE VALUE '01'.
-* EXCEL fájl
+* EXCEL file
 CONSTANTS C_FILETYPE_02  LIKE /ZAK/BEVALLD-FILETYPE VALUE '02'.
-* XML fájl
+* XML file
 CONSTANTS C_FILETYPE_03  LIKE /ZAK/BEVALLD-FILETYPE VALUE '03'.
 * SAP riport
 CONSTANTS C_FILETYPE_04  LIKE /ZAK/BEVALLD-FILETYPE VALUE '04'.
-* 107 ABEV kód, kontrol adatszolgáltatás jellege
+* 107 ABEV code, type of control data supply
 CONSTANTS: C_107_E VALUE 'E',
            C_107_P VALUE 'P',
            C_107_H VALUE 'H'.
 
-*Részben arányosított
+*Partially prorated
 CONSTANTS C_ARTYPE_R TYPE /ZAK/ARTYPE VALUE 'R'.
-*Teljesen arányosított
+*Fully prorated
 CONSTANTS C_ARTYPE_A TYPE /ZAK/ARTYPE VALUE 'A'.
-* Adóalap
+* Tax base
 CONSTANTS C_ATYPE_A  TYPE /ZAK/ATYPE VALUE 'A'.
-*ÁFA
+* VAT
 CONSTANTS C_ATYPE_B  TYPE /ZAK/ATYPE VALUE 'B'.
 
-* abev kód
+* ABEV code
 CONSTANTS: C_ABEVAZ_DUMMY      TYPE /ZAK/ABEVAZ VALUE 'DUMMY',
            C_ABEVAZ_107        TYPE /ZAK/ABEVAZ VALUE '107',
            C_ABEVAZ_351        TYPE /ZAK/ABEVAZ VALUE '351',
@@ -368,7 +368,7 @@ CONSTANTS: C_ABEVAZ_DUMMY      TYPE /ZAK/ABEVAZ VALUE 'DUMMY',
 
 
 *++BG 2006/09/22
-* Új ABEV kódok 2006.09.01-től érvényes:
+* New ABEV codes valid from 2006.09.01:
 CONSTANTS: C_ABEVAZ_A0FB005A   TYPE /ZAK/ABEVAZ VALUE 'A0FB005A',
            C_ABEVAZ_A0FC0411DA TYPE /ZAK/ABEVAZ VALUE 'A0FC0411DA',
            C_ABEVAZ_A0DC0044CA TYPE /ZAK/ABEVAZ VALUE 'A0DC0044CA',
@@ -528,7 +528,7 @@ CONSTANTS: C_ABEVAZ_A0DC0301CA TYPE /ZAK/ABEVAZ VALUE 'A0DC0301CA',
            C_ABEVAZ_A0BC0012CA TYPE /ZAK/ABEVAZ VALUE 'A0BC0012CA'.
 *--BG 2007/01/21
 **++BG 2008/01/14
-*           Transzport miatt áthelyezve a /ZAK/MAIN_EXIT_NEW-ba
+*           Moved to /ZAK/MAIN_EXIT_NEW because of transport
 *           C_ABEVAZ_A0IC50072A TYPE /ZAK/ABEVAZ VALUE 'A0IC50072A',
 *           C_ABEVAZ_A0IC50073A TYPE /ZAK/ABEVAZ VALUE 'A0IC50073A',
 *           C_ABEVAZ_A0IC50074A TYPE /ZAK/ABEVAZ VALUE 'A0IC50074A',
@@ -1484,7 +1484,7 @@ CONSTANTS:
 *++RG1165 2011.02.14 RN
 
 CONSTANTS:
-           C_ABEVAZ_24006 TYPE /ZAK/ABEVAZ VALUE '24006'.  "Átvez.kérelem
+           C_ABEVAZ_24006 TYPE /ZAK/ABEVAZ VALUE '24006'.  " Transfer request
 *  RG1165 2011.02.14 RN
 *++11K79 2012.01.30 BG
 CONSTANTS:
@@ -2092,9 +2092,9 @@ CONSTANTS: C_ABEVAZ_A0AD003A TYPE /ZAK/ABEVAZ VALUE 'A0AD003A'.
 *--13K79 2014.01.27
 
 *++BG 2006/05/29
-*Adóazonosítónkénti lapszám állandók
+* Page constants per tax ID
 
-*Range tartományok
+*Range intervals
 RANGES: R_M0AC017A FOR /ZAK/BEVALLB-ABEVAZ,
         R_M0AC018A FOR /ZAK/BEVALLB-ABEVAZ,
         R_M0AC019A FOR /ZAK/BEVALLB-ABEVAZ,
@@ -2115,7 +2115,7 @@ RANGES: R_M0AC017A FOR /ZAK/BEVALLB-ABEVAZ,
 *--BG 2006/05/29
 
 *++BG 2006/09/22
-* Új tartomány 2006.09.01-től
+* New interval effective 2006.09.01
 RANGES: R_M0AC026A FOR /ZAK/BEVALLB-ABEVAZ,
         R_M0AC027A FOR /ZAK/BEVALLB-ABEVAZ,
         R_M0AC028A FOR /ZAK/BEVALLB-ABEVAZ,
@@ -2177,11 +2177,11 @@ CONSTANTS: C_ABEVAZ_8273 TYPE /ZAK/ABEVAZ VALUE '8273',
            C_ABEVAZ_7652 TYPE /ZAK/ABEVAZ VALUE '7652'.
 *--0965 2009.02.02 BG
 
-* adónem pótlék számításhoz
+* Tax type for surcharge calculation
 CONSTANTS: C_ADONEM_104    TYPE /ZAK/ADON VALUE '104'.
 CONSTANTS: C_ADONEM_103    TYPE /ZAK/ADON VALUE '103'.
 
-* adónem önellenőrzési pótlék meghatározásához
+* Tax type for defining the self-revision surcharge
 CONSTANTS: C_ONELL_ADONEM  TYPE /ZAK/ADON VALUE '215'.
 
 * programok
@@ -2196,8 +2196,8 @@ CONSTANTS: C_PROG_ONYB TYPE PROGRAMM VALUE '/ZAK/ONYB_SAP_SEL'.
 CONSTANTS: C_PROG_UREP TYPE PROGRAMM VALUE '/ZAK/UREP_SAP_SEL'.
 *--2010.06.04 BG
 *++1908 #01. 2019.01.29
-*/ZAK/START táblába átrakva
-** pótlék számításhoz (ÁFA)
+*/ZAK/START table relocation
+** For surcharge calculation (VAT)
 *CONSTANTS: C_REFER       TYPE REFERENZ   VALUE 'MATAVJ1'.
 *--1908 #01. 2019.01.29
 *++1908 #04.
@@ -2247,18 +2247,18 @@ CONSTANTS: C_ABEVAZ_A0HD0195DA TYPE /ZAK/ABEVAZ VALUE 'A0HD0195DA',
            C_ABEVAZ_A0EC0074DA TYPE /ZAK/ABEVAZ VALUE 'A0EC0074DA'.
 *--1908 #04.
 *&---------------------------------------------------------------------*
-*& Jogosultsághoz aktivitás
+*& Activity for authorization
 *&---------------------------------------------------------------------*
-CONSTANTS: C_ACTVT_01(2) VALUE '01'. "Programok futtatása,létr.,mód.
-CONSTANTS: C_ACTVT_02(2) VALUE '02'. "Módosítás
-CONSTANTS: C_ACTVT_03(2) VALUE '03'. "Megjelenítés
+CONSTANTS: C_ACTVT_01(2) VALUE '01'. " Run/create/modify programs
+CONSTANTS: C_ACTVT_02(2) VALUE '02'. " Change
+CONSTANTS: C_ACTVT_03(2) VALUE '03'. " Display
 
-*Összeg típusa
-CONSTANTS: C_KOTEL_T LIKE /ZAK/ADONSZA-KOTEL VALUE 'T'. "Teljesítés
-CONSTANTS: C_KOTEL_K LIKE /ZAK/ADONSZA-KOTEL VALUE 'K'. "Kötelezettség
+* Amount type
+CONSTANTS: C_KOTEL_T LIKE /ZAK/ADONSZA-KOTEL VALUE 'T'. " Fulfillment
+CONSTANTS: C_KOTEL_K LIKE /ZAK/ADONSZA-KOTEL VALUE 'K'. " Obligation
 
 *++2007.07.23 BG(FMC)
-* Termelési naptár definiálás munkanap meghatározásához:
+* Production calendar definition for working-day determination:
 CONSTANTS: C_CALID LIKE TFACD-IDENT VALUE 'HU'.
 *--2007.07.23 BG(FMC)
 *++1365 2013.01.10 Balázs Gábor (Ness)
@@ -2355,47 +2355,47 @@ CONSTANTS:  C_ABEVAZ_A0AD005A  TYPE /ZAK/ABEVAZ VALUE 'A0AD005A'.
 
 *--19A60 #01.
 *++1965 #04.
-CONSTANTS: C_PADOSZ_C TYPE /ZAK/PADOSZ VALUE 'C', "Saját tábla
-           C_PADOSZ_S TYPE /ZAK/PADOSZ VALUE 'S'. "SAP törzsadat
+CONSTANTS: C_PADOSZ_C TYPE /ZAK/PADOSZ VALUE 'C', " Custom table
+           C_PADOSZ_S TYPE /ZAK/PADOSZ VALUE 'S'. " SAP master data
 *--1965 #04.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
-TABLES: /ZAK/ADONB,             " Adónemek átvezetések, kézi rögzítések
-        /ZAK/ADONEM,            " Adónemek törzstábla
-        /ZAK/ADONEMT,           " Adónemek megnevezései
-        /ZAK/ADONSZA,           " Adónemek összegtábla tételes
-        /ZAK/ANALITIKA,         " Bevallás analitika
-        /ZAK/BEVALL,            " Bevallás általános adatai
-        /ZAK/BEVALLB,           " Bevallás nyomtatvány adatok
-        /ZAK/BEVALLBT,          " Bevallás nyomtatvány adatok szöveg
-        /ZAK/BEVALLC,           " Bevallás adatszolgáltatás beállítás
-        /ZAK/BEVALLD,           " Bevallás adatszolgáltatás adatai
-        /ZAK/BEVALLDT,          " Bevallás adatszolg. adatai szövegtábla
-        /ZAK/BEVALLI,           " Bevallás adatszolg. index
-        /ZAK/BEVALLO,           " Bevallás összeg adatok
-        /ZAK/BEVALLSZ,          " Bevallás adatszolgáltatás feltöltések
-        /ZAK/BEVALLT,           " Bevallás általános adatai szövegtábla
-        /ZAK/BEVALLP,           " Feltöltés azonosító LOG tábla
-        /ZAK/BEVALLDEF,         " Nyomtatvány default értékek
-        /ZAK/ABEVK,             " ABEV azonosító kapcsolatok
-        /ZAK/ONELL_BOOK,        " Önellenőrzési könyvelés beállítása
-        /ZAK/ADONSZA_ALV,       " Adófolyószámla megjelenítés/rögzítés
+TABLES: /ZAK/ADONB,             " Tax type transfers, manual postings
+        /ZAK/ADONEM,            " Tax type master table
+        /ZAK/ADONEMT,           " Tax type descriptions
+        /ZAK/ADONSZA,           " Tax type amount table, per item
+        /ZAK/ANALITIKA,         " Return analytics
+        /ZAK/BEVALL,            " Return general data
+        /ZAK/BEVALLB,           " Return form data
+        /ZAK/BEVALLBT,          " Return form data text
+        /ZAK/BEVALLC,           " Return data supply settings
+        /ZAK/BEVALLD,           " Return data supply data
+        /ZAK/BEVALLDT,          " Return data supply data text table
+        /ZAK/BEVALLI,           " Return data supply index
+        /ZAK/BEVALLO,           " Return amount data
+        /ZAK/BEVALLSZ,          " Return data supply uploads
+        /ZAK/BEVALLT,           " Return general data text table
+        /ZAK/BEVALLP,           " Upload identifier log table
+        /ZAK/BEVALLDEF,         " Form default values
+        /ZAK/ABEVK,             " ABEV identifier links
+        /ZAK/ONELL_BOOK,        " Self-revision posting settings
+        /ZAK/ADONSZA_ALV,       " Tax current account display/recording
 *++BG 2007.08.06
-        /ZAK/AFA_ALAP,          "ÁFA alap ás adó ABEV azonosítók
+        /ZAK/AFA_ALAP,          " VAT base and tax ABEV identifiers
 *--BG 2007.08.06
 *++BG 2007.12.12
-        /ZAK/AFA_ARABEV,        "ÁFA arány számításhoz ABEV azonosítók
-*                              "meghatározása
-        /ZAK/AFA_ARBOOK,        "ÁFA arányosítás könyvelés
+        /ZAK/AFA_ARABEV,        " VAT ratio calculation ABEV identifiers
+*                              "determination
+        /ZAK/AFA_ARBOOK,        " VAT apportionment posting
 *--BG 2007.12.12
 *++BG 2009.01.14
-        /ZAK/BUKRS_SEGM.        "Vállalat szegmens összerendelés
+        /ZAK/BUKRS_SEGM.        " Company segment assignment
 *--BG 2009.01.14
 
 *&---------------------------------------------------------------------*
-*& MUNKATERÜLETEK                                                      *
+*& WORK AREAS                                                          *
 *&---------------------------------------------------------------------*
 DATA: W_/ZAK/ADONB         TYPE /ZAK/ADONB,
       W_/ZAK/ADONEM        TYPE /ZAK/ADONEM,
@@ -2437,7 +2437,7 @@ DATA: W_/ZAK/ADONB         TYPE /ZAK/ADONB,
 *--BG 2009.01.14
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK                                                        *
+*& INTERNAL TABLES                                                     *
 *&---------------------------------------------------------------------*
 
 DATA: I_/ZAK/ADONB     TYPE STANDARD TABLE OF /ZAK/ADONB   INITIAL SIZE 0,
@@ -2555,14 +2555,14 @@ FORM AUTHORITY_CHECK USING    $BUKRS
                               $BTYPAR
                               $ACTVT.
 
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT '/ZAK/BTYPR'
                   ID 'BUKRS'      FIELD $BUKRS
                   ID 'ACTVT'      FIELD $ACTVT
                   ID '/ZAK/BTYPR' FIELD $BTYPAR.
   IF SY-SUBRC NE 0.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 
 ENDFORM.                    " AUTHORITY_CHECK

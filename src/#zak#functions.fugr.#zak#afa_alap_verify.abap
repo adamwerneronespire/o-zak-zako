@@ -1,6 +1,6 @@
 FUNCTION /ZAK/AFA_ALAP_VERIFY.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*Local interface:
 *"  IMPORTING
 *"     VALUE(I_DATA) LIKE  /ZAK/AFALAPVERIF STRUCTURE
 *"        /ZAK/AFALAPVERIF
@@ -42,20 +42,20 @@ FUNCTION /ZAK/AFA_ALAP_VERIFY.
 
   CLEAR E_DATA.
 
-* Ha valamelyik INPUT adat hiányzik.
+* If any INPUT data is missing.
   IF I_DATA-LWBAS IS INITIAL OR I_DATA-LWSTE IS INITIAL OR
      I_DATA-WAERS IS INITIAL OR I_DATA-KBETR IS INITIAL.
     RAISE ERROR_INPUT_DATA.
   ENDIF.
 
-* Adatok átvétele
+* Transfer data
   CLEAR LW_DATA.
 
-* Adatok konvertálása:
+* Convert data:
   M_GET_PACK_TO_NUM: I_DATA-LWBAS I_DATA-WAERS LW_DATA-LWBAS,
                      I_DATA-LWSTE I_DATA-WAERS LW_DATA-LWSTE.
 
-* Pontos érték meghatározása
+* Determine exact value
   LWBAS_EXACT =  LW_DATA-LWSTE / ( I_DATA-KBETR / 100 ).
 
 * Intervallum
@@ -66,7 +66,7 @@ FUNCTION /ZAK/AFA_ALAP_VERIFY.
 *--BG 2009.11.26
 
 
-* Intervallum értékek
+* Interval values
 *++BG 2009.11.26
 *  LW_DATA-LWBAS_LOW  = LWBAS_EXACT - ( LINTER / 2 + 1 ).
 *  LW_DATA-LWBAS_HIGH = LWBAS_EXACT + ( LINTER / 2 + 1 ).
@@ -75,13 +75,13 @@ LW_DATA-LWBAS_HIGH = LWBAS_EXACT + ( LINTER / 2 + 10 ** I_DATA-ROUND ).
 *--BG 2009.11.26
 
 
-* Pontos érték kerekítése ha kell
+* Round the exact value if necessary
   M_ROUND LWBAS_EXACT.
 
-* Értékek átadása EXPORT:
+* Pass values to EXPORT:
   E_DATA = I_DATA.
 
-* Alsó határ:
+* Lower bound:
   CLEAR LFLAG.
   IF LW_DATA-LWBAS_LOW < 0.
     MOVE '-' TO LFLAG.
@@ -101,7 +101,7 @@ LW_DATA-LWBAS_HIGH = LWBAS_EXACT + ( LINTER / 2 + 10 ** I_DATA-ROUND ).
 
 
 
-* Felső határ:
+* Upper bound:
   CLEAR LFLAG.
   IF LW_DATA-LWBAS_HIGH < 0.
     MOVE '-' TO LFLAG.

@@ -3,30 +3,30 @@
 *& Report  /ZAK/AFA_ARANY
 *&
 *&---------------------------------------------------------------------*
-*& SAP adatokból ÁFA arányszám meghatározása
+*& Determine the VAT ratio from SAP data
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/AFA_ARANY MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& leválogatja a SAP bizonylatokból az adatokat, meghatározza az
-*& arányt és a /ZAK/AFA_ARANY táblába eltárolja
+*& Function description: Selects SAP documents based on the given criteria
+*& collects the data, calculates the ratio,
+*& and stores it in table /ZAK/AFA_ARANY
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2007.12.05
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Balazs Gabor - FMC
+*& Created on        : 2007.12.05
+*& Functional spec by: ________
+*& SAP module        : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&--------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        CHANGED BY              DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2008.04.09   Balázs G.     Szelekció módosítása, lista kész.
-*& 0002   2008.10.17   Balázs G.     Előjel javítás
-*& 0003   2009.03.17   Balázs G.     Feldolgozatlan tételek kezelése
-*& 0004   2009.04.20   Balázs G.     Arány max.100% javítás
+*& 0001   2008.04.09   Balazs G.     Selection update, list completed.
+*& 0002   2008.10.17   Balazs G.     Sign correction
+*& 0003   2009.03.17   Balazs G.     Handle unprocessed items
+*& 0004   2009.04.20   Balazs G.     Fix ratio max 100%
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 TYPES: BEGIN OF TAB_TYPE,
@@ -40,7 +40,7 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 *TABLES T001.
@@ -48,38 +48,38 @@ DATA GS_T001 TYPE T001.
 *--S4HANA#01.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-**Részben arányosított
+**Partially prorated
 *CONSTANTS C_ARTYPE_R TYPE /ZAK/ARTYPE VALUE 'R'.
-**Teljesen arányosított
+**Fully prorated
 *CONSTANTS C_ARTYPE_A TYPE /ZAK/ARTYPE VALUE 'A'.
-** Adóalap
+** Tax base
 *CONSTANTS C_ATYPE_A  TYPE /ZAK/ATYPE VALUE 'A'.
-* Pénznem
+* Currency
 CONSTANTS C_WAERS_HUF TYPE WAERS VALUE 'HUF'.
 
 
-*Bevallás típus
+*Tax return type
 DATA V_BTYPE TYPE /ZAK/BTYPE.
 
-*IDŐSZAK kezdő és záró dátuma:
+*Period start and end date:
 DATA V_FIRST_DATE LIKE SY-DATUM.
 DATA V_LAST_DATE  LIKE SY-DATUM.
 
@@ -97,18 +97,18 @@ DATA GT_I_MWSKZ_ALL TYPE STANDARD TABLE OF T_MWSKZ_ALL .
 *--S4HANA#01.
 DATA W_MWSKZ     TYPE T_MWSKZ_ALL.
 
-*Kimenő ÁFA kódok
+*Output VAT codes
 *++S4HANA#01.
 *DATA I_MWSKZ_K TYPE T_MWSKZ_ALL OCCURS 0.
 DATA GT_I_MWSKZ_K TYPE STANDARD TABLE OF T_MWSKZ_ALL .
 *--S4HANA#01.
-*Mentes adókódok
+*Exempt tax codes
 *++S4HANA#01.
 *DATA I_MWSKZ_M TYPE T_MWSKZ_ALL OCCURS 0.
 DATA GT_I_MWSKZ_M TYPE STANDARD TABLE OF T_MWSKZ_ALL .
 *--S4HANA#01.
 
-*ÁFA kódok
+*VAT codes
 *++S4HANA#01.
 *RANGES R_MWSKZ FOR /ZAK/AFA_CUST-MWSKZ.
 TYPES TT_MWSKZ TYPE RANGE OF /ZAK/AFA_CUST-MWSKZ.
@@ -139,7 +139,7 @@ DATA GT_I_ARANY_FELD TYPE STANDARD TABLE OF /ZAK/ARANY_FELD .
 
 
 
-* ALV kezelési változók
+* ALV handling variables
 DATA: V_OK_CODE               LIKE SY-UCOMM,
       V_SAVE_OK               LIKE SY-UCOMM,
       V_CONTAINER             TYPE SCRFNAME VALUE '/ZAK/ZAK_9000',
@@ -160,7 +160,7 @@ DATA: V_OK_CODE               LIKE SY-UCOMM,
 
 DATA L_STGRP TYPE STGRP_007B.
 
-*LWBAS összegek
+*LWBAS totals
 DATA V_LWBAS_NMT TYPE /ZAK/LWBAS_NMT.
 DATA V_LWBAS_SUM TYPE /ZAK/LWBAS_NMT.
 
@@ -168,7 +168,7 @@ DATA V_TEXT(40).
 DATA V_TEXT1(20).
 DATA V_TEXT2(20).
 
-* ÁFA kód irány
+* VAT code direction
 DEFINE M_0GET_AFABK.
   CLEAR &2.
   SELECT SINGLE STGRP INTO L_STGRP
@@ -184,7 +184,7 @@ DEFINE M_0GET_AFABK.
   ENDIF.
 END-OF-DEFINITION.
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -194,7 +194,7 @@ DEFINE M_DEF.
 END-OF-DEFINITION.
 
 
-*Normál kerekítés
+*Normal rounding
 DEFINE  M_ROUND_R1.
   CALL FUNCTION 'ROUND'
     EXPORTING
@@ -210,11 +210,11 @@ DEFINE  M_ROUND_R1.
       OTHERS        = 4.
   IF SY-SUBRC NE 0.
     MESSAGE E242 WITH &1.
-*   Hiba a & összeg kerekítésénél!
+*   Error while rounding the & amount!
   ENDIF.
 END-OF-DEFINITION.
 
-*Egész számra kerekítés
+*Round to an integer
 DEFINE  M_ROUND_R2.
   V_TEXT = &1.
   CONDENSE V_TEXT.
@@ -233,7 +233,7 @@ END-OF-DEFINITION.
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-* Vállalat.
+* Company.
   SELECTION-SCREEN BEGIN OF LINE.
     SELECTION-SCREEN COMMENT 01(31) TEXT-101.
     PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALL-BUKRS VALUE CHECK
@@ -242,12 +242,12 @@ SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
     PARAMETERS: P_BUTXT LIKE T001-BUTXT MODIF ID DIS.
   SELECTION-SCREEN END OF LINE.
 
-*Év
+* Year
   PARAMETERS P_GJAHR TYPE GJAHR OBLIGATORY DEFAULT SY-DATUM(4).
-*Hónap
+*Month
   PARAMETERS P_MONAT TYPE MONAT OBLIGATORY.
 
-*Teszt futás
+*Test run
   PARAMETERS P_TEST AS CHECKBOX DEFAULT 'X'.
 
 SELECTION-SCREEN: END OF BLOCK BL01.
@@ -261,12 +261,12 @@ SELECTION-SCREEN: END OF BLOCK BL02.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
   GET PARAMETER ID 'BUK' FIELD P_BUKRS.
-*  Megnevezések meghatározása
+*  Determine descriptions
   PERFORM READ_ADDITIONALS.
 
   MOVE SY-REPID TO V_REPID.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -274,7 +274,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run this program!
   ENDIF.
 *--1765 #19.
 
@@ -283,7 +283,7 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
 
-*  Képernyő attribútomok beállítása
+*  Set screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 
@@ -295,9 +295,9 @@ AT SELECTION-SCREEN OUTPUT.
 * AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN.
-* Megnevezések meghatározása
+* Determine descriptions
   PERFORM READ_ADDITIONALS.
-* IDŐSZAK megadás ellenőrzése
+* Period entry validation
 *  PERFORM VER_MONAT USING P_BUKRS
 *                          P_GJAHR
 *                          P_MONAT.
@@ -307,34 +307,34 @@ AT SELECTION-SCREEN.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Jogosultság vizsgálat
+* Authorization check
   PERFORM AUTHORITY_CHECK USING
                                 P_BUKRS
                                 C_BTYPART_AFA
                                 C_ACTVT_01.
-* Vállalat adatok meghatározása
+* Determine company data
   PERFORM GET_T001 USING P_BUKRS.
 
 
-* Meghatározzuk a bevallás típust
+* Determine the tax return type
   PERFORM GET_BTYPE  USING P_BUKRS
                            P_GJAHR
                            P_MONAT
                  CHANGING  V_BTYPE.
 
-* IDŐSZAK utolsó és első napjának meghatározása
+* Determine the last and first day of the period
   PERFORM GET_FIRST_LAST_DATE USING P_GJAHR
                                     P_MONAT
                            CHANGING V_FIRST_DATE
                                     V_LAST_DATE.
 
-* Ellenőrizzük, meghatározzuk a beállítást
+* Verify and determine the configuration
   PERFORM GET_BEVALL USING P_BUKRS
                            V_BTYPE
                            V_LAST_DATE
                   CHANGING W_/ZAK/BEVALL.
 
-* ÁFA kódok meghatározása
+* Determine VAT codes
 *++S4HANA#01.
 *  PERFORM GET_MWSKZ TABLES  I_MWSKZ_ALL
 *                            I_MWSKZ_M
@@ -345,7 +345,7 @@ START-OF-SELECTION.
 *--S4HANA#01.
                       USING  W_/ZAK/BEVALL.
 
-* Adatok szelektálása
+* Select data
 *++S4HANA#01.
 *  PERFORM GET_SEL_DATA TABLES R_MWSKZ
 *                              I_MWSKZ_ALL
@@ -382,13 +382,13 @@ START-OF-SELECTION.
 *++0003 BG 2009.03.17
   IF V_LWBAS_SUM IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain any records to process!
     EXIT.
   ENDIF.
 *--0003 BG 2009.03.17
 
 
-* Éles futtatás adatbázis módosítás
+* Live run database update
 *++0003 BG 2009.03.17
 *++S4HANA#01.
 *  PERFORM MOD_DATA TABLES I_ARANY_FELD
@@ -406,7 +406,7 @@ START-OF-SELECTION.
 
 END-OF-SELECTION.
 
-*  Háttérben nem készítünk listát.
+*  No list is generated in the background.
   IF SY-BATCH IS INITIAL.
     PERFORM LIST_DISPLAY.
   ENDIF.
@@ -450,7 +450,7 @@ ENDFORM.                    " set_screen_attributes
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
 
-* Vállalat megnevezése
+* Company name
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -482,7 +482,7 @@ FORM ROTATE_BUKRS_OUTPUT  USING    $BUKRS
       OTHERS        = 2.
   IF SY-SUBRC <> 0.
     MESSAGE E231 WITH $BUKRS.
-*    Hiba a & vállalat forgatás meghatározásnál!
+*    Error while determining the rotation for company &!
   ENDIF.
 
 ENDFORM.                    " ROTATE_BUKRS_OUTPUT
@@ -507,7 +507,7 @@ FORM GET_BTYPE  USING    $BUKRS TYPE /ZAK/BEVALL-BUKRS
                 CHANGING $BTYPE TYPE /ZAK/BTYPE.
 *--S4HANA#01.
 
-* Bevallás típus meghatározás
+* Determine tax return type
   CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
     EXPORTING
       I_BUKRS     = $BUKRS
@@ -563,7 +563,7 @@ FORM GET_FIRST_LAST_DATE  USING    $GJAHR TYPE GJAHR
   ENDIF.
 
 *++BG 2008.04.14
-* A kezdeti időszak mindig az adott év első napja
+* The initial period is always the first day of the given year
   CONCATENATE $GJAHR '01' '01' INTO $FIRST_DATE.
 *--BG 2008.04.14
 
@@ -608,13 +608,13 @@ FORM GET_BEVALL  USING    $BUKRS TYPE /ZAK/BEVALL-BUKRS
 *--S4HANA#01.
   IF SY-SUBRC NE 0.
     MESSAGE E236 WITH $BUKRS $BTYPE $LAST_DATE.
-*   Hiba a bevallás adatok meghatározásánál!(&/&/&)
+*   Error while determining the tax return data! (&/&/&)
   ENDIF.
 
-* Ha a bevallás nem arányosított
+* If the tax return is not prorated
   IF $/ZAK/BEVALL-ARTYPE IS INITIAL.
     MESSAGE E237.
-*   A megadott adatokkal nem lehet arányosított bevallás típust meghatár
+*   With the provided data it is not possible to determine a prorated tax return type
   ENDIF.
 
 ENDFORM.                    " GET_BEVALL
@@ -642,12 +642,12 @@ FORM VER_MONAT  USING    $BUKRS
   IF SY-SUBRC NE 0 AND $MONAT NE '01'.
     ADD 1 TO L_MONAT.
     MESSAGE W238 WITH $BUKRS L_MONAT.
-*   A program & vállalatra csak & hónapra futtatható!
+*   The program can only run for company & in month &!
   ELSE.
     ADD 1 TO L_MONAT.
     IF L_MONAT NE $MONAT.
       MESSAGE W238 WITH $BUKRS L_MONAT.
-*   A program & vállalatra csak & hónapra futtatható!
+*   The program can only run for company & in month &!
     ENDIF.
   ENDIF.
 
@@ -680,13 +680,13 @@ FORM GET_MWSKZ  TABLES $I_MWSKZ_ALL  LIKE GT_I_MWSKZ_ALL
     DELETE ADJACENT DUPLICATES FROM &1.
   END-OF-DEFINITION.
 
-* ÁFA kódok feltöltése
+* Load VAT codes
   SELECT * INTO CORRESPONDING FIELDS OF W_MWSKZ
            FROM /ZAK/AFA_CUST
           WHERE BTYPE = $W_/ZAK/BEVALL-BTYPE
             AND ATYPE = C_ATYPE_A
 *++BG 2008.04.14
-*  Mert ez a típus fordított adózású beszerzés
+*  Because this type is a reverse-charge purchase that must be skipped.
 *  amit ki kell hagyni.
             AND KTOSL NE 'ESA'
 *--BG 2008.04.14
@@ -696,10 +696,10 @@ FORM GET_MWSKZ  TABLES $I_MWSKZ_ALL  LIKE GT_I_MWSKZ_ALL
   ENDSELECT.
   IF SY-SUBRC NE 0.
     MESSAGE E032.
-*   Hiba az ÁFA beállítások meghatározásánál!
+*   Error while determining the VAT settings!
   ENDIF.
 
-* Adómentes rész feltöltése
+* Load the exempt portion
   SELECT * INTO CORRESPONDING FIELDS OF W_MWSKZ         "#EC CI_NOWHERE
            FROM /ZAK/ARANY_CUST.
 
@@ -837,7 +837,7 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
                   AND BUDAT GE $FIRST_DATE.
 
 *++0003 BG 2009.03.17
-* Feldolgozatlan tételek
+* Unprocessed items
 *++S4HANA#01.
 *  REFRESH $I_ARANY_FELD.
   CLEAR $I_ARANY_FELD[].
@@ -870,7 +870,7 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
 *--S4HANA#01.
 *--0003 BG 2009.03.17
 *++0001 BG 2008.04.09
-* Leválogatjuk a bizonylat adó szegmens adatait
+* Read the document tax segment data
 *    SELECT * INTO TABLE LI_AD001
 *             FROM ZMT_AD001_BKPF
 *             FOR ALL ENTRIES IN LI_BKPF
@@ -897,7 +897,7 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
       IF L_DATUM > $LAST_DATE OR L_DATUM < $FIRST_DATE.
 *--BG 2008.04.14
 *++0003 BG 2009.03.17
-*     Elmentjük a feldolgozatlan tételekhez ha évet vált.
+*     Save it to the unprocessed items if the year changes.
 *++S4HANA#01.
 *        IF L_DATUM(4) NE  LI_BKPF-GJAHR.
 *          CLEAR LW_ARANY_FELD.
@@ -933,7 +933,7 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
 *--S4HANA#01.
 *--0003 BG 2009.03.17
 
-*   ÁFA bizonylatok
+*   VAT documents
 *++0001 BG 2008.04.09
 *   SELECT * INTO CORRESPONDING FIELDS OF LW_DATA
     SELECT * INTO LW_BSET
@@ -974,7 +974,7 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
         W_ALV_ANALITIKA-LWSTE = ABS( W_ALV_ANALITIKA-LWSTE ) * -1.
       ENDIF.
 *--0001 BG 2008.04.09
-*     Pénznem mező meghatározása
+*     Determine the currency field
       SELECT SINGLE WAERS INTO LW_DATA-WAERS
                           FROM T005
                          WHERE LAND1 = LW_DATA-LSTML.
@@ -984,7 +984,7 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
       IF LW_DATA-WAERS NE GS_T001-WAERS.
         MESSAGE E243 WITH LW_DATA-WAERS GS_T001-WAERS.
 *--S4HANA#01.
-*   A feldolgozásban & pénznem, nem egyezik meg a vállalat & pénznemével
+*   The currency & in processing does not match company & currency
       ENDIF.
 *++S4HANA#01.
       SORT $I_MWSKZ_M BY MWSKZ.
@@ -994,14 +994,14 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
                  BINARY SEARCH.
       IF SY-SUBRC EQ 0.
         LM_GET_KTOSL $I_MWSKZ_M.
-*     Feltöltjük a mentes körből a KTOSL-eket
+*     Load the KTOSLs from the exempt group
         IF LW_DATA-KTOSL IN LR_KTOSL.
           CLEAR W_ALV_DATA.
           MOVE LW_DATA-BUKRS TO W_ALV_DATA-BUKRS.
           MOVE LW_DATA-MWSKZ TO W_ALV_DATA-MWSKZ.
           MOVE LW_DATA-KTOSL TO W_ALV_DATA-KTOSL.
           MOVE 'X' TO W_ALV_DATA-AFAMENT.
-*         Előjel meghatározása összeghez
+*         Determine the sign for the amount
           LM_GET_WBAS_SUM LW_DATA W_ALV_DATA-LWBAS_SUM.
 *++S4HANA#01.
 *          MOVE T001-WAERS    TO W_ALV_DATA-WAERS.
@@ -1017,18 +1017,18 @@ FORM GET_SEL_DATA TABLES $R_MWSKZ      STRUCTURE GS_MWSKZ
           APPEND W_ALV_ANALITIKA TO $I_ALV_ANALITIKA.
 *--0001 BG 2008.04.09
         ENDIF.
-*     Ellenőrizn kell, hogy kimenő e
+*     Need to check whether it is output
       ELSE.
         M_0GET_AFABK LW_DATA-KTOSL L_AFA_IRANY.
         IF L_AFA_IRANY EQ 'K'.
-*         Ha KIMENŐ akkor feltöltjük a KTOSL-eket.
+*         If it is OUTPUT then load the KTOSLs.
           LM_GET_KTOSL $I_MWSKZ_ALL.
           IF SY-SUBRC EQ 0 AND LW_DATA-KTOSL IN LR_KTOSL.
             CLEAR W_ALV_DATA.
             MOVE LW_DATA-BUKRS TO W_ALV_DATA-BUKRS.
             MOVE LW_DATA-MWSKZ TO W_ALV_DATA-MWSKZ.
             MOVE LW_DATA-KTOSL TO W_ALV_DATA-KTOSL.
-*           Előjel meghatározása összeghez
+*           Determine the sign for the amount
             LM_GET_WBAS_SUM LW_DATA W_ALV_DATA-LWBAS_SUM.
 *++S4HANA#01.
 *            MOVE T001-WAERS    TO W_ALV_DATA-WAERS.
@@ -1132,12 +1132,12 @@ FORM CREATE_AND_INIT_ALV CHANGING $I_ALV_DATA LIKE
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                                   '/ZAK/ARANY_ALV'
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -1215,7 +1215,7 @@ MODULE USER_COMMAND_9000 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Kilépés
+* Exit
     WHEN 'EXIT' OR 'BACK' OR 'CANCEL'.
       PERFORM EXIT_PROGRAM USING P_TEST.
 
@@ -1289,8 +1289,8 @@ FORM MOD_DATA  TABLES   $I_ARANY_FELD STRUCTURE /ZAK/ARANY_FELD
   CHECK $TEST IS INITIAL.
 
 *++BG 2008.04.14
-* Mivel mindig az év első napjától szelektálunk, ez már nem kell!
-** Meghatározzuk az előző rekordot ha nem első hónap!
+* Because we always select from the first day of the year, this is no longer needed!
+** Determine the previous record if it is not the first month!
 *  IF $MONAT NE '01'.
 *    L_MONAT = $MONAT - 1.
 *    SELECT SINGLE * INTO LW_AFA_ARANY
@@ -1300,12 +1300,12 @@ FORM MOD_DATA  TABLES   $I_ARANY_FELD STRUCTURE /ZAK/ARANY_FELD
 *                     AND MONAT EQ L_MONAT.
 *    IF SY-SUBRC NE 0.
 *      MESSAGE E240 WITH $BUKRS $GJAHR $MONAT.
-**   Nem található előző időszakhoz adat az arány kiszámításához! (&/&/&)
+**   No data found for the previous period to calculate the ratio! (&/&/&)
 *    ENDIF.
 *  ENDIF.
 *--BG 2008.04.14
 
-* Arány kiszámítása
+* Calculate ratio
   CLEAR W_/ZAK/AFA_ARANY.
   MOVE $BUKRS TO W_/ZAK/AFA_ARANY-BUKRS.
   MOVE $GJAHR TO W_/ZAK/AFA_ARANY-GJAHR.
@@ -1325,17 +1325,17 @@ FORM MOD_DATA  TABLES   $I_ARANY_FELD STRUCTURE /ZAK/ARANY_FELD
       L_ARANY = 100.
     ENDIF.
 *--0004 2009.04.20 BG
-*   Normál kerekítés
+*   Normal rounding
     IF NOT $R1 IS INITIAL.
       M_ROUND_R1 L_ARANY W_/ZAK/AFA_ARANY-ARANY.
-*   Következő egész számra kerekítés
+*   Round to the next integer
     ELSEIF NOT $R2 IS INITIAL.
       M_ROUND_R2 L_ARANY W_/ZAK/AFA_ARANY-ARANY.
     ENDIF.
-*   Adatbázis módosítás
+*   Modify the database
     MODIFY /ZAK/AFA_ARANY FROM W_/ZAK/AFA_ARANY.
 *++0003 BG 2009.03.17
-*   Ha van rekord létrehozás:
+*   If a record is created:
     IF NOT $I_ARANY_FELD[] IS INITIAL.
       MODIFY /ZAK/ARANY_FELD  FROM TABLE $I_ARANY_FELD.
     ENDIF.
@@ -1343,7 +1343,7 @@ FORM MOD_DATA  TABLES   $I_ARANY_FELD STRUCTURE /ZAK/ARANY_FELD
 *--0003 BG 2009.03.17
   ELSE.
     MESSAGE E241.
-*   Súlyos hiba az ÁFA arány számításnál!
+*   Critical error while calculating the VAT ratio!
   ENDIF.
 
 
@@ -1367,7 +1367,7 @@ FORM GET_T001  USING    $BUKRS TYPE /ZAK/BEVALL-BUKRS.
                    WHERE BUKRS EQ $BUKRS.
   IF SY-SUBRC NE 0.
     MESSAGE E036 WITH $BUKRS.
-*   Hiba a & vállalati adatok meghatározásánál! (T001 tábla)
+*   Error while determining company & data! (table T001)
   ENDIF.
 
 ENDFORM.                                                    " GET_T00
@@ -1423,12 +1423,12 @@ FORM CREATE_AND_INIT_ALV_9100 CHANGING $I_ALV_ANALITIKA LIKE
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER_9100.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT     USING    SY-DYNNR
                                       '/ZAK/ARANY_ANAL'
                              CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -1470,7 +1470,7 @@ MODULE USER_COMMAND_9100 INPUT.
   V_SAVE_OK = V_OK_CODE_9100.
   CLEAR V_OK_CODE_9100.
   CASE V_SAVE_OK.
-*   Kilépés
+*   Exit
     WHEN 'EXIT' OR 'BACK' OR 'CANCEL'.
       LEAVE TO SCREEN 0.
     WHEN OTHERS.

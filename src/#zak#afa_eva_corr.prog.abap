@@ -2,30 +2,29 @@
 *& Report  /ZAK/AFA_EVA_CORR
 *&
 *&---------------------------------------------------------------------*
-*& /ZAK/ANALITIKA korrekció. A MAIN_EXIT-ben nem volt beállítva 1065
-*& bevallásnál az EVA alap és adó ABEV azonosító így ezek a rekordok
-*& üres ABEV azonosítóval jöttek létre. Ez a program összegyűjti a
-*& szelekciónak megfelelő üres ABEV azonosítójú sorokat és a
-*& FIELD_N alapján (LWBAS, LWSTE) eldönti, hogy az adott sor alap
-*& vagy adó tételt tartalmaz (7995, 7996). Éles futásnál az üres
-*& ABEV azonosítójú rekordokat törli és a feltöltött ABEV azonosítójú
-*& rekordokat létre hozza az eredeti időszakokban.
+*& /ZAK/ANALITIKA correction. MAIN_EXIT did not set the EVA base and tax
+*& ABEV identifiers for return 1065, so those records were created with
+*& an empty ABEV ID. This program collects the selection-matching rows
+*& with empty ABEV IDs and, based on FIELD_N (LWBAS, LWSTE), decides
+*& whether the row holds a base or tax amount (7995, 7996). In productive
+*& execution it deletes the records with empty IDs and recreates the
+*& same rows with populated ABEV IDs in the original periods.
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/AFA_EVA_CORR MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábr - FMC
-*& Létrehozás dátuma : 2006.12.13
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Balazs Gabor - FMC
+*& Created on        : 2006.12.13
+*& Functional spec by: ________
+*& SAP module        : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        CHANGED BY           DESCRIPTION      TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
@@ -34,39 +33,39 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 TYPE-POOLS: SLIS.
 
-*ALV közös rutinok
+*Common ALV routines
 INCLUDE /ZAK/ALV_LIST_FORMS.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA I_/ZAK/ANALITIKA_DEL LIKE /ZAK/ANALITIKA OCCURS 0.
 DATA I_/ZAK/ANALITIKA_NEW LIKE /ZAK/ANALITIKA OCCURS 0.
 
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for populating the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -86,7 +85,7 @@ PARAMETERS P_TESZT AS CHECKBOX DEFAULT 'X'.
 SELECTION-SCREEN: END OF BLOCK BL01.
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -94,7 +93,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -102,11 +101,11 @@ INITIALIZATION.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Analitika szelekció
+* Analytics selection
   PERFORM GET_ANALITIKA.
   IF I_/ZAK/ANALITIKA_DEL[] IS INITIAL.
     MESSAGE I201.
-*   Nem található olyan rekord, amit konvertálni kell! (/ZAK/ANALITIKA)
+*   No records found that need conversion! (/ZAK/ANALITIKA)
     EXIT.
   ENDIF.
 
@@ -114,7 +113,7 @@ START-OF-SELECTION.
 * END-OF-SELECTION
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
-* Feldolgozás
+* Processing
   PERFORM PROCESS_DATA.
 
   PERFORM ALV_LIST  TABLES  I_/ZAK/ANALITIKA_NEW
@@ -150,15 +149,15 @@ ENDFORM.                    " GET_ANALITIKA
 FORM PROCESS_DATA .
 
   LOOP AT I_/ZAK/ANALITIKA_DEL INTO W_/ZAK/ANALITIKA.
-*   Alap
+*   Base
     IF W_/ZAK/ANALITIKA-FIELD_N EQ W_/ZAK/ANALITIKA-LWBAS.
       W_/ZAK/ANALITIKA-ABEVAZ = C_ABEVAZ_7995.
       APPEND W_/ZAK/ANALITIKA TO I_/ZAK/ANALITIKA_NEW.
-*   Adó
+*   Tax
     ELSEIF W_/ZAK/ANALITIKA-FIELD_N EQ W_/ZAK/ANALITIKA-LWSTE.
       W_/ZAK/ANALITIKA-ABEVAZ = C_ABEVAZ_7996.
       APPEND W_/ZAK/ANALITIKA TO I_/ZAK/ANALITIKA_NEW.
-*   Egyik sem nem töröljük
+*   Neither - do not keep the entry
     ELSE.
       DELETE I_/ZAK/ANALITIKA_DEL.
     ENDIF.
@@ -169,7 +168,7 @@ FORM PROCESS_DATA .
     DELETE /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA_DEL.
     COMMIT WORK AND WAIT.
     MESSAGE I203.
-*   Konvertált tételek adatbázisban módosítva!
+*   Converted items updated in the database!
   ENDIF.
 
 ENDFORM.                    " PROCESS_DATA
@@ -184,12 +183,12 @@ ENDFORM.                    " PROCESS_DATA
 FORM ALV_LIST   TABLES   $TAB
                 USING    $TAB_NAME.
 
-*ALV lista init
+*ALV list init
   PERFORM COMMON_ALV_LIST_INIT USING SY-TITLE
                                      $TAB_NAME
                                      '/ZAK/AFA_EVA_CORR'.
 
-*ALV lista
+*ALV list
   PERFORM COMMON_ALV_GRID_DISPLAY TABLES $TAB
                                   USING  $TAB_NAME
                                          SPACE

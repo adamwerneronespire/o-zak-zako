@@ -18,7 +18,7 @@ PROCESS BEFORE OUTPUT.
 *
 PROCESS AFTER INPUT.
 
-*Kilépés
+*Exit
   MODULE EXIT AT EXIT-COMMAND.
 
 *&spwizard: pai flow logic for tablecontrol 'TC_ABEVK'

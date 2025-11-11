@@ -1,22 +1,22 @@
 *&---------------------------------------------------------------------*
-*& Program: ABEV azonosító kapcsolatok karbantartása
+*& Program: Maintain ABEV identifier assignments
 *&---------------------------------------------------------------------*
 REPORT ZAD_ABEVK_UPD MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A /ZAK/ABEVK karbantartásának megvalósítása
+*& Function description: Implements maintenance for table /ZAK/ABEVK
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2006.03.18
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Balazs Gabor - FMC
+*& Created on        : 2006.03.18
+*& Functional spec by: ________
+*& SAP module        : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        CHANGED BY          DESCRIPTION        TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
@@ -24,30 +24,30 @@ REPORT ZAD_ABEVK_UPD MESSAGE-ID /ZAK/ZAK.
 INCLUDE /ZAK/COMMON_STRUCT.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants          -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges            -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods           -   (METH_xxx...)                           *
+*      Object            -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-* ABEVK tábla karbantartáshoz
+* For maintaining table /ZAK/ABEVK
 TYPES: BEGIN OF T_ABEVK.
 *++S4HANA#01.
 *        INCLUDE STRUCTURE /ZAK/ABEVK.
@@ -71,7 +71,7 @@ DATA OK_CODE_SAVE LIKE SY-UCOMM.
 DATA V_VIEW TYPE C.
 *--S4HANA#01.
 
-*GUI státuszok tíltásához
+*For disabling GUI statuses
 TYPES: BEGIN OF T_STAB,
          FCODE LIKE RSMPE-FUNC,
        END OF T_STAB.
@@ -79,7 +79,7 @@ DATA: I_STAB TYPE STANDARD TABLE OF T_STAB WITH
                  NON-UNIQUE DEFAULT KEY INITIAL SIZE 10,
       W_STAB TYPE T_STAB.
 
-*Makró definiálása státusz töltéséhez
+*Macro definition for loading statuses
 DEFINE M_STATUS.
   MOVE &1 TO W_STAB-FCODE.
   APPEND W_STAB TO I_STAB.
@@ -97,7 +97,7 @@ END-OF-DEFINITION.
 *&---------------------------------------------------------------------*
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -105,7 +105,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -113,14 +113,14 @@ INITIALIZATION.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Adatok szelektálása
+* Select data
   SELECT * INTO TABLE I_ABEVK                           "#EC CI_NOWHERE
            FROM /ZAK/ABEVK
 *++S4HANA#01.
            ORDER BY PRIMARY KEY.
 *--S4HANA#01.
 
-* Karbantartó képernyő meghívása
+* Call the maintenance screen
   CALL SCREEN 0100.
 
 *&---------------------------------------------------------------------*
@@ -181,7 +181,7 @@ MODULE TC_ABEVK_MODIFY INPUT.
     INDEX TC_ABEVK-CURRENT_LINE.
 ENDMODULE.
 
-*&spwizard: input modul for tc 'TC_ABEVK'. do not change this line!
+*&spwizard: input module for tc 'TC_ABEVK'. do not change this line!
 *&spwizard: mark table
 MODULE TC_ABEVK_MARK INPUT.
 *++S4HANA#01.
@@ -571,12 +571,12 @@ ENDFORM.                                          "fcode_tc_mark_lines
 *----------------------------------------------------------------------*
 MODULE CHECK_BTYPE INPUT.
 
-*BTYPE ellenőrzése
+*Check BTYPE
   SELECT COUNT( * ) FROM /ZAK/BEVALL
                    WHERE BTYPE EQ W_ABEVK-BTYPE.
   IF SY-SUBRC NE 0.
     MESSAGE E120 WITH W_ABEVK-BTYPE.
-*   & bevallás típus nem létezik!
+*   & return type does not exist!
   ENDIF.
 
 ENDMODULE.                 " CHECK_BTYPE  INPUT

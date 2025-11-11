@@ -2,38 +2,38 @@
 *& Report  /ZAK/AFA_IDOSZ_MOVE
 *&
 *&---------------------------------------------------------------------*
-*& Beolvadt vállalatok előre mutató időszakban létrehozott feltöltések
-*& átmozgatása
+*& Move uploads that were created for merged companies into a future period
+*&
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/AFA_IDOSZ_MOVE MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   (...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*Macro definition for populating the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -73,7 +73,7 @@ SELECTION-SCREEN: END OF BLOCK BL03.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -81,22 +81,22 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
 * AT SELECTION-SCREEN OUTPUT
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
-* Képernyő attribútomok beállítása
+* Set screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 *&---------------------------------------------------------------------*
 * AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN.
-* Vállalat kódok ellenőrzése
+* Validate company codes
   PERFORM CHECK_BUKRS.
-* BTYPE ellenőrzése
+* Validate BTYPE
   PERFORM CHECK_BTYPE.
 
 
@@ -105,11 +105,11 @@ AT SELECTION-SCREEN.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok meghatározása
+* Determine data
   PERFORM GET_DATA.
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytics record satisfies the selection!
     EXIT.
   ENDIF.
 
@@ -128,7 +128,7 @@ START-OF-SELECTION.
       I_ANALITIKA       = I_/ZAK/ANALITIKA
       E_RETURN          = I_RETURN.
 
-*  Üzenetek kezelése
+*  Handle messages
   IF NOT I_RETURN[] IS INITIAL.
     CALL FUNCTION '/ZAK/MESSAGE_SHOW'
       TABLES
@@ -137,7 +137,7 @@ START-OF-SELECTION.
 
   IF P_TEST IS INITIAL.
     IF NOT P_DEL IS INITIAL.
-*     Adatok törlése
+*     Delete data
       DELETE FROM /ZAK/ANALITIKA WHERE BUKRS EQ P_BUKRS
                                   AND BTYPE EQ P_BTYPE
                                   AND GJAHR EQ P_GJAHR
@@ -161,7 +161,7 @@ START-OF-SELECTION.
     ENDIF.
 
     MESSAGE I203.
-* Konvertált tételek adatbázisban módosítva!
+* Converted items updated in the database!
   ENDIF.
 
 *&---------------------------------------------------------------------*
@@ -214,7 +214,7 @@ FORM CHECK_BUKRS .
             AND FDATE    <= L_DATUM.
   IF SY-SUBRC NE 0.
     MESSAGE E286.
-*   A vállalatok ebben az időszakban nem léteznek a forgató táblában!
+*   The companies do not exist in the staging table for this period!
   ENDIF.
 
 ENDFORM.                    " CHECK_BUKRS
@@ -235,7 +235,7 @@ FORM CHECK_BTYPE .
           AND BTYPART EQ P_BTYPAR.
   IF SY-SUBRC NE 0.
     MESSAGE E124 WITH P_BUKRS P_BTYPE P_BTYPAR.
-*   & vállalatban & bevallás típus & bevallás fajta nem létezik!
+*   Company &, return type & and return category & do not exist!
   ENDIF.
 
 ENDFORM.                    " check_btype
@@ -284,7 +284,7 @@ FORM GRID_DISPLAY .
   DATA L_VARIANT     TYPE DISVARIANT.
 
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
     EXPORTING
       I_STRUCTURE_NAME   = '/ZAK/ANALITIKA'

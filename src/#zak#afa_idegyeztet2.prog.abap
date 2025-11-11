@@ -1,21 +1,21 @@
 *&---------------------------------------------------------------------*
-*& Program: Áfa bevallás egyeztető (APEH) lista
+*& Program: VAT return reconciliation (APEH) list
 *----------------------------------------------------------------------*
  REPORT /ZAK/AFA_IDEGYEZTET2 MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás:
+*& Function description:
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor
-*& Létrehozás dátuma : 2006.08.01
-*& Funkc.spec.készítő: ________
+*& Author            : Balazs Gabor
+*& Created on        : 2006.08.01
+*& Functional spec by: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        CHANGED BY           DESCRIPTION      TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
@@ -35,30 +35,30 @@
 
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                         *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   (...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
  DATA V_GJAHR TYPE GJAHR.
  DATA V_MONAT_FROM TYPE MONAT.
@@ -67,7 +67,7 @@
 
  DATA V_SUBRC LIKE SY-SUBRC.
 
-* ALV kezelési változók
+* ALV handling variables
  DATA: V_OK_CODE           LIKE SY-UCOMM,
        V_SAVE_OK           LIKE SY-UCOMM,
        V_REPID             LIKE SY-REPID,
@@ -105,7 +105,7 @@
  DATA GS_ABEV2 TYPE LINE OF TT_ABEV2.
 *--S4HANA#01.
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for populating the range
  DEFINE M_DEF.
    MOVE: &2      TO &1-SIGN,
          &3      TO &1-OPTION,
@@ -161,7 +161,7 @@
 *&---------------------------------------------------------------------*
  INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
                    ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -169,7 +169,7 @@
    IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
      MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
    ENDIF.
 *--1765 #19.
 
@@ -278,15 +278,15 @@
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
  START-OF-SELECTION.
-*  Jogosultság vizsgálat
+*  Authorization check
    PERFORM AUTHORITY_CHECK USING P_BUKRS
                                  C_BTYPART_AFA
                                  C_ACTVT_01.
-*  Egyéb adatok meghatározása
+*  Determine additional data
    PERFORM GET_OTHERS_DATA.
 
 *++BG 2006.09.15
-*  Fizetendő, levonandó ABEV azonosítók meghetározása
+*  Determine payable and deductible ABEV identifiers
 *++S4HANA#01.
 *   PERFORM GET_RANGE_ABEVAZ: TABLES R_ABEV1
    PERFORM GET_RANGE_ABEVAZ: TABLES GT_ABEV1
@@ -299,36 +299,36 @@
 *--S4HANA#01.
                           USING  V_BTYPE
                                  P_ABEV2.
-* Ha üres a fizetendő ÁFA adó összege range
+* If the payable VAT tax amount range is empty
 *++S4HANA#01.
 *   IF R_ABEV1[] IS INITIAL.
    IF GT_ABEV1[] IS INITIAL.
 *--S4HANA#01.
      MESSAGE I195.
-*  Nem lehet ABEV azonosítókat meghatározni a fizetendő adó összesenhez
+*  Unable to determine ABEV IDs for the payable tax total
      EXIT.
    ENDIF.
 
-* Ha üres a levonandó ÁFA adó összege range
+* If the deductible VAT tax amount range is empty
 *++S4HANA#01.
 *   IF R_ABEV2[] IS INITIAL.
    IF GT_ABEV2[] IS INITIAL.
 *--S4HANA#01.
      MESSAGE I196.
-*  Nem lehet ABEV azonosítókat meghatározni a levonandó adó összesenhez!
+*  Unable to determine ABEV IDs for the deductible tax total!
      EXIT.
    ENDIF.
 *--BG 2006.09.15
 
 
-*  Adat szelekció
+*  Data selection
 *++S4HANA#01.
 *   PERFORM SEL_/ZAK/ANALITIKA USING V_SUBRC.
    PERFORM SEL_/ZAK/ANALITIKA CHANGING V_SUBRC.
 *--S4HANA#01.
    IF NOT V_SUBRC IS INITIAL.
      MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain any records to process!
      EXIT.
    ENDIF.
 
@@ -399,7 +399,7 @@
              AND ( ABEVAZ IN GT_ABEV1 OR
                    ABEVAZ IN GT_ABEV2 ).
 *--S4HANA#01.
-*  Belső tábla feltöltés
+*  Fill the internal table
      CLEAR W_OUTTAB2.
      W_OUTTAB2-GJAHR = W_/ZAK/ANALITIKA-BUDAT(4).
      W_OUTTAB2-MONAT = W_/ZAK/ANALITIKA-BUDAT+4(2).
@@ -456,12 +456,12 @@
 *----------------------------------------------------------------------*
  FORM GET_OTHERS_DATA.
 
-*  Év, hónap meghatározás
+*  Determine year and month
    V_GJAHR      = S_DATUM-LOW(4).
    V_MONAT_FROM = S_DATUM-LOW+4(2).
    V_MONAT_TO   = S_DATUM-HIGH+4(2).
 
-*  BTYPE meghatározása
+*  Determine BTYPE
    CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
      EXPORTING
        I_BUKRS     = P_BUKRS
@@ -489,14 +489,14 @@
 *  <--  p2        text
 *----------------------------------------------------------------------*
  FORM SEL_CHECK.
-*  Éven belüli intervallum ellenőrzése
+*  Validate the interval within the same year
    IF NOT S_DATUM-HIGH IS INITIAL AND
       S_DATUM-LOW(4) NE S_DATUM-HIGH(4).
      MESSAGE E193.
-*     Kérem az intervallumot egy éven belül adja meg!
+*     Please enter the interval within a single year!
    ENDIF.
 
-*  Felső érték kitöltése ha üres
+*  Fill the upper value if it is empty
    IF S_DATUM-HIGH IS INITIAL AND NOT S_DATUM-LOW IS INITIAL.
      MOVE S_DATUM-LOW TO S_DATUM-HIGH.
 *++S4HANA#01.
@@ -538,10 +538,10 @@
      CLEAR I_ITEM2[].
 *--S4HANA#01.
      CLEAR W_ITEM2.
-*  a kijelölt sorhoz tartozó bizonylatok megjelenítése
+*  Display the documents for the selected row
      READ TABLE I_OUTTAB2 INTO W_OUTTAB2 INDEX $ROW.
      IF SY-SUBRC EQ 0.
-*      Tételes adatok meghatározása
+*      Determine the detailed items
 *++S4HANA#01.
 *       SELECT * INTO W_/ZAK/ANALITIKA
        SELECT GJAHR MONAT ZINDEX ABEVAZ BSZNUM WAERS BSEG_BELNR BUDAT BLDAT ZFBDT HKONT FIELD_C
@@ -560,7 +560,7 @@
          CHECK W_/ZAK/ANALITIKA-BUDAT(4)   EQ W_OUTTAB2-GJAHR AND
                W_/ZAK/ANALITIKA-BUDAT+4(2) EQ W_OUTTAB2-MONAT AND
                W_/ZAK/ANALITIKA-FIELD_C IS INITIAL.
-*        Adatok feltöltése
+*        Load the data
 *++ BG 2007.01.31
          MOVE W_/ZAK/ANALITIKA-ABEVAZ TO W_ITEM2-ABEVAZ.
          PERFORM GET_ABEV_TEXT USING W_ITEM2-ABEVAZ
@@ -692,7 +692,7 @@
        I_PARENT = V_CUSTOM_CONTAINER.
 
 
-* Mezőkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                           CHANGING $I_FIELDCAT.
 
@@ -734,7 +734,7 @@
 
    DATA: LS_FCAT TYPE LVC_S_FCAT.
 
-*  Összesített lista:
+*  Summary list:
    IF $DYNNR = '9000'.
      CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
        EXPORTING
@@ -744,7 +744,7 @@
          CT_FIELDCAT        = $T_FIELDCAT.
 
 
-*  Tételes lista:
+*  Detailed list:
    ELSEIF $DYNNR = '9001'.
      CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
        EXPORTING
@@ -777,7 +777,7 @@
      WHEN 'BACK'.
        SET SCREEN 0.
        LEAVE SCREEN.
-* Kilépés
+* Exit
      WHEN 'EXIT'.
        PERFORM EXIT_PROGRAM.
 
@@ -840,7 +840,7 @@
      EXPORTING
        I_PARENT = V_CUSTOM_CONTAINER2.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING SY-DYNNR
                           CHANGING $I_FIELDCAT.
 
@@ -920,7 +920,7 @@
 *     MESSAGE E112 WITH V_BTYPE $ABEV.
      MESSAGE W112 WITH V_BTYPE $ABEV.
 *--1665 #11.
-*   & bevallás & ABEV azonosító nem létezik!
+*   Return & with ABEV identifier & does not exist!
    ENDIF.
 
    SELECT SINGLE   ABEVTEXT INTO $ABEV_TEXT

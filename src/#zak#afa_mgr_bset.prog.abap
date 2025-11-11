@@ -2,8 +2,8 @@
 *& Report  /ZAK/AFA_MGR_BSET
 *&
 *&---------------------------------------------------------------------*
-*& Program: A program a BSET alapján feltölti az ÁFA kódokat és a
-*& műveletkulcsot.
+*& Program: Load VAT codes and operation keys based on table BSET
+*&
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/AFA_MGR_BSET MESSAGE-ID /ZAK/ZAK.
 
@@ -15,7 +15,7 @@ DATA GS_/ZAK/BSET TYPE /ZAK/BSET.
 INCLUDE /ZAK/COMMON_STRUCT.
 
 
-*BSET szelekcióhoz
+*For BSET selection
 DATA W_/ZAK/BSET  TYPE /ZAK/BSET.
 DATA I_/ZAK/BSET  TYPE STANDARD TABLE OF /ZAK/BSET   INITIAL SIZE 0.
 
@@ -34,7 +34,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -42,7 +42,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -152,7 +152,7 @@ ENDFORM.                    " SEL_DATA
 FORM UPDATE_DATA .
 
   IF NOT I_/ZAK/BSET[] IS INITIAL.
-*   BSET tábla update.
+*   Update table BSET.
     UPDATE /ZAK/BSET FROM TABLE I_/ZAK/BSET.
     COMMIT WORK AND WAIT.
     MESSAGE I000 WITH 'Adatbázis módosítás befejezve!'(002).

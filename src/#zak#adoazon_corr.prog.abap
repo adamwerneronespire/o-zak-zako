@@ -2,36 +2,36 @@
 *& Report  /ZAK/ADOAZON_CORR
 *&
 *&---------------------------------------------------------------------*
-*&SZJA feltöltés adóazonosító módosítása
+*& SZJA upload tax ID adjustment
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/ADOAZON_CORR MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA, /ZAK/BEVALLO.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants          -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges            -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*Macro definition for loading ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -76,12 +76,12 @@ SELECTION-SCREEN: END OF BLOCK BL02.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++2365 #02.
-* Jogosultság vizsgálat
+* Authorization check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
                    ID 'TCD'  FIELD '/ZAK/ADOAZON_CORR'.
    IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
      MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
    ENDIF.
 *--2365 #02.
 *&---------------------------------------------------------------------*
@@ -89,7 +89,7 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
 
-*  Képernyő attribútomok beállítása
+*  Set screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 *&---------------------------------------------------------------------*
@@ -102,7 +102,7 @@ AT SELECTION-SCREEN OUTPUT.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok feldolgozása
+* Process data
   PERFORM PROCESS_DATA.
 
 *&---------------------------------------------------------------------*
@@ -161,7 +161,7 @@ FORM PROCESS_DATA.
               AND ADOAZON EQ P_ADO_O.
     LOOP AT I_/ZAK/ANALITIKA_DEL INTO W_/ZAK/ANALITIKA.
       W_/ZAK/ANALITIKA-ADOAZON = P_ADO_N.
-*     Le kell cserélni a FILED_C értékét is ha abban az adóaz.van!
+*     Also replace the value of FILED_C if it contains the tax ID!
       IF W_/ZAK/ANALITIKA-FIELD_C = P_ADO_O.
         W_/ZAK/ANALITIKA-FIELD_C = P_ADO_N.
       ENDIF.
@@ -170,7 +170,7 @@ FORM PROCESS_DATA.
 
     LOOP AT I_/ZAK/BEVALLO_DEL INTO W_/ZAK/BEVALLO.
       W_/ZAK/BEVALLO-ADOAZON = P_ADO_N.
-*     Le kell cserélni a FILED_C értékét is ha abban az adóaz.van!
+*     Also replace the value of FILED_C if it contains the tax ID!
       IF W_/ZAK/BEVALLO-FIELD_C = P_ADO_O.
         W_/ZAK/BEVALLO-FIELD_C = P_ADO_N.
       ENDIF.
@@ -182,10 +182,10 @@ FORM PROCESS_DATA.
     DELETE /ZAK/BEVALLO   FROM TABLE I_/ZAK/BEVALLO_DEL.
     COMMIT WORK AND WAIT.
     MESSAGE I216.
-*   Adatmódosítások elmentve!
+*   Data changes have been saved!
   ELSE.
     MESSAGE I141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytics record matches the condition!
   ENDIF.
 
 ENDFORM.                    " PROCESS_DATA

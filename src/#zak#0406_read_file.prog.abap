@@ -2,27 +2,27 @@
 *& Report  /ZAK/0406_READ_FILE
 *&
 *&---------------------------------------------------------------------*
-*& Program: ÁFA 04 és 06-os lapok kezdeti feltöltése
+*& Program: Initial load for VAT form pages 04 and 06
 *&
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/0406_READ_FILE MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program egy excel fájl alapján az utolsó lezárt
-*& időszakhoz betölti az adatokat a /ZAK/ANALITIKA táblába
+*& Function description: Based on an Excel file, the program loads the
+*& data for the last closed period into table /ZAK/ANALITIKA
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor
-*& Létrehozás dátuma : 2007.06.01
-*& Funkc.spec.készítő:
-*& SAP modul neve    : ADO
-*& Program  típus    : Report
-*& SAP verzió        : 5.0
+*& Author            : Balazs Gabor
+*& Created on        : 2007.06.01
+*& Functional spec by:
+*& SAP module        : ADO
+*& Program type      : Report
+*& SAP version       : 5.0
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                   LEÍRÁS
+*& LOG#     DATE        CHANGED BY                DESCRIPTION
 *& ----   ----------   ----------     ---------------------- -----------
 *&
 *&---------------------------------------------------------------------*
@@ -32,7 +32,7 @@ INCLUDE EXCEL__C.
 INCLUDE <ICON>.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
@@ -40,7 +40,7 @@ INCLUDE <ICON>.
 *& type-pools
 *&---------------------------------------------------------------------*
 TYPE-POOLS: SLIS.
-*ALV közös rutinok
+*Common ALV routines
 INCLUDE /ZAK/ALV_LIST_FORMS.
 
 
@@ -49,24 +49,24 @@ INCLUDE /ZAK/ALV_LIST_FORMS.
 *&---------------------------------------------------------------------*
 CONSTANTS: C_CLASS        TYPE DD02L-TABCLASS VALUE 'INTTAB',
            C_A            TYPE C VALUE 'A',
-* analitika adatszerkezet
+* Analytics data structure
            C_ANALITIKA    LIKE /ZAK/BEVALLD-STRNAME VALUE '/ZAK/ANALITIKA',
-* file típusok
+* File types
            C_FILE_XLS(2)  TYPE C VALUE   '02',
            C_FILE_TXT(2)  TYPE C VALUE   '01',
            C_FILE_XML(2)  TYPE C VALUE   '03',
            C_FILE_SAP(2)  TYPE C VALUE   '04',
-* excel betöltéshez
+* For Excel upload
            C_END_ROW      TYPE I VALUE '65536',
            C_BEGIN_ROW    TYPE I VALUE    '1',
-* maximális sorok száma
+* Maximum number of rows
            C_MAX_XLS_LINE TYPE SY-TABIX VALUE 5000.
 
 
 
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                         *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
@@ -79,7 +79,7 @@ DATA: I_XLS      TYPE STANDARD TABLE OF ALSMEX_TABLINE
       I_MAIN_STR TYPE STANDARD TABLE OF DD03P       INITIAL SIZE 0.
 
 
-*Hiba adaszerkezet tábla
+*Error data-structure table
 DATA: I_HIBA LIKE /ZAK/ADAT_HIBA  OCCURS 0.
 DATA: W_HIBA LIKE /ZAK/ADAT_HIBA.
 
@@ -87,7 +87,7 @@ DATA: I_LINE TYPE STANDARD TABLE OF /ZAK/LINE        INITIAL SIZE 0.
 DATA: I_OUTTAB LIKE /ZAK/ANALITIKA OCCURS 0.
 DATA: W_OUTTAB LIKE /ZAK/ANALITIKA.
 
-*IDŐSZAKok kezelése
+*Period handling
 *++S4HANA#01.
 *DATA: BEGIN OF I_BTYPE OCCURS 0,
 *      BTYPE TYPE /ZAK/BTYPE,
@@ -108,7 +108,7 @@ DATA: GT_I_BTYPE TYPE TT_I_BTYPE.
 DATA  W_BTYPE TYPE TS_I_BTYPE.
 *--S4HANA#01.
 
-*GUI státuszok tíltásához
+*For disabling GUI statuses
 TYPES: BEGIN OF STAB_TYPE,
          FCODE LIKE RSMPE-FUNC,
        END OF STAB_TYPE.
@@ -118,42 +118,42 @@ DATA: S_TAB  TYPE STANDARD TABLE OF STAB_TYPE WITH
       W_STAB TYPE STAB_TYPE.
 
 
-*HIBALISTA ALV változók:
-* Fejléc adatok
+*ALV error list variables:
+* Header data
 DATA: GTE_LIST_TOP_OF_PAGE TYPE SLIS_T_LISTHEADER.
-* Lista layout beállítások
+* List layout settings
 DATA: GSE_LAYOUT           TYPE SLIS_LAYOUT_ALV.
-* Események (pl: TOP-OF-PAGE)
+* Events (e.g. TOP-OF-PAGE)
 DATA: GTE_EVENTS           TYPE SLIS_T_EVENT.
-* Nyomtatás vezérlés
+* Print control
 DATA: GSE_PRINT TYPE SLIS_PRINT_ALV.
-* Mező katalógus
+* Field catalog
 DATA: GTE_FIELDCAT TYPE SLIS_T_FIELDCAT_ALV,
       GSE_FIELDCAT TYPE SLIS_FIELDCAT_ALV.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Ranges            -   (R_xxx...)                              *
+*      Global variables   -   (V_xxx...)                              *
+*      Work area          -   (W_xxx...)                              *
+*      Types              -   (T_xxx...)                              *
+*      Macros             -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods           -   (METH_xxx...)                           *
+*      Object            -   (O_xxx...)                              *
+*      Class              -   (CL_xxx...)                             *
+*      Event              -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA: V_TYPE    LIKE /ZAK/BEVALLD-FILETYPE,
       V_STRNAME LIKE /ZAK/BEVALLD-STRNAME.
 
-* excel betöltéshez
+* For Excel upload
 DATA: V_BEGIN_COL TYPE I,
       V_END_COL   TYPE I.
 
-* struktúra ellenőrzése
+* Structure validation
 DATA: W_DD02L TYPE DD02L.
-* excel betöltéshez
+* For Excel upload
 DATA: W_XLS      TYPE ALSMEX_TABLINE,
       W_DD03P    TYPE DD03P,
       W_MAIN_STR TYPE DD03P,
@@ -165,17 +165,17 @@ DATA: V_XLS_LINE TYPE SY-TABIX VALUE 5000.
 
 DATA: V_WNUM(30) TYPE N.
 
-*Makró definiálása státusz töltéséhez
+*Macro definition for loading statuses
 DEFINE M_STATUS.
   MOVE &1 TO W_STAB-FCODE.
   APPEND W_STAB TO S_TAB.
 END-OF-DEFINITION.
 
 *&---------------------------------------------------------------------*
-*& PARAMÉTEREK  (P_XXXXXXX..)                                          *
+*& PARAMETERS  (P_XXXXXXX..)                                          *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIÓK (S_XXXXXXX..)                                        *
+*& SELECTION OPTIONS (S_XXXXXXX..)                                        *
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
   SELECTION-SCREEN BEGIN OF LINE.
@@ -232,10 +232,10 @@ SELECTION-SCREEN END OF BLOCK B01.
 *       INITIALIZATION
 *-----------------------------------------------------------------------
 INITIALIZATION.
-* megnevezések
+* Descriptions
   PERFORM FIELD_DESCRIPT.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -243,7 +243,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -254,7 +254,7 @@ AT SELECTION-SCREEN OUTPUT.
   PERFORM MODIF_SCREEN.
 
 AT SELECTION-SCREEN.
-* megnevezések
+* Descriptions
   PERFORM FIELD_DESCRIPT.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
@@ -266,39 +266,39 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
 * START-OF-SELECTION
 *-----------------------------------------------------------------------
 START-OF-SELECTION.
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 P_BTART
                                 C_ACTVT_01.
-* bevallás fajta meghatározása
+* Determine the tax return type
   PERFORM READ_BEVALL USING P_BUKRS
                             P_BTYPE.
 
   CLEAR: V_TYPE,V_STRNAME.
-* Adatszerkezet meghatározás és meglétének ellenörzése
+* Define the data structure and verify its existence
   PERFORM CHECK_BEVALLD USING P_BUKRS
                               P_BTYPE
                               P_BSZNUM
                      CHANGING V_TYPE
                               V_STRNAME.
 
-* Adatszerkezethez tartozó mező ellenörzések, és
-* az oszlopok számának meghatározása.
+* Field checks for the data structure and
+* determining the number of columns.
   PERFORM CHECK_FIELDTYP USING    V_STRNAME
                          CHANGING V_END_COL.
 
-* Analitika tábla szerkezet
+* Analytics table structure
   PERFORM GET_ANALITIKA_STUC USING C_ANALITIKA.
 
 
-* Adatszolgáltatás fájl formátuma alapján meghívom a betöltő funkciókat
+* Call the loader functions based on the data-delivery file format
   CASE V_TYPE.
     WHEN C_FILE_XLS.
 *
       PERFORM PROCESS_IND USING TEXT-P00.
 
       V_BEGIN_COL = 1.
-*      a hibák a I_HIBA táblában!
+*      the errors are stored in table I_HIBA!
       CALL FUNCTION '/ZAK/XLS'
         EXPORTING
           FILENAME                = P_FDIR
@@ -326,18 +326,18 @@ START-OF-SELECTION.
         MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ELSE.
-* Tételszám vizsgálat, itt csak a max. konstansban meghatározott
-* tételszám tölthető be!
+* Item count check; only the value defined in the MAX constant
+* can be loaded here!
 *++S4HANA#01.
 *        DESCRIBE TABLE I_LINE LINES V_XLS_LINE.
         V_XLS_LINE = LINES( I_LINE ).
 *--S4HANA#01.
         IF V_XLS_LINE > C_MAX_XLS_LINE.
           MESSAGE I207 WITH V_XLS_LINE C_MAX_XLS_LINE.
-*A megadott fájl sorok száma (&), nagyobb a max.megengedettnél (&)!
+*The number of rows (&) in the specified file exceeds the allowed maximum (&)!
           EXIT.
         ENDIF.
-* alv lista belső tábla kitöltés I_OUTTAB
+* Populate the ALV list internal table I_OUTTAB
         PERFORM FILL_DATATAB USING I_XLS[]
                                    I_DD03P[]
                                    I_MAIN_STR[]
@@ -349,7 +349,7 @@ START-OF-SELECTION.
                           CHANGING GT_I_BTYPE[].
 *--S4HANA#01.
         CHECK NOT I_OUTTAB[] IS INITIAL.
-*       Utolsó lezárt időszakok meghatározása
+*       Determine the last closed periods
 *++S4HANA#01.
 *        LOOP AT I_BTYPE INTO W_BTYPE.
         LOOP AT GT_I_BTYPE INTO W_BTYPE.
@@ -378,10 +378,10 @@ START-OF-SELECTION.
 
 *            MESSAGE E222 WITH P_BUKRS W_BTYPE-BTYPE W_BTYPE-GJAHR
 *                              W_BTYPE-MONAT.
-**           Hiba az utolsó lezárt időszak meghatározásánál! (&/&/&/&)
+**           Error while determining the last closed period! (&/&/&/&)
           ENDIF.
         ENDLOOP.
-*       IDŐSZAKok visszaírása
+*       Restore the periods
 *++S4HANA#01.
 *        LOOP AT I_BTYPE INTO W_BTYPE.
         LOOP AT GT_I_BTYPE INTO W_BTYPE.
@@ -408,16 +408,16 @@ END-OF-SELECTION.
         TEXTLINE1 = 'Létezik Hibanapló! Éles futás nem lehetséges!'(018).
   ELSE.
     M_STATUS 'ERROR_LIST'.
-*   Éles futás adatbázis módosítás
+*   Database modification during productive run
     IF P_TESZT IS INITIAL.
       INSERT /ZAK/ANALITIKA FROM TABLE I_OUTTAB ACCEPTING DUPLICATE KEYS.
       COMMIT WORK AND WAIT.
       IF SY-SUBRC EQ 0.
         MESSAGE I223.
-*       Az adatok mentése sikeresen megtörtént!
+*       Data was saved successfully!
       ELSE.
         MESSAGE E209.
-*       Hiba az adatbázis módosításkor!
+*       Error while modifying the database!
       ENDIF.
     ENDIF.
   ENDIF.
@@ -488,7 +488,7 @@ ENDFORM.                    " field_descript
 *&---------------------------------------------------------------------*
 *&      Form  filename_get
 *&---------------------------------------------------------------------*
-*       Elérési útvonal bevitele
+*       Enter the file path
 *----------------------------------------------------------------------*
 FORM FILENAME_GET.
   DATA:
@@ -505,7 +505,7 @@ FORM FILENAME_GET.
 
   L_FILTER = '*.XLS'.
 
-*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
 *++S4HANA#01.
 
 **  CALL FUNCTION 'WS_FILENAME_GET'
@@ -582,7 +582,7 @@ FORM FILENAME_GET.
   SY-SUBRC = LV_W_SYSUBRC_TEMP_0.
 
 *--S4HANA#01.
-*--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*--MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
 
   CHECK SY-SUBRC EQ 0.
 ENDFORM.                    " FILENAME_GET
@@ -598,7 +598,7 @@ FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
                               $BTYPE  LIKE /ZAK/BEVALL-BTYPE
                               $BSZNUM LIKE /ZAK/BEVALLD-BSZNUM.
 
-* Adatszerkezet-mezző összerendelés meghatározása
+* Define data-structure field mappings
 *++S4HANA#01.
 *  SELECT * INTO TABLE I_/ZAK/BEVALLC FROM /ZAK/BEVALLC
 *                            WHERE BTYPE EQ $BTYPE AND
@@ -629,8 +629,8 @@ ENDFORM.                    " read_cust_table
 FORM READ_BEVALL USING    $BUKRS TYPE /ZAK/BEVALL-BUKRS
                           $BTYPE TYPE /ZAK/BEVALL-BTYPE.
 *--S4HANA#01.
-* egy bevallás típus csak egy bevallás fajtához tartozhat, így
-* a bevallás fajta meghatározásánál elég az első bejegyzést vizsgálni!
+* A return type can belong to only one return category, so
+* it is enough to check the first entry when determining the return category!
 *++S4HANA#01.
 *  SELECT SINGLE * INTO W_/ZAK/BEVALL FROM /ZAK/BEVALL
 *                       WHERE BUKRS EQ $BUKRS AND
@@ -661,7 +661,7 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
                             $STRNAME LIKE /ZAK/BEVALLD-STRNAME.
 
   CLEAR: W_/ZAK/BEVALLD.
-* Adatszerkezet meghatározás
+* Data structure definition
   SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
                   WHERE BUKRS  EQ $BUKRS AND
                   BTYPE  EQ $BTYPE AND
@@ -670,23 +670,23 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
     MESSAGE E011 WITH $BUKRS $BTYPE $BSZNUM.
   ELSE.
     IF W_/ZAK/BEVALLD-FILETYPE EQ '04'.
-* SAP adatszolgáltatást jelenleg nem engedélyezett !
+* SAP data provisioning is currently not permitted!
       MESSAGE E006.
     ENDIF.
 
 *++2007.01.11 BG (FMC)
     IF NOT W_/ZAK/BEVALLD-XSPEC IS INITIAL.
       MESSAGE E205 WITH $BSZNUM.
-*   & adatszolgáltatás speciálisra van beállítva! (/ZAK/BEVALLD)
+*   & data provisioning is set to special! (/ZAK/BEVALLD)
     ENDIF.
 *--2007.01.11 BG (FMC)
 
     $STRNAME = W_/ZAK/BEVALLD-STRNAME.
     $TYPE    = W_/ZAK/BEVALLD-FILETYPE.
 
-* XML formátumnál nem kell struktúra
+* No structure is required for XML format
     IF  W_/ZAK/BEVALLD-FILETYPE NE '03'.
-* Adatszerkezet meglétének ellenörzése!
+* Check that the data structure exists!
 *++S4HANA#01.
 *      SELECT SINGLE * INTO W_DD02L FROM DD02L
 *                      WHERE TABNAME  EQ W_/ZAK/BEVALLD-STRNAME AND
@@ -699,7 +699,7 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
                 ORDER BY PRIMARY KEY.
       ENDSELECT.
 *--S4HANA#01.
-* aktivált?
+* activated?
       IF SY-SUBRC NE 0.
         MESSAGE E050 WITH W_/ZAK/BEVALLD-STRNAME .
       ENDIF.
@@ -739,7 +739,7 @@ FORM CHECK_FIELDTYP USING    $STRNAME TYPE /ZAK/BEVALLD-STRNAME
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
   ENDIF.
   $V_END_COL = SY-TFILL.
-* COMPTYPE = 'S' includ sor ezért nem vesszük figyelembe
+* COMPTYPE = 'S' indicates an include line, so we ignore it
   DELETE I_DD03P WHERE COMPTYPE = 'S'.
   LOOP AT I_DD03P INTO W_DD03P.
     W_DD03P-POSITION = SY-TABIX.
@@ -861,8 +861,8 @@ FORM FILL_DATATAB USING    $I_XLS     LIKE I_XLS[]
 *         L_DATUM = W_XLS-VALUE.
       ENDIF.
       AT NEW ROW.
-* analitika mezők megfeleltetése az adatszerkezetnek!
-* Ha a mező név azonos, akkor töltöm a /ZAK/ANALITIKA táblát
+* Match the analytics fields to the data structure!
+* If the field name matches, populate table /ZAK/ANALITIKA
         PERFORM MOVE_CORR USING  $I_XLS[]
                                  $I_DD03P[]
                                  $I_MAIN_STR[]
@@ -871,7 +871,7 @@ FORM FILL_DATATAB USING    $I_XLS     LIKE I_XLS[]
                         CHANGING W_OUTTAB .
 
         CLEAR COUNT.
-* csak az ABEV azonosítóval kapcsolt mezőket dolgozom fel!
+* Process only the fields linked to the ABEV identifier!
         W_OUTTAB-BUKRS   = P_BUKRS.
         W_OUTTAB-BSZNUM  = P_BSZNUM.
         W_OUTTAB-LAPSZ   = C_LAPSZ.
@@ -881,10 +881,10 @@ FORM FILL_DATATAB USING    $I_XLS     LIKE I_XLS[]
         W_OUTTAB-GJAHR   = L_DATUM(4).
         W_OUTTAB-MONAT   = L_DATUM+4(2).
         W_OUTTAB-ZINDEX  = '000'.
-*       Feltöltés azonosító feltöltése
+*       Populate the upload identifier
         CONCATENATE SY-DATUM '0406M'(017) INTO W_OUTTAB-PACK
                                      SEPARATED BY '_'.
-*       BTYPE ellenőrzése
+*       Check BTYPE
         L_DATE(4)   = W_OUTTAB-GJAHR.
         L_DATE+4(2) = W_OUTTAB-MONAT.
         L_DATE+6(2) = '01'.
@@ -931,7 +931,7 @@ FORM FILL_DATATAB USING    $I_XLS     LIKE I_XLS[]
         ENDIF.
 
         APPEND W_OUTTAB TO I_OUTTAB.
-*       IDŐSZAKok kezelése
+*       Handle periods
         CLEAR W_BTYPE.
         MOVE W_OUTTAB-BTYPE TO W_BTYPE-BTYPE.
         MOVE W_OUTTAB-GJAHR TO W_BTYPE-GJAHR.
@@ -941,7 +941,7 @@ FORM FILL_DATATAB USING    $I_XLS     LIKE I_XLS[]
       ENDAT.
     ENDIF.
   ENDLOOP.
-* item beállítása
+* Set the item
   SORT I_OUTTAB BY BUKRS BTYPE GJAHR MONAT
                    ZINDEX ABEVAZ ADOAZON.
 
@@ -981,8 +981,8 @@ FORM MOVE_CORR USING    $XLS       LIKE I_XLS[]
   DATA  L_ELOJEL.
 
   CLEAR WA_XLS.
-* analitika mezők megfeleltetése az adatszerkezetnek!
-* Ha a mező név azonos, akkor töltöm a /ZAK/ANALITIKA táblát
+* Match the analytics fields to the data structure!
+* If the field name matches, populate table /ZAK/ANALITIKA
   LOOP AT $MAIN_STR INTO W_MAIN_STR.
     READ TABLE $DD03P INTO WA_DD03P
                       WITH KEY FIELDNAME = W_MAIN_STR-FIELDNAME .
@@ -996,7 +996,7 @@ FORM MOVE_CORR USING    $XLS       LIKE I_XLS[]
         INTO V_TAB_FIELD.
         ASSIGN (V_TAB_FIELD) TO <F1>.
         MOVE WA_XLS-VALUE TO <F1>.
-*       Értékmezők kezelése 'HUF' miatt
+*       Handle value fields because of 'HUF'
         IF WA_DD03P-INTTYPE EQ 'P'.
           CLEAR L_ELOJEL.
           IF <F1> < 0.
@@ -1043,12 +1043,12 @@ FORM ALV_LIST  TABLES   $TAB STRUCTURE /ZAK/ANALITIKA
                 USING   $TAB_NAME TYPE CLIKE.
 *--S4HANA#01.
 
-*ALV lista init
+*Initialize ALV list
   PERFORM COMMON_ALV_LIST_INIT USING SY-TITLE
                                      $TAB_NAME
                                      '/ZAK/0406_READ_FILE'.
 
-*ALV lista
+*ALV list
   PERFORM COMMON_ALV_GRID_DISPLAY TABLES $TAB
                                   USING  $TAB_NAME
                                          'STATUS_SET'
@@ -1071,7 +1071,7 @@ ENDFORM.                    " END_OF_LIST
 *---------------------------------------------------------------------*
 *       FORM STATUS_SET                                               *
 *---------------------------------------------------------------------*
-*       ALV lista státus beállítása - dinamikus hívás !               *
+*       Set ALV list status - dynamic call !               *
 *---------------------------------------------------------------------*
 *  -->  EXTAB                                                         *
 *---------------------------------------------------------------------*
@@ -1084,7 +1084,7 @@ ENDFORM.   "FORM STATUS_SET
 *---------------------------------------------------------------------*
 *       FORM USER_COMMAND                                             *
 *---------------------------------------------------------------------*
-*       ALV lista hívja - Dinamikus hívással !!
+*       Call the ALV list - via dynamic call !!
 *---------------------------------------------------------------------*
 *  -->  RF_UCOMM                                                      *
 *  -->  SELFIELD                                                      *
@@ -1093,7 +1093,7 @@ FORM USER_COMMAND USING $UCOMM    LIKE SY-UCOMM
                         $SELFIELD TYPE SLIS_SELFIELD.
   CASE $UCOMM.
     WHEN 'ERROR_LIST'.
-* ALV lista meghívása adatok megjelenítése
+* Call the ALV list to display data
       PERFORM ALV_ERROR_LIST_DATA TABLES  I_HIBA
                                   USING  'I_HIBA'
                                          'HIBALISTA'.
@@ -1120,7 +1120,7 @@ FORM ALV_ERROR_LIST_DATA TABLES   $TAB STRUCTURE /ZAK/ADAT_HIBA
 *--S4HANA#01.
 
 
-* Lista értékek inicializálása, feltöltése
+* Initialize and populate list values
   L_REPID = SY-REPID.
   CLEAR: GTE_LIST_TOP_OF_PAGE[],
          GSE_LAYOUT,
@@ -1128,28 +1128,28 @@ FORM ALV_ERROR_LIST_DATA TABLES   $TAB STRUCTURE /ZAK/ADAT_HIBA
          GSE_PRINT,
          GTE_FIELDCAT[].
 
-** Lista fejléc
+** List header
 *  PERFORM COMMON_LIST_TOP_BUILD   USING GTE_LIST_TOP_OF_PAGE[]
 *                                        $TEXT.
 * Layout
   PERFORM COMMON_GS_LAYOUT_BUILD  USING GSE_LAYOUT.
-* Események definiálása (top-of-page)
+* Define events (TOP-OF-PAGE)
 * PERFORM COMMON_EVENTTAB_BUILD USING GTE_EVENTS[].
-* Nyomtatás beállítások
+* Print settings
   PERFORM COMMON_GS_PRINT_BUILD USING GSE_PRINT.
-* Mező katalógus
+* Field catalog
   PERFORM COMMON_GS_FIELD_CATALOG USING GTE_FIELDCAT[]
                                         $TAB_NAME
                                         '/ZAK/0406_READ_FILE'.
 
 
-**Fieldkatalógus átalakítása
+**Field catalog transformation
 *  PERFORM COMMON_OWN_ERROR_FIELDCAT USING GTE_FIELDCAT[].
 
-**Színmeghatározása miatt
+**For color definition
 *  GSE_LAYOUT-INFO_FIELDNAME = 'COLOR'.
 
-* ABAP/4 List Viewer hívása
+* Call ABAP/4 List Viewer
   CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
     EXPORTING
       I_CALLBACK_PROGRAM       = L_REPID
@@ -1164,8 +1164,8 @@ FORM ALV_ERROR_LIST_DATA TABLES   $TAB STRUCTURE /ZAK/ADAT_HIBA
 *     IT_FILTER                =
 *     IS_SEL_HIDE              =
 *     i_default                = g_default
-*     I_SAVE                   = 'X' "variánsok mentése
-*                                           "lehetséges
+*     I_SAVE                   = 'X' "saving variants
+*                                           "possible
 *     IS_VARIANT               = G_VARIANT
       IT_EVENTS                = GTE_EVENTS[]
 *     IT_EVENT_EXIT            =
@@ -1185,7 +1185,7 @@ ENDFORM.                    " alv_list_data
 *---------------------------------------------------------------------*
 *       FORM STATUS_SET                                               *
 *---------------------------------------------------------------------*
-*       ALV lista státus beállítása - dinamikus hívás !               *
+*       Set ALV list status - dynamic call !               *
 *---------------------------------------------------------------------*
 *  -->  EXTAB                                                         *
 *---------------------------------------------------------------------*
@@ -1198,7 +1198,7 @@ ENDFORM.   "FORM STATUS_SET
 *---------------------------------------------------------------------*
 *       FORM USER_COMMAND                                             *
 *---------------------------------------------------------------------*
-*       ALV lista hívja - Dinamikus hívással !!
+*       Call the ALV list - via dynamic call !!
 *---------------------------------------------------------------------*
 *  -->  RF_UCOMM                                                      *
 *  -->  SELFIELD                                                      *

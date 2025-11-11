@@ -1,24 +1,24 @@
 *&---------------------------------------------------------------------*
-*& Program: Adófolyószámla - lista program
+*& Program: Tax current account - list program
 *&---------------------------------------------------------------------*
 REPORT /ZAK/ADON_LIST  MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Adófolyószámla - lista
+*& Function description: Tax current account - list
 *&---------------------------------------------------------------------*
-*& Szerző            : Cserhegyi Tímea - fmc
-*& Létrehozás dátuma : 2006.03.01
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Cserhegyi Timea - FMC
+*& Created on        : 2006.03.01
+*& Functional spec by: ________
+*& SAP module        : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        CHANGED BY           DESCRIPTION        TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2007/05/17   Balázs G.     Zárolásnál több kijelölt sor
-*&                                   feldolgozása
+*& 0001   2007/05/17   Balazs G.     Process multiple selected rows during locking
+*&
 *&---------------------------------------------------------------------*
 
 *++S4HANA#01.
@@ -28,7 +28,7 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
@@ -38,23 +38,23 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
@@ -62,7 +62,7 @@ DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/ADONSZAALV2 INITIAL SIZE 0,
       W_OUTTAB TYPE /ZAK/ADONSZAALV2.
 
 
-* ALV kezelési változók
+* ALV handling variables
 DATA: V_OK_CODE          LIKE SY-UCOMM,
       V_SAVE_OK          LIKE SY-UCOMM,
       V_REPID            LIKE SY-REPID,
@@ -151,7 +151,7 @@ INITIALIZATION.
   V_REPID = SY-REPID.
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -159,7 +159,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run this program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -206,7 +206,7 @@ END-OF-SELECTION.
 *  <--  p2        text
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
-* Vállalat megnevezése
+* Company name
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -270,14 +270,14 @@ FORM READ_DATA.
     MOVE-CORRESPONDING W_/ZAK/ADONSZA TO W_OUTTAB.
 
 
-* Adónem megnevezése
+* Tax type name
     CLEAR W_OUTTAB-ADONEM_TXT.
     SELECT SINGLE ADONEM_TXT INTO W_OUTTAB-ADONEM_TXT FROM  /ZAK/ADONEMT
            WHERE  LANGU   = SY-LANGU
            AND    BUKRS   = W_OUTTAB-BUKRS
            AND    ADONEM  = W_OUTTAB-ADONEM.
 
-* Bevallás típus megnevezése
+* Tax return type name
     CLEAR W_OUTTAB-BTEXT.
 *++S4HANA#01.
 *    SELECT SINGLE BTEXT INTO W_OUTTAB-BTEXT FROM  /ZAK/BEVALLT
@@ -293,7 +293,7 @@ FORM READ_DATA.
 *--S4HANA#01.
 
 
-* Kötelezettég / teljesítés oszlopok
+* Obligation / fulfillment columns
     IF W_OUTTAB-KOTEL = 'K'.
       W_OUTTAB-K_WRBTR = W_OUTTAB-WRBTR.
       W_OUTTAB-T_WRBTR = 0.
@@ -385,11 +385,11 @@ FORM CREATE_AND_INIT_ALV CHANGING PT_OUTTAB   LIKE I_OUTTAB[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING PT_FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   PS_LAYOUT-CWIDTH_OPT = 'X'.
@@ -443,7 +443,7 @@ FORM BUILD_FIELDCAT USING    P_DYNNR     LIKE SYST-DYNNR
 
 
 *++BG 2006/07/07
-*CHEKBOX beállítása ZLOCK mezőn
+* Set checkbox on field ZLOCK
   LOOP AT PT_FIELDCAT INTO LW_FIELDCAT.
     IF LW_FIELDCAT-FIELDNAME = 'ZLOCK'.
       LW_FIELDCAT-CHECKBOX  = 'X'.
@@ -474,7 +474,7 @@ MODULE PAI_9000 INPUT.
       SET SCREEN 0.
       LEAVE SCREEN.
 
-* Kilépés
+* Exit
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
 
@@ -698,13 +698,13 @@ FORM MODIFY_SELECTED_LINES.
 
   IF L_LINE IS INITIAL.
     MESSAGE I186.
-*   Kérem jelölje ki a feldolgozandó sort vagy sorokat!
+*   Please select the row or rows to be processed!
     EXIT.
 
 *++0001 BG 2007.05.17
 *  ELSEIF L_LINE NE 1.
 *    MESSAGE E187.
-**   Kérem csak egy sort jelöljön ki!
+**   Please select only one row!
 *    EXIT.
 *--0001 BG 2007.05.17
   ENDIF.
@@ -716,10 +716,10 @@ FORM MODIFY_SELECTED_LINES.
 *
 *  READ TABLE I_OUTTAB INTO W_OUTTAB INDEX LW_ROWS-INDEX.
 *
-** Ha ki van töltve a BELNR_K már nem módosíthatja.
+** If BELNR_K is filled you can no longer change it.
 *  IF NOT W_OUTTAB-BELNR_K IS INITIAL.
 *    MESSAGE I190.
-**   Bizonylat pénzügyileg teljesítve, már nem módosítható!
+**   The document is financially cleared and can no longer be changed!
 *    EXIT.
 *  ENDIF.
 *
@@ -727,26 +727,26 @@ FORM MODIFY_SELECTED_LINES.
 *
 *  MOVE LW_ROWS-INDEX TO V_MODIFY_INDEX.
 *
-** Ez alapján hasonlitjuk össze, hogy volt e feldolgozás
+** This is how we compare whether processing has already happened
 *  MOVE /ZAK/ADONSZA_ALV  TO W_/ZAK/ADONSZA_ALV.
 
-*  Végigolvassuk a kijelölt rekorodkat:
+*  Read through the selected records:
   LOOP AT  I_ROWS INTO W_ROWS.
     READ TABLE I_OUTTAB INTO W_OUTTAB INDEX W_ROWS-INDEX.
     IF NOT W_OUTTAB-BELNR_K IS INITIAL.
       MESSAGE I190.
       MOVE C_X TO L_EXIT.
-*     A kijelölésben van pénzügyileg teljesített biz., ami már nem módosítható!
+*     The selection contains a financially cleared document that can no longer be changed!
       EXIT.
     ENDIF.
-*   Az esedékességi dátumnak és a zárolás flagnek minden rekordban meg kell egyezni
+*   The due date and lock flag must match in every record
     IF LW_OUTTAB IS INITIAL.
       LW_OUTTAB = W_OUTTAB.
     ELSE.
       IF LW_OUTTAB-ESDAT NE W_OUTTAB-ESDAT OR
          LW_OUTTAB-ZLOCK NE W_OUTTAB-ZLOCK.
         MESSAGE I218.
-*        Esedékességi dátum vagy zárolás flag értéke eltérő a kij. tételekben!
+*        The due date or lock flag value differs in the selected items!
         MOVE C_X TO L_EXIT.
         EXIT.
       ENDIF.
@@ -759,7 +759,7 @@ FORM MODIFY_SELECTED_LINES.
 
   MOVE-CORRESPONDING LW_OUTTAB TO /ZAK/ADONSZA_ALV.
 
-* Ez alapján hasonlitjuk össze, hogy volt e feldolgozás
+* This is how we compare whether processing has already happened
   MOVE /ZAK/ADONSZA_ALV  TO W_/ZAK/ADONSZA_ALV.
 *--0001 BG 2007.05.17
 
@@ -770,7 +770,7 @@ FORM MODIFY_SELECTED_LINES.
   CALL METHOD V_GRID->REFRESH_TABLE_DISPLAY.
 
 *++BG 2007.05.08
-* Beállítjuk a sor indexet.
+* We set the row index.
   CALL METHOD V_GRID->SET_SELECTED_ROWS
     EXPORTING
 *--0001 BG 2007.05.17
@@ -798,7 +798,7 @@ MODULE USER_COMMAND_9002 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Kilépés
+* Exit
     WHEN 'EXIT'.
       PERFORM LEAVE_SCREEN_9002.
     WHEN 'SAVE'.
@@ -825,15 +825,15 @@ FORM LEAVE_SCREEN_9002.
   DATA L_ANSWER TYPE C.
 *--S4HANA#01.
 
-* Változás meghatározás
+* Determine changes
   IF W_/ZAK/ADONSZA_ALV NE /ZAK/ADONSZA_ALV.
-*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
 *++S4HANA#01.
 **    CALL FUNCTION 'POPUP_TO_CONFIRM_LOSS_OF_DATA'
 **      EXPORTING
-**        TEXTLINE1     = 'Adatok nem lettek elmentve!'
-**        TEXTLINE2     = 'Kilép mentés nélkül?'
-**        TITEL         = 'Adatok változtak'
+**        TEXTLINE1     = 'Data was not saved!'
+**        TEXTLINE2     = 'Exit without saving?'
+**        TITLE         = 'Data changed'
 **        START_COLUMN  = 25
 **        START_ROW     = 6
 **        DEFAULTOPTION = 'N'
@@ -841,11 +841,11 @@ FORM LEAVE_SCREEN_9002.
 **        ANSWER        = L_ANSWER.
 *    DATA L_QUESTION TYPE STRING.
 *
-*    CONCATENATE 'Adatok nem lettek elmentve!' 'Kilép mentés nélkül?' INTO L_QUESTION SEPARATED BY SPACE.
+*    CONCATENATE 'Data was not saved!' 'Exit without saving?' INTO L_QUESTION SEPARATED BY SPACE.
 **
 *    CALL FUNCTION 'POPUP_TO_CONFIRM'
 *      EXPORTING
-*        TITLEBAR              = 'Adatok változtak'
+*        TITLEBAR              = 'Data changed'
 **       DIAGNOSE_OBJECT       = ' '
 *        TEXT_QUESTION         = L_QUESTION
 **       TEXT_BUTTON_1         = 'Ja'(001)
@@ -914,7 +914,7 @@ FORM LEAVE_SCREEN_9002.
         L_ANSWER = 'N'.
     ENDCASE.
 *--S4HANA#01.
-*--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*--MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
 
     CHECK L_ANSWER EQ 'J'.
 
@@ -935,7 +935,7 @@ ENDFORM.                    " LEAVE_SCREEN_9002
 FORM SAVE_DATA_9002.
 
 *++BG 2008.03.26
-** Adatok módosítása+összesítése
+** Modify data and aggregate totals
 *  READ TABLE I_OUTTAB INTO W_OUTTAB INDEX V_MODIFY_INDEX.
 *
   GET TIME.
@@ -965,7 +965,7 @@ FORM SAVE_DATA_9002.
     MODIFY I_OUTTAB FROM W_OUTTAB INDEX W_ROWS-INDEX.
 *--0001 BG 2007.05.17
 
-* /ZAK/ADONSZA módosítása
+* Modify /ZAK/ADONSZA
     UPDATE /ZAK/ADONSZA SET  ESDAT  = W_OUTTAB-ESDAT
                             ZLOCK  = W_OUTTAB-ZLOCK
                             DATUM  = W_OUTTAB-DATUM
@@ -982,3 +982,4 @@ FORM SAVE_DATA_9002.
   PERFORM LEAVE_SCREEN_9002.
 
 ENDFORM.                    " SAVE_DATA_900
+

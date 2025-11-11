@@ -1,33 +1,33 @@
-﻿- [ ] src/#zak#0406_read_file.prog.abap
-- [ ] src/#zak#abevk_upd.prog.abap
-- [ ] src/#zak#abevk_upd.prog.screen_0100.abap
-- [ ] src/#zak#adoazon_corr.prog.abap
-- [ ] src/#zak#adon_book.prog.abap
-- [ ] src/#zak#adon_book.prog.screen_9000.abap
-- [ ] src/#zak#adon_book.prog.screen_9001.abap
-- [ ] src/#zak#adon_book.prog.screen_9002.abap
-- [ ] src/#zak#adon_list.prog.abap
-- [ ] src/#zak#adon_list.prog.screen_9000.abap
-- [ ] src/#zak#adon_list.prog.screen_9002.abap
-- [ ] src/#zak#adonsza_esdat_conv.prog.abap
-- [ ] src/#zak#afa_abev_corr.prog.abap
-- [ ] src/#zak#afa_arany.prog.abap
-- [ ] src/#zak#afa_arany.prog.screen_9000.abap
-- [ ] src/#zak#afa_arany.prog.screen_9100.abap
-- [ ] src/#zak#afa_conv_0865.prog.abap
-- [ ] src/#zak#afa_del_data.prog.abap
-- [ ] src/#zak#afa_egyezteto.prog.abap
-- [ ] src/#zak#afa_egyezteto.prog.screen_9000.abap
-- [ ] src/#zak#afa_egyezteto.prog.screen_9001.abap
-- [ ] src/#zak#afa_eva_corr.prog.abap
-- [ ] src/#zak#afa_idegyeztet2.prog.abap
-- [ ] src/#zak#afa_idegyeztet2.prog.screen_9000.abap
-- [ ] src/#zak#afa_idegyeztet2.prog.screen_9001.abap
-- [ ] src/#zak#afa_idegyezteto.prog.abap
-- [ ] src/#zak#afa_idegyezteto.prog.screen_9000.abap
-- [ ] src/#zak#afa_idegyezteto.prog.screen_9001.abap
-- [ ] src/#zak#afa_idosz_move.prog.abap
-- [ ] src/#zak#afa_mgr_bset.prog.abap
+- [x] src/#zak#0406_read_file.prog.abap
+- [x] src/#zak#abevk_upd.prog.abap
+- [x] src/#zak#abevk_upd.prog.screen_0100.abap
+- [x] src/#zak#adoazon_corr.prog.abap
+- [x] src/#zak#adon_book.prog.abap
+- [x] src/#zak#adon_book.prog.screen_9000.abap
+- [x] src/#zak#adon_book.prog.screen_9001.abap
+- [x] src/#zak#adon_book.prog.screen_9002.abap
+- [x] src/#zak#adon_list.prog.abap
+- [x] src/#zak#adon_list.prog.screen_9000.abap
+- [x] src/#zak#adon_list.prog.screen_9002.abap
+- [x] src/#zak#adonsza_esdat_conv.prog.abap
+- [x] src/#zak#afa_abev_corr.prog.abap
+- [x] src/#zak#afa_arany.prog.abap
+- [x] src/#zak#afa_arany.prog.screen_9000.abap
+- [x] src/#zak#afa_arany.prog.screen_9100.abap
+- [x] src/#zak#afa_conv_0865.prog.abap
+- [x] src/#zak#afa_del_data.prog.abap
+- [x] src/#zak#afa_egyezteto.prog.abap
+- [x] src/#zak#afa_egyezteto.prog.screen_9000.abap
+- [x] src/#zak#afa_egyezteto.prog.screen_9001.abap
+- [x] src/#zak#afa_eva_corr.prog.abap
+- [x] src/#zak#afa_idegyeztet2.prog.abap
+- [x] src/#zak#afa_idegyeztet2.prog.screen_9000.abap
+- [x] src/#zak#afa_idegyeztet2.prog.screen_9001.abap
+- [x] src/#zak#afa_idegyezteto.prog.abap
+- [x] src/#zak#afa_idegyezteto.prog.screen_9000.abap
+- [x] src/#zak#afa_idegyezteto.prog.screen_9001.abap
+- [x] src/#zak#afa_idosz_move.prog.abap
+- [x] src/#zak#afa_mgr_bset.prog.abap
 - [ ] src/#zak#afa_packdel.prog.abap
 - [ ] src/#zak#afa_sap_selmigr.prog.abap
 - [ ] src/#zak#afa_sap_selmigr.prog.screen_9000.abap

@@ -2,56 +2,56 @@
 *& Report  /ZAK/ZAK_ANALATIKA_CORR
 *&
 *&---------------------------------------------------------------------*
-*& A program a közösségi adószám mezőt tölti ki a szállító alapján
-*& A program többször is futtatható mivel a már kitöltött adatokat
-*& nem írja felül.
+*& The program fills the EU VAT number field based on the vendor
+*& It can be run multiple times because already populated data
+*& is not overwritten.
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/AFA_ABEV_CORR MESSAGE-ID /ZAK/ZAK.
 
 
 
-*Szelekció:
-* PAREMEZTER: BUKRS, BTYPE, GJAHR, MONAT,
-* SELECT_OPTIONS:   ZINDEX,
+*Selection:
+* PARAMETERS: BUKRS, BTYPE, GJAHR, MONAT,
+* SELECT-OPTIONS:   ZINDEX,
 *                   MWSKZ, KTOSL
 *
-*  rossz            ABEVAZ
-*  jó               ABEVAZ
+*  incorrect         ABEVAZ
+*  correct           ABEVAZ
 
 
-* Leválogatni az /ZAK/ANALITIKA
-* Képezni egy sort ellenkező előjellel a rossz ABEV-en
-* Képezni egy sort azonos előjellel a jó ABEV-en
-* /ZAK/UPDATE-el felvinni.
+* Filter records from /ZAK/ANALITIKA
+* Create a row with the opposite sign on the wrong ABEV
+* Create a row with the same sign on the correct ABEV
+* Upload it with /ZAK/UPDATE.
 
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA.
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constants           -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Methods             -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*Macro definition for populating the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -97,7 +97,7 @@ SELECTION-SCREEN: END OF BLOCK BL03.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -105,7 +105,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run this program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -113,7 +113,7 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
 
-*  Képernyő attribútomok beállítása
+*  Set screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 *&---------------------------------------------------------------------*
@@ -126,16 +126,16 @@ AT SELECTION-SCREEN OUTPUT.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok feldolgozása
+* Process data
   PERFORM PROCESS_DATA.
 
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain any records to process!
     EXIT.
   ENDIF.
 
-*  Teszt vagy éles futás, adatbázis módosítás, stb.
+*  Test or production run, database update, etc.
   PERFORM INS_DATA USING P_TEST.
 
 *&---------------------------------------------------------------------*
@@ -182,7 +182,7 @@ FORM PROCESS_DATA.
     MULTIPLY LW_/ZAK/ANALITIKA_1-&1 BY -1.
   END-OF-DEFINITION.
 
-* Adatok leválogatása
+* Select data
   SELECT * INTO TABLE I_/ZAK/ANALITIKA
            FROM /ZAK/ANALITIKA
           WHERE BUKRS EQ P_BUKRS
@@ -241,11 +241,11 @@ FORM INS_DATA USING $TESZT.
 
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain any records to process!
     EXIT.
   ENDIF.
 
-*  Először mindig tesztben futtatjuk
+*  Always run it in test first
   CALL FUNCTION '/ZAK/UPDATE'
     EXPORTING
       I_BUKRS     = P_BUKRS
@@ -260,35 +260,35 @@ FORM INS_DATA USING $TESZT.
       I_ANALITIKA = I_/ZAK/ANALITIKA
       E_RETURN    = LI_RETURN.
 
-*   Üzenetek kezelése
+*   Handle messages
   IF NOT LI_RETURN[] IS INITIAL.
     CALL FUNCTION '/ZAK/MESSAGE_SHOW'
       TABLES
         T_RETURN = LI_RETURN.
   ENDIF.
 
-*  Ha nem teszt futás, akkor ellenőrizzük van ERROR
+*  If this is not a test run, verify whether there is an ERROR
   IF NOT $TESZT IS INITIAL.
     LOOP AT LI_RETURN INTO LW_RETURN WHERE TYPE CA 'EA'.
     ENDLOOP.
     IF SY-SUBRC EQ 0.
       MESSAGE E062.
-*     Adatfeltöltés nem lehetséges!
+*     Data upload is not possible!
     ENDIF.
   ENDIF.
 
-*  Éles futás de van hibaüzent és nem ERROR, kérdés a folytatásról,
+*  Production run but there is an error message that is not ERROR; ask whether to continue
   IF $TESZT IS INITIAL.
-*    Ha nem háttérben fut
+*    If it is not running in the background
     IF NOT LI_RETURN[] IS INITIAL AND SY-BATCH IS INITIAL.
-*    Szövegek betöltése
+*    Load texts
       MOVE 'Adatfeltöltés folytatása'(001) TO L_TITLE.
       MOVE 'Adatfeltöltésnél előfordultak figyelmeztető üzenetek'(002)
                                            TO L_DIAGNOSETEXT1.
       MOVE 'Folytatja  feldolgozást?'(003)
                                            TO L_TEXTLINE1.
 
-*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
 *      CALL FUNCTION 'POPUP_TO_CONFIRM_WITH_MESSAGE'
 *        EXPORTING
 *          DEFAULTOPTION        = 'N'
@@ -329,15 +329,15 @@ FORM INS_DATA USING $TESZT.
       IF L_ANSWER EQ '1'.
         MOVE 'J' TO L_ANSWER.
       ENDIF.
-*--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
-*    Egyébként mehet
+*--MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
+*    Otherwise continue
     ELSE.
       MOVE 'J' TO L_ANSWER.
     ENDIF.
 
-*    Mehet az adatbázis módosítása
+*    Continue with the database update
     IF L_ANSWER EQ 'J'.
-*      Adatok módosítása
+*      Modify data
       CALL FUNCTION '/ZAK/UPDATE'
         EXPORTING
           I_BUKRS     = P_BUKRS
@@ -368,7 +368,7 @@ FORM GRID_DISPLAY .
   DATA L_VARIANT     TYPE DISVARIANT.
 
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
     EXPORTING
       I_STRUCTURE_NAME   = '/ZAK/ANALITIKA'

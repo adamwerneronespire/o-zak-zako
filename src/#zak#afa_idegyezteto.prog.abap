@@ -1,27 +1,27 @@
 *&---------------------------------------------------------------------*
-*& Program: Áfa bevallás fõkönyv egyeztetõ lista
+*& Program: VAT return general ledger reconciliation list
 *----------------------------------------------------------------------*
  REPORT /ZAK/AFA_IDEGYEZTETO MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás:
+*& Function description:
 *&---------------------------------------------------------------------*
-*& Szerzõ            : Dénes Károly
-*& Létrehozás dátuma : 2006.02.07
-*& Funkc.spec.készítõ: ________
+*& Author            : Denes Karoly
+*& Created on        : 2006.02.07
+*& Functional spec by: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        CHANGED BY           DESCRIPTION      TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2007/01/31   Balázs G.     Szelekció optimalizálás
-*& 0002   2007/10/15   Balázs G.     INDEX kitöltése:
-*& 0003   2008/03/31   Balázs G.     Árfolyamkülönbözet tételek leválog.
-*& 0004   2009/11/18   Faragó l.     Performancia
-*& 0005   2010/01/22   Balázs G.     Adatok mentése, feld. mentett ad.
+*& 0001   2007/01/31   Balazs G.     Selection optimization
+*& 0002   2007/10/15   Balazs G.     Populate the INDEX field
+*& 0003   2008/03/31   Balazs G.     Filter exchange-rate difference items
+*& 0004   2009/11/18   Farago L.     Performance
+*& 0005   2010/01/22   Balazs G.     Save data and process saved data
 *&---------------------------------------------------------------------*
 
  INCLUDE /ZAK/AFA_TOP.
@@ -46,13 +46,13 @@
 *--0002 BG 2007.11.21
 
 *++0003 BG 2008/03/31
-*Árfolyam különbözet tételekhez
+*Exchange-rate difference items
  CONSTANTS: C_BKPF_TCODE TYPE TCODE VALUE 'FB41'.
  CONSTANTS: C_BKPF_GRPID TYPE GRPID_BKPF VALUE 'AFA_ARF_KUL'.
 *--0003 BG 2008/03/31
 
 *&---------------------------------------------------------------------*
-*& BELSÕ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                         *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
@@ -125,29 +125,29 @@
  DATA  I_BSIS_A TYPE T_BSIS_A OCCURS 0.
 *--0003 BG 2008/03/31
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belsõ tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   (...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Types               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
  DATA: V_COUNTER TYPE I.
 
-* ALV kezelési változók
+* ALV handling variables
  DATA: V_OK_CODE           LIKE SY-UCOMM,
        V_SAVE_OK           LIKE SY-UCOMM,
        V_REPID             LIKE SY-REPID,
@@ -174,7 +174,7 @@
        V_TOOLBAR           TYPE STB_BUTTON,
        V_EVENT_RECEIVER    TYPE REF TO LCL_EVENT_RECEIVER,
        V_EVENT_RECEIVER2   TYPE REF TO LCL_EVENT_RECEIVER.
-* vállalat
+* Company
  DATA: F_BUTXT    LIKE T001-BUTXT,
        V_MON_HIGH LIKE BKPF-MONAT,
        V_DAT_LOW  LIKE /ZAK/BSET-BUPER,
@@ -201,13 +201,13 @@
  SELECT-OPTIONS: S_HKONT FOR BSEG-HKONT.
 *--0005 2010.01.22 BG
 
-* periódus
+* Period
  SELECTION-SCREEN: BEGIN OF BLOCK BL03 WITH FRAME TITLE TEXT-T03.
  PARAMETERS:     P_GJAHR LIKE BKPF-GJAHR.
  SELECT-OPTIONS: S_MONAT FOR BKPF-MONAT NO-EXTENSION DEFAULT '01'.
  PARAMETERS:     P_PERI RADIOBUTTON GROUP R01 USER-COMMAND PERI
                                                      DEFAULT 'X',
-* idõs/zak/zak
+* Posting period (/ZAK/ZAK)
                  P_IDO  RADIOBUTTON GROUP R01.
  SELECT-OPTIONS: S_DATUM FOR /ZAK/BSET-BUPER NO-EXTENSION.
  SELECTION-SCREEN: END OF BLOCK BL03.
@@ -343,7 +343,7 @@
 *       ........                                                      *
 *---------------------------------------------------------------------*
    METHOD HANDLE_USER_COMMAND.
-* § 3.In event handler method for event USER_COMMAND: Query your
+* Sec. 3. In event handler method for event USER_COMMAND: Query your
 *   function codes defined in step 2 and react accordingly.
 
      DATA: I_ROWS TYPE LVC_T_ROW,
@@ -351,7 +351,7 @@
            S_OUT  TYPE /ZAK/EGYEZTETALV.
 
      CASE E_UCOMM.
-* Tételek megjelenítése!
+* Display items!
        WHEN 'BSEG'.
          CALL SCREEN 9001.
      ENDCASE.
@@ -381,7 +381,7 @@
    GET PARAMETER ID 'BUK' FIELD P_BUKRS.
    PERFORM FIELD_DESCRIPT.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
 *                  ID 'TCD'  FIELD SY-TCODE.
                    ID 'TCD'  FIELD '/ZAK/IDEGYEZTETO'.
@@ -390,7 +390,7 @@
    IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
      MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
    ENDIF.
 *--1765 #19.
 ************************************************************************
@@ -421,7 +421,7 @@
 
    V_REPID = SY-REPID.
 
-*  Jogosultság vizsgálat
+*  Authorization check
    PERFORM AUTHORITY_CHECK USING P_BUKRS
                                  C_BTYPART_AFA
                                  C_ACTVT_01.
@@ -431,11 +431,11 @@
 *--0005 2010.01.22 BG
 
      PERFORM SET_RANGES .
-* szelekció
+* Selection
 *++0001 BG 2007/01/31
 *  PERFORM SEL_BKPF_BSEG.
      PERFORM SEL_BSIS_BSET.
-*  ALV listához tábla feltöltése!
+*  Populate table for the ALV list!
 *   PERFORM FILL_OUTTAB USING I_OUTTAB_I[]
 *                             I_BSEG_V[]
 *                             I_BKPF[]
@@ -462,20 +462,20 @@
 *--1765 #23.
 
 *++0005 2010.01.22 BG
-*    Adatok mentése
+*    Save data
      PERFORM SAVE_DATA USING I_OUTTAB_I[]
                              I_BSIS_V[]
                              P_BUKRS
                              P_SAVE.
    ELSE.
-*    Adatok beolvasása
+*    Read data
      PERFORM LOAD_DATA USING I_OUTTAB_I[]
                              I_BSIS_V[]
                              P_BUKRS .
 
      IF I_OUTTAB_I[] IS INITIAL.
        MESSAGE I289 WITH '&'.
-*      Nem áll rendelkezésre menetett adat & vállalatra!
+*      No saved data available for company &!
        EXIT.
      ENDIF.
    ENDIF.
@@ -535,7 +535,7 @@
    DATA: L_NAME(20) TYPE C,
          W_RETURN   LIKE BAPIRET2.
    IF V_CUSTOM_CONTAINER IS INITIAL.
-* az adatszerkezet SAP-os struktúrája a /ZAK/BEVALLD-strname táblából
+* The SAP data structure comes from table /ZAK/BEVALLD-STRNAME
 * kell venni
      PERFORM CREATE_AND_INIT_ALV CHANGING I_OUTTAB_I[]
                                           I_FIELDCAT
@@ -563,7 +563,7 @@
      WHEN 'BACK'.
        SET SCREEN 0.
        LEAVE SCREEN.
-* Kilépés
+* Exit
      WHEN 'EXIT'.
        PERFORM EXIT_PROGRAM.
 
@@ -588,7 +588,7 @@
    DATA: TAB    TYPE STANDARD TABLE OF TAB_TYPE WITH
                   NON-UNIQUE DEFAULT KEY INITIAL SIZE 10,
          WA_TAB TYPE TAB_TYPE.
-* analitika struktúra megjelenítés
+* Display analytics structure
    IF SY-DYNNR = '9000'.
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN'.
@@ -621,7 +621,7 @@
      EXPORTING
        I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezõkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                           CHANGING PT_FIELDCAT.
 
@@ -668,7 +668,7 @@
 
    DATA: S_FCAT TYPE LVC_S_FCAT.
 
-* /ZAK/ANALITIKA tábla
+* /ZAK/ANALITIKA table
    IF P_DYNNR = '9000'.
      CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
        EXPORTING
@@ -679,7 +679,7 @@
 
 
    ELSE.
-* tétel tábla
+* Item table
      CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
        EXPORTING
          I_STRUCTURE_NAME   = '/ZAK/IDTETEL_ALV'
@@ -771,11 +771,11 @@
      EXPORTING
        I_PARENT = V_CUSTOM_CONTAINER2.
 
-* Mezõkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING SY-DYNNR
                           CHANGING PT_FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
    PS_LAYOUT-CWIDTH_OPT = 'X'.
@@ -824,18 +824,18 @@
       NOT E_ROW IS INITIAL.
      SET PF-STATUS 'MAIN9001' .
      SET TITLEBAR 'MAIN9001'.
-* a kijelölt sorhoz tartozó bizonylatok megjelenítése
+* Display the documents for the selected row
      READ TABLE I_OUTTAB_I INTO W_OUTTAB_I INDEX E_ROW.
      IF SY-SUBRC EQ 0.
 *++0001 BG 2007/01/31
-** bizonylat tábla feltöltése
+** Populate the document table
 *       SORT I_BSEG_V BY HKONT GJAHR MONAT BUPER.
 *       REFRESH I_ITEM_I.
 *       LOOP AT I_BSEG_V INTO W_BSEG_V
 *               WHERE GJAHR EQ W_OUTTAB_I-GJAHR AND
 *                     MONAT EQ W_OUTTAB_I-MONAT AND
 *                     BUPER EQ W_OUTTAB_I-BUPER.
-** elõjel
+** Sign
 **         IF W_BSEG_V-SHKZG EQ C_H .
 **           W_BSEG_V-DMBTR = W_BSEG_V-DMBTR * -1 .
 **         ENDIF.
@@ -981,7 +981,7 @@
    IF NOT P_PERI IS INITIAL.
      IF NOT S_MONAT-LOW BETWEEN '01' AND '16' AND P_LOAD IS INITIAL.
        MESSAGE E020.
-*   Kérem a periódus értékét 01-16 között adja meg!
+*   Please enter the period between 01 and 16!
      ENDIF.
      IF S_MONAT-HIGH > 16 AND P_LOAD IS INITIAL.
        MESSAGE E020.
@@ -1020,7 +1020,7 @@
 *----------------------------------------------------------------------*
  FORM SEL_BKPF_BSEG.
    IF NOT P_IDO IS INITIAL.
-* idõs/zak/zak szerinti keresés
+* Search by posting period (FISCPER)
      SELECT * INTO TABLE I_/ZAK/BSET FROM /ZAK/BSET
                WHERE BUKRS EQ P_BUKRS AND
                      BUPER IN S_DATUM.
@@ -1032,7 +1032,7 @@
                       GJAHR EQ I_/ZAK/BSET-GJAHR.
 
        IF NOT I_BKPF[] IS INITIAL.
-* Bizonylatszegmens: könyvelés
+* Document segment: posting
          SELECT
                 GJAHR
                 HKONT
@@ -1051,13 +1051,13 @@
        ENDIF.
      ENDIF.
    ELSE.
-* periódus szerinti keresés
+* Search by period
      SELECT * INTO TABLE I_BKPF FROM BKPF
               WHERE BUKRS EQ P_BUKRS AND
                     GJAHR EQ P_GJAHR AND
                     MONAT IN S_MONAT.
      IF NOT I_BKPF[] IS INITIAL.
-* Bizonylatszegmens: könyvelés
+* Document segment: posting
        SELECT
               GJAHR
               HKONT
@@ -1073,7 +1073,7 @@
                     BELNR EQ I_BKPF-BELNR AND
                     GJAHR EQ I_BKPF-GJAHR AND
                     HKONT IN S_HKONT.               "#EC CI_DB_OPERATION_OK[2431747]
-*Bizonylatszegmens: adóadatok 2
+*Document segment: tax data 2
        IF NOT I_BSEG_V IS INITIAL .
          SELECT * INTO TABLE I_/ZAK/BSET FROM /ZAK/BSET
                    FOR ALL ENTRIES IN I_BSEG_V
@@ -1112,7 +1112,7 @@
                                          BELNR EQ W_BKPF-BELNR AND
                                          GJAHR EQ W_BKPF-GJAHR.
        L_TABIX = SY-TABIX.
-* elõjel
+* Sign
        IF W_BSEG_V-SHKZG EQ C_H .
          W_BSEG_V-DMBTR = W_BSEG_V-DMBTR * -1 .
        ENDIF.
@@ -1126,12 +1126,12 @@
        ELSE.
          CLEAR W_OUTTAB_I-BUPER.
        ENDIF.
-* normál
+* Normal
        W_OUTTAB_I-DMBTR = W_BSEG_V-DMBTR.
        W_OUTTAB_I-WAERS = T001-WAERS.
 *         W_OUTTAB-HKONT      = W_BSEG_V-HKONT.
        COLLECT W_OUTTAB_I INTO $OUTTAB.
-* bseg idõs/zak/zak - periódus összerendelés
+* Map BSEG posting period
        W_BSEG_V-MONAT = W_BKPF-MONAT.
        MODIFY $BSEG_V FROM W_BSEG_V INDEX L_TABIX.
      ENDLOOP.
@@ -1262,7 +1262,7 @@
 *     ENDSELECT.
 *   END-OF-DEFINITION.
 
-*(nem volt jó - így is a BSIS-tól indult, HINTS-et sem vette figyelembe)
+*(This was incorrect - it still started from BSIS and the HINTS were ignored)
    DEFINE LM_SEL_ARF.
      SELECT BKPF~GJAHR
             &1~HKONT
@@ -1290,12 +1290,12 @@
 *--0003 BG 2008/03/31
 
    IF NOT P_IDO IS INITIAL.
-* idõs/zak/zak szerinti keresés
+* Search by posting period (FISCPER)
      SELECT * INTO TABLE I_/ZAK/BSET FROM /ZAK/BSET
                WHERE BUKRS EQ P_BUKRS AND
                      BUPER IN S_DATUM.
      IF NOT I_/ZAK/BSET IS INITIAL .
-*      Bizonylatszegmens: könyvelés
+*      Document segment: posting
        SELECT * INTO CORRESPONDING FIELDS OF TABLE I_BSIS_V
                 FROM BSIS
                  FOR ALL ENTRIES IN I_/ZAK/BSET
@@ -1319,7 +1319,7 @@
 *--BG 2007.04.19
      ENDIF.
    ELSE.
-* periódus szerinti keresés
+* Search by period
      SELECT * INTO CORRESPONDING FIELDS OF TABLE I_BSIS_V
               FROM BSIS
              WHERE BUKRS EQ P_BUKRS
@@ -1351,7 +1351,7 @@
 
 *++2565 #05.
 **++0003 BG 2008/03/31
-**  Árfolyam különbözet tételek leválogatása
+**  Select exchange-rate difference items
 **V004+
 **   LM_SEL_ARF BSIS.
 **   LM_SEL_ARF BSAS.
@@ -1449,7 +1449,7 @@
      CLEAR &2.
      L_GJAHR = &1-BUPER(4).
      L_MONAT = &1-BUPER+4(2).
-*    Meghatározzuk a típust
+*    Determine the type
      CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
        EXPORTING
          I_BUKRS     = &1-BUKRS
@@ -1476,7 +1476,7 @@
      ENDIF.
    END-OF-DEFINITION.
 
-*  Beolvassuk az ÁFA cust táblát.
+*  Read the VAT customizing table.
    SELECT * INTO TABLE LI_/ZAK/AFA_CUST                  "#EC CI_NOWHERE
             FROM /ZAK/AFA_CUST.
    SORT LI_/ZAK/AFA_CUST.
@@ -1508,7 +1508,7 @@
        W_BSIS_V-CWAER = L_CWAER.
      ENDIF.
 *--2465 #04.
-*    elõjel
+*    Sign
      IF W_BSIS_V-SHKZG EQ C_H .
        W_BSIS_V-DMBTR = W_BSIS_V-DMBTR * -1 .
 *++1765 #23.
@@ -1527,9 +1527,9 @@
      IF SY-SUBRC EQ 0.
 *++0002 BG 2007.11.21
        LM_GET_MWSKZ W_/ZAK/BSET L_FOUND W_BSIS_V-MWSKZ.
-*      Benne van az ÁFA kód a beállító táblában
+*      VAT code is present in the configuration table
        IF NOT L_FOUND IS INITIAL.
-*        Megkeressük a nem DUM-os indexet
+*        Search for the non-DUM index
          LOOP AT I_/ZAK/BSET INTO W_/ZAK/BSET
                            WHERE BUKRS = W_BSIS_V-BUKRS
                              AND BELNR = W_BSIS_V-BELNR
@@ -1539,7 +1539,7 @@
          ENDLOOP.
          W_OUTTAB_I-BUPER  = W_/ZAK/BSET-BUPER.
          W_OUTTAB_I-ZINDEX = W_/ZAK/BSET-ZINDEX.
-*      Nincs benne az áfa kód a beállító táblában
+*      VAT code is not present in the configuration table
        ELSE.
          W_OUTTAB_I-ZINDEX = C_DUM_IND.
          W_OUTTAB_I-BUPER  = W_/ZAK/BSET-BUPER.
@@ -1557,7 +1557,7 @@
      MODIFY $BSIS_V FROM W_BSIS_V.
 
 *++0003 BG 2008/03/31
-*    Árfolyam különbözet tételek szelektálása
+*    Select exchange-rate difference items
      CONCATENATE W_BSIS_V-BELNR W_BSIS_V-BUKRS W_BSIS_V-GJAHR
                  INTO L_BKTXT SEPARATED BY '/'.
 
@@ -1569,7 +1569,7 @@
      LOOP AT $BSIS_A INTO W_BSIS_A FROM SY-TABIX.
        IF W_BSIS_A-BKTXT <> L_BKTXT. EXIT. ENDIF.
 *V004-
-*    elõjel
+*    Sign
        IF W_BSIS_A-SHKZG EQ C_H .
          W_BSIS_A-DMBTR = W_BSIS_A-DMBTR * -1 .
 *++1765 #23.
@@ -1610,7 +1610,7 @@
 
    IF P_LOAD IS INITIAL AND S_HKONT[] IS INITIAL.
      MESSAGE E288.
-*   Kérem adjon meg fõkönyvi számlát a szelekción!
+*   Please enter a G/L account on the selection screen!
    ENDIF.
 
  ENDFORM.                    " CHECK_HKONT
@@ -1633,10 +1633,10 @@
 
    CHECK NOT $SAVE IS INITIAL.
 
-*  Adatok törlése
+*  Delete data
    DELETE FROM /ZAK/EGYEZT_SAVE WHERE BUKRS EQ $BUKRS.
 
-*  Adatok mentése
+*  Save data
    LOOP AT $OUTTAB INTO W_OUTTAB_I.
      CLEAR LI_EGYEZT_SAVE.
      MOVE-CORRESPONDING W_OUTTAB_I TO LI_EGYEZT_SAVE.
@@ -1709,7 +1709,7 @@
                                   $BSIS_V LIKE I_BSIS_V[].
 
 
-*  BKPF kiegészítés
+*  BKPF enrichment
    LOOP AT $BSIS_V INTO W_BSIS_V.
      SELECT SINGLE BUDAT
                    BLDAT

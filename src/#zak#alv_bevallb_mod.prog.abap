@@ -1,21 +1,21 @@
 *&---------------------------------------------------------------------*
-*& Program: Bevallás beállítások módosításai
+*& Program: Tax return configuration changes
 *&---------------------------------------------------------------------*
 REPORT /ZAK/ALV_BEVALLB_MOD .
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Bevallás beállítási adataiban történt módosítások
+*& Function description: Changes made in the tax return configuration data
 *&---------------------------------------------------------------------*
-*& Szerző            : Cserhegyi Tímea - fmc
-*& Létrehozás dátuma : 2006.06.27
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author             : Cserhegyi Timea - fmc
+*& Creation date      : 2006.06.27
+*& Functional spec by : ________
+*& SAP module         : ADO
+*& Program type       : Report
+*& SAP version        : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (Write the OSS note number at the end of the modified lines)
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER                DESCRIPTION           TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *&
 *&---------------------------------------------------------------------*
@@ -37,7 +37,7 @@ PARAMETERS: P_OBJEKT   LIKE CDHDR-OBJECTCLAS DEFAULT '/ZAK/BEVALLB'
 
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -45,7 +45,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 

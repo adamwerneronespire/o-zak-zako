@@ -2,35 +2,35 @@
 **& Report  /ZAK/ANALITIKA_ARANY_CORR
 **&
 **&---------------------------------------------------------------------*
-**& A program az arányosított sorok FIELD_A mezőt tölti fel
+**& The program populates the FIELD_A field for the proportional rows
 **&---------------------------------------------------------------------*
 REPORT  /ZAK/ANALITIKA_ARANY_CORR  MESSAGE-ID /ZAK/ZAK.
 *
 **&---------------------------------------------------------------------*
-**& TÁBLÁK                                                              *
+**& TABLES                                                              *
 **&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA.
 *
 **&---------------------------------------------------------------------*
-**& PROGRAM VÁLTOZÓK                                                    *
-**      Belső tábla         -   (I_xxx...)                              *
-**      FORM paraméter      -   ($xxxx...)                              *
-**      Konstans            -   (C_xxx...)                              *
-**      Paraméter változó   -   (P_xxx...)                              *
-**      Szelekciós opció    -   (S_xxx...)                              *
-**      Sorozatok (Range)   -   (R_xxx...)                              *
-**      Globális változók   -   (V_xxx...)                              *
-**      Lokális változók    -   (L_xxx...)                              *
-**      Munkaterület        -   (W_xxx...)                              *
-**      Típus               -   (T_xxx...)                              *
-**      Makrók              -   (M_xxx...)                              *
+**& PROGRAM VARIABLES                                                    *
+**      Internal table        -   (I_xxx...)                              *
+**      FORM parameter       -   ($xxxx...)                              *
+**      Constant            -   (C_xxx...)                              *
+**      Parameter variable  -   (P_xxx...)                              *
+**      Selection option    -   (S_xxx...)                              *
+**      Ranges              -   (R_xxx...)                              *
+**      Global variables    -   (V_xxx...)                              *
+**      Local variables     -   (L_xxx...)                              *
+**      Work area           -   (W_xxx...)                              *
+**      Type                -   (T_xxx...)                              *
+**      Macros              -   (M_xxx...)                              *
 **      Field-symbol        -   (FS_xxx...)                             *
-**      Methodus            -   (METH_xxx...)                           *
-**      Objektum            -   (O_xxx...)                              *
-**      Osztály             -   (CL_xxx...)                             *
-**      Esemény             -   (E_xxx...)                              *
+**      Method              -   (METH_xxx...)                           *
+**      Object              -   (O_xxx...)                              *
+**      Class               -   (CL_xxx...)                             *
+**      Event               -   (E_xxx...)                              *
 **&---------------------------------------------------------------------*
-**MAKRO definiálás range feltöltéshez
+**MACRO definition for populating ranges
 *DEFINE M_DEF.
 *  MOVE: &2      TO &1-SIGN,
 *        &3      TO &1-OPTION,
@@ -86,7 +86,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 **
 **++1765 #19.
 *INITIALIZATION.
-** Jogosultság vizsgálat
+** Authorization check
 *  AUTHORITY-CHECK OBJECT 'S_TCODE'
 *                  ID 'TCD'  FIELD SY-TCODE.
 **++1865 #03.
@@ -94,7 +94,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *  IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 **--1865 #03.
 *    MESSAGE E152(/ZAK/ZAK).
-**   Önnek nincs jogosultsága a program futtatásához!
+**   You are not authorized to run the program!
 *  ENDIF.
 **--1765 #19.
 ***&---------------------------------------------------------------------*
@@ -102,7 +102,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 ***&---------------------------------------------------------------------*
 **AT SELECTION-SCREEN OUTPUT.
 **
-***  Képernyő attribútomok beállítása
+***  Setting screen attributes
 **  PERFORM SET_SCREEN_ATTRIBUTES.
 **
 **&---------------------------------------------------------------------*
@@ -110,10 +110,10 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 **&---------------------------------------------------------------------*
 START-OF-SELECTION.
 *
-* Adatok feldolgozása
+* Data processing
   PERFORM PROCESS_DATA.
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
-    MESSAGE I000 WITH 'Nincs a szelekciónak megfelelő adat!'.
+    MESSAGE I000 WITH 'Nincs a szelekciÃ³nak megfelelÅ adat!'.
 *   & & & &
     EXIT.
   ENDIF.
@@ -122,7 +122,7 @@ START-OF-SELECTION.
     MODIFY /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA.
     COMMIT WORK AND WAIT.
     MESSAGE I216.
-*   Adatmódosítások elmentve!
+*   Data changes saved!
   ENDIF.
 *
 *
@@ -179,7 +179,7 @@ FORM PROCESS_DATA .
             AND MONAT  IN S_MONAT
             AND ZINDEX IN S_INDEX.
 
-* Csak az arányosított sorok kellenek:
+* Only proportional rows are needed:
   DELETE I_/ZAK/ANALITIKA WHERE ARANY_FLAG NE 'X'.
 
 

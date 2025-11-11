@@ -2,35 +2,35 @@
 **& Report  /ZAK/ANALITIKA_SZLA_CORR
 **&
 **&---------------------------------------------------------------------*
-**& A program a közös számla azonosítót tölti fel a szelekció alapján
+**& The program fills the shared account identifier based on the selection
 **&---------------------------------------------------------------------*
 REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 *
 **&---------------------------------------------------------------------*
-**& TÁBLÁK                                                              *
+**& TABLES                                                              *
 **&---------------------------------------------------------------------*
 *TABLES: /ZAK/ANALITIKA.
 *
 **&---------------------------------------------------------------------*
-**& PROGRAM VÁLTOZÓK                                                    *
-**      Belső tábla         -   (I_xxx...)                              *
-**      FORM paraméter      -   ($xxxx...)                              *
-**      Konstans            -   (C_xxx...)                              *
-**      Paraméter változó   -   (P_xxx...)                              *
-**      Szelekciós opció    -   (S_xxx...)                              *
-**      Sorozatok (Range)   -   (R_xxx...)                              *
-**      Globális változók   -   (V_xxx...)                              *
-**      Lokális változók    -   (L_xxx...)                              *
-**      Munkaterület        -   (W_xxx...)                              *
-**      Típus               -   (T_xxx...)                              *
-**      Makrók              -   (M_xxx...)                              *
+**& PROGRAM VARIABLES                                                    *
+**      Internal table        -   (I_xxx...)                              *
+**      FORM parameter       -   ($xxxx...)                              *
+**      Constant            -   (C_xxx...)                              *
+**      Parameter variable  -   (P_xxx...)                              *
+**      Selection option    -   (S_xxx...)                              *
+**      Ranges              -   (R_xxx...)                              *
+**      Global variables    -   (V_xxx...)                              *
+**      Local variables     -   (L_xxx...)                              *
+**      Work area           -   (W_xxx...)                              *
+**      Type                -   (T_xxx...)                              *
+**      Macros              -   (M_xxx...)                              *
 **      Field-symbol        -   (FS_xxx...)                             *
-**      Methodus            -   (METH_xxx...)                           *
-**      Objektum            -   (O_xxx...)                              *
-**      Osztály             -   (CL_xxx...)                             *
-**      Esemény             -   (E_xxx...)                              *
+**      Method              -   (METH_xxx...)                           *
+**      Object              -   (O_xxx...)                              *
+**      Class               -   (CL_xxx...)                             *
+**      Event               -   (E_xxx...)                              *
 **&---------------------------------------------------------------------*
-**MAKRO definiálás range feltöltéshez
+**MACRO definition for populating ranges
 *DEFINE M_DEF.
 *  MOVE: &2      TO &1-SIGN,
 *        &3      TO &1-OPTION,
@@ -86,7 +86,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 **
 **++1765 #19.
 *INITIALIZATION.
-** Jogosultság vizsgálat
+** Authorization check
 *  AUTHORITY-CHECK OBJECT 'S_TCODE'
 *                  ID 'TCD'  FIELD SY-TCODE.
 **++1865 #03.
@@ -94,7 +94,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 *  IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 **--1865 #03.
 *    MESSAGE E152(/ZAK/ZAK).
-**   Önnek nincs jogosultsága a program futtatásához!
+**   You are not authorized to run the program!
 *  ENDIF.
 **--1765 #19.
 ***&---------------------------------------------------------------------*
@@ -102,7 +102,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 ***&---------------------------------------------------------------------*
 **AT SELECTION-SCREEN OUTPUT.
 **
-***  Képernyő attribútomok beállítása
+***  Setting screen attributes
 **  PERFORM SET_SCREEN_ATTRIBUTES.
 **
 **&---------------------------------------------------------------------*
@@ -110,10 +110,10 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 **&---------------------------------------------------------------------*
 *START-OF-SELECTION.
 *
-** Adatok feldolgozása
+** Data processing
 *  PERFORM PROCESS_DATA.
 *  IF I_/ZAK/ANALITIKA[] IS INITIAL.
-*    MESSAGE I000 WITH 'Nincs a szelekciónak megfelelő adat!'.
+*    MESSAGE I000 WITH 'No data matches the selection!'.
 **   & & & &
 *    EXIT.
 *  ENDIF.
@@ -122,7 +122,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 *    MODIFY /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA.
 *    COMMIT WORK AND WAIT.
 *    MESSAGE I216.
-**   Adatmódosítások elmentve!
+**   Data changes saved!
 *  ENDIF.
 *
 *
@@ -196,7 +196,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 *            AND BSEG_GJAHR EQ W_/ZAK/ANALITIKA-BSEG_GJAHR
 *            AND BSEG_BELNR EQ W_/ZAK/ANALITIKA-BSEG_BELNR
 *            AND BSEG_BUZEI EQ W_/ZAK/ANALITIKA-BSEG_BUZEI.
-**   Valamelyik mező eltér
+**   One of the fields differs
 *    IF  W_/ZAK/ANALITIKA-SZAMLASZ  NE W_/ZAK/AFA_SZLA-SZAMLASZ OR
 *        W_/ZAK/ANALITIKA-SZAMLASZA NE W_/ZAK/AFA_SZLA-SZAMLASZA OR
 *        W_/ZAK/ANALITIKA-SZAMLASZE NE W_/ZAK/AFA_SZLA-SZAMLASZE OR
@@ -235,31 +235,31 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 
 *++S4HANA#01.
 **&---------------------------------------------------------------------*
-**& TÁBLÁK                                                              *
+**& TABLES                                                              *
 **&---------------------------------------------------------------------*
 *DATA GS_/ZAK/ANALITIKA TYPE /ZAK/ANALITIKA.                                                        "$smart: #902
 *
 *
 **&---------------------------------------------------------------------*
-**& PROGRAM VÁLTOZÓK                                                    *
-**      Belső tábla         -   (I_xxx...)                              *
-**      FORM paraméter      -   ($xxxx...)                              *
-**      Konstans            -   (C_xxx...)                              *
-**      Paraméter változó   -   (P_xxx...)                              *
-**      Szelekciós opció    -   (S_xxx...)                              *
-**      Sorozatok (Range)   -   (R_xxx...)                              *
-**      Globális változók   -   (V_xxx...)                              *
-**      Lokális változók    -   (L_xxx...)                              *
-**      Munkaterület        -   (W_xxx...)                              *
-**      Típus               -   (T_xxx...)                              *
-**      Makrók              -   (M_xxx...)                              *
+**& PROGRAM VARIABLES                                                    *
+**      Internal table        -   (I_xxx...)                              *
+**      FORM parameter       -   ($xxxx...)                              *
+**      Constant            -   (C_xxx...)                              *
+**      Parameter variable  -   (P_xxx...)                              *
+**      Selection option    -   (S_xxx...)                              *
+**      Ranges              -   (R_xxx...)                              *
+**      Global variables    -   (V_xxx...)                              *
+**      Local variables     -   (L_xxx...)                              *
+**      Work area           -   (W_xxx...)                              *
+**      Type                -   (T_xxx...)                              *
+**      Macros              -   (M_xxx...)                              *
 **      Field-symbol        -   (FS_xxx...)                             *
-**      Methodus            -   (METH_xxx...)                           *
-**      Objektum            -   (O_xxx...)                              *
-**      Osztály             -   (CL_xxx...)                             *
-**      Esemény             -   (E_xxx...)                              *
+**      Method              -   (METH_xxx...)                           *
+**      Object              -   (O_xxx...)                              *
+**      Class               -   (CL_xxx...)                             *
+**      Event               -   (E_xxx...)                              *
 **&---------------------------------------------------------------------*
-**MAKRO definiálás range feltöltéshez
+**MACRO definition for populating ranges
 *DEFINE M_DEF.
 *  MOVE: &2      TO &1-SIGN,
 *        &3      TO &1-OPTION,
@@ -308,7 +308,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 ***&---------------------------------------------------------------------*
 **AT SELECTION-SCREEN OUTPUT.
 **
-***  Képernyő attribútomok beállítása
+***  Setting screen attributes
 **  PERFORM SET_SCREEN_ATTRIBUTES.
 **
 **&---------------------------------------------------------------------*
@@ -316,10 +316,10 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 **&---------------------------------------------------------------------*
 *START-OF-SELECTION.
 *
-** Adatok feldolgozása
+** Data processing
 *  PERFORM PROCESS_DATA.
 *  IF I_/ZAK/ANALITIKA[] IS INITIAL.
-*    MESSAGE I000 WITH 'Nincs a szelekciónak megfelelő adat!'.
+*    MESSAGE I000 WITH 'No data matches the selection!'.
 **   & & & &
 *  ENDIF.
 *
@@ -327,7 +327,7 @@ REPORT  /ZAK/ANALITIKA_SZLA_CORR  MESSAGE-ID /ZAK/ZAK.
 *    MODIFY /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA.
 *    COMMIT WORK AND WAIT.
 *    MESSAGE I216.
-**   Adatmódosítások elmentve!
+**   Data changes saved!
 *  ENDIF.
 *
 *

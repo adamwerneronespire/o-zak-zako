@@ -38,16 +38,16 @@
 - [x] src/#zak#afa_szla_noneed.prog.screen_9000.abap
 - [x] src/#zak#afa_top.prog.abap
 - [x] src/#zak#afa_xml_download.prog.abap
-- [ ] src/#zak#alv_bevallb_mod.prog.abap
-- [ ] src/#zak#alv_grid_alap.prog.abap
-- [ ] src/#zak#alv_list_definitions.prog.abap
-- [ ] src/#zak#alv_list_forms.prog.abap
-- [ ] src/#zak#analitika_arany_corr.prog.abap
-- [ ] src/#zak#analitika_corr.prog.abap
-- [ ] src/#zak#analitika_del_onybf.prog.abap
-- [ ] src/#zak#analitika_move.prog.abap
-- [ ] src/#zak#analitika_set_onybf.prog.abap
-- [ ] src/#zak#analitika_szla_corr.prog.abap
+- [x] src/#zak#alv_bevallb_mod.prog.abap
+- [x] src/#zak#alv_grid_alap.prog.abap
+- [x] src/#zak#alv_list_definitions.prog.abap
+- [x] src/#zak#alv_list_forms.prog.abap
+- [x] src/#zak#analitika_arany_corr.prog.abap
+- [x] src/#zak#analitika_corr.prog.abap
+- [x] src/#zak#analitika_del_onybf.prog.abap
+- [x] src/#zak#analitika_move.prog.abap
+- [x] src/#zak#analitika_set_onybf.prog.abap
+- [x] src/#zak#analitika_szla_corr.prog.abap
 - [ ] src/#zak#atvez_sap_sel.prog.abap
 - [ ] src/#zak#atvez_sap_sel.prog.screen_9000.abap
 - [ ] src/#zak#book_file_gen.prog.abap

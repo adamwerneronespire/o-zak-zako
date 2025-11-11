@@ -9,53 +9,53 @@
 REPORT  /ZAK/ANALITIKA_MOVE MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott adatokat átmozgatja
-*& a megadott időszakra.
+*& Function description: The program moves the data specified on the selection screen
+*& to the given period.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2009.10.09
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 50
+*& Author             : Balazs Gabor - FMC
+*& Creation date      : 2009.10.09
+*& Functional spec by : ________
+*& SAP module         : ADO
+*& Program type       : Report
+*& SAP version        : 50
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (Write the OSS note number at the end of the modified lines)
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& CHANGES (Write the OSS note number at the end of the modified lines)
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 *++2065 #08.
 TABLES: /ZAK/ANALITIKA.
 *--2065 #08.
 TYPE-POOLS: SLIS.
-*ALV közös rutinok
+* Common ALV routines
 INCLUDE /ZAK/ALV_LIST_FORMS.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant            -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Type                -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Method              -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 *INCLUDE /ZAK/COMMON_STRUCT.
 
@@ -72,7 +72,7 @@ DATA W_/ZAK/BSET      LIKE /ZAK/BSET.
 *--1365 #18.
 *++2265 #10.
 CONSTANTS: C_BTYPART_AFA  TYPE /ZAK/BTYPART VALUE 'AFA'.
-CONSTANTS: C_ACTVT_01(2) VALUE '01'. "Programok futtatása,létr.,mód.
+CONSTANTS: C_ACTVT_01(2) VALUE '01'. "Running/creating/modifying programs
 *--2265 #10.
 SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
 PARAMETERS P_BUKRS LIKE /ZAK/ANALITIKA-BUKRS OBLIGATORY.
@@ -114,12 +114,12 @@ AT SELECTION-SCREEN.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++2365 #02.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                    ID 'TCD'  FIELD '/ZAK/ANALITIKA_MOVE'.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--2365 #02.
 *&---------------------------------------------------------------------*
@@ -127,29 +127,29 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 *++2265 #10.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT '/ZAK/BTYPR'
                   ID 'BUKRS'      FIELD P_BUKRS
                   ID 'ACTVT'      FIELD C_BTYPART_AFA
                   ID '/ZAK/BTYPR' FIELD C_ACTVT_01.
   IF SY-SUBRC NE 0.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--2265 #10.
-*Adatok szelektálása:
+*Data selection:
   PERFORM SEL_DATA.
 
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain records to process!
     EXIT.
   ENDIF.
 
-*Adatok feldolgozása
+*Processing data
   PERFORM PROCESS_DATA.
 
-*Adatbázis műveletek
+*Database operations
   PERFORM MODIFY_DATA.
 
 *&---------------------------------------------------------------------*
@@ -314,8 +314,8 @@ FORM VERIFY_TARGET .
 
   IF P_BTYPE NE P_CBTYPE.
 *++2265 #09.
-*    MESSAGE E000 WITH 'Bevallás típus nem egyezik meg!'.
-    MESSAGE W000 WITH 'Bevallás típus nem egyezik meg!'.
+*    MESSAGE E000 WITH 'Tax return type does not match!'.
+    MESSAGE W000 WITH 'BevallÃ¡s tÃ­pus nem egyezik meg!'.
 *--2265 #09
 *   & & & &
   ENDIF.
@@ -328,12 +328,12 @@ FORM VERIFY_TARGET .
            AND MONAT EQ P_CMONAT
            AND ZINDEX EQ P_CINDEX.
   IF SY-SUBRC NE 0.
-    MESSAGE E000 WITH 'Cél időszak nincs megnyitva!'.
+    MESSAGE E000 WITH 'CÃ©l idÅszak nincs megnyitva!'.
 *   & & & &
   ENDIF.
 
   IF L_FLAG CA 'ZX'.
-    MESSAGE E000 WITH 'Cél időszak lezárva!'.
+    MESSAGE E000 WITH 'CÃ©l idÅszak lezÃ¡rva!'.
 *   & & & &
   ENDIF.
 
@@ -351,12 +351,12 @@ ENDFORM.                    " VERIFY_TARGET
 FORM ALV_LIST  TABLES   $TAB
                 USING   $TAB_NAME.
 
-*ALV lista init
+*ALV list init
   PERFORM COMMON_ALV_LIST_INIT USING SY-TITLE
                                      $TAB_NAME
                                      '/ZAK/ANALITIKA_MOVE'.
 
-*ALV lista
+*ALV list
   PERFORM COMMON_ALV_GRID_DISPLAY TABLES $TAB
                                   USING  $TAB_NAME
                                          ''
@@ -459,7 +459,7 @@ FORM MODIFY_DATA .
   COMMIT WORK AND WAIT.
 
   MESSAGE I007.
-*   Tábla módosítások elvégezve!
+*   Table modifications completed!
 
 
 ENDFORM.                    " MODIFY_DATA

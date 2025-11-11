@@ -2,10 +2,10 @@
 *& Report  /ZAK/ANALITIKA_SET_ONYBF
 *&
 *&---------------------------------------------------------------------*
-*& A program a /ZAK/ANALITIKA tábla ONYBF mezőjét tölti fel:
-*& Feltételek:
-*&    - /ZAK/BEVALLB-ONYBF = 'X' (ABEV azonosítók)
-*&    - feltöltés azonosító <= 2008.01.21
+*& The program populates the ONYBF field of table /ZAK/ANALITIKA:
+*& Conditions:
+*&    - /ZAK/BEVALLB-ONYBF = 'X' (ABEV identifiers)
+*&    - load identifier <= 2008.01.21
 *&    - /ZAK/ANALITIKA-GJAHR < 2008
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/ANALITIKA_DEL_ONYBF  MESSAGE-ID /ZAK/ZAK.
@@ -14,7 +14,7 @@ INCLUDE /ZAK/COMMON_STRUCT.
 INCLUDE /ZAK/SAP_SEL_F01.
 
 
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for populating ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -35,7 +35,7 @@ SELECT-OPTIONS S_BELNR FOR /ZAK/ANALITIKA-BSEG_BELNR.
 *--2011.01.27 BG
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -43,7 +43,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 *++2011.01.27 BG
@@ -52,7 +52,7 @@ AT SELECTION-SCREEN.
      S_GJAHR[] IS INITIAL AND
      S_BELNR[] IS INITIAL.
     MESSAGE E292.
-*   Kérem adjon meg további éretéket a szelekción!
+*   Please provide additional values for the selection!
   ENDIF.
 *--2011.01.27 BG
 
@@ -62,20 +62,20 @@ START-OF-SELECTION.
   PERFORM GET_ONYB_ABEV TABLES I_ONYB_ABEV.
   IF I_ONYB_ABEV[] IS INITIAL.
     MESSAGE E268.
-*    Nincsenek beállítva a BEVALLB táblában az összesítő jelentés ABEV-ei!
+*    The BEVALLB table does not contain the aggregated report ABEV entries!
   ENDIF.
 
-* Feltöltjük a bevallás típusokat:
+* We load the tax return types:
 *  m_def r_btype 'I' 'EQ' '0665' space.
 *  m_def r_btype 'I' 'EQ' '0765' space.
 *  M_DEF R_BTYPE 'I' 'EQ' '0865' SPACE.
 *  M_DEF R_BTYPE 'I' 'EQ' '0965' SPACE.
 *  M_DEF R_BTYPE 'I' 'EQ' '1065' SPACE.
 
-* Meghatározzuk a feltöltés azonosítókat:
+* We determine the load identifiers:
 *  m_def r_pack 'E' 'BT' '20100414_000000' '99991231_999999'.
 
-* Adatok leválogatása
+* Data selection
   SELECT * INTO TABLE I_/ZAK/ANALITIKA
            FROM /ZAK/ANALITIKA
            FOR ALL ENTRIES IN I_ONYB_ABEV
@@ -93,7 +93,7 @@ START-OF-SELECTION.
 *++2011.01.27 BG
   IF SY-SUBRC NE 0.
     MESSAGE E141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytics record matches the condition!
     EXIT.
   ENDIF.
 *--2011.01.27 BG
@@ -121,6 +121,6 @@ START-OF-SELECTION.
   COMMIT WORK AND WAIT.
 
   MESSAGE I223.
-* Az adatok mentése sikeresen megtörtént!
+* Data was saved successfully!
 
 END-OF-SELECTION.

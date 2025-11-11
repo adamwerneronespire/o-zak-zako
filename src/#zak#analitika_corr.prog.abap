@@ -2,39 +2,39 @@
 *& Report  /ZAK/ZAK_ANALATIKA_CORR
 *&
 *&---------------------------------------------------------------------*
-*& A program a 1008 bevallás 2011 adatait forgatja át DUMMY-ra
+*& The program rewrites the 2011 data of the 1008 tax return to DUMMY
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/ANALITIKA_CORR MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant            -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Type                -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Method              -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 CONSTANTS C_ABEVAZ TYPE /ZAK/ABEVAZ VALUE 'DUMMY_R'.
 *--S4HANA#01.
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for populating ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -94,7 +94,7 @@ INITIALIZATION.
   M_DEF S_BUKRS 'I' 'EQ' 'MG16' SPACE.
   M_DEF S_BTYPE 'I' 'EQ' '1008' SPACE.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -102,7 +102,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -110,7 +110,7 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
 
-*  Képernyő attribútomok beállítása
+*  Setting screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 *&---------------------------------------------------------------------*
@@ -123,7 +123,7 @@ AT SELECTION-SCREEN OUTPUT.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok feldolgozása
+* Data processing
   PERFORM PROCESS_DATA.
 
 *&---------------------------------------------------------------------*
@@ -182,10 +182,10 @@ FORM PROCESS_DATA.
 *    INSERT /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA_NEW.
 *    COMMIT WORK AND WAIT.
 *    MESSAGE I216.
-**   Adatmódosítások elmentve!
+**   Data changes saved!
 *  ELSE.
 *    MESSAGE I141.
-**   Nincs a feltételnek megfelelő analitika rekord!
+**   No analytics record matches the condition!
 *  ENDIF.
 
   DATA L_TABNAME TYPE C LENGTH 20.                                                               "$smart: #139
@@ -217,7 +217,7 @@ FORM PROCESS_DATA.
               AND GJAHR EQ W_/ZAK/ANALITIKA-BSEG_GJAHR
             ORDER BY PRIMARY KEY.                                                                "$smart: #600
     LOOP AT LI_BSET INTO LW_BSET.
-*  Ha LWBAS ¸res, akkor haszn·ljuk a HWBAS,HWSTE-t.
+*  If LWBAS is empty, use HWBAS and HWSTE.
 *++1765 #11. 2017.03.20
 *        IF LW_BSET-LWBAS IS INITIAL.
 *--1765 #11. 2017.03.20
@@ -230,7 +230,7 @@ FORM PROCESS_DATA.
 *++1765 #11. 2017.03.20
 *        ENDIF.
 *--1765 #11. 2017.03.20
-*       Elıjel forgat·s
+*       Sign conversion
 *++S4HANA#01.
       PERFORM CHANGE_SIGN IN PROGRAM /ZAK/AFA_SAP_SELN USING LW_BSET                              "$smart: #146
                                              CHANGING     LW_ANALITIKA_BSET.
@@ -261,7 +261,7 @@ FORM PROCESS_DATA.
 
   COMMIT WORK AND WAIT.
 
-  MESSAGE I000 WITH 'Rekordok módosítva (YAK_ANALITIKA és YAK_AFA_SZLA)'.
+  MESSAGE I000 WITH 'Rekordok mÃ³dosÃ­tva (YAK_ANALITIKA Ã©s YAK_AFA_SZLA)'.
 *   & & & &
 
 *++S4HANA#01.

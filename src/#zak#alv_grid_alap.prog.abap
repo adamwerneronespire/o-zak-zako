@@ -2,7 +2,7 @@
 *&  Include           /ZAK/ALV_GRID_ALAP
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& Adatdeklarációk
+*& Data declarations
 *&---------------------------------------------------------------------*
 DATA: GT_DATA     TYPE TY_DATA,
       GS_DATA     LIKE LINE OF GT_DATA,
@@ -10,7 +10,7 @@ DATA: GT_DATA     TYPE TY_DATA,
       GT_DATA_TMP TYPE TY_DATA.
 
 *&---------------------------------------------------------------------*
-*& ALV Adatok
+*& ALV data
 *&---------------------------------------------------------------------*
 DATA: GO_ALV  TYPE REF TO CL_GUI_ALV_GRID,
       GO_CONT TYPE REF TO CL_GUI_CUSTOM_CONTAINER,
@@ -28,9 +28,9 @@ DATA: GV_OK_9000  TYPE OK.
 FIELD-SYMBOLS: <FS_FCAT> TYPE LVC_S_FCAT,
                <FS_ANY>  TYPE ANY.
 *&---------------------------------------------------------------------*
-*& ALV Makrók
+*& ALV macros
 *&---------------------------------------------------------------------*
-* mező elrejtése
+* Hide field
 DEFINE M_HIDE_FIELD.
   READ TABLE &1 ASSIGNING <FS_FCAT>
   WITH KEY FIELDNAME = &2.
@@ -39,7 +39,7 @@ DEFINE M_HIDE_FIELD.
   ENDIF.
 END-OF-DEFINITION.
 
-* hotspot megadása
+* Define hotspot
 DEFINE M_HOTSPOT.
   READ TABLE &1 ASSIGNING <FS_FCAT>
   WITH KEY FIELDNAME = &2.
@@ -48,7 +48,7 @@ DEFINE M_HOTSPOT.
   ENDIF.
 END-OF-DEFINITION.
 
-* mező módosítása
+* Modify field
 DEFINE M_MODIFY_FIELD.
   READ TABLE &1 ASSIGNING <FS_FCAT>
   WITH KEY FIELDNAME = &2.
@@ -94,7 +94,7 @@ DEFINE M_GET_PRG_NAME.
 END-OF-DEFINITION.
 
 *&---------------------------------------------------------------------*
-*& Eseménykezelő osztály
+*& Event handler class
 *&---------------------------------------------------------------------*
 
 CLASS LCL_EVENT_HANDLER DEFINITION.

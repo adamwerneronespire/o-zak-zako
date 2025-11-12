@@ -98,10 +98,10 @@
 - [x] src/#zak#functions.fugr.#zak#kont_file_download.abap
 - [x] src/#zak#functions.fugr.#zak#kulf_file_download.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf01.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf02.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf03.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf04.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf05.abap
+- [X] src/#zak#functions.fugr.#zak#lfunctionsf02.abap
+- [X] src/#zak#functions.fugr.#zak#lfunctionsf03.abap
+- [X] src/#zak#functions.fugr.#zak#lfunctionsf04.abap
+- [X] src/#zak#functions.fugr.#zak#lfunctionsf05.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf14.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf15.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf16.abap

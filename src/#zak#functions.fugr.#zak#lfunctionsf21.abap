@@ -2,15 +2,15 @@
 ***INCLUDE /ZAK/LFUNCTIONSF21.
 *----------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_M_SZJA_2108
+*&      Form  CALC_ABEV_M_SZJA_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_T_ADOAZON_ALL text
-*      -->P_$INDEX text
-*      -->P_$LAST_DATE text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_T_ADOAZON_ALL  text
+*      -->P_$INDEX  text
+*      -->P_$LAST_DATE  text
 *----------------------------------------------------------------------*
 FORM calc_abev_m_szja_2108  TABLES t_bevallo STRUCTURE /zak/bevallo
                                    t_bevallb STRUCTURE /zak/bevallb
@@ -23,8 +23,8 @@ FORM calc_abev_m_szja_2108  TABLES t_bevallo STRUCTURE /zak/bevallo
   SORT t_bevallo BY abevaz adoazon lapsz.
   RANGES lr_abevaz FOR /zak/bevallb-abevaz.
 
-*Special M calculations as a tax ID
-*M 02-316 d Combined tax base (sum of lines 300-306 and lines 312-315 "D")
+*Speciális M-s számítások adóazonosítóként
+*M 02-316 d Összevont adóalap ( a 300-306. sorok  és 312-315.sorok"D"összege)
   REFRESH lr_abevaz.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0300da space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0301da space.
@@ -37,14 +37,14 @@ FORM calc_abev_m_szja_2108  TABLES t_bevallo STRUCTURE /zak/bevallo
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0313da space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0314da space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0315da space.
-*  field0 = field1+field2+...fieldN as much as is in RANGE
+*  mező0 = mező1+mező2+...mezőN amennyi a RANGE-ben van
   PERFORM get_sum_r_m TABLES t_bevallo
                              t_bevallb
                              t_adoazon_all
                              lr_abevaz
-                      USING  c_abevaz_m0bc0316da.           "field0
+                      USING  c_abevaz_m0bc0316da.           "mező0
 
-*M 03-317 4 or more gy. reducing the consolidated tax base. Foster mothers
+*M 03-317 Összevont adóalapot csökkentő 4 vagy több gy. Nevelő anyák
   REFRESH lr_abevaz.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0300ea space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0301ea space.
@@ -55,45 +55,45 @@ FORM calc_abev_m_szja_2108  TABLES t_bevallo STRUCTURE /zak/bevallo
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0306ea space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0314ea space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0315ea space.
-*  field0 = field1-field2-........ field as much as is in the RANGE
+*  mező0 = mező1-mező2-........ mezőn amennyi a RANGE-ben van
   PERFORM get_sum_r_m TABLES t_bevallo
                              t_bevallb
                              t_adoazon_all
                              lr_abevaz
-                      USING  c_abevaz_m0cc0317ba.          "field0
+                      USING  c_abevaz_m0cc0317ba.          "mező0
 
 *++2108 #04.
-* Discounts reducing the combined tax base in total
+* Öszevont adóalapot csökkentő kedvezmények összesen
   REFRESH lr_abevaz.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0cc0317ba space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0cc0318ba space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0cc0319ba space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0cc0320ba space.
-*  field0 = field1-field2-........ field as much as is in the RANGE
+*  mező0 = mező1-mező2-........ mezőn amennyi a RANGE-ben van
   PERFORM get_sum_r_m TABLES t_bevallo
                              t_bevallb
                              t_adoazon_all
                              lr_abevaz
-                      USING  c_abevaz_m0cc0321ba.          "field0
+                      USING  c_abevaz_m0cc0321ba.          "mező0
 *--2108 #04.
 
-*M 02-322 B Basis of the tax advance (difference between lines 316-31)
+*M 02-322 B Az adóelőleg alapja (a 316-31. sorok különbözete)
   REFRESH lr_abevaz.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0316da space.
 *++2108 #03.
 *  M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0BC0321DA SPACE.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0cc0321ba space.
 *--2108 #03.
-*  field0 = field1+field2+...fieldN as much as is in RANGE
+*  mező0 = mező1+mező2+...mezőN amennyi a RANGE-ben van
   PERFORM get_sub_r_m TABLES t_bevallo
                              t_bevallb
                              t_adoazon_all
                              lr_abevaz
 *++2108 #03.
-*                      USING C_ABEVAZ_M0BC0322BA "field0
-                      USING  c_abevaz_m0cc0322ba            "field0
+*                      USING  C_ABEVAZ_M0BC0322BA            "mező0
+                      USING  c_abevaz_m0cc0322ba            "mező0
 *--2108 #03.
-                             '+'.                           "The result cannot be '-'
+                             '+'.                           "Az eredmény nem lehet '-'
 
   REFRESH lr_abevaz.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0300da space.
@@ -102,24 +102,24 @@ FORM calc_abev_m_szja_2108  TABLES t_bevallo STRUCTURE /zak/bevallo
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0303da space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0314aa space.
   m_def lr_abevaz 'I' 'EQ' c_abevaz_m0bc0315aa space.
-*  field0 = field1-field2-........ field as much as is in the RANGE
+*  mező0 = mező1-mező2-........ mezőn amennyi a RANGE-ben van
   PERFORM get_sum_r_m TABLES t_bevallo
                              t_bevallb
                              t_adoazon_all
                              lr_abevaz
-                      USING  c_abevaz_m0cc0323ba.          "field0
+                      USING  c_abevaz_m0cc0323ba.          "mező0
 
 ENDFORM.                    " CALC_ABEV_M_SZJA_2108
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_SZJA_SPECIAL_2108
+*&      Form  CALC_ABEV_SZJA_SPECIAL_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_T_ADOAZON text
-*      -->P_$INDEX text
-*      -->P_$LAST_DATE text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_T_ADOAZON  text
+*      -->P_$INDEX  text
+*      -->P_$LAST_DATE  text
 *----------------------------------------------------------------------*
 FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
                                         t_bevallb STRUCTURE /zak/bevallb
@@ -148,8 +148,8 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
 
   DEFINE lm_get_spec_sum1.
     LOOP AT t_bevallo INTO l_bevallo WHERE abevaz = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
       READ TABLE t_bevallo INTO l_tmp_bevallo
       WITH KEY abevaz  = &2
       adoazon = l_bevallo-adoazon
@@ -182,7 +182,7 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
 
   SORT t_bevallb BY abevaz.
 
-*  Uploading selective ABEVAZ
+*  Szelekciós ABEVAZ feltöltése
 *++2108 #03.
 *  M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0101CA SPACE.
 *  M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0102CA SPACE.
@@ -202,12 +202,12 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
   m_def lr_sel_abevaz 'I' 'EQ' c_abevaz_a0he0177ba space.
   m_def lr_sel_abevaz 'I' 'EQ' c_abevaz_a0ge0178ba space.
   m_def lr_sel_abevaz 'I' 'EQ' c_abevaz_a0ge0179ba space.
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
   LOOP AT t_bevallb INTO w_/zak/bevallb WHERE abevaz IN lr_sel_abevaz.
 
     CLEAR w_/zak/bevallo.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
     READ TABLE t_bevallo INTO w_/zak/bevallo
     WITH KEY abevaz = w_/zak/bevallb-abevaz
     BINARY SEARCH.
@@ -216,36 +216,36 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
 
     v_tabix = sy-tabix .
 
-*    Special calculations
+*    Speciális számítások
     CASE w_/zak/bevallb-abevaz.
-* A 04-101 Permanent jobseeker receives 12.5% unemployment benefit (code 9: 679.|
+* A 04-101 A tartósan állástkereső fogl fogl 12,5% szocho (9-es kód: 679.|
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0101CA.
       WHEN  c_abevaz_a0fc0101ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '09' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KE0695CA' 'M0KC007A' lr_cond.
         lm_get_spec_sum1 'M0KE00511A' 'M0KC007A' lr_cond.
-* 04-102 A GYED,GYES,GYET will take 12.5% socho (code 10: 67|
+* A 04-102 A GYED,GYES,GYET  fogl 12,5% szocho (10-es kód: 67|
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0102CA.
       WHEN  c_abevaz_a0fc0102ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '10' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KE0695CA' 'M0KC007A' lr_cond.
         lm_get_spec_sum1 'M0KE00511A' 'M0KC007A' lr_cond.
-*A 04-103 The shoulder operating in the free shoulder zone is 12.5% socho (11|
+*A 04-103 A szabad váll zónában működő váll 12,5% szocho (11|
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0103CA.
       WHEN  c_abevaz_a0fc0103ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '11' space.
         lm_get_field $index.
@@ -256,59 +256,59 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
         m_def lr_cond 'I' 'EQ' '16' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0JD0678CA' 'M0JC007A' lr_cond.
-*04-10 does not require professional qualifications
+*A 04-10 a s/zak/zakképzettséget nem igénylő
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0104CA.
       WHEN  c_abevaz_a0fc0104ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '18' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KD0677CA' 'M0KC007A' lr_cond.
-*04-105 is in the field of agricultural work
+*A 04-105 a mezőgazdasági munkakörben fogl
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0105CA.
       WHEN  c_abevaz_a0fc0105ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '19' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KD0677CA' 'M0KC007A' lr_cond.
-*A 04-106 Those entering the labor market
+*A 04-106 A munkaerőpiacra lépők
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0106CA.
       WHEN  c_abevaz_a0fc0106ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '20' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KD0677CA' 'M0KC007A' lr_cond.
-*04-107 in the framework of public employment
+*A 04-107 a közfoglalkoztatás keretében
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0107CA.
       WHEN  c_abevaz_a0fc0107ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '23' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KD0677CA' 'M0KC007A' lr_cond.
-*04-108 is the national higher education doctorate
+*A 04-108 a nemzeti felsőoktatás doktori
 *++2108 #03.
 *      WHEN  C_ABEVAZ_A0EC0108CA.
       WHEN  c_abevaz_a0fc0108ca.
 *--2108 #03.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '25' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0KD0677CA' 'M0KC007A' lr_cond.
-*A 04-120 The private individual's pension contribution (563,604,611|
+*A 04-120 A magánszemélyt terelő nyugdíjjárulék (563,604,611|
       WHEN  c_abevaz_a0fc0120ca.
-*        Upload condition
+*        Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'E' 'EQ' '25' space.
         m_def lr_cond 'E' 'EQ' '42' space.
@@ -321,18 +321,18 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
         lm_get_spec_sum1 'M0GD0579CA' 'M0GC004A' lr_cond.
         lm_get_spec_sum1 'M0HD0605CA' 'M0HC004A' lr_cond.
         lm_get_spec_sum1 'M0ID0619CA' 'M0IC004A' lr_cond.
-*A 04-121-c The burden of unemployment, employment pension (605.s|
+*A 04-121-c A megánsz terh munkanélk,állásker nyugdíj (605.s|
       WHEN  c_abevaz_a0fc0121ca.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '25' space.
         m_def lr_cond 'I' 'EQ' '42' space.
         m_def lr_cond 'I' 'EQ' '81' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0HD0605CA' 'M0HC004A' lr_cond.
-*A 04-122-c The private sector pays pension after GYED, S, T (A 604|
+*A 04-122-c A magánsz terh GYED, S, T után fiz nyugdíj(A 604|
       WHEN  c_abevaz_a0fc0122ca.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '83' space.
         m_def lr_cond 'I' 'EQ' '92' space.
@@ -340,33 +340,33 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
         m_def lr_cond 'I' 'EQ' '112' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0HD0605CA' 'M0HC004A' lr_cond.
-*A 05-177-b The pension contribution to be paid by students (line 579, line 605)
+*A 05-177-b A tanulók által fizetendő nyugdíjjárulék (579.sor,605.
 *++2108 #11.
 *      WHEN  C_ABEVAZ_A0HE0177BA.
       WHEN  c_abevaz_a0hd0177ba.
 *--2108 #11.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '46' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0GD0579CA' 'M0GC004A' lr_cond.
         lm_get_spec_sum1 'M0HD0605CA' 'M0HC004A' lr_cond.
-*A 05-178-b Product insurance to be paid by students (lines 567
+*A 05-178-b A tanulók által fizetendő term.egbizt (567.sorok
 *++2108 #11.
 *      WHEN  C_ABEVAZ_A0GE0178BA.
       WHEN  c_abevaz_a0hd0178ba.
 *--2108 #11.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '46' space.
         lm_get_field $index.
         lm_get_spec_sum1 'M0GD0567CA' 'M0GC004A' lr_cond.
-*A 05-179-b With money to be paid by the students eg.bizt (571.so
+*A 05-179-b A tanulók által fizetendő pénzbel eg.bizt (571.so
 *++2108 #11.
 *      WHEN  C_ABEVAZ_A0GE0179BA.
       WHEN  c_abevaz_a0hd0179ba.
 *--2108 #11.
-*       Upload condition
+*       Feltétel feltöltése
         REFRESH lr_cond.
         m_def lr_cond 'I' 'EQ' '46' space.
         lm_get_field $index.
@@ -389,14 +389,14 @@ FORM calc_abev_szja_special_2108 TABLES t_bevallo STRUCTURE /zak/bevallo
 
 ENDFORM.
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_SZJA_2108
+*&      Form  CALC_ABEV_SZJA_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_$LAST_DATE text
-*      -->P_$INDEX text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_$LAST_DATE  text
+*      -->P_$INDEX  text
 *----------------------------------------------------------------------*
 FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
                                    t_bevallb STRUCTURE /zak/bevallb
@@ -410,17 +410,17 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
         END OF li_adoazon.
   DATA: l_bevallo TYPE /zak/bevallo.
 
-*  To define a self-check
+*  Önellenőrzés meghatározásához
   RANGES lr_abevaz FOR /zak/bevallo-abevaz.
   RANGES lr_sel_abevaz FOR /zak/bevallo-abevaz.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
   SORT t_bevallb BY abevaz  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
 
   m_def lr_sel_abevaz 'I' 'EQ' c_abevaz_a0ac039a space.
   m_def lr_sel_abevaz 'I' 'EQ' c_abevaz_a0ac040a space.
@@ -434,7 +434,7 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
 
     CLEAR w_/zak/bevallo.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
     READ TABLE t_bevallo INTO w_/zak/bevallo
     WITH KEY abevaz = w_/zak/bevallb-abevaz
          BINARY SEARCH.
@@ -444,19 +444,19 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
 
 
     CASE w_/zak/bevallb-abevaz.
-*      period from first day
+*      időszak-tól első nap
       WHEN c_abevaz_a0ac039a.
-* Monthly
+* Havi
         IF w_/zak/bevall-bidosz = 'H'.
           l_kam_kezd = $date.
           l_kam_kezd+6(2) = '01'.
           w_/zak/bevallo-field_c = l_kam_kezd.
-* A year old
+* Éves
         ELSEIF w_/zak/bevall-bidosz = 'E'.
           l_kam_kezd = $date.
           l_kam_kezd+4(4) = '0101'.
           w_/zak/bevallo-field_c = l_kam_kezd.
-* He is four years old
+* Negyedéves
         ELSEIF w_/zak/bevall-bidosz = 'N'.
 
           l_kam_kezd = $date.
@@ -493,18 +493,18 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
         ENDIF.
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
 
-*      last day until period
+*      időszak-ig utolsó nap
       WHEN c_abevaz_a0ac040a.
         w_/zak/bevallo-field_c = $date.
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
       WHEN c_abevaz_a0ac044a.
 
         REFRESH li_adoazon.
 *++2108 #20.
 *        LOOP AT T_BEVALLO INTO L_BEVALLO.
-        LOOP AT t_bevallo INTO l_bevallo WHERE abevaz EQ 'M0AC007A'. "KATA tax declarations are not required
+        LOOP AT t_bevallo INTO l_bevallo WHERE abevaz EQ 'M0AC007A'. "KATA-s adóaznonsítók nem kellenek
 *--2108 #20.
           CHECK NOT l_bevallo-adoazon IS INITIAL.
           MOVE l_bevallo-adoazon TO li_adoazon.
@@ -521,54 +521,54 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
 
         CONDENSE w_/zak/bevallo-field_c.
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
-*      Correction, Self-check
+*      Helyesbítés, Önellenőrzés
       WHEN c_abevaz_a0ac041a.
-*        Only in self-check
+*        Csak önellenőrzésénél
         IF $index NE '000'.
           REFRESH lr_abevaz.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
           m_def lr_abevaz 'I' 'BT' c_abevaz_a0id0193da
                                    c_abevaz_a0id0231da.
           m_def lr_abevaz 'I' 'BT' c_abevaz_a0jc0240ca
                                    c_abevaz_a0je0255ca.
           LOOP AT t_bevallo INTO l_bevallo WHERE abevaz IN lr_abevaz
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                           AND NOT field_nr IS INITIAL.
             EXIT.
           ENDLOOP.
-*          There is value:
+*          Van érték:
           IF sy-subrc EQ 0.
             w_/zak/bevallo-field_c = 'O'.
-*          Corrective
+*          Helyesbítő
           ELSE.
             w_/zak/bevallo-field_c = 'H'.
           ENDIF.
           CONDENSE w_/zak/bevallo-field_c.
           MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
         ENDIF.
-*      Repeated self-check
+*      Ismételt önellenőrzés
 *++2108 #17.
 *      WHEN C_ABEVAZ_A0HC001A.
       WHEN c_abevaz_a0ic001a.
 *--2108 #17.
-*        Only in self-check
+*        Csak önellenőrzésénél
         IF $index > '001'.
           REFRESH lr_abevaz.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
           m_def lr_abevaz 'I' 'BT' c_abevaz_a0id0193da
                                    c_abevaz_a0id0231da.
           m_def lr_abevaz 'I' 'BT' c_abevaz_a0jc0240ca
                                    c_abevaz_a0je0255ca.
           LOOP AT t_bevallo INTO l_bevallo WHERE abevaz IN lr_abevaz
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                           AND NOT field_nr IS INITIAL.
             EXIT.
           ENDLOOP.
-*          There is value:
+*          Van érték:
           IF sy-subrc EQ 0.
             w_/zak/bevallo-field_c = 'X'.
           ENDIF.
@@ -581,11 +581,11 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
 
 ENDFORM.
 *&---------------------------------------------------------------------*
-*& Form GET_LAP_SZ_2108
+*&      Form  GET_LAP_SZ_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
+*      -->P_T_BEVALLO  text
 *----------------------------------------------------------------------*
 FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
 
@@ -602,7 +602,7 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
 
   CLEAR l_index.
 
-*  Upload RANKS to manage retired numbers
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
   m_def r_a0ac047a 'I' 'EQ' 'M0FC003A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0GC003A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0HC003A' space.
@@ -611,7 +611,7 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
   m_def r_a0ac047a 'I' 'EQ' 'M0KC003A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0LC003A' space.
 
-*  Values
+*  Értékek
   m_def r_nylapval 'I' 'EQ' '3' space.
   m_def r_nylapval 'I' 'EQ' '7' space.
   m_def r_nylapval 'I' 'EQ' '8' space.
@@ -625,14 +625,14 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
   LOOP AT i_/zak/bevallo INTO w_/zak/bevallo.
     l_tabix = sy-tabix.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
     PERFORM process_ind_item USING '100000'
           l_index
           TEXT-p01.
 
-*   Only with SZJA
+*   Csak SZJA-nal
     IF  w_/zak/bevall-btypart EQ c_btypart_szja.
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
       PERFORM call_nylap TABLES r_a0ac047a
         r_nylapval
       USING  w_/zak/bevallo.
@@ -650,9 +650,9 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
                           lapsz   = w_/zak/bevallo-lapsz
                           BINARY SEARCH.
     IF sy-subrc EQ 0.
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
       IF NOT l_alv-oflag IS INITIAL.
         l_null_flag = l_alv-null_flag.
       ELSE.
@@ -696,7 +696,7 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
     DELETE i_/zak/bevallo.
   ENDLOOP.
 
-*  Definition of pensioners
+*  Nyugdíjasok meghatározása
   IF NOT i_nylap[] IS INITIAL.
     DESCRIBE TABLE i_nylap LINES l_nylap.
     READ TABLE t_bevallo INTO l_bevallo_alv
@@ -717,13 +717,13 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
       MODIFY t_bevallo FROM l_bevallo_alv INDEX sy-tabix
       TRANSPORTING field_c.
     ENDIF.
-  ENDIF.                                 "Please enter the correct name of <...>.
+  ENDIF.                                 "Kérem, adja meg <...> helyes nevét.
 
 *++2108 #11.
-*Number of students with student contracts
+*Tanulószerződéses tanulók létszáma
   CLEAR l_index.
   REFRESH: r_a0ac047a, r_nylapval.
-*  Loading RANKS
+*  RANGEK feltöltése
   m_def r_a0ac047a 'I' 'EQ' 'M0FC004A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0GC004A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0HC004A' space.
@@ -731,7 +731,7 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
   m_def r_a0ac047a 'I' 'EQ' 'M0JC004A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0KC004A' space.
   m_def r_a0ac047a 'I' 'EQ' 'M0LC004A' space.
-*  Values
+*  Értékek
   m_def r_nylapval 'I' 'EQ' '46' space.
 
   REFRESH i_nylap.
@@ -740,14 +740,14 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
   FREE li_/zak/bevallo.
   LOOP AT i_/zak/bevallo INTO w_/zak/bevallo WHERE abevaz IN r_a0ac047a.
     l_tabix = sy-tabix.
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
     PERFORM process_ind_item USING '100000'
           l_index
           TEXT-p01.
 
-*   Only with SZJA
+*   Csak SZJA-nal
     IF  w_/zak/bevall-btypart EQ c_btypart_szja.
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
       PERFORM call_nylap TABLES r_a0ac047a
                                 r_nylapval
                          USING  w_/zak/bevallo.
@@ -782,20 +782,20 @@ FORM get_lap_sz_2108  TABLES t_bevallo STRUCTURE  /zak/bevallalv.
       MODIFY t_bevallo FROM l_bevallo_alv INDEX sy-tabix
       TRANSPORTING field_c.
     ENDIF.
-  ENDIF.                                 "Please enter the correct name of <...>.
+  ENDIF.                                 "Kérem, adja meg <...> helyes nevét.
 *--2108 #11.
 
 ENDFORM.                    " GET_LAP_SZ_2108
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_0_SZJA_2108
+*&      Form  CALC_ABEV_0_SZJA_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_ADOAZON_ALL text
-*      -->P_SPACE text
-*      -->P_$LAST_DATE text
-*      -->P_$INDEX text
+*      -->P_T_BEVALLO  text
+*      -->P_T_ADOAZON_ALL  text
+*      -->P_SPACE  text
+*      -->P_$LAST_DATE  text
+*      -->P_$INDEX  text
 *----------------------------------------------------------------------*
 FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
                                       t_adoazon_all STRUCTURE /zak/adoazonlpsz
@@ -810,147 +810,147 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
   DATA li_abev_range TYPE STANDARD TABLE OF t_abev_range.
   DATA ls_abev_range TYPE t_abev_range.
 
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
   CLEAR v_onrev.
   IF NOT $onrev IS INITIAL.
     MOVE $onrev TO v_onrev.
   ENDIF.
-** If field1 >= field2 then field3 0 flag setting
+**  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
 *   PERFORM GET_NULL_FLAG TABLES T_BEVALLO
 *                                T_ADOAZON_ALL
-*                         USING C_ABEVAZ_M0BC0382CA "field1
-*                                C_ABEVAZ_M0BC0382BA "field2
-*                                C_ABEVAZ_M0BC0382DA.        "field 3
-** If field1+field2+field3+field4 > 0 then 0 flag setting
+*                         USING  C_ABEVAZ_M0BC0382CA         "mező1
+*                                C_ABEVAZ_M0BC0382BA         "mező2
+*                                C_ABEVAZ_M0BC0382DA.        "mező3
+**  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0IC0284HA
-*                              "0-flag setting
-*                                     C_ABEVAZ_A0IC0284CA "field1
-*                                     C_ABEVAZ_A0IC0284DA "field2
-*                                     C_ABEVAZ_A0IC0284EA "field3
-*                                     SPACE.                 "field 4
-** If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-** or field 5 not 0 then 0 flag setting
+*                              "0-flag beállítás
+*                                     C_ABEVAZ_A0IC0284CA    "mező1
+*                                     C_ABEVAZ_A0IC0284DA    "mező2
+*                                     C_ABEVAZ_A0IC0284EA    "mező3
+*                                     SPACE.                 "mező4
+** Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+** vagy mező5 ne 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
-*                              USING C_ABEVAZ_A0DC0087DA "0flag
-*                                     C_ABEVAZ_A0DC0087CA "field1
-*                                     SPACE "field2
-*                                     SPACE "field3
-*                                     SPACE "field4
-*                                     SPACE "field5
-*                                     SPACE.                 "field 6
+*                              USING  C_ABEVAZ_A0DC0087DA    "0flag
+*                                     C_ABEVAZ_A0DC0087CA    "mező1
+*                                     SPACE                  "mező2
+*                                     SPACE                  "mező3
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
+*                                     SPACE.                 "mező6
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
-*                               USING C_ABEVAZ_M0CC0415DA "0flag
-*                                      C_ABEVAZ_M0BC0382BA "field1
-*                                      C_ABEVAZ_M0BC0386BA "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                "field 6
-** 0 flag setting on field 1
+*                               USING  C_ABEVAZ_M0CC0415DA   "0flag
+*                                      C_ABEVAZ_M0BC0382BA   "mező1
+*                                      C_ABEVAZ_M0BC0386BA   "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
+** mező1-n 0 flag állítás
 *     PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
 *                                 USING  C_ABEVAZ_A0BC50041A.
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
 *   PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
 *                                    T_ADOAZON_ALL
-*                             USING C_ABEVAZ_M0FD0496AA "field1
-*                                    C_ABEVAZ_M0FD0495AA "field2
-*                                    C_ABEVAZ_M0FD0498BA "0-flag
+*                             USING  C_ABEVAZ_M0FD0496AA     "mező1
+*                                    C_ABEVAZ_M0FD0495AA     "mező2
+*                                    C_ABEVAZ_M0FD0498BA     "0-flag
 *                                    C_ABEVAZ_M0FD0497BA.    "0-flag
-* If field1 in LR_VALUE and LR_ABEVAZ >= 0 (or), then 0-flag
+* Ha mező1 in LR_VALUE and LR_ABEVAZ >= 0 (or), akkor 0-flag
 * perform get_null_flag_M_in_or_abevaz tables T_BEVALLO
 *                                             T_ADOAZON_ALL
 *                                             LR_VALUE
 *                                             LR_ABEVAZ
-*                                       using C_ABEVAZ_M0GC007A "field1
+*                                       using C_ABEVAZ_M0GC007A   "mező1
 *                                             C_ABEVAZ_M0GD0570CA."0-flag
 *     PERFORM GET_NULL_FLAG_0_M   TABLES T_BEVALLO
 *                                        T_ADOAZON_ALL
 *                                 USING  C_ABEVAZ_M0BD0341BA.
-*  If field1 >= field2 then field3 0 flag setting
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0301ca          "field 1
-                               c_abevaz_m0bc0301ba          "field 2
-                               c_abevaz_m0bc0301da.         "field 3
+                        USING  c_abevaz_m0bc0301ca          "mező1
+                               c_abevaz_m0bc0301ba          "mező2
+                               c_abevaz_m0bc0301da.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0301da          "field 1
-                               c_abevaz_m0bc0301ba          "field 2
-                               c_abevaz_m0bc0301ca.         "field 3
+                        USING  c_abevaz_m0bc0301da          "mező1
+                               c_abevaz_m0bc0301ba          "mező2
+                               c_abevaz_m0bc0301ca.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0302ca          "field 1
-                               c_abevaz_m0bc0302ba          "field 2
-                               c_abevaz_m0bc0302da.         "field 3
+                        USING  c_abevaz_m0bc0302ca          "mező1
+                               c_abevaz_m0bc0302ba          "mező2
+                               c_abevaz_m0bc0302da.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0302da          "field 1
-                               c_abevaz_m0bc0302ba          "field 2
-                               c_abevaz_m0bc0302ca.         "field 3
+                        USING  c_abevaz_m0bc0302da          "mező1
+                               c_abevaz_m0bc0302ba          "mező2
+                               c_abevaz_m0bc0302ca.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0305ca          "field 1
-                               c_abevaz_m0bc0305ba          "field 2
-                               c_abevaz_m0bc0305da.         "field 3
+                        USING  c_abevaz_m0bc0305ca          "mező1
+                               c_abevaz_m0bc0305ba          "mező2
+                               c_abevaz_m0bc0305da.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0305da          "field 1
-                               c_abevaz_m0bc0305ba          "field 2
-                               c_abevaz_m0bc0305ca.         "field 3
+                        USING  c_abevaz_m0bc0305da          "mező1
+                               c_abevaz_m0bc0305ba          "mező2
+                               c_abevaz_m0bc0305ca.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0306ca          "field 1
-                               c_abevaz_m0bc0306ba          "field 2
-                               c_abevaz_m0bc0306da.         "field 3
+                        USING  c_abevaz_m0bc0306ca          "mező1
+                               c_abevaz_m0bc0306ba          "mező2
+                               c_abevaz_m0bc0306da.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0306da          "field 1
-                               c_abevaz_m0bc0306ba          "field 2
-                               c_abevaz_m0bc0306ca.         "field 3
+                        USING  c_abevaz_m0bc0306da          "mező1
+                               c_abevaz_m0bc0306ba          "mező2
+                               c_abevaz_m0bc0306ca.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0307ca          "field 1
-                               c_abevaz_m0bc0307ba          "field 2
-                               c_abevaz_m0bc0307da.         "field 3
+                        USING  c_abevaz_m0bc0307ca          "mező1
+                               c_abevaz_m0bc0307ba          "mező2
+                               c_abevaz_m0bc0307da.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0307da          "field 1
-                               c_abevaz_m0bc0307ba          "field 2
-                               c_abevaz_m0bc0307ca.         "field 3
+                        USING  c_abevaz_m0bc0307da          "mező1
+                               c_abevaz_m0bc0307ba          "mező2
+                               c_abevaz_m0bc0307ca.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0312ca          "field 1
-                               c_abevaz_m0bc0312ba          "field 2
-                               c_abevaz_m0bc0312da.         "field 3
+                        USING  c_abevaz_m0bc0312ca          "mező1
+                               c_abevaz_m0bc0312ba          "mező2
+                               c_abevaz_m0bc0312da.         "mező3
 
   PERFORM get_null_flag TABLES t_bevallo
                                t_adoazon_all
-                        USING  c_abevaz_m0bc0312da          "field 1
-                               c_abevaz_m0bc0312ba          "field 2
-                               c_abevaz_m0bc0312ca.         "field 3
+                        USING  c_abevaz_m0bc0312da          "mező1
+                               c_abevaz_m0bc0312ba          "mező2
+                               c_abevaz_m0bc0312ca.         "mező3
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0cc0322ba    "0 flag
-                                     c_abevaz_m0bc0316da    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0cc0322ba    "0flag
+                                     c_abevaz_m0bc0316da    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_0_m   TABLES t_bevallo
                                      t_adoazon_all
@@ -969,13 +969,13 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0kd0676ca    "0 flag
-                                     c_abevaz_m0kd0676aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0kd0676ca    "0flag
+                                     c_abevaz_m0kd0676aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' 'I' space.
@@ -985,8 +985,8 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
                                               t_adoazon_all
                                               lr_value
                                               lr_abevaz
-                                        USING c_abevaz_m0gc007a    "field 1
-                                              c_abevaz_m0gd0566ca. "0 flags
+                                        USING c_abevaz_m0gc007a    "mező1
+                                              c_abevaz_m0gd0566ca. "0 flag
 
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' 'I' space.
@@ -996,8 +996,8 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
                                               t_adoazon_all
                                               lr_value
                                               lr_abevaz
-                                        USING c_abevaz_m0gc007a    "field 1
-                                              c_abevaz_m0gd0570ca. "0 flags
+                                        USING c_abevaz_m0gc007a    "mező1
+                                              c_abevaz_m0gd0570ca. "0 flag
 
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' 'I' space.
@@ -1009,58 +1009,58 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
                                               t_adoazon_all
                                               lr_value
                                               lr_abevaz
-                                        USING c_abevaz_m0gc007a    "field 1
-                                              c_abevaz_m0gd0578ca. "0 flags
+                                        USING c_abevaz_m0gc007a    "mező1
+                                              c_abevaz_m0gd0578ca. "0 flag
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0567ca    "0 flag
-                                     c_abevaz_m0gd0564ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0567ca    "0flag
+                                     c_abevaz_m0gd0564ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0571ca    "0 flag
-                                     c_abevaz_m0gd0569ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0571ca    "0flag
+                                     c_abevaz_m0gd0569ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0571ca    "0 flag
-                                     c_abevaz_m0gd0570ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0571ca    "0flag
+                                     c_abevaz_m0gd0570ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0hd0605ca    "0 flag
-                                     c_abevaz_m0hd0603ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0hd0605ca    "0flag
+                                     c_abevaz_m0hd0603ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0577ca    "0 flag
-                                     c_abevaz_m0gd0574ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0577ca    "0flag
+                                     c_abevaz_m0gd0574ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_0_m   TABLES t_bevallo
                                      t_adoazon_all
@@ -1068,173 +1068,173 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0ec0364da    "0 flag
-                                     c_abevaz_m0ec0364ba    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0ec0364da    "0flag
+                                     c_abevaz_m0ec0364ba    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0ec0364ea    "0 flag
-                                     c_abevaz_m0ec0364ba    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0ec0364ea    "0flag
+                                     c_abevaz_m0ec0364ba    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0ec0368da    "0 flag
-                                     c_abevaz_m0ec0368ba    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0ec0368da    "0flag
+                                     c_abevaz_m0ec0368ba    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0ec0368ea    "0 flag
-                                     c_abevaz_m0ec0368ba    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0ec0368ea    "0flag
+                                     c_abevaz_m0ec0368ba    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0kd0678aa    "0 flag
-                                     c_abevaz_m0kd0673aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0kd0678aa    "0flag
+                                     c_abevaz_m0kd0673aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0kd0678ca    "0 flag
-                                     c_abevaz_m0kd0673aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0kd0678ca    "0flag
+                                     c_abevaz_m0kd0673aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0kd0676aa    "0 flag
-                                     c_abevaz_m0kd0673aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0kd0676aa    "0flag
+                                     c_abevaz_m0kd0673aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0kd0676ca    "0 flag
-                                     c_abevaz_m0kd0673aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0kd0676ca    "0flag
+                                     c_abevaz_m0kd0673aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0565ca    "0 flag
-                                     c_abevaz_m0gd0564ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0565ca    "0flag
+                                     c_abevaz_m0gd0564ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0569ca    "0 flag
-                                     c_abevaz_m0gd0568ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0569ca    "0flag
+                                     c_abevaz_m0gd0568ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0573ca    "0 flag
-                                     c_abevaz_m0gd0572ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0573ca    "0flag
+                                     c_abevaz_m0gd0572ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0bc0319ba    "0 flag
-                                     c_abevaz_m0bc0319aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0bc0319ba    "0flag
+                                     c_abevaz_m0bc0319aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0cc0320ba    "0 flag
-                                     c_abevaz_m0cc0320aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0cc0320ba    "0flag
+                                     c_abevaz_m0cc0320aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
 *++2108 #04.
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0cc0321ba    "0 flag
-                                     c_abevaz_m0cc0318ba    "field 1
-                                     c_abevaz_m0cc0319ba    "field 2
-                                     c_abevaz_m0cc0320ba    "field 3
+                              USING  c_abevaz_m0cc0321ba    "0flag
+                                     c_abevaz_m0cc0318ba    "mező1
+                                     c_abevaz_m0cc0319ba    "mező2
+                                     c_abevaz_m0cc0320ba    "mező3
 *++2108 #11.
-*                                     SPACE "field4
-*                                     SPACE "field5
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
                                      c_abevaz_m0cc0319aa
                                      c_abevaz_m0cc0320aa
 *--2108 #11.
-                                     space.                  "field 6
+                                     space.                  "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0cc0322ba    "0 flag
-                                     c_abevaz_m0cc0316ba    "field 1
-                                     c_abevaz_m0cc0321ba    "field 2
-                                     c_abevaz_m0cc0318ba    "field 3
+                              USING  c_abevaz_m0cc0322ba    "0flag
+                                     c_abevaz_m0cc0316ba    "mező1
+                                     c_abevaz_m0cc0321ba    "mező2
+                                     c_abevaz_m0cc0318ba    "mező3
 *++2108 #11.
-*                                     C_ABEVAZ_M0CC0319BA "field4
-                                     c_abevaz_m0cc0319aa    "field 4
-*                                     C_ABEVAZ_M0CC0320BA "field5
-                                     c_abevaz_m0cc0320aa    "field 5
+*                                     C_ABEVAZ_M0CC0319BA    "mező4
+                                     c_abevaz_m0cc0319aa    "mező4
+*                                     C_ABEVAZ_M0CC0320BA    "mező5
+                                     c_abevaz_m0cc0320aa    "mező5
 *--2108 #11.
-                                     space.                 "field 6
+                                     space.                 "mező6
 *--2108 #04.
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0gd0567ca    "0 flag
-                                     c_abevaz_m0gd0564ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0gd0567ca    "0flag
+                                     c_abevaz_m0gd0564ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_0_m   TABLES t_bevallo
                                      t_adoazon_all
@@ -1242,33 +1242,33 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0633ca    "0 flag
-                                     c_abevaz_m0id0629ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0633ca    "0flag
+                                     c_abevaz_m0id0629ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0ke0694ca    "0 flag
-                                     c_abevaz_m0ke0694aa    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0ke0694ca    "0flag
+                                     c_abevaz_m0ke0694aa    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0629ca    "0 flag
-                                     c_abevaz_m0id0626ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0629ca    "0flag
+                                     c_abevaz_m0id0626ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' 'I' space.
@@ -1278,8 +1278,8 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
                                               t_adoazon_all
                                               lr_value
                                               lr_abevaz
-                                        USING c_abevaz_m0hc008a    "field 1
-                                              c_abevaz_m0hd0604ca. "0 flags
+                                        USING c_abevaz_m0hc008a    "mező1
+                                              c_abevaz_m0hd0604ca. "0 flag
 *++2108 #04.
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' 'I' space.
@@ -1291,56 +1291,56 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
                                               t_adoazon_all
                                               lr_value
                                               lr_abevaz
-                                        USING c_abevaz_m0ic007a    "field 1
-                                              c_abevaz_m0id0630ca. "0 flags
+                                        USING c_abevaz_m0ic007a    "mező1
+                                              c_abevaz_m0id0630ca. "0 flag
 *--2108 #04.
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0629ca    "0 flag
-                                     c_abevaz_m0id0627ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0629ca    "0flag
+                                     c_abevaz_m0id0627ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0629ca    "0 flag
-                                     c_abevaz_m0id0628ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0629ca    "0flag
+                                     c_abevaz_m0id0628ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' '0' space.
   PERFORM get_null_flag_m_in_c_range   TABLES t_bevallo
                                               t_adoazon_all
                                               lr_value
-                                        USING c_abevaz_m0ic003a    "field 1
-                                              c_abevaz_m0id0629ca. "0 flags
+                                        USING c_abevaz_m0ic003a    "mező1
+                                              c_abevaz_m0id0629ca. "0 flag
 
   REFRESH: lr_value, lr_abevaz.
   m_def lr_value  'I' 'EQ' '0' space.
   PERFORM get_null_flag_m_in_c_range   TABLES t_bevallo
                                               t_adoazon_all
                                               lr_value
-                                        USING c_abevaz_m0ic003a    "field 1
-                                              c_abevaz_m0id0633ca. "0 flags
+                                        USING c_abevaz_m0ic003a    "mező1
+                                              c_abevaz_m0id0633ca. "0 flag
 
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0633ca    "0 flag
-                                     c_abevaz_m0id0626ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0633ca    "0flag
+                                     c_abevaz_m0id0626ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 *++2108 #03.
 *  PERFORM GET_NULL_FLAG_0_M   TABLES T_BEVALLO
 *                                     T_ADOAZON_ALL
@@ -1353,13 +1353,13 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0643ca    "0 flag
-                                     c_abevaz_m0id0641ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0643ca    "0flag
+                                     c_abevaz_m0id0641ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
 *++2108 #04.
   REFRESH: lr_value2, li_abev_range.
@@ -1405,34 +1405,34 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
   m_def lr_value2 'E' 'EQ' '2' space.
   ls_abev_range-abevaz = c_abevaz_m0fc008a.
   ls_abev_range-range[] = lr_value2[].
-  MOVE 'X' TO ls_abev_range-noerr. "If there is no record, it is not an error!
+  MOVE 'X' TO ls_abev_range-noerr. "Ha nincs rekord az nem hiba!
   APPEND ls_abev_range TO li_abev_range.
   CLEAR ls_abev_range.
-* 640 lines
+* 640 sor
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0id0640ca. "0 flags
-* 641 lines
+                                        USING c_abevaz_m0id0640ca. "0 flag
+* 641 sor
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0id0641ca. "0 flags
-* 643 lines
+                                        USING c_abevaz_m0id0641ca. "0 flag
+* 643 sor
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0id0643ca. "0 flags
+                                        USING c_abevaz_m0id0643ca. "0 flag
 
   PERFORM get_null_flag_initm TABLES t_bevallo
                                      t_adoazon_all
-                              USING  c_abevaz_m0id0634ca    "0 flag
-                                     c_abevaz_m0id0640ca    "field 1
-                                     space                  "field 2
-                                     space                  "field 3
-                                     space                  "field 4
-                                     space                  "field 5
-                                     space.                 "field 6
+                              USING  c_abevaz_m0id0634ca    "0flag
+                                     c_abevaz_m0id0640ca    "mező1
+                                     space                  "mező2
+                                     space                  "mező3
+                                     space                  "mező4
+                                     space                  "mező5
+                                     space.                 "mező6
 
 *--2108 #04.
 *++2108 #13.
@@ -1441,50 +1441,50 @@ FORM calc_abev_0_szja_2108   TABLES   t_bevallo STRUCTURE /zak/bevallo
   m_def lr_value2 'E' 'EQ' '' space.
   ls_abev_range-abevaz = 'M0BC0306AA'.
   ls_abev_range-range[] = lr_value2[].
-  MOVE 'X' TO ls_abev_range-noerr. "If there is no record, it is not an error!
+  MOVE 'X' TO ls_abev_range-noerr. "Ha nincs rekord az nem hiba!
   APPEND ls_abev_range TO li_abev_range.
   CLEAR ls_abev_range.
-* 306 lines
+* 306 sor
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0bc0306ba. "0 flags
+                                        USING c_abevaz_m0bc0306ba. "0 flag
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0bc0306ca. "0 flags
+                                        USING c_abevaz_m0bc0306ca. "0 flag
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0bc0306da. "0 flags
-* 307 lines
+                                        USING c_abevaz_m0bc0306da. "0 flag
+* 307 sor
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0bc0307ba. "0 flags
+                                        USING c_abevaz_m0bc0307ba. "0 flag
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0bc0307ca. "0 flags
+                                        USING c_abevaz_m0bc0307ca. "0 flag
   PERFORM get_null_flag_m_in_c_ranges  TABLES t_bevallo
                                               t_adoazon_all
                                               li_abev_range
-                                        USING c_abevaz_m0bc0307da. "0 flags
+                                        USING c_abevaz_m0bc0307da. "0 flag
 *--2108 #13.
 ENDFORM.
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_AFA_2165
+*&      Form  CALC_ABEV_AFA_2165
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_T_ADOAZON text
-*      -->P_T_AFA_SZLA_SUM text
-*      -->P_$LAST_DATE text
-*      -->P_$INDEX text
-*      -->P_W_/ZAK/BEVALL_OMREL text
-*      -->P_W_/ZAK/BEVALL_KIUTALAS text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_T_ADOAZON  text
+*      -->P_T_AFA_SZLA_SUM  text
+*      -->P_$LAST_DATE  text
+*      -->P_$INDEX  text
+*      -->P_W_/ZAK/BEVALL_OMREL  text
+*      -->P_W_/ZAK/BEVALL_KIUTALAS  text
 *----------------------------------------------------------------------*
 FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
                                 t_bevallb STRUCTURE /zak/bevallb
@@ -1524,14 +1524,14 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
   DATA   lw_adoaz_szamlasza_sum TYPE lt_adoaz_szamlasza_sum.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
-****************************************************** ONLY VAT normal
+******************************************************** CSAK ÁFA normál
 
   DATA: w_sz TYPE /zak/bevallb.
 
   RANGES lr_abevaz FOR /zak/bevallo-abevaz.
-* Loading calculated fields
+* Számított mezők feltöltése
 *++S4HANA#01.
 *  REFRESH lr_abevaz.
   CLEAR lr_abevaz[].
@@ -1558,7 +1558,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
 
   LOOP AT t_bevallb INTO w_/zak/bevallb WHERE abevaz IN lr_abevaz.
     CLEAR : l_sum,w_/zak/bevallo.
-* this line must be modified!
+* ezt a sort kell módosítani!
     READ TABLE t_bevallo INTO w_/zak/bevallo
     WITH KEY abevaz = w_/zak/bevallb-abevaz.
     v_tabix = sy-tabix .
@@ -1567,9 +1567,9 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
            w_/zak/bevallo-field_nrk.
 
     CASE w_/zak/bevallb-abevaz.
-* 84.C. Amount of tax to be paid (data of line 83, if unsigned)
+* 84.C. Befizetendő adó összege (a 83. sor adata, ha előjel nélküli)
       WHEN c_abevaz_a0dd0084ca.
-        l_upd = 'X'. "You always have to update, because if the amount changes, you have to empty it
+        l_upd = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
         CLEAR l_sum.
         READ TABLE t_bevallo INTO w_sum
         WITH KEY abevaz = c_abevaz_a0dd0083ca.
@@ -1582,19 +1582,19 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
           ENDIF.
 *          L_UPD = 'X'.
         ENDIF.
-* 00C Declaration period from
+* 00C Bevallási időszak -tól
       WHEN c_abevaz_a0af001a.
-* Monthly
+* Havi
         IF w_/zak/bevall-bidosz = 'H'.
           l_kam_kezd = $date.
           l_kam_kezd+6(2) = '01'.
           w_/zak/bevallo-field_c = l_kam_kezd.
-* A year old
+* Éves
         ELSEIF w_/zak/bevall-bidosz = 'E'.
           l_kam_kezd = $date.
           l_kam_kezd+4(4) = '0101'.
           w_/zak/bevallo-field_c = l_kam_kezd.
-* He is four years old
+* Negyedéves
         ELSEIF w_/zak/bevall-bidosz = 'N'.
 
           l_kam_kezd = $date.
@@ -1631,59 +1631,59 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
         ENDIF.
 
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
-*00C Declaration period until
+*00C Bevallási időszak -ig
       WHEN c_abevaz_a0af002a.
         w_/zak/bevallo-field_c = $date.
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
-*00C Nature of declaration
+*00C Bevallás jellege
       WHEN c_abevaz_a0af005a.
         IF w_/zak/bevallo-zindex GE '001'.
           w_/zak/bevallo-field_c = 'O'.
           MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
         ENDIF.
-*04 (O) Mark repeated self-check (x)
+*04 (O) Ismételt önellenőrzés jelölése (x)
       WHEN c_abevaz_a0ic001a.
-*        ZINDEX > '001' --> 'X' "repeated self-check
+*        ZINDEX > '001' --> 'X'     "ismételt önellenőrzés
         IF w_/zak/bevallo-zindex > '001'.
           w_/zak/bevallo-field_c = 'X'.
           MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
         ENDIF.
-*00C Declaration frequency /H-monthly, N-quarterly, E-yearly
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
       WHEN c_abevaz_a0af006a.
         w_/zak/bevallo-field_c = w_/zak/bevall-bidosz.
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
-*82.B. The amount of the reducing item that can be calculated from the previous period (previous year
+*82.B. Előző időszakról beszámítható csökkentő tétel összege (előző id.
       WHEN c_abevaz_a0dd0082ba.
         PERFORM set_bevallo USING c_abevaz_a0dd0082ca
                             CHANGING w_/zak/bevallo.
         l_upd = 'X'.
-*83.C. The total amount of tax payable in the subject period.
+*83.C. Tárgyidőszakban megállapított fizetendő adó együttes összegének.
       WHEN c_abevaz_a0dd0083ba.
         PERFORM set_bevallo USING c_abevaz_a0dd0083ca
                             CHANGING w_/zak/bevallo.
         l_upd = 'X'.
-*84.B. Amount of tax to be paid (data of line 83, if unsigned)
+*84.B. Befizetendő adó összege (a 83. sor adata, ha előjel nélküli)
       WHEN c_abevaz_a0dd0084ba.
         PERFORM set_bevallo USING c_abevaz_a0dd0084ca
                             CHANGING w_/zak/bevallo.
         l_upd = 'X'.
-*85.B. The amount of tax that can be reclaimed (line 83 with a negative sign, ...
+*85.B. Visszaigényelhető adó összege (a negatív előjelű 83. sor, ...
       WHEN c_abevaz_a0dd0085ba.
         PERFORM set_bevallo USING c_abevaz_a0dd0085ca
                             CHANGING w_/zak/bevallo.
         l_upd = 'X'.
-*86.B. Amount of claim that can be carried over to the next period
+*86.B. Következő időszakra átvihető követelés összege
       WHEN c_abevaz_a0dd0086ba.
         PERFORM set_bevallo USING c_abevaz_a0dd0086ca
                             CHANGING w_/zak/bevallo.
         l_upd = 'X'.
-*00F year month day
+*00F év hó nap
       WHEN c_abevaz_a0ai002a.
         w_/zak/bevallo-field_c = sy-datum.
         MODIFY t_bevallo FROM w_/zak/bevallo INDEX v_tabix.
-*85.C. The amount of tax that can be reclaimed (line 83 with a negative sign...
+*85.C. Visszaigényelhető adó összege (a negatív előjelű 83. sor...
       WHEN  c_abevaz_a0dd0085ca.
-        l_upd = 'X'. "You always have to update, because if the amount changes, you have to empty it
+        l_upd = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
         READ TABLE t_bevallo INTO w_sum
              WITH KEY abevaz = c_abevaz_a0dd0083ca.
         IF sy-subrc EQ 0 AND w_sum-field_n < 0.
@@ -1699,9 +1699,9 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
 *            L_UPD = 'X'.
           ENDIF.
         ENDIF.
-*Carried over to next period
+*Következő időszakra átvitt
       WHEN  c_abevaz_a0dd0086ca.
-        l_upd = 'X'. "You always have to update, because if the amount changes, you have to empty it
+        l_upd = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
         READ TABLE t_bevallo INTO w_sum
              WITH KEY abevaz = c_abevaz_a0dd0083ca.
         IF sy-subrc EQ 0 AND w_sum-field_n < 0.
@@ -1718,10 +1718,10 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
           ENDIF.
         ENDIF.
     ENDCASE.
-* fill in all numerical values for calculated fields!
-* the procedure for forming an amount is as follows:
-* eg: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
+* pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
+* majd a beálított kerekítési szabályt alkalmazni!
     IF NOT w_/zak/bevallb-collect IS INITIAL AND
        l_upd EQ 'X'.
       CLEAR l_round.
@@ -1736,7 +1736,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
     CLEAR: l_upd,l_sum,l_round.
   ENDLOOP.
 
-*  Calculation of dependent fields
+*  Függő mezők számítása
 *++S4HANA#01.
 *  REFRESH lr_abevaz.
   CLEAR lr_abevaz[].
@@ -1745,7 +1745,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
 
   LOOP AT t_bevallb INTO w_/zak/bevallb WHERE abevaz IN lr_abevaz.
     CLEAR : l_sum,w_/zak/bevallo.
-* this line must be modified!
+* ezt a sort kell módosítani!
     READ TABLE t_bevallo INTO w_/zak/bevallo
     WITH KEY abevaz = w_/zak/bevallb-abevaz.
     v_tabix = sy-tabix .
@@ -1756,7 +1756,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
 
     CASE w_/zak/bevallb-abevaz.
 
-*00D I do not request a referral
+*00D Kiutalást nem kérek
       WHEN c_abevaz_a0ag016a.
         IF NOT $kiutalas IS INITIAL.
           READ TABLE t_bevallo INTO w_sum
@@ -1771,10 +1771,10 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
           ENDIF.
         ENDIF.
     ENDCASE.
-* fill in all numerical values for calculated fields!
-* the procedure for forming an amount is as follows:
-* eg: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
+* pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
+* majd a beálított kerekítési szabályt alkalmazni!
     IF NOT w_/zak/bevallb-collect IS INITIAL AND
        l_upd EQ 'X'.
       CLEAR l_round.
@@ -1790,9 +1790,9 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
 
   ENDLOOP.
 
-*  Summary report Calculation of fields below the VAT value limit
+*  Összesítő jelentés ÁFA értékhatár alatti mezők számítása
   IF NOT $omrel IS INITIAL.
-*  Value limit
+*  Értékhatár
     l_amount_external = w_/zak/bevall-olwste.
     CALL FUNCTION 'BAPI_CURRENCY_CONV_TO_INTERNAL'
       EXPORTING
@@ -1803,9 +1803,9 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
         amount_internal      = l_olwste
 *       RETURN               =
       .
-*  Month treatment
+*  Hónap kezelése
 *++S4HANA#01.
-*    REFRESH lr_month.
+*    REFRESH lr_monat.
     CLEAR lr_monat[].
 *--S4HANA#01.
     IF w_/zak/bevall-bidosz = 'H'.
@@ -1824,11 +1824,11 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
     ELSEIF w_/zak/bevall-bidosz = 'E'.
       m_def lr_monat 'I' 'BT' '01' '12'.
     ENDIF.
-*  Determination of amount per tax number, per invoice
+*  Összeg meghatározása adószámonként, számlánként
     LOOP AT t_afa_szla_sum INTO lw_afa_szla_sum
                           WHERE mlap   IS INITIAL
                             AND nylapazon(3) = c_nylapazon_m02.
-*      It must only be aggregated within the month
+*      Csak a hónapon belül kell összesíteni
       CHECK lw_afa_szla_sum-gjahr EQ $date(4) AND
             lw_afa_szla_sum-monat IN lr_monat.
       CLEAR lw_adoaz_szamlasza_sum.
@@ -1836,9 +1836,9 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
       lw_adoaz_szamlasza_sum-lwste      = lw_afa_szla_sum-lwste.
       COLLECT lw_adoaz_szamlasza_sum INTO li_adoaz_szamlasza_sum.
     ENDLOOP.
-*    Determination of value limit
+*    Értékhatár meghatározása
     LOOP AT li_adoaz_szamlasza_sum INTO lw_adoaz_szamlasza_sum.
-*      If it is listed on sheet M or the value limit is greater than the set one
+*      Ha szerepel M-es lapon vagy az értékhatár nagyobb a beállítottnál
       READ TABLE t_afa_szla_sum TRANSPORTING NO FIELDS
                  WITH KEY adoazon = lw_adoaz_szamlasza_sum-adoazon
                           nylapazon(3) = c_nylapazon_m02
@@ -1847,16 +1847,16 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
       IF sy-subrc NE 0 AND lw_adoaz_szamlasza_sum-lwste < l_olwste.
         CONTINUE.
       ENDIF.
-*     Filling filling of other calculated fields of main sheet M
+*     M-es főlap egyéb számított mezők töltése töltése
       PERFORM calc_abev_afa_2165_m TABLES t_bevallo
                                           t_bevallb
                                    USING  lw_adoaz_szamlasza_sum-adoazon
                                           w_/zak/bevall.
     ENDLOOP.
 
-*    Management of calculated fields also on M flat fields
+*    Számított mezők kezelése az M lapos mezőkön is
     FREE li_adoaz_szamlasza_sum.
-*    Determination of amount per tax number, per invoice
+*    Összeg meghatározása adószámonként, számlánként
     LOOP AT t_afa_szla_sum INTO lw_afa_szla_sum
                           WHERE NOT mlap   IS INITIAL.
       lw_adoaz_szamlasza_sum-adoazon    = lw_afa_szla_sum-adoazon.
@@ -1864,7 +1864,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
     ENDLOOP.
 
     LOOP AT li_adoaz_szamlasza_sum INTO lw_adoaz_szamlasza_sum.
-*       Filling filling of other calculated fields of main sheet M
+*       M-es főlap egyéb számított mezők töltése töltése
 *++2165 #04.
 *      PERFORM CALC_ABEV_AFA_2065_M TABLES T_BEVALLO
       PERFORM calc_abev_afa_2165_m TABLES t_bevallo
@@ -1876,10 +1876,10 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
   ENDIF.
 
 ************************************************************************
-* calculation of self-check allowance
+* önellenörzési pótlék számítása
 ************************************************************************
   IF $index NE '000'.
-* if A0DD0084CA - A0DD0084BA > 0 then this value, otherwise 0
+* ha A0DD0084CA - A0DD0084BA > 0 akkor ezt az értéket, ellenkező esetben 0
     LOOP AT t_bevallb INTO w_/zak/bevallb
       WHERE  abevaz EQ     c_abevaz_a0id0001ca.
       CLEAR: l_sum,l_sum_a0id0001ca.
@@ -1897,7 +1897,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
       ENDIF.
       l_sum_a0id0001ca = l_sum_a0id0001ca + l_sum.
       CLEAR l_sum.
-* (A0DD0086CA - A0DD0086BA) < 0 then the calculated value is minus
+* (A0DD0086CA - A0DD0086BA) < 0 akkor minusz a számolt érték
       LOOP AT t_bevallo INTO w_/zak/bevallo
         WHERE  abevaz EQ     c_abevaz_a0dd0086ca  OR
                abevaz EQ     c_abevaz_a0dd0086ba.
@@ -1912,7 +1912,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
       ENDIF.
       l_sum_a0id0001ca = l_sum_a0id0001ca - l_sum.
       CLEAR l_sum.
-* A0DD0085CA - A0DD0085BA < 0 then the calculated value is minus
+* A0DD0085CA - A0DD0085BA < 0 akkor minusz a számolt érték
       LOOP AT t_bevallo INTO w_/zak/bevallo
         WHERE  abevaz EQ     c_abevaz_a0dd0085ca  OR
                abevaz EQ     c_abevaz_a0dd0085ba.
@@ -1927,8 +1927,8 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
       ENDIF.
       l_sum_a0id0001ca = l_sum_a0id0001ca - l_sum.
       CLEAR l_sum.
-*     If A0DD0082CA-A0DD0082BA < 0 then it must be reduced by this amount
-*     L_SUM_A0ID0001CA.
+*     Ha a A0DD0082CA-A0DD0082BA < 0 akkor, ezzel az összeggel csökkenteni kell
+*     az L_SUM_A0ID0001CA-at.
       READ TABLE t_bevallo INTO w_/zak/bevallo
                            WITH KEY abevaz = c_abevaz_a0dd0082ca.
       IF sy-subrc EQ 0.
@@ -1964,8 +1964,8 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
       ENDIF.
     ENDLOOP.
 
-* determination of self-control allowance
-* Calculation of ABEV A0ID0002CA based on A0ID0001CA, if the index is 2 or higher, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV A0ID0002CA számítása a A0ID0001CA alapján ha az index 2 vagy nagyobb akkor x1,5
     IF w_/zak/bevallo-zindex NE '000'.
 
       READ TABLE t_bevallb INTO w_/zak/bevallb
@@ -1977,29 +1977,29 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
         IF sy-subrc = 0.
           l_sum = w_/zak/bevallo-field_nrk.
         ENDIF.
-* period definition
+* időszak meghatározása
         READ TABLE t_bevallo INTO w_/zak/bevallo
                              WITH KEY abevaz = c_abevaz_23337.
         IF sy-subrc EQ 0 AND
         NOT w_/zak/bevallo-field_c IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
           SELECT SINGLE fizhat INTO w_/zak/adonem-fizhat FROM /zak/adonem
                                 WHERE bukrs  EQ w_/zak/bevallo-bukrs AND
                                                  adonem EQ c_adonem_104
                                                  .
           IF sy-subrc EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
             CLEAR l_kam_kezd.
             l_kam_kezd = $date + 1 + w_/zak/adonem-fizhat.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
             CLEAR l_kam_veg.
             CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
               EXPORTING
                 input  = w_/zak/bevallo-field_c
               IMPORTING
                 output = l_kam_veg.
-* allowance calculation
+* pótlék számítás
             PERFORM calc_potlek USING    w_/zak/bevallo-bukrs
                                          w_/zak/bevallo-zindex
                                 CHANGING l_kam_kezd
@@ -2016,8 +2016,8 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
                          w_/zak/bevallo-waers
                 CHANGING w_/zak/bevallo-field_nr
                          w_/zak/bevallo-field_nrk.
-*              The value of the 0 flag must be handled in the form control
-*              because of:
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
+*              miatt:
               IF NOT w_/zak/bevallo-field_n IS INITIAL AND
                  w_/zak/bevallo-field_nrk IS INITIAL.
                 w_/zak/bevallo-null_flag = 'X'.
@@ -2027,7 +2027,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
           ENDIF.
         ENDIF.
       ENDIF.
-*      If there is a value, A0ID0001CA must be corrected.
+*      Ha van érték, korrigálni kell a A0ID0001CA-at.
       IF NOT l_sum_save IS INITIAL.
         READ TABLE t_bevallo INTO w_/zak/bevallo
         WITH KEY abevaz = c_abevaz_a0id0001ca.
@@ -2058,19 +2058,19 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
 
 ENDFORM.
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_AFA_2165_M
+*&      Form  CALC_ABEV_AFA_2165_M
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_LW_ADOAZ_SZAMLASZA_SUM_ADOAZON text
-*      -->P_W_/ZAK/BEVALL text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_LW_ADOAZ_SZAMLASZA_SUM_ADOAZON  text
+*      -->P_W_/ZAK/BEVALL  text
 *----------------------------------------------------------------------*
 FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
                                     $t_bevallb STRUCTURE /zak/bevallb
 *++S4HANA#01.
-*                            USING $adoazon
+*                            USING   $adoazon
                             USING   $adoazon TYPE /zak/adoazon
 *--S4HANA#01.
                                     $bevall    STRUCTURE /zak/bevall.
@@ -2091,40 +2091,40 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
   RANGES lr_monat FOR /zak/analitika-monat.
   DATA l_text50 TYPE text50.
 
-*  M0AC001A Tax number of the taxpayer, can be taken from: A0AE001A
+*  M0AC001A   Adózó adószáma, át lehet venni: A0AE001A-ból
   PERFORM get_afa_m_abevaz TABLES $t_bevallo
                                   $t_bevallb
                            USING  c_abevaz_m0ac001a
                                   c_abevaz_a0ae001a
                                   $adoazon.
-*  M0AC003A Tax number of your legal predecessor, can be taken if it is not empty: from A0AE004A
+*  M0AC003A   Jogelőd adószáma, át lehet venni, ha nem üres: A0AE004A-ból
   PERFORM get_afa_m_abevaz TABLES $t_bevallo
                                   $t_bevallb
                            USING  c_abevaz_m0ac003a
                                   c_abevaz_a0ae004a
                                   $adoazon.
 
-*  M0AC004A Taxpayer name, can be taken from: A0AE008A
+*  M0AC004A Adózó neve, át lehet venni: A0AE008A-ból
   PERFORM get_afa_m_abevaz TABLES $t_bevallo
                                   $t_bevallb
                            USING  c_abevaz_m0ac004a
                                   c_abevaz_a0ae006a
                                   $adoazon.
 
-*  M0AD001A Declaration period from, can be taken from: A0AF001A
+*  M0AD001A Bevallási időszak -tól, át lehet venni: A0AF001A-ból
   PERFORM get_afa_m_abevaz TABLES $t_bevallo
                                   $t_bevallb
                            USING  c_abevaz_m0ad001a
                                   c_abevaz_a0af001a
                                   $adoazon.
 
-*  M0AD002A Declaration period until , can be taken from: A0AF002A
+*  M0AD002A Bevallási időszak -ig, át lehet venni: A0AF002A-ból
   PERFORM get_afa_m_abevaz TABLES $t_bevallo
                                   $t_bevallb
                            USING  c_abevaz_m0ad002a
                                   c_abevaz_a0af002a
                                   $adoazon.
-* The tax number is not empty
+* Az nem üres az adószám
   IF NOT $adoazon IS INITIAL.
 *   ADOAZON
     PERFORM get_afa_m_value  TABLES $t_bevallo
@@ -2132,7 +2132,7 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
                              USING  c_abevaz_m0ac005a
                                     $adoazon
                                     $adoazon.
-*  Enter a group name
+*  Csoport név megadása
     CLEAR l_text50.
     SELECT SINGLE text50 INTO l_text50
                          FROM /zak/padonszt
@@ -2147,14 +2147,14 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
     ENDIF.
   ENDIF.
 
-* M0AC005A Partner's tax number: the M paper ADOAZON must be entered here,
-*if it was loaded from STCD1 (the receiver or
-*carrier code+KOART specifies how to ship. Or customer!)
-*M0AC006A if loaded from STCD3
+* M0AC005A Partner adószáma: ebbe kell tenni az M-es lapi ADOAZON-t,
+*ha STCD1-ből töltöttük (/ZAK/ANALITIKA-ból ki kell venni a vevő vagy
+*szállító kódot+KOART megadja hogy száll. Vagy vevő!)
+*M0AC006A ha STCD3-ból töltöttük
   READ TABLE $t_bevallo INTO lw_bevallo INDEX 1.
-*  Upload month:
+*  Hónap feltöltése:
 *++S4HANA#01.
-*  REFRESH lr_month.
+*  REFRESH lr_monat.
   CLEAR lr_monat[].
 *--S4HANA#01.
   IF $bevall-bidosz EQ 'H'.
@@ -2181,15 +2181,15 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
   ENDIF.
 
 *++S4HANA#01.
-*  SELECT SINGLE * INTO lw_analytics
-*                  FROM /zak/analytics
+*  SELECT SINGLE * INTO lw_analitika
+*                  FROM /zak/analitika
   SELECT adoazon lifkun koart stcd1 field_c INTO lw_analitika
                   FROM /zak/analitika UP TO 1 ROWS
 *--S4HANA#01.
                   WHERE bukrs   EQ lw_bevallo-bukrs
                     AND btype   EQ lw_bevallo-btype
                     AND gjahr   EQ lw_bevallo-gjahr
-*                    AND monat EQ lw_acknowledge-monat
+*                    AND monat   EQ lw_bevallo-monat
                     AND monat   IN lr_monat
 *                    AND ZINDEX  EQ LW_BEVALLO-ZINDEX
                     AND zindex  LE lw_bevallo-zindex
@@ -2220,24 +2220,24 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
                                       lw_analitika-adoazon
                                       $adoazon.
     ENDIF.
-*    Customer name:
+*    Vevő neve:
     IF lw_analitika-koart EQ 'D'.
       SELECT SINGLE name1 INTO l_name1
                           FROM kna1
                          WHERE kunnr EQ lw_analitika-lifkun
 *++1765 #26.
-                            AND xcpdk NE 'X'.    "if not CPD
+                            AND xcpdk NE 'X'.    "ha nem CPD
 *--1765 #26.
-*    Supplier name
+*    Szállító neve
     ELSEIF lw_analitika-koart EQ 'K'.
       SELECT SINGLE name1 INTO l_name1
                           FROM lfa1
                          WHERE lifnr EQ lw_analitika-lifkun
 *++1765 #26.
-                            AND xcpdk NE 'X'.    "if not CPD
+                            AND xcpdk NE 'X'.    "ha nem CPD
 *--1765 #26.
     ENDIF.
-*    There is a name in field_c on a DUMMY_R record
+*    DUMMY_R-es rekordon a field_c-ben van név
     IF l_name1 IS INITIAL AND NOT lw_analitika-field_c IS INITIAL.
       l_name1 = lw_analitika-field_c.
     ENDIF.
@@ -2249,7 +2249,7 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
                                       l_name1
                                       $adoazon.
     ELSE.
-*      DUMMY_R FIELD_C field
+*      DUMMY_R FIELD_C mező
       PERFORM get_afa_m_from_abev TABLES $t_bevallo
                                          $t_bevallb
                                   USING  c_abevaz_m0ac006a
@@ -2260,18 +2260,18 @@ FORM calc_abev_afa_2165_m  TABLES   $t_bevallo STRUCTURE /zak/bevallo
 
 ENDFORM.
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_ONYB_21A60
+*&      Form  CALC_ABEV_ONYB_21A60
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_$LAST_DATE text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_$LAST_DATE  text
 *----------------------------------------------------------------------*
 FORM calc_abev_onyb_21a60  TABLES t_bevallo STRUCTURE /zak/bevallo
                                   t_bevallb STRUCTURE /zak/bevallb
 *++S4HANA#01.
-*                           USING $last_date.
+*                           USING  $last_date.
                            USING  $last_date TYPE sy-datum.
 *--S4HANA#01.
 
@@ -2285,51 +2285,51 @@ FORM calc_abev_onyb_21a60  TABLES t_bevallo STRUCTURE /zak/bevallo
 
   l_gjahr = $last_date(4).
   l_monat = $last_date+4(2).
-* E - Year old
+* E - Éves
   IF w_/zak/bevall-bidosz = 'E'.
     l_monat = '01'.
-* N - Quarterly
+* N - Negyedéves
   ELSEIF w_/zak/bevall-bidosz = 'N'.
     SUBTRACT 2 FROM l_monat.
-* Mon - Monthly
+* H - Havi
   ELSEIF w_/zak/bevall-bidosz = 'H'.
 
   ENDIF.
 
   CONCATENATE l_gjahr l_monat '01' INTO l_begin_day.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
   LOOP AT t_bevallb INTO w_/zak/bevallb
     WHERE  abevaz EQ     c_abevaz_a0ad001a
        OR  abevaz EQ     c_abevaz_a0ad002a
        OR  abevaz EQ     c_abevaz_a0ad004a
        OR  abevaz EQ     c_abevaz_a0ad005a.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
     LOOP AT t_bevallo INTO w_/zak/bevallo
                       WHERE abevaz = w_/zak/bevallb-abevaz.
 
       CASE w_/zak/bevallb-abevaz.
 
 *++2010.02.11 RN
-* this field is no longer on the 10A60
-** Signature date (sy-datum)
+* ez a mező már nincs rajta a 10A60-on
+**    Aláírás dátuma (sy-datum)
 *         WHEN  C_ABEVAZ_24.
 *           W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
 *--2010.02.11 RN
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
         WHEN  c_abevaz_a0ad001a.
           w_/zak/bevallo-field_c = l_begin_day.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
         WHEN  c_abevaz_a0ad002a.
           w_/zak/bevallo-field_c = $last_date.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
         WHEN  c_abevaz_a0ad004a.
           IF w_/zak/bevallo-zindex NE '000'.
             w_/zak/bevallo-field_c = 'H'.
           ENDIF.
-*    Frequency of reporting
+*    Bevallás gyakorisága
         WHEN  c_abevaz_a0ad005a.
           IF w_/zak/bevall-bidosz = 'H'.
             w_/zak/bevallo-field_c = 'H'.
@@ -2344,12 +2344,12 @@ FORM calc_abev_onyb_21a60  TABLES t_bevallo STRUCTURE /zak/bevallo
 ENDFORM.                    " CALC_ABEV_ONYB_21A60
 *++2108 #05.
 *&---------------------------------------------------------------------*
-*& Form GET_KATA_DATA
+*&      Form  GET_KATA_DATA
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_W_/ZAK/BEVALL text
+*      -->P_T_BEVALLO  text
+*      -->P_W_/ZAK/BEVALL  text
 *----------------------------------------------------------------------*
 FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
                     USING    $w_bevall  STRUCTURE /zak/bevall
@@ -2374,7 +2374,7 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
   DATA: l_lwbas TYPE lwbas_bset.
 *--2108 #12.
 
-* Definition of basic data
+* Alapadatok meghatározása
   SELECT * INTO TABLE @DATA(li_kata_sel)
            FROM /zak/kata_sel
           WHERE bukrs EQ @$w_bevall-bukrs
@@ -2383,7 +2383,7 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
   IF sy-subrc NE 0.
     EXIT.
   ENDIF.
-* Collection of KATA data
+* KATA adatok gyűjtése
 *++2108 #12.
 *  SORT LI_KATA_SEL BY ADOAZON.
   SORT li_kata_sel BY adoazon ASCENDING budat DESCENDING.
@@ -2392,17 +2392,17 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
   LOOP AT li_kata_sel INTO DATA(ls_kata_sel).
     CLEAR: ls_kata_sum,
            ls_kata_sum-lwste.
-*   Aggregation of processed data
+*   Feldolgozott adatok összesytése
     MOVE-CORRESPONDING ls_kata_sel TO ls_kata_sum.
     IF NOT ls_kata_sel-relevant IS INITIAL AND NOT ls_kata_sel-process IS INITIAL.
       ls_kata_sum-process = 'X'.
       COLLECT  ls_kata_sum INTO li_kata_sum_proc.
     ENDIF.
-*   Formation of all tax bases
+*   Összes adóalap képzése
     CLEAR ls_kata_sum-process.
     COLLECT  ls_kata_sum INTO li_kata_sum.
   ENDLOOP.
-* Amount conversion
+* Összeg konvertálás
   l_amount_external = $w_bevall-olwste.
   CALL FUNCTION 'BAPI_CURRENCY_CONV_TO_INTERNAL'
     EXPORTING
@@ -2412,9 +2412,9 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
     IMPORTING
       amount_internal      = l_olwste.
 
-* KATA tax calculation
+* KATA adó kalkulálás
   LOOP AT li_kata_sum ASSIGNING FIELD-SYMBOL(<ls_kata_sum>).
-*   Consideration of paid-up fund:
+*   Megfizetett alap figyelembe vétele:
     READ TABLE li_kata_sum_proc INTO DATA(ls_kata_sum_proc) WITH KEY adoazon = <ls_kata_sum>-adoazon.
     IF sy-subrc EQ 0.
       SUBTRACT ls_kata_sum_proc-lwbas FROM <ls_kata_sum>-lwbas.
@@ -2428,7 +2428,7 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
       DELETE li_kata_sum.
     ENDIF.
   ENDLOOP.
-*  If the row column structure is filled out, then we have to fill it according to
+*  Ha ki van töltve a sor oszlop struktúra, akkor a szerint kell töltenünk
   REFRESH i_/zak/bevallb.
   SELECT * INTO TABLE i_/zak/bevallb
                  FROM /zak/bevallb
@@ -2448,12 +2448,12 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
            ls_bevallo-field_n.
     l_oszl = &1.
     CONCATENATE l_sor l_oszl INTO l_sorindex.
-*    Assembling a row index
-*   We have reached the maximum value, let's start again
+*    Sorindex összerakása
+*   Elértük a maximális értéket, újra kezdjük
     IF l_sorindex > l_sorindex_max.
-*          Initialization
+*          Inicializálás
       l_sor = '01'.
-*          We are increasing the number of pages
+*          Növeljük a lapszámot
       ADD 1 TO l_lapsz.
       CONCATENATE l_sor l_oszl INTO l_sorindex.
     ENDIF.
@@ -2496,7 +2496,7 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
                                    ls_bevallo-field_nrk.
   ENDCASE.
   APPEND ls_bevallo TO $t_bevallo.
-* If there is a total ABEVAZ, then it must also be included!
+* Ha van összesatő ABEVAZ, akkor azt is fel kell venni!
   IF NOT w_/zak/bevallb-sum_abevaz IS INITIAL.
     READ TABLE $t_bevallo TRANSPORTING NO FIELDS WITH KEY abevaz = w_/zak/bevallb-sum_abevaz.
     IF sy-subrc NE 0.
@@ -2523,7 +2523,7 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
   ENDIF.
   END-OF-DEFINITION.
 
-* Withdrawal of notation of relevant items that have not been processed
+* Nem feldolgozott relevans tételek jelölés visszavétele
   UPDATE /zak/kata_sel SET relevant = ''
                     WHERE bukrs    = $w_bevall-bukrs
 *++2108 #10.
@@ -2534,9 +2534,9 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
 *++2108 #10.
 *  MODIFY /ZAK/KATA_SELSUM FROM TABLE LI_KATA_SUM.
 *--2108 #10.
-* Generation of KATA analytics items
+* KATA analitika tételek generálása
   LOOP AT li_kata_sum INTO ls_kata_sum WHERE lwste GT 0.
-*  General data:
+*  Általános adatok:
     CLEAR ls_bevallo.
 *++2108 #18.
     ls_bevallo-mandt = sy-mandt.
@@ -2551,13 +2551,13 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
     ls_bevallo-waers = ls_kata_sum-waers.
 *++2108 #10.
 *++2108 #12.
-*   Remarking relevant items
+*   Relevans tételek visszajelölése
 *    UPDATE /ZAK/KATA_SEL SET RELEVANT = 'X'
 *                      WHERE BUKRS   = $W_BEVALL-BUKRS
 *                        AND GJAHR    = $GJAHR
 *                        AND ADOAZON = LS_KATA_SUM-ADOAZON.
 *--2108 #12.
-*  Only items larger than rounded 0 are required in the return:
+*  Csak a kerekített 0-nál nagyobb tételek szükségesek a bevallásba:
     CATCH SYSTEM-EXCEPTIONS convt_no_number = 1
                    OTHERS          = 2.
       l_amount_external = ls_kata_sum-lwste.
@@ -2571,12 +2571,12 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
                                  ls_bevallo-field_nrk.
 *++2108 #12.
     l_lwbas = ls_kata_sum-lwbas.
-*   Calculated tax base and tax return
+*   Kalkulált adóalap és adó visszaírása
     LOOP AT li_kata_sel INTO ls_kata_sel WHERE adoazon EQ ls_kata_sum-adoazon
                                            AND process NE 'X'.
       ls_kata_sel-relevant = 'X'.
       IF l_lwbas GE 0.
-*    If the tax base is smaller, only the value above the limit is returned
+*    Ha az adóalap kisebb, akkor csak a határ feletti értéket írjuk vissza
         IF ls_kata_sel-lwbas LE l_lwbas.
           ls_kata_sel-hwbas = ls_kata_sel-lwbas.
           ls_kata_sel-hwste = ( ls_kata_sel-hwbas * $w_bevall-katasz ) / 100.
@@ -2592,7 +2592,7 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
 *--2108 #12.
     CHECK ls_bevallo-field_nr GT 0.
 *--2108 #10.
-*   Reading address data
+*   Címadatok beolvasása
     SELECT SINGLE * INTO @DATA(ls_mgcim)
                     FROM /zak/mgcim
                    WHERE adoazon EQ @ls_kata_sum-adoazon.
@@ -2600,12 +2600,12 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
       CLEAR ls_mgcim.
     ENDIF.
     ADD 1 TO l_sor.
-*   The tax number of A 04-001 Taxpayer company
+*   A A 04-001 Kisadózó vállalkozás adószáma
     lm_fill 'A' ls_kata_sum-adoazon.
-*   Name of 04-002
+*   A 04-002 Neve
     lm_fill 'B' ls_mgcim-name.
-*   04-003 Headquarters is a foreign address
-*   Country 04-003 Headquarters
+*   A 04-003 Székhely külföldi cím
+*   A 04-003 Székhely ország
     SELECT SINGLE landx INTO @DATA(l_landx)
                         FROM t005t
                        WHERE spras EQ @sy-langu
@@ -2616,22 +2616,22 @@ FORM get_kata_data  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
 *--2108 #18.
       lm_fill 'D' l_landx.
     ENDIF.
-*   Postal code 04-003 Headquarters
+*   A 04-003 Székhely irányítószám
     lm_fill 'E' ls_mgcim-postcod.
-*   City of 04-003 Headquarters
+*   A 04-003 Székhely város
     lm_fill 'F' ls_mgcim-city1.
-*   The name of the public space 04-004 Szkhely
+*   A 04-004 Székhely közterület neve
     lm_fill 'G' ls_mgcim-street.
-*   The character of the 04-004 Szkhely public space
+*   A 04-004 Székhely közterület jellege
     lm_fill 'H' ls_mgcim-pubchar.
-*   04-004 Headquarters no
+*   A 04-004 Székhely hsz
     lm_fill 'I' ls_mgcim-house.
-*   A 04-005 Basis of the tax to be paid
+*   A 04-005 A fizetendő adó alapja
     lm_fill 'N' ls_kata_sum-lwbas.
-*   A 04-005 Amount of tax
+*   A 04-005 Az adó összege
     lm_fill 'O' ls_kata_sum-lwste.
 *++2108 #10.
-** Remark relevant items
+**   Relevans tételek visszajelölése
 *    UPDATE /ZAK/KATA_SEL SET RELEVANT = 'X'
 *                      WHERE BUKRS   = $W_BEVALL-BUKRS
 *                        AND ADOAZON = LS_KATA_SUM-ADOAZON.
@@ -2642,15 +2642,15 @@ ENDFORM.
 *--2108 #05.
 *++2108 #06.
 *&---------------------------------------------------------------------*
-*& Form CALC_ABEV_ONREV_SZJA_2108
+*&      Form  CALC_ABEV_ONREV_SZJA_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_T_BEVALLB text
-*      -->P_T_ADOAZON text
-*      -->P_$INDEX text
-*      -->P_$LAST_DATE text
+*      -->P_T_BEVALLO  text
+*      -->P_T_BEVALLB  text
+*      -->P_T_ADOAZON  text
+*      -->P_$INDEX  text
+*      -->P_$LAST_DATE  text
 *----------------------------------------------------------------------*
 FORM calc_abev_onrev_szja_2108  TABLES  t_bevallo STRUCTURE /zak/bevallo
                                         t_bevallb STRUCTURE /zak/bevallb
@@ -2672,15 +2672,15 @@ FORM calc_abev_onrev_szja_2108  TABLES  t_bevallo STRUCTURE /zak/bevallo
   DATA   l_kamat LIKE /zak/bevallo-field_n.
   DATA   l_kamat_sum LIKE /zak/bevallo-field_n.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
   RANGES lr_abevaz FOR /zak/bevallo-abevaz.
 
-*  If self-revision
+*  Ha önrevízió
   CHECK $index NE '000'.
 
   SORT t_bevallb BY abevaz.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
   READ TABLE t_bevallo INTO w_/zak/bevallo INDEX 1.
   CHECK sy-subrc EQ 0.
   l_last_index = $index - 1.
@@ -2703,18 +2703,18 @@ FORM calc_abev_onrev_szja_2108  TABLES  t_bevallo STRUCTURE /zak/bevallo
 
   SORT li_last_bevallo BY bukrs btype gjahr monat zindex abevaz.
 
-*  We delete records that are not in the given period
-*  they gave up.
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
+*  adtak fel.
   LOOP AT t_bevallo INTO w_/zak/bevallo
                     WHERE NOT adoazon IS INITIAL.
     READ TABLE t_adoazon WITH KEY adoazon = w_/zak/bevallo-adoazon
                                   BINARY SEARCH.
-*    You don't need the record.
+*    Nem kell a rekord.
     IF sy-subrc NE 0.
       DELETE t_bevallo.
       CONTINUE.
     ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
     IF w_/zak/bevallo-abevaz EQ c_abevaz_m0ae003a.
       MOVE 'H' TO w_/zak/bevallo-field_c.
       MODIFY t_bevallo FROM w_/zak/bevallo TRANSPORTING field_c.
@@ -2725,284 +2725,284 @@ FORM calc_abev_onrev_szja_2108  TABLES  t_bevallo STRUCTURE /zak/bevallo
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0193da   "Modified field
-                                c_abevaz_a0bc0001ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0193da   "Módosított mező
+                                c_abevaz_a0bc0001ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0195DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0195da   "Modified field
-                                c_abevaz_a0fc0074ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0195da   "Módosított mező
+                                c_abevaz_a0fc0074ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0195CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0195ca   "Modified field
+                        USING  c_abevaz_a0id0195ca   "Módosított mező
                                c_abevaz_a0id0195da
                                '0.15'.
 * A0ID0196DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0196da   "Modified field
-                                c_abevaz_a0bc0007ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0196da   "Módosított mező
+                                c_abevaz_a0bc0007ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0197DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0197da   "Modified field
-                                c_abevaz_a0cd0036ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0197da   "Módosított mező
+                                c_abevaz_a0cd0036ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0197CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0197ca   "Modified field
+                        USING  c_abevaz_a0id0197ca   "Módosított mező
                                c_abevaz_a0id0197da
                                '0.015'.
 * A0ID0199DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0199da   "Modified field
-                                c_abevaz_a0bc0014ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0199da   "Módosított mező
+                                c_abevaz_a0bc0014ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0200DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0200da   "Modified field
-                                c_abevaz_a0fc0109ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0200da   "Módosított mező
+                                c_abevaz_a0fc0109ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0200CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0200ca   "Modified field
+                        USING  c_abevaz_a0id0200ca   "Módosított mező
                                c_abevaz_a0id0200da
                                '0.155'.
 * A0ID0203DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0203da   "Modified field
-                                c_abevaz_a0fc0123ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0203da   "Módosított mező
+                                c_abevaz_a0fc0123ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0203CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0203ca   "Modified field
+                        USING  c_abevaz_a0id0203ca   "Módosított mező
                                c_abevaz_a0id0203da
                                '0.10'.
 * A0ID0206DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0206da   "Modified field
-                                c_abevaz_a0gc0150ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0206da   "Módosított mező
+                                c_abevaz_a0gc0150ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0206CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0206ca   "Modified field
+                        USING  c_abevaz_a0id0206ca   "Módosított mező
                                c_abevaz_a0id0206da
                                '0.04'.
 * A0ID0207DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0207da   "Modified field
-                                c_abevaz_a0gc0151ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0207da   "Módosított mező
+                                c_abevaz_a0gc0151ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0207CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0207ca   "Modified field
+                        USING  c_abevaz_a0id0207ca   "Módosított mező
                                c_abevaz_a0id0207da
                                '0.03'.
 * A0ID0208DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0208da   "Modified field
-                                c_abevaz_a0gc0152ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0208da   "Módosított mező
+                                c_abevaz_a0gc0152ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0208CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0208ca   "Modified field
+                        USING  c_abevaz_a0id0208ca   "Módosított mező
                                c_abevaz_a0id0208da
                                '0.015'.
 * A0ID0209DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0209da   "Modified field
-                                c_abevaz_a0gc0154ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0209da   "Módosított mező
+                                c_abevaz_a0gc0154ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0209CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0209ca   "Modified field
+                        USING  c_abevaz_a0id0209ca   "Módosított mező
                                c_abevaz_a0id0209da
                                '0.095'.
 * A0ID0210DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0210da   "Modified field
-                                c_abevaz_a0gc0155ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0210da   "Módosított mező
+                                c_abevaz_a0gc0155ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0210CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0210ca   "Modified field
+                        USING  c_abevaz_a0id0210ca   "Módosított mező
                                c_abevaz_a0id0210da
                                '0.155'.
 * A0ID0211DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0211da   "Modified field
-                                c_abevaz_a0gc0156ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0211da   "Módosított mező
+                                c_abevaz_a0gc0156ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0211CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0211ca   "Modified field
+                        USING  c_abevaz_a0id0211ca   "Módosított mező
                                c_abevaz_a0id0211da
                                '0.095'.
 * A0ID0212DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0212da   "Modified field
-                                c_abevaz_a0gc0157ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0212da   "Módosított mező
+                                c_abevaz_a0gc0157ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0212CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0212ca   "Modified field
+                        USING  c_abevaz_a0id0212ca   "Módosított mező
                                c_abevaz_a0id0212da
                                '0.15'.
 * A0ID0213AA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0213aa   "Modified field
-                                c_abevaz_a0gc0158ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0213aa   "Módosított mező
+                                c_abevaz_a0gc0158ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0214DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0214da   "Modified field
-                                c_abevaz_a0gc0135ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0214da   "Módosított mező
+                                c_abevaz_a0gc0135ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0215DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0215da   "Modified field
-                                c_abevaz_a0gc0136ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0215da   "Módosított mező
+                                c_abevaz_a0gc0136ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0216DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0216da   "Modified field
-                                c_abevaz_a0gc0160ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0216da   "Módosított mező
+                                c_abevaz_a0gc0160ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0216CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0216ca   "Modified field
+                        USING  c_abevaz_a0id0216ca   "Módosított mező
                                c_abevaz_a0id0216da
                                '0.185'.
 * A0ID0217DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0217da   "Modified field
-                                c_abevaz_a0gc0161ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0217da   "Módosított mező
+                                c_abevaz_a0gc0161ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0217CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0217ca   "Modified field
+                        USING  c_abevaz_a0id0217ca   "Módosított mező
                                c_abevaz_a0id0217da
                                '0.185'.
 * A0ID0218DA
   PERFORM get_onrev_calc TABLES t_bevallo
                                 li_last_bevallo
                                 t_bevallb
-                         USING  c_abevaz_a0id0218da   "Modified field
-                                c_abevaz_a0bc0016ca         "Source 1
-                                space                       "Source 2
-                                space                       "Source 3
-                                space                       "Source 4
-                                space.                      "Source 5
+                         USING  c_abevaz_a0id0218da   "Módosított mező
+                                c_abevaz_a0bc0016ca         "Forrás 1
+                                space                       "Forrás 2
+                                space                       "Forrás 3
+                                space                       "Forrás 4
+                                space.                      "Forrás 5
 * A0ID0218CA
   PERFORM get_onrev_div TABLES t_bevallo
                                t_bevallb
-                        USING  c_abevaz_a0id0218ca   "Modified field
+                        USING  c_abevaz_a0id0218ca   "Módosított mező
                                c_abevaz_a0id0218da
                                '0.40'.
 * A0ID0194DA
@@ -3050,13 +3050,13 @@ ENDFORM.
 *--2108 #06.
 *++2108 #08.
 *&---------------------------------------------------------------------*
-*& Form DEL_ESDAT_FIELD_2108
+*&      Form  DEL_ESDAT_FIELD_2108
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_I_/ZAK/BEVALLB text
-*      -->P_C_ABEVAZ_A0AC041A text
+*      -->P_T_BEVALLO  text
+*      -->P_I_/ZAK/BEVALLB  text
+*      -->P_C_ABEVAZ_A0AC041A  text
 *----------------------------------------------------------------------*
 FORM del_esdat_field_2108  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
                                     $t_bevallb STRUCTURE /zak/bevallb
@@ -3064,13 +3064,13 @@ FORM del_esdat_field_2108  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
 
   DATA lw_/zak/bevallalv TYPE /zak/bevallalv.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
   READ TABLE $t_bevallo INTO lw_/zak/bevallalv
   WITH KEY abevaz = $abevaz_jelleg
   BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
   IF sy-subrc EQ 0 AND lw_/zak/bevallalv-field_c = 'H'.
-** ABEV ID value marked in ESDAT_FLAG
+**  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
 *     READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
 *                         WITH KEY  ESDAT_FLAG = 'X'.
 *     IF SY-SUBRC EQ 0.
@@ -3084,7 +3084,7 @@ FORM del_esdat_field_2108  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
 *                               INDEX V_TABIX TRANSPORTING FIELD_C.
 *       ENDIF.
 *     ENDIF.
-*  For correctors, there is no need for 0 flag in the self-check allowance either
+*  Helyesbítőnél nem kell az önellenőrzési pótlékban sem 0 flag
     READ TABLE $t_bevallo INTO lw_/zak/bevallalv
     WITH KEY abevaz = c_abevaz_a0hc0240ca
     BINARY SEARCH.
@@ -3100,15 +3100,15 @@ ENDFORM.
 *--2108 #08.
 *++2108 #19.
 *&---------------------------------------------------------------------*
-*& Form SEL_KATA_000
+*&      Form  SEL_KATA_000
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      -->P_T_BEVALLO text
-*      -->P_W_/ZAK/BEVALL text
-*      -->P_I_GJAHR text
-*      -->P_I_MONAT text
-*      -->P_I_INDEX text
+*      -->P_T_BEVALLO  text
+*      -->P_W_/ZAK/BEVALL  text
+*      -->P_I_GJAHR  text
+*      -->P_I_MONAT  text
+*      -->P_I_INDEX  text
 *----------------------------------------------------------------------*
 FORM sel_kata_000  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
                             $t_onrev_adoazon  STRUCTURE /zak/onr_adoazon
@@ -3121,7 +3121,7 @@ FORM sel_kata_000  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
   DATA ls_bevallo_alv TYPE /zak/bevallalv.
   DATA ls_onrev_adoazon TYPE /zak/onr_adoazon.
 
-*Determination of ABEV identifiers
+*ABEV azonosítók meghatározása
   SELECT abevaz INTO @DATA(l_abevaz)
                  FROM /zak/bevallb
                 WHERE btype     EQ @$w_bevall-btype
@@ -3132,7 +3132,7 @@ FORM sel_kata_000  TABLES   $t_bevallo STRUCTURE /zak/bevallalv
     EXIT.
   ENDIF.
 
-* Reading period 000 because it must be repeated!
+* 000-ás időszak beolvasása mert meg kell ismételni!
   SELECT * INTO TABLE @DATA(li_bevallo)
            FROM /zak/bevallo
           WHERE bukrs EQ @$w_bevall-bukrs

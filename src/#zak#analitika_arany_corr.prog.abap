@@ -113,7 +113,7 @@ START-OF-SELECTION.
 * Data processing
   PERFORM PROCESS_DATA.
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
-    MESSAGE I000 WITH 'Nincs a szelekciónak megfelelő adat!'.
+    MESSAGE I000 WITH 'Nincs a szelekciÃ³nak megfelelÅ adat!'.
 *   & & & &
     EXIT.
   ENDIF.

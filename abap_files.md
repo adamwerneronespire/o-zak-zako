@@ -102,15 +102,15 @@
 - [X] src/#zak#functions.fugr.#zak#lfunctionsf03.abap
 - [X] src/#zak#functions.fugr.#zak#lfunctionsf04.abap
 - [X] src/#zak#functions.fugr.#zak#lfunctionsf05.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionsf14.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf15.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf16.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf17.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf18.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf19.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf20.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionsf21.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf22.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf14.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf15.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf16.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf17.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf18.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf19.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf20.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf21.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf22.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf23.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf24.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf25.abap

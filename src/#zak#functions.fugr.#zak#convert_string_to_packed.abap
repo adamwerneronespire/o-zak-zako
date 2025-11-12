@@ -1,6 +1,6 @@
 FUNCTION /ZAK/CONVERT_STRING_TO_PACKED .
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(I_AMOUNT)
 *"     VALUE(I_CURRENCY_CODE)
@@ -18,11 +18,11 @@ FUNCTION /ZAK/CONVERT_STRING_TO_PACKED .
         W_DEC_POINT_POS LIKE SY-FDPOS VALUE 1.
   DATA: W_CURRDEC       LIKE TCURX-CURRDEC,
         W_DIVIDER       TYPE I.
-* Formátum ellenõrzés
+* Format validation
   W_AMOUNT_C = I_AMOUNT.
-* Tizedes vesszõ és pont lecserélése #-ra
+* Replace decimal comma and dot with #
   TRANSLATE W_AMOUNT_C USING ',#.#'.
-* Van-e benne több tizedes pont?
+* Check for multiple decimal points
   DO.
     SEARCH W_AMOUNT_C FOR '#' STARTING AT W_DEC_POINT_POS.
     IF SY-SUBRC <> 0. EXIT. ENDIF.
@@ -32,18 +32,18 @@ FUNCTION /ZAK/CONVERT_STRING_TO_PACKED .
   IF W_DEC_POINT_CNT > 1.
     RAISE NOT_NUMERIC.
   ENDIF.
-* Ven-e benne nem numerikus karakter
+* Check for non-numeric characters
   IF NOT W_AMOUNT_C CO '0123456789# '.
     RAISE NOT_NUMERIC.
   ENDIF.
-* A # átalakítása tizedes ponttá
+* Convert # to decimal point
   TRANSLATE W_AMOUNT_C USING '#.'.
-* Szóközök kiszedése
+* Remove spaces
   CONDENSE W_AMOUNT_C NO-GAPS.
 *
-* Összeg kiszámolása
+* Calculate amount
   W_AMOUNT_F = W_AMOUNT_C.
-* Osztó meghatározása
+* Determine divisor
   SELECT SINGLE * FROM  TCURX
          WHERE  CURRKEY  = I_CURRENCY_CODE.
   IF SY-SUBRC <> 0.
@@ -54,7 +54,7 @@ FUNCTION /ZAK/CONVERT_STRING_TO_PACKED .
     W_DIVIDER = 10 ** ( 2 - TCURX-CURRDEC ).
   ENDIF.
 
-* Pakolt összeg kiszámítása
+* Calculate packed amount
   IF W_DIVIDER = 1.
     W_AMOUNT_P = W_AMOUNT_F.
   ELSE.

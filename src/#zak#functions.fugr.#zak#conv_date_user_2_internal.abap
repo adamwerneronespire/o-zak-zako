@@ -1,6 +1,6 @@
 FUNCTION /ZAK/CONV_DATE_USER_2_INTERNAL.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_INPUT) TYPE  CHAR50
 *"     REFERENCE(I_USER) TYPE  UNAME
@@ -30,7 +30,7 @@ FUNCTION /ZAK/CONV_DATE_USER_2_INTERNAL.
 
   READ TABLE LT_USERS INDEX 1.
   CLEAR E_DATE.
-* Nap
+* Day
   IF LT_USERS-DATFM(2) EQ 'DD'.
     E_DATE+6(2) = L_INPUT(2).
   ELSEIF LT_USERS-DATFM+3(2) EQ 'DD'.
@@ -38,7 +38,7 @@ FUNCTION /ZAK/CONV_DATE_USER_2_INTERNAL.
   ELSEIF LT_USERS-DATFM+8(2) EQ 'DD'.
     E_DATE+6(2) = L_INPUT+6(2).
   ENDIF.
-* Hónap
+* Month
   IF LT_USERS-DATFM(2) EQ 'MM'.
     E_DATE+4(2) = L_INPUT(2).
   ELSEIF LT_USERS-DATFM+3(2) EQ 'MM'.
@@ -46,7 +46,7 @@ FUNCTION /ZAK/CONV_DATE_USER_2_INTERNAL.
   ELSEIF LT_USERS-DATFM+5(2) EQ 'MM'.
     E_DATE+4(2) = L_INPUT+4(2).
   ENDIF.
-* Év
+* Year
   IF LT_USERS-DATFM(4) EQ 'YYYY'.
     E_DATE(4) = L_INPUT(4).
   ELSEIF LT_USERS-DATFM+6(4) EQ 'YYYY'.

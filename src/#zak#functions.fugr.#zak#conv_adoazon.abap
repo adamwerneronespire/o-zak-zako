@@ -1,6 +1,6 @@
 FUNCTION /ZAK/CONV_ADOAZON.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(INPUT)
 *"  EXPORTING

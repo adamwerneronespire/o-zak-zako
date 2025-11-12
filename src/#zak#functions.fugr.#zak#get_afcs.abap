@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_AFCS.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -16,7 +16,7 @@ FUNCTION /ZAK/GET_AFCS.
         NOT I_BTYPE IS INITIAL AND
         NOT I_DATUM IS INITIAL.
 
-*Csoport vállalat meghatározása
+* Determine group company
 *++S4HANA#01.
 *SELECT SINGLE BUKCS INTO E_BUKCS
 *                    FROM /ZAK/AFACS

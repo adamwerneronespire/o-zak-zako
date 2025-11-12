@@ -1,31 +1,31 @@
 *&---------------------------------------------------------------------*
-*& Program: Tax current account - item entry and transfer summary
+*& Program: Adófolyószámla - tétel rögzítés, átutalási összesítő program
 *&---------------------------------------------------------------------*
 REPORT /ZAK/ADON_BOOK  MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Function description: Tax current account - item entry and transfer summary program
+*& Funkció leírás: Adófolyószámla - tétel rögzítés, átutalási összesítő
+*& program
+*&---------------------------------------------------------------------*
+*& Szerző            : Cserhegyi Tímea - fmc
+*& Létrehozás dátuma : 2006.02.22
+*& Funkc.spec.készítő: ________
+*& SAP modul neve    : ADO
+*& Program  típus    : Riport
+*& SAP verzió        : 46C
+*&---------------------------------------------------------------------*
+*&---------------------------------------------------------------------*
+*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
 *&
-*&---------------------------------------------------------------------*
-*& Author            : Cserhegyi Timea - FMC
-*& Created on        : 2006.02.22
-*& Functional spec by: ________
-*& SAP module        : ADO
-*& Program type      : Report
-*& SAP version       : 46C
-*&---------------------------------------------------------------------*
-*&---------------------------------------------------------------------*
-*& CHANGES (write the OSS note number at the end of each modified line)*
-*&
-*& LOG#     DATE        CHANGED BY           DESCRIPTION        TRANSPORT
+*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2006/05/27   Cserhegyi T.  Replace CL_GUI_FRONTEND_SERVICES
-*&                                   with the classic upload.
-*& 0002   2006/09/22   Balazs G.     Grouping must be driven by BTYPART
-*&                                   instead of BTYPE.
-*& 0003   2007/07/23   Balazs G.     For VAT also consider the AFAO types.
-*&
-*& 0004   2009/01/14   Balazs G.     Map company segments.
-*& 0005   2010/04/20   Balazs G.     Extend the note with the cash-desk flag.
+*& 0001   2006/05/27   Cserhegyi T.  CL_GUI_FRONTEND_SERVICES
+*&                                   cseréje hagyományosra
+*& 0002   2006/09/22   Balázs G.     Az összevonás nem BTYPE szerint
+*&                                   kell hanem BTYPART szerint.
+*& 0003   2007/07/23   Balázs G.     AFA esetén figyelembe kell venni
+*&                                   az AFAO típusokat is.
+*& 0004   2009/01/14   Balázs G.     Vállalat szegmens összerendelés
+*& 0005   2010/04/20   Balázs G.     Közlemény bővítése pénztár megn.
 *&---------------------------------------------------------------------*
 
 *++S4HANA#01.
@@ -37,7 +37,7 @@ CLASS LCL_EVENT_RECEIVER DEFINITION DEFERRED.
 
 
 *&---------------------------------------------------------------------*
-*& TABLES                                                              *
+*& TÁBLÁK                                                              *
 *&---------------------------------------------------------------------*
 
 
@@ -49,30 +49,30 @@ CONSTANTS C_SEGM_SEP VALUE '#'.
 *--0004 2008.01.14 BG
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VARIABLES                                                    *
-*      Internal table      -   (I_xxx...)                              *
-*      FORM parameter      -   ($xxxx...)                              *
+*& PROGRAM VÁLTOZÓK                                                    *
+*      Belső tábla         -   (I_xxx...)                              *
+*      FORM paraméter      -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Parameter variable  -   (P_xxx...)                              *
-*      Selection option    -   (S_xxx...)                              *
+*      Paraméter változó   -   (P_xxx...)                              *
+*      Szelekciós opció    -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Global variables    -   (V_xxx...)                              *
-*      Local variables     -   (L_xxx...)                              *
-*      Work area           -   (W_xxx...)                              *
-*      Types               -   (T_xxx...)                              *
-*      Macros              -   (M_xxx...)                              *
+*      Globális változók   -   (V_xxx...)                              *
+*      Lokális változók    -   (L_xxx...)                              *
+*      Munkaterület        -   (W_xxx...)                              *
+*      Típus               -   (T_xxx...)                              *
+*      Makrók              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Class               -   (CL_xxx...)                             *
-*      Event               -   (E_xxx...)                              *
+*      Osztály             -   (CL_xxx...)                             *
+*      Esemény             -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
 DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/ADONSZA_ALV INITIAL SIZE 0,
       W_OUTTAB TYPE /ZAK/ADONSZA_ALV.
 
-* File data structure
+* Fájl adatszerkezete
 *++ FI 20070118
 *TYPES: T_FILE TYPE /ZAK/ADONSZA_OUT.
 TYPES: T_FILE TYPE /ZAK/ADONSZOUTN.
@@ -81,7 +81,7 @@ DATA: I_FILE TYPE STANDARD TABLE OF T_FILE INITIAL SIZE 0,
       W_FILE TYPE T_FILE.
 
 
-* ALV control variables
+* ALV kezelési változók
 DATA: V_OK_CODE          LIKE SY-UCOMM,
       V_SAVE_OK          LIKE SY-UCOMM,
       V_REPID            LIKE SY-REPID,
@@ -100,10 +100,10 @@ DATA V_MODIFY_INDEX  LIKE SY-TABIX.
 *--BG 2006/06/23
 
 *++BG 2006/07/19
-*Create a range to collect the BTYPE values of the selected documents
+*Range létrehozása, a kijelölt bizonylatok BTYPE gyűjtéséhez
 RANGES R_BTYPE FOR /ZAK/ADONSZA-BTYPE.
 
-*Macro definition for filling the range
+*MAKRO definiálás range feltöltéshez
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -217,7 +217,7 @@ INITIALIZATION.
   V_REPID = SY-REPID.
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Authorization check
+* Jogosultság vizsgálat
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -225,7 +225,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   You are not authorized to run the program!
+*   Önnek nincs jogosultsága a program futtatásához!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -247,7 +247,7 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
   PERFORM READ_DATA.
 *++0004 2008.01.14 BG
-* Assign the company segment
+* Vállalat szegmens összerendelés
   CALL FUNCTION '/ZAK/GET_SEGM_FOR_BUKRS'
     EXPORTING
       I_BUKRS   = P_BUKRS
@@ -270,7 +270,7 @@ END-OF-SELECTION.
 *  <--  p2        text
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
-* Company description
+* Vállalat megnevezése
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -323,7 +323,7 @@ FORM READ_DATA.
     MOVE-CORRESPONDING W_/ZAK/ADONSZA TO W_OUTTAB.
 
 *++0002 BG 2006.09.22
-*   Determine the return type
+*   Bevallás fajta megahtározása
     CALL FUNCTION '/ZAK/GET_BTYPART_FROM_BTYPE'
       EXPORTING
         I_BUKRS       = W_/ZAK/ADONSZA-BUKRS
@@ -340,13 +340,13 @@ FORM READ_DATA.
 *--0002 BG 2006.09.22
 
 *++BG 2006.12.20
-*  For VAT we do not distinguish self-revision:
+*  ÁFA esetén nem különböztetjök meg az önrevíziót:
     IF W_OUTTAB-BTYPART(3) EQ C_BTYPART_AFA.
       W_OUTTAB-BTYPART = C_BTYPART_AFA.
     ENDIF.
 *--BG 2006.12.20
 
-* Tax type description
+* Adónem megnevezése
     SELECT SINGLE ADONEM_TXT INTO W_OUTTAB-ADONEM_TXT FROM  /ZAK/ADONEMT
            WHERE  LANGU   = SY-LANGU
            AND    BUKRS   = W_OUTTAB-BUKRS
@@ -441,11 +441,11 @@ FORM CREATE_AND_INIT_ALV CHANGING PT_OUTTAB   LIKE I_OUTTAB[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Build field catalog
+* Mezőkatalógus összeállítása
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING PT_FIELDCAT.
 
-* Excluding functions
+* Funkciók kizárása
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   PS_LAYOUT-CWIDTH_OPT = 'X'.
@@ -492,7 +492,7 @@ FORM BUILD_FIELDCAT USING    P_DYNNR     LIKE SYST-DYNNR
       CT_FIELDCAT        = PT_FIELDCAT.
 
 *++BG 2006/06/23
-*Set the checkbox on field ZLOCK
+*CHEKBOX beállítása ZLOCK mezőn
   LOOP AT PT_FIELDCAT INTO LW_FIELDCAT.
     IF LW_FIELDCAT-FIELDNAME = 'ZLOCK'.
       LW_FIELDCAT-CHECKBOX  = 'X'.
@@ -516,12 +516,12 @@ MODULE PAI_9000 INPUT.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
 
-* Manual entry
+* Manuális rögzítés
     WHEN '/ZAK/ZAK_MAN'.
       CLEAR /ZAK/ADONSZA.
       CALL SCREEN 9001.
 
-* Generate transfer summary
+* Átutalási összesítő készítő
     WHEN '/ZAK/ZAK_TXT'.
 
       PERFORM PROCESS_SELECTED_LINES.
@@ -537,7 +537,7 @@ MODULE PAI_9000 INPUT.
       SET SCREEN 0.
       LEAVE SCREEN.
 
-* Exit
+* Kilépés
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
 
@@ -577,7 +577,7 @@ MODULE PAI_9001 INPUT.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
 
-* Manual entry
+* Manuális rögzítés
     WHEN 'SAVE'.
       PERFORM GET_NUMBER_NEXT USING '01'
                                     /ZAK/ADONSZA-BUKRS
@@ -618,7 +618,7 @@ MODULE PAI_9001 INPUT.
           LEAVE SCREEN.
         ELSE.
           MESSAGE A188 WITH SY-SUBRC.
-*       Error while saving the item! (/ZAK/ADONSZA error code: &)
+*       Hiba a tétel mentésénél! (/ZAK/ADONSZA hibakód: &)
 *--BG 2006/06/23
         ENDIF.
       ENDIF.
@@ -687,7 +687,7 @@ MODULE EXIT_9001 INPUT.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
 
-* Exit
+* Kilépés
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
 
@@ -997,7 +997,7 @@ FORM PROCESS_SELECTED_LINES.
   DEFINE LM_GET_BTYPE.
     REFRESH LT_BTYPES.
     CLEAR   LT_BTYPES.
-*   Determine the types for the document category
+*   Meghatározzuk a bizonylat fajtához a típusokat
     CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART_M'
       EXPORTING
         I_BUKRS           = &1
@@ -1036,9 +1036,9 @@ FORM PROCESS_SELECTED_LINES.
       ET_INDEX_ROWS = I_ROWS.
 
 *++BG 2006/07/19
-* Collect the BTYPE values that were selected
-* because otherwise only the tax type and the due
-* date would determine the reference, which was not correct
+* Összegyűjtjük azokat a BTYPE-okat amik ki lettek
+* jelölve, mert egyébként csak az adónem és az esedékességi
+* dátum határozta meg a referenciát ami nem volt jó
 *--S4HANA#01.
 *  REFRESH R_BTYPE.
   CLEAR R_BTYPE[].
@@ -1063,7 +1063,7 @@ FORM PROCESS_SELECTED_LINES.
 *     M_DEF R_BTYPE 'I' 'EQ' S_OUT-BTYPE SPACE.
 
       LM_GET_BTYPE S_OUT-BUKRS S_OUT-BTYPART.
-*     For VAT types the self-revision is also required:
+*     ÁFA típus esetén kell az önrevízió is:
       IF S_OUT-BTYPART EQ C_BTYPART_AFA.
         LM_GET_BTYPE S_OUT-BUKRS C_BTYPART_AFAO.
       ENDIF.
@@ -1076,37 +1076,37 @@ FORM PROCESS_SELECTED_LINES.
   ENDLOOP.
 
 *++0002 BG 2006.09.22
-* Sort the RANGE
+* RANGE rendezése
   SORT R_BTYPE.
   DELETE ADJACENT DUPLICATES FROM R_BTYPE.
 *--0002 BG 2006.09.22
 
-* Create file
+* Fájl létrehozása
   DATA: L_COUNTER TYPE I.
 
 
   LOOP AT I_FILE_MAIN INTO W_FILE_MAIN.
 
 
-*++0005 2010.04.20 Balazs Gabor (Ness)
+*++0005 2010.04.20 Balázs Gábor (Ness)
     CLEAR: W_/ZAK/ADONEM, W_/ZAK/ADONEMT.
-*--0005 2010.04.20 Balazs Gabor (Ness)
+*--0005 2010.04.20 Balázs Gábor (Ness)
 
     SELECT SINGLE * INTO W_/ZAK/ADONEM FROM /ZAK/ADONEM
       WHERE BUKRS  = W_FILE_MAIN-BUKRS
         AND ADONEM = W_FILE_MAIN-ADONEM.
-*++0005 2010.04.20 Balazs Gabor (Ness)
-*   Tax type description
+*++0005 2010.04.20 Balázs Gábor (Ness)
+*   Adónem megnevezés
     SELECT SINGLE * INTO W_/ZAK/ADONEMT FROM /ZAK/ADONEMT
       WHERE LANGU  = SY-LANGU
         AND BUKRS  = W_FILE_MAIN-BUKRS
         AND ADONEM = W_FILE_MAIN-ADONEM.
-*--0005 2010.04.20 Balazs Gabor (Ness)
+*--0005 2010.04.20 Balázs Gábor (Ness)
 
     AT NEW ADONEM.
       L_COUNTER = L_COUNTER + 1.
     ENDAT.
-** File
+** Fájl
 *++ FI 20070118
 *    W_FILE-SORSZAM    = L_COUNTER.
 *    W_FILE-ADONEM_TXT = W_FILE_MAIN-ADONEM_TXT.
@@ -1121,14 +1121,14 @@ FORM PROCESS_SELECTED_LINES.
     CLEAR :W_FILE-NAME1.
     IF W_/ZAK/ADONEM-LIFNR IS NOT INITIAL.
 *-- FI 20070212
-*++0005 2010.04.20 Balazs Gabor (Ness)
-*     Populate leading zeros:
+*++0005 2010.04.20 Balázs Gábor (Ness)
+*     Vezető 0 feltöltés:
       CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
         EXPORTING
           INPUT  = W_/ZAK/ADONEM-LIFNR
         IMPORTING
           OUTPUT = W_/ZAK/ADONEM-LIFNR.
-*--0005 2010.04.20 Balazs Gabor (Ness)
+*--0005 2010.04.20 Balázs Gábor (Ness)
 
       SELECT SINGLE NAME1 FROM LFA1
                           INTO W_FILE-NAME1
@@ -1151,12 +1151,12 @@ FORM PROCESS_SELECTED_LINES.
        WHERE BUKRS = W_FILE_MAIN-BUKRS
          AND PARTY = 'YHRASZ'.
 
-*++0005 2010.04.20 Balazs Gabor (Ness)
+*++0005 2010.04.20 Balázs Gábor (Ness)
     CONCATENATE W_FILE-KOZLEMENY
                 W_/ZAK/ADONEMT-ADONEM_TXT
                 INTO W_FILE-KOZLEMENY
                 SEPARATED BY SPACE.
-*--0005 2010.04.20 Balazs Gabor (Ness)
+*--0005 2010.04.20 Balázs Gábor (Ness)
 
 *++ FI 20070118
 *    W_FILE-GJAHR      = W_FILE_MAIN-ESDAT+0(4).
@@ -1165,16 +1165,16 @@ FORM PROCESS_SELECTED_LINES.
 
 
 
-*++0004 2008.01.14 BG "Deleted on: 2009.04.02"
-*                               at the request of Ilona Kis
-**  If a segment exists then append it to the note.
+*++0004 2008.01.14 BG "Törölve: 2009.04.02-án
+*                               Kis Ilona kérésére
+**  Ha van szegemens akkor az kell a közlemény végére
 *    IF NOT V_SEGMENT IS INITIAL.
 *      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
 *        EXPORTING
 *          INPUT  = V_SEGMENT
 *        IMPORTING
 *          OUTPUT = L_SEGM.
-**   If it is a single character long then it still fits:
+**   Ha egy karakter hosszú akkor belefér:
 *      L_LENGTH = STRLEN( L_SEGM ).
 *      IF L_LENGTH EQ 1.
 *        CONCATENATE C_SEGM_SEP L_SEGM C_SEGM_SEP INTO L_SEGM.
@@ -1195,7 +1195,7 @@ FORM PROCESS_SELECTED_LINES.
 
 
 
-* Download succeeded for the given BUKRS/ESDAT combination
+* Letöltés sikerült adott BUKRS/ESDAT kombinációra
       IF L_SUBRC = 0.
 *++S4HANA#01.
 *        CLEAR I_DONE.
@@ -1239,7 +1239,7 @@ FORM PROCESS_SELECTED_LINES.
 
 
 
-* Create new document
+* Új bizonylat létrehozása
       CLEAR W_/ZAK/ADONSZA.
       W_/ZAK/ADONSZA-BUKRS  = W_FILE_MAIN-BUKRS.
       W_/ZAK/ADONSZA-ADONEM = W_FILE_MAIN-ADONEM.
@@ -1289,7 +1289,7 @@ FORM PROCESS_SELECTED_LINES.
   ENDLOOP.
 
 
-* Refresh list
+* Lista aktualizálása
   PERFORM READ_DATA.
   CALL METHOD V_GRID->REFRESH_TABLE_DISPLAY.
 
@@ -1347,7 +1347,7 @@ FORM DOWNLOAD_FILE USING    L_BUKRS TYPE /ZAK/ADONSZAFILE-BUKRS
     SEPARATED BY '_'.
   CONCATENATE L_DEF_FILENAME '.XLS' INTO L_DEF_FILENAME.
 
-* Read data structure
+* Adatszerkezet beolvasása
   CALL FUNCTION 'DD_GET_DD03P_ALL'
     EXPORTING
       LANGU         = SYST-LANGU
@@ -1377,7 +1377,7 @@ FORM DOWNLOAD_FILE USING    L_BUKRS TYPE /ZAK/ADONSZAFILE-BUKRS
 
   ENDIF.
 
-*++ BG 2006.04.20 Path determination
+*++ BG 2006.04.20 Útvonal meghatározás
   MOVE L_DEF_FILENAME TO L_FILENAME.
 
 * ++ 0001 CST 2006.05.27
@@ -1427,7 +1427,7 @@ FORM DOWNLOAD_FILE USING    L_BUKRS TYPE /ZAK/ADONSZAFILE-BUKRS
 
   MOVE L_FILENAME TO L_FILENAME_DOWN.
 
-*++MOL_UPG_UCCHECK Forgo Istvan (NESS) 2016.06.28
+*++MOL_UPG_UCCHECK Forgó István (NESS) 2016.06.28
 *++S4HANA#01.
 **  CALL FUNCTION 'DOWNLOAD'
 **       EXPORTING
@@ -1530,7 +1530,7 @@ FORM DOWNLOAD_FILE USING    L_BUKRS TYPE /ZAK/ADONSZAFILE-BUKRS
       OTHERS     = 1.
   IF SY-SUBRC <> 0 OR L_CANCEL = 'X' OR L_CANCEL = 'x'.
 *--S4HANA#01.
-*--MOL_UPG_UCCHECK Forgo Istvan (NESS) 2016.06.28
+*--MOL_UPG_UCCHECK Forgó István (NESS) 2016.06.28
     L_SUBRC = 4.
   ENDIF.
 
@@ -1558,7 +1558,7 @@ FORM SET_REFERENCES USING    P_BUKRS TYPE /ZAK/ADONSZA-BUKRS
                              P_BELNR_K TYPE /ZAK/ADONSZA-BELNR_K
                              P_GJAHR_K TYPE /ZAK/ADONSZA-GJAHR_K.
 *--S4HANA#01.
-* Save reference
+* Referencia rögzítése
   SELECT * INTO TABLE I_/ZAK/ADONSZA FROM /ZAK/ADONSZA
       WHERE BUKRS  = P_BUKRS
         AND ADONEM = P_ADONEM
@@ -1611,7 +1611,7 @@ MODULE EXIT_9002 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Exit
+* Kilépés
     WHEN 'EXIT'.
 
       PERFORM LEAVE_SCREEN_9002.
@@ -1637,15 +1637,15 @@ FORM LEAVE_SCREEN_9002.
   DATA L_ANSWER TYPE C.
 *--S4HANA#01.
 
-* Determine changes
+* Változás meghatározás
   IF W_/ZAK/ADONSZA_ALV NE /ZAK/ADONSZA_ALV.
-*++MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
 *++S4HANA#01.
 **    CALL FUNCTION 'POPUP_TO_CONFIRM_LOSS_OF_DATA'
 **      EXPORTING
-**        TEXTLINE1     = 'Data was not saved!'
-**        TEXTLINE2     = 'Exit without saving?'
-**        TITLE         = 'Data changed'
+**        TEXTLINE1     = 'Adatok nem lettek elmentve!'
+**        TEXTLINE2     = 'Kilép mentés nélkül?'
+**        TITEL         = 'Adatok változtak'
 **        START_COLUMN  = 25
 **        START_ROW     = 6
 **        DEFAULTOPTION = 'N'
@@ -1653,11 +1653,11 @@ FORM LEAVE_SCREEN_9002.
 **        ANSWER        = L_ANSWER.
 *    DATA L_QUESTION TYPE STRING.
 *
-*    CONCATENATE 'Data was not saved!' 'Exit without saving?' INTO L_QUESTION SEPARATED BY SPACE.
+*    CONCATENATE 'Adatok nem lettek elmentve!' 'Kilép mentés nélkül?' INTO L_QUESTION SEPARATED BY SPACE.
 **
 *    CALL FUNCTION 'POPUP_TO_CONFIRM'
 *      EXPORTING
-*        TITLEBAR              = 'Data changed'
+*        TITLEBAR              = 'Adatok változtak'
 **       DIAGNOSE_OBJECT       = ' '
 *        TEXT_QUESTION         = L_QUESTION
 **       TEXT_BUTTON_1         = 'Ja'(001)
@@ -1725,7 +1725,7 @@ FORM LEAVE_SCREEN_9002.
         L_ANSWER = 'N'.
     ENDCASE.
 *--S4HANA#01.
-*--MOL_UPG_ChangeImp - E09324753 - Balazs Gabor (Ness) - 2016.07.12
+*--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
 
     CHECK L_ANSWER EQ 'J'.
 
@@ -1763,11 +1763,11 @@ FORM MODIFY_SELECTED_LINES.
 
   IF L_LINE IS INITIAL.
     MESSAGE I186.
-*   Please select the row to be processed!
+*   Kérem jelölje ki a feldolgozandó sort!
     EXIT.
   ELSEIF L_LINE NE 1.
     MESSAGE E187.
-*   Please select only one row!
+*   Kérem csak egy sort jelöljön ki!
     EXIT.
   ENDIF.
 
@@ -1779,7 +1779,7 @@ FORM MODIFY_SELECTED_LINES.
 
   MOVE LW_ROWS-INDEX TO V_MODIFY_INDEX.
 
-* Based on this we compare whether processing has happened
+* Ez alapján hasonlitjuk össze, hogy volt e feldolgozás
   MOVE /ZAK/ADONSZA_ALV  TO W_/ZAK/ADONSZA_ALV.
 
   CALL SCREEN 9002 STARTING AT 5  5
@@ -1797,7 +1797,7 @@ MODULE USER_COMMAND_9002 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Exit
+* Kilépés
     WHEN 'EXIT'.
       PERFORM LEAVE_SCREEN_9002.
     WHEN 'SAVE'.
@@ -1817,7 +1817,7 @@ ENDMODULE.                 " USER_COMMAND_9002  INPUT
 *----------------------------------------------------------------------*
 FORM SAVE_DATA_9002.
 
-* Modify and aggregate data
+* Adatok módosítása+összesítése
   READ TABLE I_OUTTAB INTO W_OUTTAB INDEX V_MODIFY_INDEX.
   DELETE I_OUTTAB INDEX V_MODIFY_INDEX.
 

@@ -4,7 +4,7 @@
 REPORT /ZAK/ADON_BOOK  MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
 *& Funkció leírás: Adófolyószámla - tétel rögzítés, átutalási összesítő
-*& program
+*& program2
 *&---------------------------------------------------------------------*
 *& Szerző            : Cserhegyi Tímea - fmc
 *& Létrehozás dátuma : 2006.02.22

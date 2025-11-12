@@ -1,6 +1,6 @@
 FUNCTION /ZAK/AFA_XML_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_FILE) TYPE  STRING
 *"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
@@ -38,7 +38,7 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
 *--2065 #09.
   READ TABLE T_/ZAK/BEVALLALV INTO LW_BEVALLO_ALV INDEX 1.
 
-* Bevallások beállításának beolvasása
+* Read declaration settings
   REFRESH I_/ZAK/BEVALLB.
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
@@ -47,7 +47,7 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
   SORT I_/ZAK/BEVALLB.
 
 
-* Vállalat név meghatározása
+* Determine the company name
 *++1565 #01. 2015.02.09
   IF LW_BEVALLO_ALV-BTYPE EQ C_1565
 *++1665 #01. 2015.02.02
@@ -59,7 +59,7 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
 *++1865 #01. 2018.01.30
   OR LW_BEVALLO_ALV-BTYPE EQ C_1865.
 *--1865 #01. 2018.01.30
-    ABEV = '0A0001E005'. "Vállalat ABEV 1565-ben
+    ABEV = '0A0001E005'. " Company ABEV in 1565
 *++1965 #01.
   ELSEIF LW_BEVALLO_ALV-BTYPE EQ C_1965
 *++2065 #09.
@@ -88,7 +88,7 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
 *--2565 #01.
   ELSE.
 *--1565 #01. 2015.02.09
-    ABEV = '0A0001E008'. "Vállalat ABEV 1365-ben
+    ABEV = '0A0001E008'. " Company ABEV in 1365
 *++1565 #01. 2015.02.09
   ENDIF.
 *--1565 #01. 2015.02.09
@@ -98,24 +98,24 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
                             CHANGING VALUE.
   BUKRSTEXT = VALUE.
 
-* Adószám meghatározása
-  ABEV = '0A0001E001'. "Adószám ABEV 1365-ben
+* Determine the tax number
+  ABEV = '0A0001E001'. " Tax number ABEV in 1365
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   ADOSZAM = VALUE.
 
-* IDŐSZAK -tól
-  ABEV = '0A0001F001'. "Adószám ABEV 1365-ben
+* Period from
+  ABEV = '0A0001F001'. " Tax number ABEV in 1365
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   IDTOL = VALUE.
 
-* IDŐSZAK -ig
-  ABEV = '0A0001F002'. "Adószám ABEV 1365-ben
+* Period to
+  ABEV = '0A0001F002'. " Tax number ABEV in 1365
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
@@ -123,7 +123,7 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
   IDIG = VALUE.
 
 
-* Nyomtatvány azonosítók:
+* Form identifiers:
 *++2065 #09.
 *  CONCATENATE LW_BEVALLO_ALV-BTYPE 'A' INTO NYOMTA.
 *  CONCATENATE LW_BEVALLO_ALV-BTYPE 'M' INTO NYOMTM.
@@ -143,7 +143,7 @@ FUNCTION /ZAK/AFA_XML_DOWNLOAD.
   CONCATENATE L_BTYPE 'M' INTO NYOMTM.
 *--2065 #09.
 
-* Adatok összeállítása BEVALLO_ALV-ből
+* Assemble data from BEVALLO_ALV
   PERFORM FIELDS_FROM_IT_BEVALLO_TO_XX65 TABLES T_/ZAK/BEVALLALV
                                                 I_/ZAK/BEVALLB
                                                 LI_A_XX65

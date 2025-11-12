@@ -1,6 +1,6 @@
 FUNCTION /ZAK/CALC_POTLEK.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_ZINDEX) TYPE  /ZAK/INDEX
@@ -44,15 +44,15 @@ FUNCTION /ZAK/CALC_POTLEK.
                    DATAB <= L_KEZD AND
                    DATAB >= L_VEG.
   ENDIF.
-* létrehozok egy belső táblát, ami csak a dátumokhoz
-* tartozó pótlék százalékokat tartalmazza!
+* Create an internal table that only stores the dates
+* that contains only the surcharge percentages!
   LOOP AT L_T056P INTO LW_T056P.
     PERFORM INVDT_OUTPUT USING LW_T056P-DATAB
                          CHANGING L_KAMAT-DATUM.
     L_KAMAT-ZSOLL = LW_T056P-ZSOLL.
     APPEND L_KAMAT.
   ENDLOOP.
-* pótlék számítása!!
+* Surcharge calculation!!
   L_KEZD_DATUM = I_KAM_KEZD.
   DO .
     IF SY-INDEX EQ 1.
@@ -66,8 +66,8 @@ FUNCTION /ZAK/CALC_POTLEK.
     ELSE.
       READ TABLE L_KAMAT WITH KEY DATUM = L_KEZD_DATUM.
     ENDIF.
-* dátumhoz tartozó kamat meghatározása
-* a kezdő tátumot megelőző
+* Determine the interest belonging to the date
+* before the start date
     IF SY-SUBRC <> 0.
 
     ENDIF.
@@ -79,12 +79,12 @@ FUNCTION /ZAK/CALC_POTLEK.
       EXIT.
     ELSE.
 *---------------------------------------------------------------------*
-* pótlék számítás                                                     *
+* Surcharge calculation *
 * Formel:                                                             *
 *                          kamat                                      *
-*         zins   = --------------------  / 100 * összeg * napszám     *
-*                        év napszám                                   *
-* év napszám  - napszám                                               *
+*         zins   = --------------------  / 100 * amount * number of days     *
+*                        year days *
+* year days  - number of days                                               *
 *            360 - im Bankkalender und im franz. Kalender             *
 *            365 - im gregorianischen Kalender, sofern kein Schaltjahr*
 *            366 - im gregorianischen Kalender, sofern ein Schaltjahr *
@@ -109,7 +109,7 @@ FUNCTION /ZAK/CALC_POTLEK.
   ENDDO.
   E_KAMAT = L_ZINS.
 
-* ++ CST 2006.06.04: 1,5 szörös kamat érték.
+* ++ CST 2006.06.04: 1.5x interest value.
   IF I_ZINDEX >= '002'.
     E_KAMAT = E_KAMAT * '1.5'.
   ENDIF.

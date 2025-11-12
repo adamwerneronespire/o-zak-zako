@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ATV_BOOK_EXCEL.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -13,7 +13,7 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 *"      DATA_MISMATCH
 *"      DOWNLOAD_FAILED
 *"----------------------------------------------------------------------
-*  Új könyvelési Excel készült, és ezért kell az új formátum
+*  A new posting Excel was created, so the new format is required
 *
 *++S4HANA#01.
 *data: begin of i_lines occurs 20.
@@ -39,7 +39,7 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 
   IF NOT T_BEVALLO[] IS INITIAL.
 
-* Adatkonzisztencia ellenőrzése
+* Data consistency check
     LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
       CHECK W_/ZAK/BEVALLO-BUKRS  NE I_BUKRS OR
             W_/ZAK/BEVALLO-BTYPE  NE I_BTYPE OR
@@ -68,14 +68,14 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 
   CHECK V_ERROR = SPACE.
 
-* Nyomtatvány adatok beolvasása
+* Read form data
   PERFORM READ_BEVALLB_m USING i_BTYPE.
 
 
-* T_BEVALLO értelmezése, konvertálása > /ZAK/ATVEZ_SOR,
-*                                  majd /ZAK/ATVEZ_EXCEL formátumba
+* Interpret T_BEVALLO and convert to /ZAK/ATVEZ_SOR,
+*                                  then into /ZAK/ATVEZ_EXCEL format
 *++FI 20070213
-* Az új Excel struktúrát vissza kellett állítani, mert itt (szállító) könyvelésnél a régi kell
+* The new Excel structure had to be reverted because the old one is needed for this (vendor) posting
   PERFORM CONVERT_BEVALLO_NEW TABLES T_BEVALLO
                                  I_EXCEL
                           USING I_BUKRS.
@@ -83,9 +83,9 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 *                                  i_excel
 *                           using i_bukrs.
 *--FI 20070213
-* Excel fájl készítése
+* Create Excel file
 *++FI 20070213
-* Az új Excel struktúrát vissza kellett állítani, mert itt (szállító) könyvelésnél a régi kell
+* The new Excel structure had to be reverted because the old one is needed for this (vendor) posting
   PERFORM DOWNLOAD_FILE TABLES I_EXCEL
                         USING I_BUKRS
                               I_BTYPE

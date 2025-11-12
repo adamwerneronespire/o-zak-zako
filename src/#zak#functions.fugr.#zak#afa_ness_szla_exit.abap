@@ -1,6 +1,6 @@
 FUNCTION /zak/afa_ness_szla_exit.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_START) TYPE  /ZAK/START OPTIONAL
 *"     REFERENCE(I_TEST) TYPE  XFELD OPTIONAL
@@ -9,7 +9,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *"      T_AFA_SZLA STRUCTURE  /ZAK/AFA_SZLA OPTIONAL
 *"      T_RETURN STRUCTURE  BAPIRET2 OPTIONAL
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_START) TYPE  /ZAK/START OPTIONAL
 *"     REFERENCE(I_TEST) TYPE  XFELD OPTIONAL
@@ -20,7 +20,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *"      T_RETURN STRUCTURE  BAPIRET2 OPTIONAL
 *--1665 #08.
 *"----------------------------------------------------------------------
-*Feldolgozott bizonylatok
+*Processed documents
   TYPES: BEGIN OF lt_proc_belnr,
            bukrs TYPE bukrs,
 *++1365 #5.
@@ -36,7 +36,7 @@ FUNCTION /zak/afa_ness_szla_exit.
            gjahr TYPE gjahr,
          END OF lt_awkey_decode.
 *++1465 #05.
-*Rendezett bizonylatok
+*Sorted documents
   TYPES: BEGIN OF lt_analitika_sort,
            bukrs TYPE bukrs,
            gjahr TYPE gjahr,
@@ -102,7 +102,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++1465 #18.
   DATA li_afa_lifknm TYPE STANDARD TABLE OF /zak/afa_lifknm.
 *--1465 #18.
-* Fordított művelet kulcsok meghatározása
+* Determining reverse operation keys
 *++S4HANA#01.*
 *  DATA: BEGIN OF li_fmuv OCCURS 0,
 *          btype  TYPE /zak/btype,
@@ -129,7 +129,7 @@ FUNCTION /zak/afa_ness_szla_exit.
   DATA l_m01valid TYPE /zak/m01valid.
 *--1865 #13.
 *++1365 #19.
-* Nem összesítő releváns ÁFA kódok
+* Non-summary relevant VAT codes
 *++S4HANA#01.
 *  DATA: BEGIN OF li_mwskz_nm OCCURS 0,
 *          btype TYPE /zak/btype,
@@ -168,7 +168,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         l_fwbtr TYPE /zak/fwbtr.
 *--1665 #13.
 *++1765 #11.
-* Nem levonható művelet kulcsok meghatározása
+* Determining non-deductible operation keys
 *++S4HANA#01.
 *  DATA: BEGIN OF li_stazf OCCURS 0,
 *          mwskz TYPE mwskz,
@@ -205,7 +205,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--2265 #10.
 
   DEFINE lm_set_noneed_szamlasze.
-* Ellenőrizzük az aktuális adatokban
+* Check within the current data
     READ TABLE t_afa_szla INTO lw_afa_szla_tmp
              WITH KEY bukrs     = &2-bukrs
                       adoazon   = &2-adoazon
@@ -217,7 +217,7 @@ FUNCTION /zak/afa_ness_szla_exit.
       MODIFY t_afa_szla FROM lw_afa_szla_tmp INDEX l_tabix
                         TRANSPORTING noneed.
 
-*   Adat az adatbázisban van
+*   Data already exists in the database
     ELSE.
       SELECT SINGLE * INTO lw_afa_szla_tmp
                            FROM /zak/afa_szla
@@ -228,8 +228,8 @@ FUNCTION /zak/afa_ness_szla_exit.
       IF sy-subrc EQ 0 AND lw_afa_szla_tmp-noneed IS INITIAL.
         lw_afa_szla_tmp-noneed = 'X'.
 *++1465 #07.
-*Ebben az esetben közvetlenül módosítjuk a rekordot mert egyébként
-*létre jön egy külön package azonosítóval még egyszer!
+*In this case we modify the record directly because otherwise
+*a separate package with its identifier would be created again!
 *        APPEND LW_AFA_SZLA_TMP TO T_AFA_SZLA.
         IF i_test IS INITIAL.
           UPDATE /zak/afa_szla SET noneed     =  lw_afa_szla_tmp-noneed
@@ -272,10 +272,10 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--S4HANA#01.
 *--1665 #08.
 *++1365 #10.
-* Telefon ÁFA
+* Telephone VAT
   SELECT * INTO TABLE li_tel_afa                        "#EC CI_NOWHERE
            FROM /zak/tel_afa.
-* Egyéb művelet kulcsok
+* Other operation keys
   SELECT * INTO TABLE li_afa_ktosl                      "#EC CI_NOWHERE
            FROM /zak/afa_ktosl.
 *--1365 #10.
@@ -300,12 +300,12 @@ FUNCTION /zak/afa_ness_szla_exit.
   SORT li_mwskz_ns.
 *--2265 #10.
 *++2017.05.10
-** Követel könyvelési kódok feltöltése
+** Populate credit posting codes
 *  M_DEF LR_BSCHL 'I' 'EQ' '21' SPACE.
 *  M_DEF LR_BSCHL 'I' 'EQ' '22' SPACE.
 *--2017.05.10
 *++1465 #05.
-* Analitika feldologzása rögzítés dátuma szerint:
+* Process analytics by posting date:
 *++S4HANA#01.
 *  LOOP AT t_analitika INTO lw_analitika WHERE abevaz(5) NE 'DUMMY'.
   LOOP AT t_analitika INTO lw_analitika WHERE abevaz(5) NE 'DUMMY'.
@@ -331,7 +331,7 @@ FUNCTION /zak/afa_ness_szla_exit.
     lw_analitika_sort-belnr = lw_analitika-bseg_belnr.
     lw_analitika_sort-buzei = lw_analitika-bseg_buzei.
 *++1765 2017.11.07
-*   ONYB releváns ABEV azonosítókat nem kell feldolgozni.
+*   ONYB-relevant ABEV identifiers do not need processing.
 *++S4HANA#01.
 *    SELECT SINGLE onybf INTO l_onybf
 *                        FROM /zak/bevallb
@@ -354,7 +354,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++S4HANA#01.
   FREE lt_/zak/bevallb_new[].
 *--S4HANA#01.
-* Meghatározzuk a rögzítés időpontját:
+* Determine the posting timestamp:
 *++S4HANA#01.
   IF NOT li_analitika_sort[] IS INITIAL.
     DATA(lt_lw_analitika_sort_drv) = li_analitika_sort[].
@@ -432,7 +432,7 @@ FUNCTION /zak/afa_ness_szla_exit.
     CLEAR v_inf_count.
 *--2165 #01.
 *++1865 #13.
-* M01 lap érvényességének meghatározása:
+* Determine the validity period of sheet M01:
     IF l_m01valid IS INITIAL.
       SELECT SINGLE m01valid INTO l_m01valid
                       FROM /zak/start
@@ -459,13 +459,13 @@ FUNCTION /zak/afa_ness_szla_exit.
       ADD 1 TO  l_prlog_items.
 *--1765 2017.09.19
 *++1665 #07.
-*     Ha magánszemély CPD szállító vagy vevő nem kell feldolgozni:
+*     Skip processing if the CPD vendor or customer is a private person:
       IF lw_analitika-stcd1 IS INITIAL AND NOT lw_analitika-stcd2 IS INITIAL.
         CONTINUE.
       ENDIF.
 *--1665 #07.
 *--1365 #11.
-*   Feldolgozás ellenőrzése
+*   Processing check
       READ TABLE li_proc_belnr TRANSPORTING NO FIELDS
                  WITH KEY bukrs = lw_analitika-bukrs
 *++1365 #5.
@@ -500,7 +500,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         ORDER BY PRIMARY KEY.
 *--S4HANA#01.
 *++2065 #12.
-*  Halasztott ÁFA kezeléshez b izonylatok beolvasása
+*  Read documents for deferred VAT handling
       IF NOT lw_analitika-h_belnr IS INITIAL.
         SELECT * INTO TABLE li_h_bset
                  FROM bset
@@ -514,7 +514,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *      REFRESH li_stazf.
       REFRESH lt_li_stazf.
 *--S4HANA#01.
-*     Adó nem vonható le összesítés
+*     Summation for non-deductible tax
       LOOP AT li_bset INTO lw_bset.
 *++S4HANA#01.
 *        CLEAR li_stazf.
@@ -543,7 +543,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *      LOOP AT LI_BSET INTO LW_BSET.
       LOOP AT <bset> INTO lw_bset.
 *--2065 #12.
-*  Ha LWBAS üres, akkor használjuk a HWBAS,HWSTE-t.
+*  If LWBAS is empty use HWBAS/HWSTE.
         IF lw_bset-lwbas IS INITIAL.
           MOVE lw_bset-hwbas TO lw_bset-lwbas.
         ENDIF.
@@ -551,7 +551,7 @@ FUNCTION /zak/afa_ness_szla_exit.
           MOVE lw_bset-hwste TO lw_bset-lwste.
         ENDIF.
 **++1765 #11.
-*       Adó nem vonható le ellenőrzés
+*       Non-deductible tax check
 *++S4HANA#01.
 *        READ TABLE li_stazf WITH KEY mwskz = lw_bset-mwskz
         READ TABLE lt_li_stazf INTO ls_li_stazf WITH KEY mwskz = lw_bset-mwskz
@@ -559,19 +559,19 @@ FUNCTION /zak/afa_ness_szla_exit.
                                      ktosl = lw_bset-ktosl
                                      stazf = 'X'.
         IF sy-subrc EQ 0.
-*         Keresünk olyan rekordot ahol a adó nem vonható le üres ua. az adókódnál
+*         Find a record where the non-deductible tax field is empty for the same tax code
 *++S4HANA#01.
 *          READ TABLE li_stazf WITH KEY mwskz = lw_bset-mwskz
           READ TABLE lt_li_stazf INTO ls_li_stazf WITH KEY mwskz = lw_bset-mwskz
 *--S4HANA#01.
                                        stazf = ''.
-*         Van ilyen üríteni kell a xBAS mezők értékét
+*         If it exists, clear the xBAS field values
           IF sy-subrc EQ 0.
             CLEAR: lw_bset-lwbas, lw_bset-fwbas.
           ENDIF.
         ENDIF.
 **--1765 #11.
-*       Előjel forgatás
+*       Reverse the sign
 *++S4HANA#01.
 *        PERFORM change_sign(/zak/afa_sap_seln) USING lw_bset
         PERFORM change_sign IN PROGRAM /zak/afa_sap_seln USING lw_bset
@@ -591,7 +591,7 @@ FUNCTION /zak/afa_ness_szla_exit.
       MOVE l_hwbtr TO lw_analitika-hwbtr.
       MOVE l_fwbtr TO lw_analitika-fwbtr.
 *--1665 #13.
-*   Meghatározzuk a BTYPE-ot:
+*   Determine the BTYPE:
       CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
         EXPORTING
           i_bukrs     = lw_analitika-bukrs
@@ -608,7 +608,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++2165 #06.
 *        MESSAGE E208(/ZAK/ZAK) WITH C_BTYPART_AFA LW_ANALITIKA-GJAHR
 *                               LW_ANALITIKA-MONAT.
-*   Bevallás típus nem hatrározható meg!(Fajta: &, Év: &, Hónap: &)
+*   Return type cannot be determined! (Type: &, Year: &, Month: &)
         PERFORM add_message TABLES t_return
                             USING  '/ZAK/ZAK'
                                    'E'
@@ -623,7 +623,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++1765 #16.
       CONCATENATE lw_analitika-gjahr lw_analitika-monat '01' INTO l_datum.
 *--1765 #16.
-*   Típus alapján összesítő jelentés flag figyelése
+*   Monitor the summary report flag based on the type
 *++S4HANA#01.
 *      SELECT SINGLE * INTO w_/zak/bevall
 *                      FROM /zak/bevall
@@ -646,7 +646,7 @@ FUNCTION /zak/afa_ness_szla_exit.
       ENDIF.
 *--1365 #12.
 *++2017.05.10
-*   Összeg konvertálása
+*   Convert amount
       l_amount_external = w_/zak/bevall-olwste.
       CALL FUNCTION 'BAPI_CURRENCY_CONV_TO_INTERNAL'
         EXPORTING
@@ -658,7 +658,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *         RETURN               =
         .
 *--2017.05.10
-*   Fordított művletkulcs ellenőrzés
+*   Reverse operation key check
 *++1865 #13.
 *      REFRESH LR_FMUV.
 *++S4HANA#01.
@@ -704,7 +704,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         lr_fmuv_m01[] = lw_fmuv-rc3m01[].
 *--1865 #13.
       ENDIF.
-*   Fordított ÁFA ellenőrzés
+*   Reverse VAT check
 *++1865 #13.
 *        IF NOT LR_FMUV IS INITIAL AND LW_ANALITIKA-KTOSL IN LR_FMUV.
       IF NOT lr_fmuv[] IS INITIAL AND lw_analitika-ktosl IN lr_fmuv.
@@ -713,14 +713,14 @@ FUNCTION /zak/afa_ness_szla_exit.
       ENDIF.
 *++1365 #19.
 *++1865 #13.
-*   M01 lap kitöltésének vizsgálata
+*   Check whether sheet M01 must be filled
       IF NOT lr_fmuv_m01[] IS INITIAL AND NOT l_m01valid IS INITIAL AND lw_analitika_sort-cpudt > l_m01valid AND
          lw_analitika-ktosl IN lr_fmuv_m01.
         CONTINUE.
       ENDIF.
 *--1865 #13.
 
-*   Nem releváns ÁFA kódok ellenőrzése
+*   Check non-relevant VAT codes
 *++S4HANA#01.
 *      REFRESH lr_mwskz_nm.
 *      READ TABLE li_mwskz_nm INTO lw_mwskz_nm
@@ -744,7 +744,7 @@ FUNCTION /zak/afa_ness_szla_exit.
       ELSE.
         lr_mwskz_nm[] = lw_mwskz_nm-rc2[].
       ENDIF.
-*    ÁFA kód ellenőrzés
+*    VAT code check
 *++2165 #04.
 *      IF NOT LR_MWSKZ_NM IS INITIAL AND LW_ANALITIKA-MWSKZ IN LR_MWSKZ_NM.
       IF NOT lr_mwskz_nm[] IS INITIAL AND lw_analitika-mwskz IN lr_mwskz_nm.
@@ -753,7 +753,7 @@ FUNCTION /zak/afa_ness_szla_exit.
       ENDIF.
 *--1365 #19.
 *++1665 #14.
-*   Nem releváns bizonylatfajták ellenőrzése
+*   Check non-relevant document types
       READ TABLE li_blart_nm TRANSPORTING NO FIELDS
                         WITH KEY blart = lw_analitika-blart.
       IF sy-subrc NE 0.
@@ -761,13 +761,13 @@ FUNCTION /zak/afa_ness_szla_exit.
                      FROM /zak/afa_blartnm
                     WHERE blart EQ lw_analitika-blart.
       ENDIF.
-*    bizonylatfajta ellenőrzés
+*    Document type check
       IF sy-subrc EQ 0.
         CONTINUE.
       ENDIF.
 *--1665 #14.
 *++1465 #18.
-*   Nem releváns szállító vevő kódok kezelése
+*   Handle non-relevant vendor/customer codes
       IF NOT lw_analitika-lifkun IS INITIAL.
         READ TABLE li_afa_lifknm TRANSPORTING NO FIELDS
                    WITH KEY lifkun = lw_analitika-lifkun
@@ -778,7 +778,7 @@ FUNCTION /zak/afa_ness_szla_exit.
       ENDIF.
 *--1465 #18.
 *++1465 #04.
-*   Előjel kezelés
+*   Sign handling
 *++S4HANA#01.
 *      READ TABLE li_/zak/afa_cust WITH KEY btype = l_btype
 *                                          mwskz = lw_analitika-mwskz
@@ -810,10 +810,10 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--S4HANA#01.
                                       lw_analitika.
 *--1765 #26.
-*   Adatok feltöltése
+*   Populate data
       CLEAR lw_afa_szla.
 
-*   Adószám meghatározás
+*   Determine the tax number
 *++1365 #9.
 *    IF NOT LW_ANALITIKA-STCD3 IS INITIAL.
 *      LW_ANALITIKA-ADOAZON = LW_ANALITIKA-STCD3(8).
@@ -824,7 +824,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         lw_analitika-adoazon = lw_analitika-stcd1(8).
       ENDIF.
 *--1365 #9.
-*   Meghatározzuk a bizonylat típusát
+*   Determine the document type
       SELECT SINGLE awtyp awkey INTO (l_awtyp, l_awkey)
                                 FROM bkpf
                                WHERE bukrs EQ lw_analitika-bukrs
@@ -832,7 +832,7 @@ FUNCTION /zak/afa_ness_szla_exit.
                                  AND gjahr EQ lw_analitika-bseg_gjahr.
       CHECK sy-subrc EQ 0.
 
-*   SD számla
+*   SD invoice
       IF  l_awtyp(1) EQ 'V'.
         CALL FUNCTION '/ZAK/GET_SD_SZAMLASZ'
           EXPORTING
@@ -862,32 +862,32 @@ FUNCTION /zak/afa_ness_szla_exit.
           APPEND LINES OF lt_return TO t_return.
         ENDIF.
 *--1765 #05.
-*       Ha üres akkor korrekció
+*       If empty, perform correction
         IF lw_analitika-szlatip IS INITIAL.
           lw_analitika-szlatip = c_szlatip_k.
         ENDIF.
         lw_analitika-nylapazon = c_nylapazon_m01.
-*     Számla kelt:
+*     Invoice date:
         l_vbeln = l_awkey.
         CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
           EXPORTING
             input  = l_vbeln
           IMPORTING
             output = l_vbeln.
-*       Számlázás: fejadatok szelekció
+*       Billing: select header data
         SELECT SINGLE fkdat INTO lw_analitika-szamlakelt
                             FROM vbrk
                            WHERE vbeln EQ l_vbeln.
-*     Sztornó kezelése
-*     Nem kell a hónabon beüli sztornó tétel
+*     Reversal handling
+*     Intra-month reversal items are not needed
         IF i_start-ostorno IS INITIAL AND NOT l_storno IS INITIAL.
-*       Előzmény bizonylat dátuma
+*       Predecessor document date
           SELECT SINGLE fkdat INTO l_fkdat_e
                               FROM vbrk
                              WHERE vbeln EQ lw_analitika-szamlasze.
           IF lw_analitika-szamlakelt(6) = l_fkdat_e(6).
             lw_afa_szla-noneed = 'X'.
-*         Ebben az esetben az előzmény sem kell
+*         In this case the predecessor is not needed either
             lm_set_noneed_szamlasze lw_afa_szla
                                     lw_analitika.
           ENDIF.
@@ -907,7 +907,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         APPEND lw_analitika TO lw_szamla-analitika.
         APPEND lw_szamla TO li_szamla.
 *--1765 2017.06.13
-*   MM számla
+*   MM invoice
       ELSEIF l_awtyp(2) EQ 'RM'.
 *++1765 2017.06.13
         CLEAR lw_szamla.
@@ -954,19 +954,19 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--1765 #05.
 
 *++1765 2017.06.13
-**     Ha üres akkor korrekció
+**     If empty, perform correction
 *        IF LW_ANALITIKA-SZLATIP IS INITIAL.
 *          LW_ANALITIKA-SZLATIP = C_SZLATIP_K.
 *        ENDIF.
 *        LW_ANALITIKA-NYLAPAZON = C_NYLAPAZON_M02.
-**     Számla kelt:
+**     Invoice date:
 *        LS_AWKDEC = L_AWKEY.
 *        SELECT SINGLE BLDAT INTO LW_ANALITIKA-SZAMLAKELT
 *                            FROM RBKP
 *                           WHERE BELNR EQ LS_AWKDEC-BELNR
 *                             AND GJAHR EQ LS_AWKDEC-GJAHR.
-**     Sztornó kezelése
-**     Nem kell a hónabon beüli sztornó tétel
+**     Reversal handling
+**     Intra-month reversal items are not needed
 *        IF I_START-OSTORNO IS INITIAL AND NOT L_STORNO IS INITIAL
 **++1365 #6.
 *           AND NOT LW_ANALITIKA-SZAMLASZE IS INITIAL.
@@ -975,7 +975,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 **          LS_AWKDEC = LW_ANALITIKA-SZAMLASZE.
 **--1465 #07.
 *
-**        Előzmény bizonylat dátuma
+**        Predecessor document date
 **        SELECT SINGLE FKDAT INTO L_FKDAT_E
 **                            FROM VBRK
 **                           WHERE VBELN EQ LW_ANALITIKA-SZAMLASZE.
@@ -993,7 +993,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *          IF SY-SUBRC EQ 0 AND LW_ANALITIKA-SZAMLAKELT(6) = L_BLDAT_E(6).
 **--1365 #6.
 *            LW_AFA_SZLA-NONEED = 'X'.
-**         Ebben az esetben az előzmény sem kell
+**         In this case the predecessor is not needed either
 *            LM_SET_NONEED_SZAMLASZE LW_AFA_SZLA
 *                                    LW_ANALITIKA.
 *          ENDIF.
@@ -1006,19 +1006,19 @@ FUNCTION /zak/afa_ness_szla_exit.
           lw_afa_szla_s  = lw_afa_szla.
           lw_analitika_s = lw_analitika.
           l_storno       = lw_szamla-storno.
-*     Ha üres akkor korrekció
+*     If empty, perform correction
           IF lw_analitika_s-szlatip IS INITIAL.
             lw_analitika_s-szlatip = c_szlatip_k.
           ENDIF.
           lw_analitika_s-nylapazon = c_nylapazon_m02.
-*     Számla kelt:
+*     Invoice date:
           ls_awkdec = l_awkey.
           SELECT SINGLE bldat INTO lw_analitika_s-szamlakelt
                               FROM rbkp
                              WHERE belnr EQ ls_awkdec-belnr
                                AND gjahr EQ ls_awkdec-gjahr.
-*     Sztornó kezelése
-*     Nem kell a hónabon beüli sztornó tétel
+*     Reversal handling
+*     Intra-month reversal items are not needed
           IF i_start-ostorno IS INITIAL AND NOT l_storno IS INITIAL
              AND NOT lw_analitika_s-szamlasze IS INITIAL.
 *++S4HANA#01.
@@ -1035,7 +1035,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--S4HANA#01.
             IF sy-subrc EQ 0 AND lw_analitika_s-szamlakelt(6) = l_bldat_e(6).
               lw_afa_szla_s-noneed = 'X'.
-*         Ebben az esetben az előzmény sem kell
+*         In this case the predecessor is not needed either
               lm_set_noneed_szamlasze lw_afa_szla_s
                                       lw_analitika_s.
             ENDIF.
@@ -1046,13 +1046,13 @@ FUNCTION /zak/afa_ness_szla_exit.
         ENDLOOP.
 *--1765 2017.06.13
 
-*   FI számla
+*   FI invoice
 *++1365 #9.
 *    ELSEIF L_AWTYP EQ 'BKPF'.
       ELSEIF l_awtyp(4) EQ 'BKPF'.
 *--1365 #9.
 *++1365 #20.
-*     Halasztott ÁFA kezelése
+*     Deferred VAT handling
         IF NOT lw_analitika-zmwskf IS INITIAL.
           lw_afa_szla-szamlasza = lw_analitika-xblnr.
           lw_analitika-szamlasz = lw_analitika-xblnr.
@@ -1096,11 +1096,11 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++1365 #20
         ENDIF.
 *--1365 #20.
-*     Ha üres akkor korrekció
+*     If empty, perform correction
         IF lw_analitika-szlatip IS INITIAL.
           lw_analitika-szlatip = c_szlatip_k.
         ENDIF.
-*     Számlakelt
+*     Invoice date
 *++S4HANA#01.
 *        SELECT SINGLE bldat INTO lw_analitika-szamlakelt
 *                            FROM bkpf
@@ -1138,17 +1138,17 @@ FUNCTION /zak/afa_ness_szla_exit.
           ENDIF.
         ENDIF.
 *--S4HANA#01.
-*     Számla típus
+*     Invoice type
         IF lw_analitika-koart EQ 'K'.
           lw_analitika-nylapazon = c_nylapazon_m02.
         ELSE.
           lw_analitika-nylapazon = c_nylapazon_m01.
         ENDIF.
-*     Sztornó kezelése
-*     Nem kell a hónabon beüli sztornó tétel
+*     Reversal handling
+*     Intra-month reversal items are not needed
         IF i_start-ostorno IS INITIAL AND NOT l_storno IS INITIAL
            AND NOT lw_analitika-szamlasze IS INITIAL.
-*        Előzmény bizonylat dátuma
+*        Predecessor document date
 *++S4HANA#01.
           CLEAR l_bldat_e.
           SELECT SINGLE bldat INTO l_bldat_e
@@ -1157,7 +1157,7 @@ FUNCTION /zak/afa_ness_szla_exit.
                                AND xblnr    EQ lw_analitika-szamlasze.
           IF sy-subrc EQ 0 AND lw_analitika-szamlakelt(6) = l_bldat_e(6).
             lw_afa_szla-noneed = 'X'.
-*         Ebben az esetben az előzmény sem kell
+*         In this case the predecessor is not needed either
             lm_set_noneed_szamlasze lw_afa_szla
                                     lw_analitika.
 *          CLEAR lr_xblnr[].
@@ -1202,7 +1202,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *          ENDIF.
 *          IF lw_analitika-szamlakelt(6) = l_zfbdt_e(6).
 *            lw_afa_szla-noneed = 'X'.
-**         Ebben az esetben az előzmény sem kell
+**         In this case the predecessor is not needed either
 *            lm_set_noneed_szamlasze lw_afa_szla
 *                                    lw_analitika.
 *--S4HANA#01.
@@ -1223,7 +1223,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         APPEND lw_analitika TO lw_szamla-analitika.
         APPEND lw_szamla TO li_szamla.
 *--1765 2017.06.13
-*   Egyéb
+*   Other
       ELSE.
         CONTINUE.
       ENDIF.
@@ -1232,7 +1232,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         READ TABLE lw_szamla-afa_szla  INTO lw_afa_szla  INDEX 1.
         READ TABLE lw_szamla-analitika INTO lw_analitika INDEX 1.
 *--1765 2017.06.13
-*   Ha nem sikerül meghatározni a számla azonosítót
+*   If the invoice identifier cannot be determined
         IF lw_afa_szla-szamlasza IS INITIAL.
 *++1665 #08.
 **++1365 #4.
@@ -1241,7 +1241,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 **--1365 #4.
 *                               LW_ANALITIKA-BSEG_BELNR
 *                               LW_ANALITIKA-BSEG_GJAHR.
-**   Nem lehet közös számla azonosítót meghatározni! (&/&/&)
+**   Cannot determine a common invoice identifier! (&/&/&)
 *++1365 #4.
           PERFORM add_message TABLES t_return
                               USING  '/ZAK/ZAK'
@@ -1253,7 +1253,7 @@ FUNCTION /zak/afa_ness_szla_exit.
                                      ''.
 *--1665 #08.
 *++1365 #23.
-*     Ha nincs közös számlaazonosító, akkor E-s tételként kezeljük
+*     If no common invoice identifier exists, treat it as an E item
           IF NOT lw_analitika-szamlasz IS INITIAL.
             lw_afa_szla-szamlasza = lw_analitika-szamlasz.
             lw_analitika-szlatip  = c_szlatip_e.
@@ -1264,13 +1264,13 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--1365 #4.
         ENDIF.
 *++1365 #10.
-*   Telefon ÁFA kódnál szükséges a bizonylatokból a beállító tábla
-*   szerinti másik adókód összege is!
+*   For the telephone VAT code the setup table values from the documents are required
+*   including the amount of the alternate tax code defined there!
         READ TABLE li_tel_afa INTO lw_tel_afa
              WITH KEY btype = l_btype
                       mwskz = lw_analitika-mwskz.
         IF sy-subrc EQ 0 AND NOT lw_tel_afa-mwskz_t IS INITIAL.
-*   Összeállítjuk a szükséges ÁFA kódokat!
+*   Assemble the required VAT codes!
 *++S4HANA#01.
 *          REFRESH: lr_mwskz, li_bset.
           CLEAR: lr_mwskz[].
@@ -1288,10 +1288,10 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++S4HANA#01.
             ORDER BY PRIMARY KEY.
 *--S4HANA#01.
-*     Van rekord, összesíteni kell:
+*     Record found, aggregation needed:
           IF sy-subrc EQ 0.
             LOOP AT li_bset INTO lw_bset.
-*         Ha LWBAS üres, akkor használjuk a HWBAS,HWSTE-t.
+*         If LWBAS is empty use HWBAS/HWSTE.
               IF lw_bset-lwbas IS INITIAL.
                 MOVE lw_bset-hwbas TO lw_bset-lwbas.
               ENDIF.
@@ -1299,11 +1299,11 @@ FUNCTION /zak/afa_ness_szla_exit.
                 MOVE lw_bset-hwste TO lw_bset-lwste.
               ENDIF.
 *++2265 #10.
-*             Ellenőrizzük, hogy kell e a tételt összesíteni
+*             Check whether the item must be aggregated
               READ TABLE li_mwskz_ns TRANSPORTING NO FIELDS WITH KEY mwskz = lw_bset-mwskz
                                                                      ktosl = lw_bset-ktosl.
               IF sy-subrc  NE 0.
-*               Művelet kulcs nélkül is ellenőrizzük
+*               Also check without an operation key
                 READ TABLE li_mwskz_ns TRANSPORTING NO FIELDS WITH KEY mwskz = lw_bset-mwskz.
                 IF sy-subrc EQ 0.
                   CONTINUE.
@@ -1312,8 +1312,8 @@ FUNCTION /zak/afa_ness_szla_exit.
                 CONTINUE.
               ENDIF.
 *--2265 #10.
-*         Feltöltjük egy üres munkaterületre, hogy tudjuk használni
-*         az előjelkezelés rutint!
+*         Load it into an empty work area so we can
+*         use the sign-handling routine!
               lw_analitika_bset-lwbas = lw_bset-lwbas.
               lw_analitika_bset-lwste = lw_bset-lwste.
 *++S4HANA#01.
@@ -1327,7 +1327,7 @@ FUNCTION /zak/afa_ness_szla_exit.
           ENDIF.
         ENDIF.
 
-*   Egyéb művelet kulcsok kezelése
+*   Handle other operation keys
         READ TABLE li_afa_ktosl INTO lw_afa_ktosl
              WITH KEY btype = l_btype
                       mwskz = lw_analitika-mwskz
@@ -1348,10 +1348,10 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++S4HANA#01.
             ORDER BY PRIMARY KEY.
 *--S4HANA#01.
-*     Van rekord, összesíteni kell:
+*     Record found, aggregation needed:
           IF sy-subrc EQ 0.
             LOOP AT li_bset INTO lw_bset.
-*         Ha LWBAS üres, akkor használjuk a HWBAS,HWSTE-t.
+*         If LWBAS is empty use HWBAS/HWSTE.
               IF lw_bset-lwbas IS INITIAL.
                 MOVE lw_bset-hwbas TO lw_bset-lwbas.
               ENDIF.
@@ -1359,11 +1359,11 @@ FUNCTION /zak/afa_ness_szla_exit.
                 MOVE lw_bset-hwste TO lw_bset-lwste.
               ENDIF.
 *++2265 #10.
-*             Ellenőrizzük, hogy kell e a tételt összesíteni
+*             Check whether the item must be aggregated
               READ TABLE li_mwskz_ns TRANSPORTING NO FIELDS WITH KEY mwskz = lw_bset-mwskz
                                                                      ktosl = lw_bset-ktosl.
               IF sy-subrc  NE 0.
-*               Művelet kulcs nélkül is ellenőrizzük
+*               Also check without an operation key
                 READ TABLE li_mwskz_ns TRANSPORTING NO FIELDS WITH KEY mwskz = lw_bset-mwskz.
                 IF sy-subrc EQ 0.
                   CONTINUE.
@@ -1372,8 +1372,8 @@ FUNCTION /zak/afa_ness_szla_exit.
                 CONTINUE.
               ENDIF.
 *--2265 #10.
-*         Feltöltjük egy üres munkaterületre, hogy tudjuk használni
-*         az előjelkezelés rutint!
+*         Load it into an empty work area so we can
+*         use the sign-handling routine!
               lw_analitika_bset-lwbas = lw_bset-lwbas.
               lw_analitika_bset-lwste = lw_bset-lwste.
 *++S4HANA#01.
@@ -1391,7 +1391,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++1365 #15.
         lw_analitika-szamlasza = lw_afa_szla-szamlasza.
 *--1365 #15.
-*   Számla rekord
+*   Invoice record
 *++2165 #08.
         lw_afa_szla_tmp = lw_afa_szla.
 *--2165 #08.
@@ -1402,11 +1402,11 @@ FUNCTION /zak/afa_ness_szla_exit.
         ENDIF.
         CLEAR lw_afa_szla_tmp.
 *--2165 #08.
-*   Ha a típus E és 2013.01.01 előtti, akkor nem kell a rekord
+*   If the type is E and before 2013.01.01 the record is not needed
         IF lw_afa_szla-szamlakelt < c_omrel_datum.
           lw_afa_szla-noneed = 'X'.
 *++1365 #11.
-**   Meghatározzuk, hogy az eredeti tétel kellett e
+**   Determine whether the original item was required
 *    ELSEIF LW_AFA_SZLA-NONEED IS INITIAL AND
 *           LW_AFA_SZLA-SZLATIP NE C_SZLATIP_E.
 *      READ TABLE T_AFA_SZLA INTO LW_AFA_SZLA_TMP
@@ -1416,7 +1416,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *                    SZLATIP   = C_SZLATIP_E.
 *      IF SY-SUBRC EQ 0 AND NOT LW_AFA_SZLA_TMP-NONEED IS INITIAL.
 *        LW_AFA_SZLA-NONEED = LW_AFA_SZLA_TMP-NONEED.
-**     Keressük az adatbázisban is
+**     Also search the database
 *      ELSEIF SY-SUBRC NE 0.
 *        SELECT SINGLE NONEED INTO LW_AFA_SZLA-NONEED
 *                             FROM /ZAK/AFA_SZLA
@@ -1424,7 +1424,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *                              AND ADOAZON   EQ LW_AFA_SZLA-ADOAZON
 *                              AND SZAMLASZA EQ LW_AFA_SZLA-SZAMLASZA
 *                              AND SZLATIP   EQ C_SZLATIP_E.
-**       Olyan korrekciós, aminek még nincs előzménye, ami nem kell
+**       Corrections without a predecessor that are unnecessary
 *        IF SY-SUBRC NE 0.
 *          LW_AFA_SZLA-NONEED = 'X'.
 *        ENDIF.
@@ -1432,7 +1432,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--1365 #11.
         ENDIF.
         APPEND lw_afa_szla TO  t_afa_szla.
-*   Analitika tétel
+*   Analytics item
         lw_analitika-abevaz = c_abevaz_dummy_r.
 *++1665 #07.
 *     Ha CPD-s akkor kell a NAME1 a FIELD_C-be
@@ -1443,7 +1443,7 @@ FUNCTION /zak/afa_ness_szla_exit.
                              AND gjahr EQ lw_analitika-bseg_gjahr.
 *--1665 #07.
         APPEND lw_analitika TO li_analitika_ins.
-*   Bizonylatszám mentése
+*   Save the document number
         CLEAR lw_proc_belnr.
         lw_proc_belnr-bukrs = lw_analitika-bukrs.
         lw_proc_belnr-belnr = lw_analitika-bseg_belnr.
@@ -1492,7 +1492,7 @@ FUNCTION /zak/afa_ness_szla_exit.
   ENDIF.
 *--1765 2017.09.19
 *++1365 #11.
-* Meghatározzuk, hogy az eredeti tétel kellett e
+* Determine whether the original item was required
   LOOP AT t_afa_szla INTO lw_afa_szla WHERE noneed IS INITIAL
                                         AND szlatip NE c_szlatip_e.
     READ TABLE t_afa_szla INTO lw_afa_szla_tmp
@@ -1502,7 +1502,7 @@ FUNCTION /zak/afa_ness_szla_exit.
                   szlatip   = c_szlatip_e.
     IF sy-subrc EQ 0 AND NOT lw_afa_szla_tmp-noneed IS INITIAL.
       lw_afa_szla-noneed = lw_afa_szla_tmp-noneed.
-*     Keressük az adatbázisban is
+*     Also search the database
     ELSEIF sy-subrc NE 0.
 *++S4HANA#01.
 *      SELECT SINGLE noneed INTO lw_afa_szla-noneed
@@ -1518,7 +1518,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         ORDER BY PRIMARY KEY.
       ENDSELECT.
 *--S4HANA#01.s
-*       Olyan korrekciós, aminek még nincs előzménye, ami nem kell
+*       Corrections without a predecessor that are unnecessary
       IF sy-subrc NE 0.
         lw_afa_szla-noneed = 'X'.
       ENDIF.
@@ -1535,7 +1535,7 @@ FUNCTION /zak/afa_ness_szla_exit.
   DELETE ADJACENT DUPLICATES FROM t_return.
 *--1665 #08.
 *++1965 #02.
-*M01 lap érvényesség vizsgálata
+*Check M01 sheet validity
   LOOP AT t_afa_szla INTO lw_afa_szla WHERE nylapazon EQ c_nylapazon_m01
                                         AND noneed EQ ''.
     l_datum(4)   = lw_afa_szla-gjahr.
@@ -1605,7 +1605,7 @@ FUNCTION /zak/afa_ness_szla_exit.
         lt_bseg_temp1 TYPE TABLE OF bseg.
 *--S4HANA#01.
 *--2165 #02.
-* Előleg kezelés M-es lap tétel generálás
+* Advance handling M-sheet item generation
 *++S4HANA#01.
 *  LOOP AT t_afa_szla ASSIGNING <fs_afa_szla> WHERE noneed EQ ''.
   LOOP AT t_afa_szla ASSIGNING <fs_afa_szla> WHERE noneed EQ ''.
@@ -1627,7 +1627,7 @@ FUNCTION /zak/afa_ness_szla_exit.
   LOOP AT t_afa_szla ASSIGNING <fs_afa_szla> WHERE noneed EQ ''.
 *--S4HANA#01.
     CLEAR l_tcode.
-*   Előleg generálás eljárás kezdő időpontja:
+*   Advance generation procedure start time:
     IF l_elokgen IS INITIAL.
       SELECT SINGLE elokgen INTO l_elokgen
                      FROM /zak/start
@@ -1640,7 +1640,7 @@ FUNCTION /zak/afa_ness_szla_exit.
     l_datum(4)   = <fs_afa_szla>-gjahr.
     l_datum+4(2) = <fs_afa_szla>-monat.
     l_datum+6(2) = '01'.
-*   Dátum figyelés <
+*   Date check <
     IF l_datum < l_elokgen.
       CONTINUE.
     ENDIF.
@@ -1668,7 +1668,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *++S4HANA#01.
   FREE lt_bkpf_new_1[].
 *--S4HANA#01.
-* Előleg sorok feldolgozása
+* Process advance rows
 *++S4HANA#01.
   CALL FUNCTION 'FAGL_GET_LEADING_LEDGER'
     IMPORTING
@@ -1740,7 +1740,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *  REFRESH: li_afa_szla_e.
   CLEAR: li_afa_szla_e[].
 *--S4HANA#01.
-* Referencia rekordok keresése:
+* Searching reference records:
   LOOP AT li_rebzg ASSIGNING <fs_rebzg>.
     READ TABLE t_afa_szla INTO lw_afa_szla WITH KEY bukrs      = <fs_rebzg>-bukrs
                                                     bseg_belnr = <fs_rebzg>-rebzg
@@ -1759,14 +1759,14 @@ FUNCTION /zak/afa_ness_szla_exit.
         ORDER BY PRIMARY KEY.
       ENDSELECT.
 *--S4HANA#01.
-*     HIBA a referencia bizonylat meghatározásánál
+*     ERROR while determining the reference document
       IF sy-subrc NE 0.
         CLEAR ls_assign_belnr.
         READ TABLE li_assign_belnr INTO ls_assign_belnr WITH KEY rebzg = <fs_rebzg>-rebzg
                                                                  rebzj = <fs_rebzg>-rebzj.
 *++2165 #06.
 *        MESSAGE E371(/ZAK/ZAK) WITH <FS_REBZG>-REBZG <FS_REBZG>-REBZJ LS_ASSIGN_BELNR-BELNR LS_ASSIGN_BELNR-GJAHR.
-*       Nem található végszámla (&/&) az előleg elszámoláshoz (&/&).
+*       Final invoice (&/&) not found for advance clearing (&/&).
         PERFORM add_message TABLES t_return
                             USING  '/ZAK/ZAK'
                                    'E'
@@ -1798,11 +1798,11 @@ FUNCTION /zak/afa_ness_szla_exit.
     ENDLOOP.
     <fs_afa_szla>-lwbas = ls_rebzg-lwbas + l_lwbas.
     <fs_afa_szla>-lwste = ls_rebzg-lwste + l_lwste.
-*   Generált rekord flag
+*   Generated record flag
     <fs_afa_szla>-elkgen = 'X'.
-*   Index törlés
+*   Index deletion
     CLEAR <fs_afa_szla>-zindex.
-*   Tétel beállítása
+*   Item setup
     <fs_afa_szla>-bseg_buzei = '999'.
 *++2020.12.16
 *    READ TABLE T_AFA_SZLA INTO LW_AFA_SZLA WITH KEY SZAMLASZ = <FS_AFA_SZLA>-SZAMLASZ
@@ -1823,19 +1823,19 @@ FUNCTION /zak/afa_ness_szla_exit.
 *    ENDIF.
 *--2020.12.16
 *--2165 #02
-*   Ha a végszámla összege 0 akkor nem kell a generált tétel:
+*   If the final invoice amount is 0 the generated item is not needed:
     IF  <fs_afa_szla>-lwste IS INITIAL.
       <fs_afa_szla>-noneed = 'X'.
     ENDIF.
-*   A generált rekord stádiuma 'KÜL'
+*   The generated record stage is 'K�L'
     <fs_afa_szla>-elstad = c_estad_k.
   ENDLOOP.
-* Előleg stádium jelölése végszámla
+* Mark advance stage for final invoice
   REFRESH li_analitika_ins.
   LOOP AT li_afa_szla_e INTO ls_afa_szla_e.
     READ TABLE t_afa_szla ASSIGNING <fs_afa_szla> WITH KEY bseg_belnr    = ls_afa_szla_e-bseg_belnr
                                                            bseg_gjahr    = ls_afa_szla_e-bseg_gjahr.
-*   Csak akkor kell végszámla jelölés, ha KÜL is van
+*   Only flag the final invoice if a 'K�L' entry exists as well
 *++2165 #05.
 *    IF SY-SUBRC EQ 0 AND LS_AFA_SZLA_E-NONEED IS INITIAL.
     IF sy-subrc EQ 0.
@@ -1843,7 +1843,7 @@ FUNCTION /zak/afa_ness_szla_exit.
 *--2165 #05.
       <fs_afa_szla>-elstad = c_estad_v.
     ENDIF.
-*   Analitika bővítése
+*   Extend analytics
     READ TABLE t_analitika INTO lw_analitika WITH KEY abevaz = c_abevaz_dummy_r
                                                       bseg_belnr = ls_afa_szla_e-bseg_belnr
                                                       bseg_gjahr = ls_afa_szla_e-bseg_gjahr.
@@ -1854,11 +1854,11 @@ FUNCTION /zak/afa_ness_szla_exit.
       APPEND lw_analitika TO li_analitika_ins.
     ENDIF.
   ENDLOOP.
-* AFA SZLA bővítése
+* Extend AFA SZLA
   IF NOT li_afa_szla_e[] IS INITIAL.
     APPEND LINES OF li_afa_szla_e TO t_afa_szla.
   ENDIF.
-* ANALITIKA bővítése
+* Extend analytics
   IF NOT li_analitika_ins[] IS INITIAL.
     APPEND LINES OF li_analitika_ins TO t_analitika.
   ENDIF.

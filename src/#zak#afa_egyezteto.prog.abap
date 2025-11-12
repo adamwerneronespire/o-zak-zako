@@ -1,26 +1,26 @@
 *&---------------------------------------------------------------------*
-*& Program: Áfa bevallás főkönyv egyeztető lista
+*& Program: VAT return vs. general ledger reconciliation list
 *----------------------------------------------------------------------*
  REPORT /ZAK/AFA_EGYEZTETO MESSAGE-ID /ZAK/ZAK LINE-SIZE 255
                                          LINE-COUNT 65.
 *&---------------------------------------------------------------------*
-*& Funkció leírás:
+*& Function description:
 *&---------------------------------------------------------------------*
-*& Szerző            : Dénes Károly
-*& Létrehozás dátuma : 2006.02.07
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Denes Karoly
+*& Created on        : 2006.02.07
+*& Functional spec by: ________
+*& SAP module        : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (write the OSS note number at the end of each modified line)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                     LEÍRÁS
+*& LOG#     DATE        CHANGED BY                 DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2008/11/05   Balázs G.     Mező kiegészítések részletezésnél,
-*&                                   mentett lista megvalósítás,
-*&                                   összes kijelölés
+*& 0001   2008/11/05   Balazs G.     Additional fields on the detail screen,
+*&                                   implement saved list,
+*&                                   select all
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
  DATA: L_NAME   TYPE C LENGTH 20,
@@ -34,7 +34,7 @@
 
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
  CONSTANTS:
    C_RLDNR LIKE GLT0-RLDNR VALUE '00',
@@ -46,7 +46,7 @@
 
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                         *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
@@ -60,12 +60,12 @@
           KOART LIKE BSEG-KOART,
           SHKZG LIKE BSEG-SHKZG,
           DMBTR LIKE BSEG-DMBTR,
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
           MWSKZ LIKE BSEG-MWSKZ,
           KTOSL LIKE BSEG-KTOSL,
           LIFNR LIKE BSEG-LIFNR,
           KUNNR LIKE BSEG-KUNNR,
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
         END OF T_BSEG_V.
 
  DATA: W_BSEG_V TYPE T_BSEG_V.
@@ -75,29 +75,29 @@
  DATA: GT_I_BSEG_V TYPE STANDARD TABLE OF T_BSEG_V . "INITIAL SIZE 0.
 *--S4HANA#01.
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constant            -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Type                -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
  DATA: V_COUNTER TYPE I.
 
-* ALV kezelési változók
+* ALV handling variables
  DATA: V_OK_CODE           LIKE SY-UCOMM,
        V_SAVE_OK           LIKE SY-UCOMM,
        V_REPID             LIKE SY-REPID,
@@ -122,7 +122,7 @@
        V_TOOLBAR           TYPE STB_BUTTON,
        V_EVENT_RECEIVER    TYPE REF TO LCL_EVENT_RECEIVER,
        V_EVENT_RECEIVER2   TYPE REF TO LCL_EVENT_RECEIVER.
-* vállalat
+* Company
  DATA: F_BUTXT    LIKE T001-BUTXT,
        V_MON_HIGH LIKE BKPF-MONAT.
 *
@@ -130,7 +130,7 @@
 
  DATA: V_LAST_DATE TYPE DATUM.
 
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
  RANGES R_HKONT FOR /ZAK/EGYEZTETALV-HKONT.
 
  DATA I_/ZAK/EGY_FEJ TYPE STANDARD TABLE OF /ZAK/EGY_FEJ INITIAL SIZE 0.
@@ -155,7 +155,7 @@
  DATA: GS_I_BTYPE TYPE TS_I_BTYPE.
  DATA: GT_I_BTYPE TYPE TT_I_BTYPE.
 *--S4HANA#01.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 *++1865 #14.
  DATA V_WAERS TYPE WAERS.
 *--1865 #14.
@@ -179,11 +179,11 @@
    SELECTION-SCREEN: END OF BLOCK BL03.
  SELECTION-SCREEN: END OF BLOCK BL01.
 
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
  SELECTION-SCREEN: BEGIN OF BLOCK BL02 WITH FRAME TITLE TEXT-T02.
    PARAMETERS P_LOAD AS CHECKBOX.
  SELECTION-SCREEN: END OF BLOCK BL02.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 
 
 *++S4HANA#01.
@@ -262,7 +262,7 @@
 *     CLEAR V_TOOLBAR.
 *     MOVE 3 TO V_TOOLBAR-BUTN_TYPE.
 *     APPEND V_TOOLBAR TO E_OBJECT->MT_TOOLBAR.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
      CLEAR V_TOOLBAR.
      MOVE 'DETAIL' TO V_TOOLBAR-FUNCTION.
      MOVE ICON_DETAIL TO V_TOOLBAR-ICON.
@@ -270,7 +270,7 @@
      MOVE 'Részletek'(TO4) TO V_TOOLBAR-TEXT.
      MOVE 0 TO V_TOOLBAR-BUTN_TYPE.
      APPEND V_TOOLBAR TO E_OBJECT->MT_TOOLBAR.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
    ENDMETHOD.                    "HANDLE_TOOLBAR
 
 
@@ -310,7 +310,7 @@
 *       ........                                                      *
 *---------------------------------------------------------------------*
    METHOD HANDLE_USER_COMMAND.
-* § 3.In event handler method for event USER_COMMAND: Query your
+* Sec. 3. In event handler method for event USER_COMMAND: Query your
 *   function codes defined in step 2 and react accordingly.
 
      DATA: I_ROWS TYPE LVC_T_ROW,
@@ -318,14 +318,14 @@
            S_OUT  TYPE /ZAK/EGYEZTETALV.
 
      CASE E_UCOMM.
-* Tételek megjelenítése!
+* Display items!
        WHEN 'BSEG'.
          CALL SCREEN 9001.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
-* Részletek megjelenítése
+*++0001 2008.11.05 Balazs Gabor (Fmc)
+* Display details
        WHEN 'DETAIL'.
          PERFORM VIEW_DETAIL.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
      ENDCASE.
    ENDMETHOD.                           "handle_user_command
 *---------------------------------------------------------------------*
@@ -353,7 +353,7 @@
    GET PARAMETER ID 'BUK' FIELD P_BUKRS.
    PERFORM FIELD_DESCRIPT.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2165 #03.
 *                   ID 'TCD'  FIELD SY-TCODE.
@@ -364,7 +364,7 @@
    IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
      MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
    ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -385,18 +385,18 @@
 *&---------------------------------------------------------------------*
  START-OF-SELECTION.
 
-*  Jogosultság vizsgálat
+*  Authorization check
    PERFORM AUTHORITY_CHECK USING P_BUKRS
                                  C_BTYPART_AFA
                                  C_ACTVT_01.
 
    PERFORM SET_RANGES .
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
    IF P_LOAD IS INITIAL.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
-*  szelekció
+*--0001 2008.11.05 Balazs Gabor (Fmc)
+*  Selection
      PERFORM SEL_BKPF_BSEG.
-*  ALV listához tábla feltöltése!
+*  Selection
 *++S4HANA#01.
 *     PERFORM FILL_OUTTAB USING I_OUTTAB[]
 *                               I_BSEG_V[]
@@ -407,7 +407,7 @@
                       CHANGING I_OUTTAB[]
                                GT_I_BSEG_V[].
 *--S4HANA#01.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
      PERFORM FILL_ITEM_ALL.
    ELSE.
 *++S4HANA#01.
@@ -418,32 +418,32 @@
        CONCATENATE S_MONAT-LOW S_MONAT-HIGH INTO V_TEXT
                    SEPARATED BY '-'.
        MESSAGE I212 WITH P_BUKRS P_GJAHR V_TEXT.
-*      Nem áll rendelkezésre mentett adat & vállalat & év & hónapra!
+*      No saved data available for company & year & month!
        EXIT.
      ENDIF.
    ENDIF.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 
 
 
-*  Ha háttér futás és nem mentett feldolgozás
-*  adatok mentése.
+*  If background run and no saved processing
+*  Save the data.
    PERFORM SAVE_DATA.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
 
 ************************************************************************
 * ALPROGRAMOK
 ************************************************************************
  END-OF-SELECTION.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
    IF SY-BATCH IS INITIAL.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
      PERFORM ALV_LIST.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
    ELSE.
      PERFORM GRID_DISPLAY.
    ENDIF.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 
 
 *&---------------------------------------------------------------------*
@@ -506,7 +506,7 @@
 *         W_RETURN   LIKE BAPIRET2.
 *--S4HANA#01.
    IF V_CUSTOM_CONTAINER IS INITIAL.
-* az adatszerkezet SAP-os struktúrája a /ZAK/BEVALLD-strname táblából
+* The SAP data structure comes from table /ZAK/BEVALLD-STRNAME
 * kell venni
      PERFORM CREATE_AND_INIT_ALV CHANGING I_OUTTAB[]
                                           I_FIELDCAT
@@ -535,7 +535,7 @@
      WHEN 'BACK'.
        SET SCREEN 0.
        LEAVE SCREEN.
-* Kilépés
+* Exit
      WHEN 'EXIT'.
        PERFORM EXIT_PROGRAM.
 
@@ -560,7 +560,7 @@
    DATA: TAB    TYPE STANDARD TABLE OF TAB_TYPE WITH
                   NON-UNIQUE DEFAULT KEY INITIAL SIZE 10,
          WA_TAB TYPE TAB_TYPE.
-* analitika struktúra megjelenítés
+* Display analytics structure
    IF SY-DYNNR = '9000'.
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN'.
@@ -592,7 +592,7 @@
      EXPORTING
        I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                           CHANGING PT_FIELDCAT.
 
@@ -634,7 +634,7 @@
 
    DATA: S_FCAT TYPE LVC_S_FCAT.
 
-* /ZAK/ANALITIKA tábla
+* /ZAK/ANALITIKA table
    IF P_DYNNR = '9000'.
      CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
        EXPORTING
@@ -645,7 +645,7 @@
 
 
    ELSE.
-* tétel tábla
+* Item table
      CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
        EXPORTING
          I_STRUCTURE_NAME   = '/ZAK/EGYTETELALV'
@@ -737,11 +737,11 @@
      EXPORTING
        I_PARENT = V_CUSTOM_CONTAINER2.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING SY-DYNNR
                           CHANGING PT_FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
    PS_LAYOUT-CWIDTH_OPT = 'X'.
@@ -785,24 +785,24 @@
       NOT E_ROW IS INITIAL.
      SET PF-STATUS 'MAIN9001' .
      SET TITLEBAR 'MAIN9001'.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
 *++S4HANA#01.
 *     REFRESH R_HKONT.
      CLEAR R_HKONT[].
 *--S4HANA#01.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 
-* a kijelölt sorhoz tartozó bizonylatok megjelenítése
+* Display the documents for the selected row
      READ TABLE I_OUTTAB INTO W_OUTTAB INDEX E_ROW.
      IF SY-SUBRC EQ 0.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
        M_DEF R_HKONT 'I' 'EQ' W_OUTTAB-HKONT SPACE.
        PERFORM GET_ITEM_FOR_ALL.
-** bizonylat tábla feltöltése
+** Populate the document table
 *       REFRESH I_ITEM.
 *       LOOP AT I_BSEG_V INTO W_BSEG_V
 *               WHERE HKONT EQ W_OUTTAB-HKONT.
-** előjel
+** Sign
 *         IF W_BSEG_V-SHKZG EQ C_H .
 *           W_BSEG_V-DMBTR = W_BSEG_V-DMBTR * -1 .
 *         ENDIF.
@@ -828,7 +828,7 @@
 *         APPEND W_ITEM TO I_ITEM.
 *         CLEAR W_ITEM.
 *       ENDLOOP.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
      ENDIF.
      CALL SCREEN 9001.
 
@@ -876,7 +876,7 @@
 *--2565 #07.
 * Implement suitable error handling here
              MESSAGE E172(00) WITH 'FB03'.
-*           Nincs jogosultsága & tranzakcióhoz
+*           No authorization for transaction &
            ELSE.
 *--2165 #02.
              CALL TRANSACTION 'FB03' AND SKIP FIRST SCREEN.
@@ -919,7 +919,7 @@
 
    IF NOT S_MONAT-LOW BETWEEN '01' AND '16'.
      MESSAGE E020.
-*   Kérem a periódus értékét 01-16 között adja meg!
+*   Please enter the period between 01 and 16!
    ENDIF.
    IF S_MONAT-HIGH > 16.
      MESSAGE E020.
@@ -967,7 +967,7 @@
 *  <--  p2        text
 *----------------------------------------------------------------------*
  FORM SEL_BKPF_BSEG.
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
 *++S4HANA#01.
 *   DATA LI_BSEG LIKE BSEG OCCURS 0.
 *   DATA LW_BSEG LIKE BSEG.
@@ -980,7 +980,7 @@
      TS_LI_BSEG_SEL .
    DATA LW_BSEG TYPE TS_LI_BSEG_SEL.
 *--S4HANA#01.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 
 *++S4HANA#01.
    DATA: LV_RLDNR1    TYPE RLDNR,
@@ -989,7 +989,7 @@
    DATA LT_FAGL_BSEG_TMP TYPE FAGL_T_BSEG.
 *--S4HANA#01.
 
-* 001 index létezik
+* Index 001 exists
 *++S4HANA#01.
 *   SELECT * INTO TABLE I_BKPF FROM BKPF
    SELECT BUKRS BELNR GJAHR BLDAT BUDAT INTO CORRESPONDING
@@ -999,7 +999,7 @@
                      GJAHR EQ P_GJAHR AND
                      MONAT IN S_MONAT.
    IF NOT I_BKPF[] IS INITIAL.
-* Bizonylatszegmens: könyvelés
+* Document segment: posting
 *++S4HANA#01.
 *     SELECT
      SELECT     "#EC CI_DB_OPERATION_OK[2431747]
@@ -1012,10 +1012,10 @@
             KOART
             SHKZG
             DMBTR
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
             MWSKZ
             KTOSL
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 *++S4HANA#01.
 *            INTO TABLE I_BSEG_V FROM BSEG
             INTO TABLE GT_I_BSEG_V FROM BSEG
@@ -1058,7 +1058,7 @@
      ENDLOOP.
 *--S4HANA#01.
 
-*Bizonylatszegmens: adóadatok 2
+*Document segment: tax data 2
 *++S4HANA#01.
 *     IF NOT I_BSEG_V IS INITIAL .
      IF NOT GT_I_BSEG_V IS INITIAL .
@@ -1077,7 +1077,7 @@
 *                       BUZEI EQ I_BSEG_V-BUZEI.
      ENDIF.
    ENDIF.
-* Forgalmi adatok főkönyvi törzse
+* Totals data from the GL master
    SELECT * INTO TABLE I_GLT0 FROM GLT0
             WHERE RLDNR EQ C_RLDNR AND
                   RRCTY EQ C_RRCTY AND
@@ -1086,14 +1086,14 @@
                   RYEAR EQ P_GJAHR AND
                   RACCT IN S_HKONT.
 
-*++0001 2008.11.05 Balázs Gábor (Fmc)
+*++0001 2008.11.05 Balazs Gabor (Fmc)
 *++S4HANA#01.
 *   SORT I_BSEG_V BY BUKRS BELNR GJAHR.
    SORT GT_I_BSEG_V BY BUKRS BELNR GJAHR.
 *--S4HANA#01.
-* Szállító, vevő kódok meghatározása
+* Determine vendor and customer codes
    LOOP AT I_BKPF INTO W_BKPF.
-*   Ellenőrizzük létezik e a rekord.
+*   Check whether the record exists.
 *++S4HANA#01.
 *     READ TABLE I_BSEG_V TRANSPORTING NO FIELDS
      READ TABLE GT_I_BSEG_V TRANSPORTING NO FIELDS
@@ -1146,7 +1146,7 @@
          ENDIF.
        ENDIF.
 *--S4HANA#01.
-*      Szállító megkeresése
+*      Find vendor
 *++S4HANA#01.
 *       LOOP AT LI_BSEG INTO LW_BSEG WHERE NOT LIFNR IS INITIAL
        LOOP AT LT_LI_BSEG INTO LW_BSEG WHERE NOT LIFNR IS INITIAL
@@ -1164,7 +1164,7 @@
            EXIT.
          ENDLOOP.
        ENDIF.
-*      Vevő megkeresése
+*      Find customer
 *++S4HANA#01.
 *       LOOP AT LI_BSEG INTO LW_BSEG WHERE NOT KUNNR IS INITIAL
        LOOP AT LT_LI_BSEG INTO LW_BSEG WHERE NOT KUNNR IS INITIAL
@@ -1182,7 +1182,7 @@
            EXIT.
          ENDLOOP.
        ENDIF.
-*      Szállító és Vevő visszaírása
+*      Write back vendor and customer
 *++S4HANA#01.
 *       MODIFY I_BSEG_V FROM W_BSEG_V TRANSPORTING LIFNR KUNNR
        MODIFY GT_I_BSEG_V FROM W_BSEG_V TRANSPORTING LIFNR KUNNR
@@ -1192,7 +1192,7 @@
                        AND GJAHR = W_BKPF-GJAHR.
      ENDIF.
    ENDLOOP.
-*--0001 2008.11.05 Balázs Gábor (Fmc)
+*--0001 2008.11.05 Balazs Gabor (Fmc)
 
 
  ENDFORM.                    " SEL_BKPF_BSEG
@@ -1223,7 +1223,7 @@
    SORT $BSEG_V BY HKONT.
 
    LOOP AT $BSEG_V INTO W_BSEG_V.
-* előjel
+* Sign
      AT END OF HKONT.
        L_UPDATE = 'X'.
      ENDAT.
@@ -1239,23 +1239,23 @@
 *       IF W_/ZAK/BSET-BUPER IN R_BUPER.
        IF W_/ZAK/BSET-BUPER IN GT_BUPER.
 *--S4HANA#01.
-* normál
+* Normal
          W_OUTTAB-/ZAK/NORMAL = W_OUTTAB-/ZAK/NORMAL + W_BSEG_V-DMBTR.
 *++S4HANA#01.
 *       ELSEIF W_/ZAK/BSET-BUPER < R_BUPER-LOW.
        ELSEIF W_/ZAK/BSET-BUPER < GS_BUPER-LOW.
 *--S4HANA#01.
-* önrevízió
+* Self-revision
          W_OUTTAB-/ZAK/ONREV = W_OUTTAB-/ZAK/ONREV + W_BSEG_V-DMBTR.
 *++S4HANA#01.
 *       ELSEIF W_/ZAK/BSET-BUPER > R_BUPER-LOW.
        ELSEIF W_/ZAK/BSET-BUPER > GS_BUPER-LOW.
 *--S4HANA#01.
-* bevallásban nem szereplő
+* Not part of the return
          W_OUTTAB-/ZAK/JOVO = W_OUTTAB-/ZAK/JOVO + W_BSEG_V-DMBTR.
        ENDIF.
      ELSE.
-* bevallásban nem szereplő
+* Not part of the return
        W_OUTTAB-/ZAK/JOVO = W_OUTTAB-/ZAK/JOVO + W_BSEG_V-DMBTR.
      ENDIF.
      W_OUTTAB-/ZAK/SZAMIT = W_OUTTAB-/ZAK/SZAMIT + W_BSEG_V-DMBTR.
@@ -1265,7 +1265,7 @@
 *--1865 #14.
      W_OUTTAB-HKONT      = W_BSEG_V-HKONT.
      IF L_UPDATE = 'X'.
-* havi főkönyvi egyenleg a GLT0 táblából
+* Monthly G/L balance from table GLT0
        LOOP AT I_GLT0 INTO W_GLTO
             WHERE RYEAR EQ P_GJAHR AND
                   RACCT EQ W_BSEG_V-HKONT.
@@ -1349,7 +1349,7 @@
 
    IF L_LINE IS INITIAL.
      MESSAGE I186.
-*    Kérem jelölje ki a feldolgozandó sort!
+*    Please select the row to process!
      EXIT.
    ENDIF.
 
@@ -1357,7 +1357,7 @@
 *   REFRESH: R_HKONT.
    CLEAR: R_HKONT[].
 *--S4HANA#01.
-*  Kijelölt sorok feldolgozása
+*  Process the selected rows
    LOOP AT LI_ROWS INTO LW_ROWS.
      READ TABLE I_OUTTAB INTO W_OUTTAB INDEX LW_ROWS-INDEX.
      IF SY-SUBRC EQ 0.
@@ -1388,13 +1388,13 @@
    SORT I_/ZAK/BSET BY BUKRS BELNR.
 
    LOOP AT I_OUTTAB INTO W_OUTTAB.
-*    bizonylat tábla feltöltése
+*    Populate the document table
 *++S4HANA#01.
 *     LOOP AT I_BSEG_V INTO W_BSEG_V
      LOOP AT GT_I_BSEG_V INTO W_BSEG_V
 *--S4HANA#01.
            WHERE HKONT EQ W_OUTTAB-HKONT.
-*      előjel
+*      Sign
        IF W_BSEG_V-SHKZG EQ C_H .
          W_BSEG_V-DMBTR = W_BSEG_V-DMBTR * -1 .
        ENDIF.
@@ -1420,7 +1420,7 @@
        IF SY-SUBRC EQ 0.
          W_ITEM-BUPER = W_/ZAK/BSET-BUPER.
        ENDIF.
-*      Adódátum meghatározása
+*      Determine the tax date
 *       SELECT SINGLE ADODAT INTO W_ITEM-ADODAT
 *                            FROM ZMT_AD001_BKPF
 *                           WHERE BUKRS = P_BUKRS
@@ -1429,13 +1429,13 @@
        IF SY-SUBRC NE 0 OR W_ITEM-ADODAT IS INITIAL.
          MOVE W_ITEM-BLDAT TO W_ITEM-ADODAT.
        ENDIF.
-*      ÁFA kód
+*      VAT code
        MOVE W_BSEG_V-MWSKZ TO W_ITEM-MWSKZ.
-*      Szállító kód
+*      Vendor code
        MOVE W_BSEG_V-LIFNR TO W_ITEM-LIFNR.
-*      Vevő kód
+*      Customer code
        MOVE W_BSEG_V-KUNNR TO W_ITEM-KUNNR.
-*      ABEV kód meghatározása ha van időszak
+*      Determine the ABEV code if a period exists
 *++S4HANA#01.
 *       PERFORM GET_ABEVAZ USING  I_BTYPE
 *                                 W_BSEG_V
@@ -1509,7 +1509,7 @@
    DATA: LT_LI_ABEVS TYPE TT_LI_ABEVS.
 *--S4HANA#01.
 
-*  Ha van időszak
+*  If a period is provided
    CHECK NOT $W_ITEM-BUPER IS INITIAL.
 
 *++S4HANA#01.
@@ -1528,7 +1528,7 @@
                                  MONAT = L_MONAT
                                  BINARY SEARCH.
    IF SY-SUBRC NE 0.
-*  BTYPE meghatározása
+*  Determine BTYPE
      CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
        EXPORTING
          I_BUKRS     = $BUKRS
@@ -1562,7 +1562,7 @@
 *--S4HANA#01.
    ENDIF.
    IF SY-SUBRC EQ 0.
-*    ÁFA CUST olvasása KTOSL alapján
+*    Read VAT customer settings based on KTOSL
      SELECT  /ZAK/AFA_CUST~ABEVAZ
              /ZAK/BEVALLB~FOSOR
              /ZAK/BEVALLBT~ABEVTEXT
@@ -1582,7 +1582,7 @@
                AND /ZAK/AFA_CUST~KTOSL EQ $W_BSEG_V-KTOSL
                AND /ZAK/AFA_CUST~ATYPE EQ C_ATYPE_B.
      IF SY-SUBRC NE 0.
-*    ÁFA CUST olvasása KTOSL nélkül
+*    Read VAT customer settings without KTOSL
        SELECT  /ZAK/AFA_CUST~ABEVAZ
                /ZAK/BEVALLB~FOSOR
                /ZAK/BEVALLBT~ABEVTEXT
@@ -1625,7 +1625,7 @@
 *----------------------------------------------------------------------*
  FORM GRID_DISPLAY .
 
-* Mezőkatalógus összeállítása
+* Build field catalog
    PERFORM BUILD_FIELDCAT USING    '9000'
                           CHANGING I_FIELDCAT.
 
@@ -1697,11 +1697,11 @@
 *----------------------------------------------------------------------*
  FORM TOP_OF_PAGE .
 
-* Fejléc adatok
+* Header data
    DATA: LI_LIST_TOP_OF_PAGE TYPE SLIS_T_LISTHEADER.
    DATA: L_LINE TYPE SLIS_LISTHEADER.
 
-* Fejléc megadása
+* Provide header
    CLEAR L_LINE.
    L_LINE-TYP  = 'H'.
    WRITE 'ÁFA egyeztető lista'(021) TO L_LINE-INFO CENTERED.

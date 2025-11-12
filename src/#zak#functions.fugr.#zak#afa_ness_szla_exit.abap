@@ -1827,7 +1827,7 @@ FUNCTION /zak/afa_ness_szla_exit.
     IF  <fs_afa_szla>-lwste IS INITIAL.
       <fs_afa_szla>-noneed = 'X'.
     ENDIF.
-*   The generated record stage is 'KÃœL'
+*   The generated record stage is 'KÜL'
     <fs_afa_szla>-elstad = c_estad_k.
   ENDLOOP.
 * Mark advance stage for final invoice
@@ -1835,7 +1835,7 @@ FUNCTION /zak/afa_ness_szla_exit.
   LOOP AT li_afa_szla_e INTO ls_afa_szla_e.
     READ TABLE t_afa_szla ASSIGNING <fs_afa_szla> WITH KEY bseg_belnr    = ls_afa_szla_e-bseg_belnr
                                                            bseg_gjahr    = ls_afa_szla_e-bseg_gjahr.
-*   Only flag the final invoice if a 'KÃœL' entry exists as well
+*   Only flag the final invoice if a 'KÜL' entry exists as well
 *++2165 #05.
 *    IF SY-SUBRC EQ 0 AND LS_AFA_SZLA_E-NONEED IS INITIAL.
     IF sy-subrc EQ 0.

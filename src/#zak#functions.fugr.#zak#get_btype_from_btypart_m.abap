@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_BTYPE_FROM_BTYPART_M.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPART) TYPE  /ZAK/BTYPART
@@ -17,21 +17,21 @@ FUNCTION /ZAK/GET_BTYPE_FROM_BTYPART_M.
 
   DATA V_DATUM LIKE SY-DATUM.
 
-* Hónap ellenőrzése
+* Validate month
   IF NOT I_MONAT IS INITIAL.
     IF NOT I_MONAT BETWEEN '01' AND '12'.
       MESSAGE E110(/ZAK/ZAK) WITH I_MONAT RAISING ERROR_MONAT.
-*   Hónap megadás hiba! (&)
+*   Invalid month input! (&)
     ENDIF.
 
 
-*Időpont meghatározása
+* Determine date values
     V_DATUM(4)   = I_GJAHR.
     V_DATUM+4(2) = I_MONAT.
     V_DATUM+6(2) = 01.
 
 
-* Hónap utolsó napjának meghatározása
+* Determine last day of month
     CALL FUNCTION 'LAST_DAY_OF_MONTHS'  "#EC CI_USAGE_OK[2296016]
          EXPORTING
               DAY_IN            = V_DATUM
@@ -52,10 +52,10 @@ FUNCTION /ZAK/GET_BTYPE_FROM_BTYPART_M.
     ENDSELECT.
     IF SY-SUBRC NE 0.
       MESSAGE E114(/ZAK/ZAK) RAISING ERROR_BTYPE.
-*   Bevallás típus meghatározás hiba!
+*   Declaration type determination error!
     ENDIF.
 
-* Nincs év-hónap megadva
+* No year-month provided
   ELSE.
 
     SELECT BTYPE INTO TABLE T_BTYPES

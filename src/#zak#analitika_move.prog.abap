@@ -315,7 +315,7 @@ FORM VERIFY_TARGET .
   IF P_BTYPE NE P_CBTYPE.
 *++2265 #09.
 *    MESSAGE E000 WITH 'Tax return type does not match!'.
-    MESSAGE W000 WITH 'BevallÃ¡s tÃ­pus nem egyezik meg!'.
+    MESSAGE W000 WITH 'Bevallás típus nem egyezik meg!'.
 *--2265 #09
 *   & & & &
   ENDIF.
@@ -328,12 +328,12 @@ FORM VERIFY_TARGET .
            AND MONAT EQ P_CMONAT
            AND ZINDEX EQ P_CINDEX.
   IF SY-SUBRC NE 0.
-    MESSAGE E000 WITH 'CÃ©l idÅszak nincs megnyitva!'.
+    MESSAGE E000 WITH 'Cél időszak nincs megnyitva!'.
 *   & & & &
   ENDIF.
 
   IF L_FLAG CA 'ZX'.
-    MESSAGE E000 WITH 'CÃ©l idÅszak lezÃ¡rva!'.
+    MESSAGE E000 WITH 'Cél időszak lezárva!'.
 *   & & & &
   ENDIF.
 

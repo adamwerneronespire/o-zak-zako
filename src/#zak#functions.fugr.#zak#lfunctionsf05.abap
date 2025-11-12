@@ -27,13 +27,13 @@ FORM PROC_VBFA_TAB  TABLES   $I_VBFA_TAB STRUCTURE VBFA
   DATA LW_SZLA_GROUP TYPE  T_SZLA_GROUP.
   LOOP AT $I_VBFA_TAB INTO LW_VBFA_TAB WHERE VBELV EQ $VBELN
                                          AND POSNV EQ $POSNR.
-*   Ha elértük a főkönyvi könyvelés bizonylatot, akkor kilépés
+*   Exit when the general ledger posting document is reached
     IF  LW_VBFA_TAB-VBTYP_N IN $R_VBTYP_F.
       CONTINUE.
     ENDIF.
     IF  LW_VBFA_TAB-VBTYP_N IN $R_VBTYP.
       CLEAR LW_SZLA_GROUP.
-*     Közös azonosító váltás ha a típus M-Normál számla
+*     Switch shared identifier if the type is M-normal invoice
       IF LW_VBFA_TAB-VBTYP_N IN $R_VBTYP_M.
         $SZAMLASZA = LW_VBFA_TAB-VBELN.
         LW_SZLA_GROUP-SZLATIP = C_SZLATIP_E.
@@ -43,14 +43,14 @@ FORM PROC_VBFA_TAB  TABLES   $I_VBFA_TAB STRUCTURE VBFA
 *     POSNN     TYPE POSNR_NACH,
 *     VBTYP     TYPE VBTYP_N,
 *     SZLATIP   TYPE /ZAK/SZLATIP,
-*     Feltöltjük a csoport adatokat
+*     Populate the group data
       LW_SZLA_GROUP-SZAMLASZA = $SZAMLASZA.
       LW_SZLA_GROUP-SZAMLASZ  = LW_VBFA_TAB-VBELN.
       LW_SZLA_GROUP-POSNN     = LW_VBFA_TAB-POSNN.
       LW_SZLA_GROUP-VBTYP     = LW_VBFA_TAB-VBTYP_N.
       APPEND LW_SZLA_GROUP TO $I_GROUP.
     ENDIF.
-*   További tételek feldolgozása
+*   Process remaining items
     PERFORM PROC_VBFA_TAB TABLES $I_VBFA_TAB
                                  $I_GROUP
                                  $R_VBTYP
@@ -85,16 +85,16 @@ FORM GET_SZAMLASZE  TABLES   $I_VBFA_TAB STRUCTURE VBFA
   LOOP AT $I_VBFA_TAB INTO LW_VBFA_TAB
                      WHERE VBELN EQ $VBELN
                        AND POSNN EQ $POSNR.
-*  Ahol nem önmaga
+*  Where it is not itself
     CONCATENATE LW_VBFA_TAB-VBELV
                 LW_VBFA_TAB-POSNV INTO L_VBELV_POSNV.
     IF L_VBELV_POSNV EQ L_VBELN_POSNN.
       CONTINUE.
     ENDIF.
-*   Ha számla típus
+*   If the type is invoice
     IF LW_VBFA_TAB-VBTYP_V IN $R_VBTYP.
       $SZAMLASZE = LW_VBFA_TAB-VBELV.
-*   Ha nem számla típus tovább keressük
+*   If the type is not invoice, keep searching
     ELSE.
       PERFORM GET_SZAMLASZE TABLES $I_VBFA_TAB
                                    $R_VBTYP
@@ -129,7 +129,7 @@ FORM GET_PREV_BELNR_XBLNR  TABLES   $T_RETURN STRUCTURE BAPIRET2
   ADD 1 TO V_INF_COUNT.
   IF V_INF_COUNT > C_INF_COUNT.
     MESSAGE E370(/ZAK/ZAK) WITH $BKPF-BUKRS $BKPF-GJAHR $BKPF-BELNR.
-*   Egymásra mutató referenciák (biz: &/&/&)! Futás megs/zak/zakítva!
+*   Cross-references detected (doc: &/&/&)! Run aborted!
   ENDIF.
 *--2065 #04.
 
@@ -137,7 +137,7 @@ FORM GET_PREV_BELNR_XBLNR  TABLES   $T_RETURN STRUCTURE BAPIRET2
 *  DATA LS_BKPF TYPE BKPF.
 *  DATA L_ZUONR TYPE DZUONR.
 *
-** Meghatározzuk a szállító láb hozzárendelési számát
+** Determine the vendor leg assignment number
 *  CLEAR L_ZUONR.
 *  SELECT SINGLE ZUONR INTO L_ZUONR
 *                  FROM BSEG
@@ -146,7 +146,7 @@ FORM GET_PREV_BELNR_XBLNR  TABLES   $T_RETURN STRUCTURE BAPIRET2
 *                   AND BELNR EQ $BKPF-BELNR
 *                   AND LIFNR NE ''.
 *
-** Ha megegyezik, akkor nem kell tovább keresni
+** If it matches, no need to continue searching
 **  IF SY-SUBRC EQ 0 AND L_ZUONR EQ $BKPF-XBLNR .
 **++1465 #16.
 **  IF SY-SUBRC EQ 0 AND ( L_ZUONR EQ $BKPF-XBLNR
@@ -165,7 +165,7 @@ FORM GET_PREV_BELNR_XBLNR  TABLES   $T_RETURN STRUCTURE BAPIRET2
 *      IF $SZAMLASZE IS INITIAL.
 *        $SZAMLASZE = LS_BKPF-XBLNR.
 *      ENDIF.
-**     Előző bizonylatok keresése
+**     Search previous documents
 **++1765 #31.
 **  PERFORM GET_PREV_BELNR_XBLNR USING LS_BKPF
 *  PERFORM GET_PREV_BELNR_XBLNR TABLES $T_RETURN

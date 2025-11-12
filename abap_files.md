@@ -113,7 +113,7 @@
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf22.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf23.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf24.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf25.abap
+- [x] src/#zak#functions.fugr.#zak#lfunctionsf25.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionstop.abap
 - [ ] src/#zak#functions.fugr.#zak#main_exit.abap
 - [ ] src/#zak#functions.fugr.#zak#main_exit_new.abap

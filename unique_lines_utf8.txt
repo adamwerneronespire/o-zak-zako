@@ -1,0 +1,294 @@
+                      USING  'M0BD0316DA'.           "mező0
+                      USING  'M0CC0317BA'.          "mező0
+                      USING  'M0CC0318BA'.          "mező0
+                      USING  'M0CC0322BA'.          "mező0
+                      USING  'M0CC0323BA'            "mező0
+                      USING  'M0CC0324BA'.          "mező0
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
+*   ezt a sort kell módosítani!
+*   Speciális számítások
+* A 04-101 A tartósan állástkereső fogl fogl 12,5% szocho (9-es kód: 679.|
+*       Feltétel feltöltése
+*A 04-102 A GYED,GYES,GYET  fogl 12,5% szocho (10-es kód: 67|
+*A 04-103 A szabad váll zónában működő váll 12,5% szocho (11|
+*A 04-10 a s/zak/zakképzettséget nem igénylő
+*A 04-105 a mezőgazdasági munkakörben fogl
+*A 04-106 A munkaerőpiacra lépők
+*A 04-107 a 3 vagy több gyermeket nevelő nők után
+*A 04-108 a közfoglalkoztatás keretében
+*A 04-108 a nemzeti felsőoktatás doktori
+*A 04-120 A magánszemélyt terelő nyugdíjjárulék (563,604,611|
+*A 04-121-c A megánsz terh munkanélk,állásker nyugdíj (605.s|
+*A 04-122-c A magánsz terh GYED, S, T után fiz nyugdíj(A 604|
+*  Önellenőrzés meghatározásához
+* Speciális abev mezők
+*      időszak-tól első nap
+* Éves
+* Negyedéves
+*      időszak-ig utolsó nap
+*      Adózók száma = Adószámok
+        LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ EQ 'M0AC007A'. "KATA-s adóaznonsítók nem kellenek
+*      Helyesbítés, Önellenőrzés
+*        Csak önellenőrzésénél
+*          Ebben a tartományban kell keresni numerikus értéket
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
+*          Van érték:
+*          Helyesbítő
+*      Ismételt önellenőrzés
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
+**  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
+*                         USING  C_ABEVAZ_M0BC0382CA         "mező1
+*                                C_ABEVAZ_M0BC0382BA         "mező2
+*                                C_ABEVAZ_M0BC0382DA.        "mező3
+**  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
+*                              "0-flag beállítás
+*                                     C_ABEVAZ_A0IC0284CA    "mező1
+*                                     C_ABEVAZ_A0IC0284DA    "mező2
+*                                     C_ABEVAZ_A0IC0284EA    "mező3
+*                                     SPACE.                 "mező4
+** Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+** vagy mező5 ne 0 akkor 0 flag beállítás
+*                                     C_ABEVAZ_A0DC0087CA    "mező1
+*                                     SPACE                  "mező2
+*                                     SPACE                  "mező3
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
+*                                     SPACE.                 "mező6
+*                                      C_ABEVAZ_M0BC0382BA   "mező1
+*                                      C_ABEVAZ_M0BC0386BA   "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
+** mező1-n 0 flag állítás
+* Ha mező1 = mező2 akkor  0 flag állítás
+*                             USING  C_ABEVAZ_M0FD0496AA     "mező1
+*                                    C_ABEVAZ_M0FD0495AA     "mező2
+* Ha mező1 in LR_VALUE and LR_ABEVAZ >= 0 (or), akkor 0-flag
+*                                       using C_ABEVAZ_M0GC007A   "mező1
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
+                        USING  'M0BD0301CA'          "mező1
+                               'M0BD0301BA'          "mező2
+                               'M0BD0301DA'.         "mező3
+                        USING  'M0BD0301DA'          "mező1
+                               'M0BD0301CA'.         "mező3
+                        USING  'M0BD0302CA'          "mező1
+                               'M0BD0302BA'          "mező2
+                               'M0BD0302DA'.         "mező3
+                        USING  'M0BD0302DA'          "mező1
+                               'M0BD0302CA'.         "mező3
+                        USING  'M0BD0305CA'          "mező1
+                               'M0BD0305BA'          "mező2
+                               'M0BD0305DA'.         "mező3
+                        USING  'M0BD0305DA'          "mező1
+                               'M0BD0305CA'.         "mező3
+                        USING  'M0BD0306CA'          "mező1
+                               'M0BD0306BA'          "mező2
+                               'M0BD0306DA'.         "mező3
+                        USING  'M0BD0306DA'          "mező1
+                               'M0BD0306CA'.         "mező3
+                        USING  'M0BD0307CA'          "mező1
+                               'M0BD0307BA'          "mező2
+                               'M0BD0307DA'.         "mező3
+                        USING  'M0BD0307DA'          "mező1
+                               'M0BD0307CA'.         "mező3
+                        USING  'M0BD0312CA'          "mező1
+                               'M0BD0312BA'          "mező2
+                               'M0BD0312DA'.         "mező3
+                        USING  'M0BD0312DA'          "mező1
+                               'M0BD0312CA'.         "mező3
+*                                     'M0BD0316DA'           "mező1
+                                     'M0KD0676AA'           "mező1
+                                     SPACE                  "mező2
+                                     SPACE                  "mező3
+                                     SPACE                  "mező4
+                                     SPACE                  "mező5
+                                     SPACE.                 "mező6
+                                        USING 'M0GC007A'    "mező1
+                                     'M0GD0569CA'           "mező1
+                                     'M0GD0570CA'           "mező1
+                                     'M0HD0603CA'           "mező1
+                                     'M0GD0574CA'           "mező1
+                                     'M0ED0364BA'           "mező1
+                                     'M0ED0368BA'           "mező1
+                                     'M0KD0673AA'           "mező1
+                                     'M0GD0564CA'           "mező1
+                                     'M0GD0568CA'           "mező1
+                                     'M0GD0572CA'           "mező1
+                                     'M0CC0320AA'           "mező1
+                                     'M0CC0321AA'           "mező1
+*                                     'M0CC0322BA'           "mező1
+*                                     'M0CC0320BA'           "mező2
+*                                     'M0CC0321BA'           "mező3
+                                     'M0CC0319BA'           "mező1
+                                     'M0CC0320BA'           "mező2
+                                     'M0CC0321BA'           "mező3
+                                     'M0CC0321AA'           "mező2
+                                     'M0CD0316BA'           "mező4
+                                     'M0CC0322BA'           "mező5
+                                     'M0ID0629CA'           "mező1
+                                     'M0KE0694AA'           "mező1
+                                     'M0ID0626CA'           "mező1
+                                        USING 'M0HC008A'    "mező1
+                                        USING 'M0IC007A'    "mező1
+                                     'M0ID0627CA'           "mező1
+                                     'M0ID0628CA'           "mező1
+                                     'M0ID0640CA'           "mező1
+                                        USING 'M0IC003A'    "mező1
+                                     'M0ID0641CA'           "mező1
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
+*  Értékek
+*   Dialógus futás biztosításhoz
+*      Nyugdíjas adószámok gyűjtése
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
+*  Nyugdíjasok meghatározása
+  ENDIF.                                 "Kérem, adja meg <...> helyes nevét.
+*  Meghatározzuk a jelleget:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
+**  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
+*  Helyesbítőnél nem kell az önellenőrzési pótlékban sem 0 flag
+******************************************************** CSAK ÁFA normál
+* Számított mezők feltöltése
+* ezt a sort kell módosítani!
+* 84.C. Befizetendő adó összege (a 83. sor adata, ha előjel nélküli)
+        L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
+* 00C Bevallási időszak -tól
+*00C Bevallási időszak -ig
+*00C Bevallás jellege
+*04 (O) Ismételt önellenőrzés jelölése (x)
+*        ZINDEX > '001' --> 'X'     "ismételt önellenőrzés
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
+*82.B. Előző időszakról beszámítható csökkentő tétel összege (előző id.
+*83.C. Tárgyidőszakban megállapított fizetendő adó együttes összegének.
+*84.B. Befizetendő adó összege (a 83. sor adata, ha előjel nélküli)
+*85.B. Visszaigényelhető adó összege (a negatív előjelű 83. sor, ...
+*86.B. Következő időszakra átvihető követelés összege
+*00F év hó nap
+*85.C. Visszaigényelhető adó összege (a negatív előjelű 83. sor...
+*Következő időszakra átvitt
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
+* majd a beálított kerekítési szabályt alkalmazni!
+*  Függő mezők számítása
+*00D Kiutalást nem kérek
+*  Összesítő jelentés ÁFA értékhatár alatti mezők számítása
+*  Értékhatár
+*  Hónap kezelése
+*  Összeg meghatározása adószámonként, számlánként
+*      Csak a hónapon belül kell összesíteni
+*    Értékhatár meghatározása
+*      Ha szerepel M-es lapon vagy az értékhatár nagyobb a beállítottnál
+*     M-es főlap egyéb számított mezők töltése töltése
+*    Számított mezők kezelése az M lapos mezőkön is
+*    Összeg meghatározása adószámonként, számlánként
+*       M-es főlap egyéb számított mezők töltése töltése
+* önellenörzési pótlék számítása
+* ha A0DD0084CA - A0DD0084BA > 0 akkor ezt az értéket, ellenkező esetben 0
+* (A0DD0086CA - A0DD0086BA) < 0 akkor minusz a számolt érték
+* A0DD0085CA - A0DD0085BA < 0 akkor minusz a számolt érték
+*     Ha a A0DD0082CA-A0DD0082BA < 0 akkor, ezzel az összeggel csökkenteni kell
+* önellenörzési pótlék  meghatározása
+* ABEV A0ID0002CA számítása a A0ID0001CA alapján ha az index 2 vagy nagyobb akkor x1,5
+* időszak meghatározása
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
+* pótlék számítás kezdeti dátuma
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
+* pótlék számítás
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
+*      Ha van érték, korrigálni kell a A0ID0001CA-at.
+* Számlaszám kezelés főlapon
+                                  'A0AG002A'  "számla
+                                  'A0AG003A'. "számla
+*  M0AC001A   Adózó adószáma, át lehet venni: A0AE001A-ból
+*  M0AC003A   Jogelőd adószáma, át lehet venni, ha nem üres: A0AE004A-ból
+*  M0AC004A Adózó neve, át lehet venni: A0AE008A-ból
+*  M0AD001A Bevallási időszak -tól, át lehet venni: A0AF001A-ból
+*  M0AD002A Bevallási időszak -ig, át lehet venni: A0AF002A-ból
+* Az nem üres az adószám
+*  Csoport név megadása
+* M0AC005A Partner adószáma: ebbe kell tenni az M-es lapi ADOAZON-t,
+*ha STCD1-ből töltöttük (/ZAK/ANALITIKA-ból ki kell venni a vevő vagy
+*szállító kódot+KOART megadja hogy száll. Vagy vevő!)
+*M0AC006A ha STCD3-ból töltöttük
+*  Hónap feltöltése:
+*    Vevő neve:
+*    Szállító neve
+*    DUMMY_R-es rekordon a field_c-ben van név
+*      DUMMY_R FIELD_C mező
+* E - Éves
+* N - Negyedéves
+*    IDŐSZAK kezdő dátuma
+*    IDŐSZAK záró dátuma
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
+*    Bevallás gyakorisága
+*  Összegzendő mezők feltöltéséhez
+*  Ha önrevízió
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
+                         USING  'A0HD0193DA'   "Módosított mező
+                                'A0BD0001CA'   "Forrás 1
+                                SPACE          "Forrás 2
+                                SPACE          "Forrás 3
+                                SPACE          "Forrás 4
+                                SPACE.         "Forrás 5
+                         USING  'A0HD0195DA'   "Módosított mező
+                                'A0EC0074CA'   "Forrás 1
+                        USING  'A0HD0195CA'   "Módosított mező
+                         USING  'A0HD0196DA'   "Módosított mező
+                                'A0BD0007CA'   "Forrás 1
+                         USING  'A0HD0198DA'   "Módosított mező
+                                'A0BD0014CA'   "Forrás 1
+                         USING  'A0HD0199DA'   "Módosított mező
+                                'A0BE0025CA'   "Forrás 1
+                         USING  'A0HD0200DA'   "Módosított mező
+                                'A0EC0110CA'   "Forrás 1
+                        USING  'A0HD0200CA'   "Módosított mező
+                         USING  'A0HD0203DA'   "Módosított mező
+                                'A0EC0123CA'   "Forrás 1
+                        USING  'A0HD0203CA'   "Módosított mező
+                         USING  'A0HD0206DA'   "Módosított mező
+                                'A0FC0150CA'   "Forrás 1
+                        USING  'A0HD0206CA'   "Módosított mező
+                         USING  'A0HD0207DA'   "Módosított mező
+                                'A0FC0151CA'   "Forrás 1
+                        USING  'A0HD0207CA'   "Módosított mező
+                         USING  'A0HD0208DA'   "Módosított mező
+                                'A0FC0152CA'   "Forrás 1
+                        USING  'A0HD0208CA'   "Módosított mező
+                         USING  'A0HD0209DA'   "Módosított mező
+                                'A0FC0154CA'   "Forrás 1
+                        USING  'A0HD0209CA'   "Módosított mező
+                         USING  'A0HD0210DA'   "Módosított mező
+                                'A0FC0155CA'   "Forrás 1
+                        USING  'A0HD0210CA'   "Módosított mező
+                         USING  'A0HD0211DA'   "Módosított mező
+                                'A0FC0156CA'   "Forrás 1
+                        USING  'A0HD0211CA'   "Módosított mező
+                         USING  'A0HD0212DA'   "Módosított mező
+                                'A0FC0157CA'   "Forrás 1
+                        USING  'A0HD0212CA'   "Módosított mező
+                         USING  'A0HD0213AA'   "Módosított mező
+                                'A0FC0158CA'   "Forrás 1
+                         USING  'A0HD0214DA'   "Módosított mező
+                                'A0FC0135CA'   "Forrás 1
+                         USING  'A0HD0215DA'   "Módosított mező
+                                'A0FC0136CA'   "Forrás 1
+                         USING  'A0HD0216DA'   "Módosított mező
+                                'A0FC0160CA'   "Forrás 1
+                        USING  'A0HD0216CA'   "Módosított mező
+*                         USING  'A0HD0216DA'   "Módosított mező
+                         USING  'A0HD0217DA'   "Módosított mező
+                                'A0FC0161CA'   "Forrás 1
+                        USING  'A0HD0217CA'   "Módosított mező
+                         USING  'A0HD0218DA'   "Módosított mező
+                                'A0BD0015CA'   "Forrás 1
+                        USING  'A0HD0218CA'   "Módosított mező

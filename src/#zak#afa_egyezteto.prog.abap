@@ -394,9 +394,9 @@
    PERFORM SET_RANGES .
 *++0001 2008.11.05 Balazs Gabor (Fmc)
    IF P_LOAD IS INITIAL.
+*--0001 2008.11.05 Balázs Gábor (Fmc)
 *  Selection
-*  Selection
-*  Populate table for the ALV list!
+     PERFORM SEL_BKPF_BSEG.
 *  Populate table for the ALV list!
 *++S4HANA#01.
 *     PERFORM FILL_OUTTAB USING I_OUTTAB[]

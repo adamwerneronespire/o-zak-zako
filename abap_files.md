@@ -110,7 +110,7 @@
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf19.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf20.abap
 - [X] src/#zak#functions.fugr.#zak#lfunctionsf21.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf22.abap
+- [x] src/#zak#functions.fugr.#zak#lfunctionsf22.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf23.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf24.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf25.abap

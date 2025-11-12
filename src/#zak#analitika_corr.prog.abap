@@ -261,7 +261,7 @@ FORM PROCESS_DATA.
 
   COMMIT WORK AND WAIT.
 
-  MESSAGE I000 WITH 'Rekordok mÃ³dosÃ­tva (YAK_ANALITIKA Ã©s YAK_AFA_SZLA)'.
+  MESSAGE I000 WITH 'Rekordok módosítva (YAK_ANALITIKA és YAK_AFA_SZLA)'.
 *   & & & &
 
 *++S4HANA#01.

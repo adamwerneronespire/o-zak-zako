@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_BUKRS_FROM_BUKCS.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKCS) TYPE  /ZAK/BUKCS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE

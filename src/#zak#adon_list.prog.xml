@@ -449,10 +449,6 @@
      <LENGTH>16</LENGTH>
     </item>
     <item>
-     <ID>R</ID>
-     <LENGTH>22</LENGTH>
-    </item>
-    <item>
      <ID>S</ID>
      <KEY>P_BUKRS</KEY>
      <ENTRY>Vállalat</ENTRY>

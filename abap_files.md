@@ -105,8 +105,8 @@
 - [X] src/#zak#functions.fugr.#zak#lfunctionsf14.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf15.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf16.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf17.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf18.abap
+- [x] src/#zak#functions.fugr.#zak#lfunctionsf17.abap
+- [x] src/#zak#functions.fugr.#zak#lfunctionsf18.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf19.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf20.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf21.abap

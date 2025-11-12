@@ -107,7 +107,7 @@
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf16.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf17.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf18.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf19.abap
+- [x] src/#zak#functions.fugr.#zak#lfunctionsf19.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf20.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf21.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf22.abap

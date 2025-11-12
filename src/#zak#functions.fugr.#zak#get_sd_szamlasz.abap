@@ -1,6 +1,6 @@
 FUNCTION /zak/get_sd_szamlasz.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BELNR) TYPE  BELNR_D OPTIONAL
@@ -41,29 +41,29 @@ FUNCTION /zak/get_sd_szamlasz.
   DATA l_vbtyp_n TYPE string VALUE 'CGHIKLE'.
 *--1465 #03.
 
-* Rangek definiálása
+* Define ranges
   RANGES lr_vbtyp   FOR vbfa-vbtyp_n.
-  RANGES lr_vbtyp_m FOR vbfa-vbtyp_n. "Normál számla
-  RANGES lr_vbtyp_s FOR vbfa-vbtyp_n. "Sztornó
-  RANGES lr_vbtyp_f FOR vbfa-vbtyp_n. "Főkönyvi bizonylat
+  RANGES lr_vbtyp_m FOR vbfa-vbtyp_n. "Normal invoice
+  RANGES lr_vbtyp_s FOR vbfa-vbtyp_n. "Reversal
+  RANGES lr_vbtyp_f FOR vbfa-vbtyp_n. "G/L document
 
 ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_01 SPOTS /ZAK/FUNCTIONS_ES STATIC .
 
 ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_FGSZ_01 SPOTS /ZAK/FUNCTIONS_ES .
 
-* Normál bizonylattípus
+* Normal document types
   m_def lr_vbtyp 'I' 'EQ' 'M' space.
   m_def lr_vbtyp 'I' 'EQ' 'O' space.
   m_def lr_vbtyp 'I' 'EQ' 'P' space.
   m_def lr_vbtyp 'I' 'EQ' 'N' space.
   m_def lr_vbtyp 'I' 'EQ' 'S' space.
-* Normál számla
+* Normal invoice
   m_def lr_vbtyp_m 'I' 'EQ' 'M' space.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_04 SPOTS /ZAK/FUNCTIONS_ES .
 * Storno
   m_def lr_vbtyp_s 'I' 'EQ' 'N' space.
   m_def lr_vbtyp_s 'I' 'EQ' 'S' space.
-* Könyvelés
+* Posting
   m_def lr_vbtyp_f 'I' 'EQ' '+' space.
 *++1365 #7.
   DATA l_vbeln TYPE vbeln.
@@ -79,7 +79,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_04 SPOTS /ZAK/FUNCTIONS_ES .
   END-OF-DEFINITION.
 
 
-*Meghatározzuk a referencia kulcsot
+*Determine the reference key
   IF i_awkey IS INITIAL.
     m_conv_alpha_input i_belnr.
     SELECT SINGLE awkey INTO i_awkey
@@ -106,7 +106,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_04 SPOTS /ZAK/FUNCTIONS_ES .
                                ''
                                ''.
 *--1665 #08.
-*   Nem lehet meghatározni vagy hibás referenciakulcs! (AWKEY)
+*   Cannot determine or the reference key is invalid! (AWKEY)
   ENDIF.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_02 SPOTS /ZAK/FUNCTIONS_ES .
 
@@ -118,7 +118,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_ZF_01 SPOTS /ZAK/FUNCTIONS_ES .
 
-* Hierechia TOP meghatáozása
+* Determine hierarchy TOP
   m_set_comwa i_awkey 0.
   l_orig_vbeln = ls_comwa-vbeln.
 *++S4HANA#01.
@@ -140,7 +140,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_ZF_01 SPOTS /ZAK/FUNCTIONS_ES .
                                ''
                                ''.
 *--1665 #08.
-*   Nem lehet meghatározni vagy hibás referenciakulcs! (AWKEY)
+*   Cannot determine or the reference key is invalid! (AWKEY)
   ENDIF.
 
 
@@ -168,12 +168,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1465 #03.
 *    IF LW_VBFA_TAB-VBTYP_N = 'I'.
 *      LOOP AT LI_VBFA_TAB INTO LW_VBFA_TAB WHERE VBTYP_V EQ 'I'.
-* Rápozícionálunk a második sorra, hogy onnan vegyük ki az adatot
+* Position on the second row to read the data from there
 *        EXIT.
 *      ENDLOOP.
 *    ENDIF.
 *++1465 #04.
-*   Ha kiszállítási terv, akkor a szállításra állunk rá perfromancia miatt.
+*   If it is a delivery schedule we position on the delivery for performance reasons.
 *++S4HANA#01.
 *    IF LW_VBFA_TAB-VBTYP_N = 'E'.
     IF lw_vbfa_tab-vbtyp_n = if_sd_doc_category=>sched_agree.
@@ -191,7 +191,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_02 SPOTS /ZAK/FUNCTIONS_ES .
       ELSE.
 *++1665 #08.
 *        MESSAGE E357(/ZAK/ZAK) WITH LS_COMWA-VBELN.
-**       Szállítás tervhez nem lehet meghatározni kiszállítást (számla: &)!
+**       Cannot determine a delivery for a delivery schedule (invoice: &)!
         PERFORM add_message TABLES t_return
                             USING  '/ZAK/ZAK'
                                    'E'
@@ -248,8 +248,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_03 SPOTS /ZAK/FUNCTIONS_ES .
     ENDLOOP.
     IF sy-subrc NE 0.
 
-* ha nem volt benne egyáltalán SD Rendelés típusú bizonylat,
-* megnézzük, hogy MM Megrendeléssel indult-e
+* if there was no SD Order type document at all,
+* check whether it started from an MM Purchase Order
       LOOP AT li_vbfa_tab INTO lw_vbfa_tab WHERE vbelv IS INITIAL
                                              AND posnv IS INITIAL
                                              AND NOT vbeln IS INITIAL
@@ -278,18 +278,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_03 SPOTS /ZAK/FUNCTIONS_ES .
       ENDIF.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_TELENOR_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++1465 #03.
-*Sztornó kezelés vizsgálat
+*Reversal handling check
       l_subrc = sy-subrc.
       SELECT SINGLE fksto sfakn INTO (l_fksto, l_sfakn)
                                 FROM vbrk
                                WHERE vbeln = l_orig_vbeln.
-*     Ez a rendelés sztornózva ez lesz az eredeti
+*     This order is reversed; this becomes the original
       IF NOT l_fksto IS INITIAL.
         e_szamlasza = l_orig_vbeln.
         e_szamlasz  = l_orig_vbeln.
         e_szlatip   = c_szlatip_e.
         EXIT.
-*     Ez a sztornó bizonylat, megkeressük az eredetit
+*     This is the reversal document; find the original
       ELSEIF NOT l_sfakn IS INITIAL.
         e_szamlasz  = l_orig_vbeln.
         e_szamlasze = l_sfakn.
@@ -315,13 +315,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_01 SPOTS /ZAK/FUNCTIONS_ES .
       IF sy-subrc NE 0.
 *++1665 #07.
 *++S4HANA#01.
-*        LOOP AT LI_VBFA_TAB INTO LW_VBFA_TAB WHERE VBTYP_N EQ 'M'   "számla
-*                                               AND VBTYP_V EQ '2'.  "és az előzménye külső
+*        LOOP AT LI_VBFA_TAB INTO LW_VBFA_TAB WHERE VBTYP_N EQ 'M'   "invoice
+*                                               AND VBTYP_V EQ '2'.  "and its predecessor is external
         LOOP AT li_vbfa_tab INTO lw_vbfa_tab WHERE vbtyp_n EQ if_sd_doc_category=>invoice        "$smart: #607
-"számla                                                                                "$smart: #607
+"invoice                                                                                "$smart: #607
                                      AND vbtyp_v EQ                                    "$smart: #607
                                        if_sd_doc_category=>external_transaction.       "$smart: #607
-          "és az előzménye külső                          "$smart: #607
+          "and its predecessor is external                          "$smart: #607
 *--S4HANA#01.
           EXIT.
         ENDLOOP.
@@ -345,15 +345,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_01 SPOTS /ZAK/FUNCTIONS_ES .
 *        MESSAGE E355(/ZAK/ZAK) WITH I_AWKEY RAISING ERROR_OTHER.
 *--1665 #07.
       ENDIF.
-*   Hiba a & követõ bizonylatok meghatározásánál!
+*   Error while determining the subsequent documents for &!
     ENDIF.
   ENDIF.
-* Teljes bizonylatáramlás felépítése
+* Build the full document flow
 *  M_SET_COMWA LW_VBFA_TAB-VBELN LW_VBFA_TAB-POSNN.
 *  M_SET_COMWA L_VBELN L_POSNN.
 *  M_CALL_FLOW_INFORMATION LI_VBFA_TAB_ALL L_SUBRC.
 *--1365 #7.
-* Hierarchia feldolgozása
+* Process the hierarchy
   PERFORM proc_vbfa_tab TABLES li_vbfa_tab_all
                                i_szla_group
                                lr_vbtyp
@@ -367,22 +367,22 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_01 SPOTS /ZAK/FUNCTIONS_ES .
                          CHANGING v_szamlasza.
 *--S4HANA#01.
 
-* Meghatározzuk a kimeneti adatokat:
+* Determine the output data:
   READ TABLE i_szla_group INTO lw_szla_group
                           WITH KEY szamlasz = l_orig_vbeln.
 *++1365 #7.
   IF sy-subrc NE 0.
-* Ha nics találat de a csoportban csak üres SZAMLASZA-k
-* vannak, akkor a önmaga lesz
+* If there is no match but the group only contains empty SZAMLASZA values
+* then use the value itself
     LOOP AT i_szla_group TRANSPORTING NO FIELDS
                          WHERE NOT szamlasza IS INITIAL.
       EXIT.
     ENDLOOP.
-* Van rekord SZAMLASZA-val tehát hiba
+* A record with SZAMLASZA exists, therefore it is an error
     IF sy-subrc EQ 0.
 *++1665 #08.
 *      MESSAGE E355(/ZAK/ZAK) WITH I_AWKEY RAISING ERROR_OTHER.
-**   Hiba a & követ# bizonylatok meghatározásánál!
+**   Error while determining the subsequent documents for &!
       PERFORM add_message TABLES t_return
                           USING  '/ZAK/ZAK'
                                  'E'
@@ -406,7 +406,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_01 SPOTS /ZAK/FUNCTIONS_ES .
   ENDIF.
   IF lw_szla_group-szlatip EQ c_szlatip_e.
     e_szlatip = lw_szla_group-szlatip.
-* Előzmény bizonylat meghatározása
+* Determine the preceding document
   ELSE.
 *++S4HANA#01.
 *    m_set_comwa lw_szla_group-szamlasz lw_szla_group-posnn.
@@ -417,7 +417,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_SD_MOL_01 SPOTS /ZAK/FUNCTIONS_ES .
     IF NOT l_subrc IS INITIAL.
 *++1665 #08.
 *      MESSAGE E355(/ZAK/ZAK) WITH I_AWKEY RAISING ERROR_OTHER.
-**   Hiba a & követő bizonylatok meghatározásánál!
+**   Error while determining the subsequent documents for &!
       PERFORM add_message TABLES t_return
                           USING  '/ZAK/ZAK'
                                  'E'

@@ -1,6 +1,6 @@
 FUNCTION /ZAK/KATA_FILE_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"* Local interface:
 *"  IMPORTING
 *"     VALUE(I_FILE) TYPE  STRING OPTIONAL
 *"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
@@ -35,7 +35,7 @@ FUNCTION /ZAK/KATA_FILE_DOWNLOAD.
 
   READ TABLE T_/ZAK/BEVALLALV INTO LW_BEVALLO_ALV INDEX 1.
 
-* Bevallások beállításának beolvasása
+* Load declaration configuration
   REFRESH I_/ZAK/BEVALLB.
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
@@ -44,7 +44,7 @@ FUNCTION /ZAK/KATA_FILE_DOWNLOAD.
   SORT I_/ZAK/BEVALLB.
 
 
-* Vállalat név meghatározása
+* Determine company name
   ABEV = '0A0001C004'. "Vállalat
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
@@ -52,19 +52,19 @@ FUNCTION /ZAK/KATA_FILE_DOWNLOAD.
                             CHANGING VALUE.
   BUKRSTEXT = VALUE.
 
-* Adószám meghatározása
+* Determine tax number
   ABEV = '0A0001C001'. "Adószám ABEV
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   ADOSZAM = VALUE.
-* Nyomtatvány azonosítók:
+* Form identifiers:
   CONCATENATE LW_BEVALLO_ALV-BTYPE 'A' INTO NYOMTA.
   CONCATENATE LW_BEVALLO_ALV-BTYPE 'M' INTO NYOMTM.
 
 
-* Adatok összeállítása BEVALLO_ALV-ből
+* Assemble data from BEVALLO_ALV
   PERFORM FIELDS_FROM_IT_BEVALLO_TO_KATA TABLES T_/ZAK/BEVALLALV
                                                 I_/ZAK/BEVALLB
                                                 LI_A_XXK102

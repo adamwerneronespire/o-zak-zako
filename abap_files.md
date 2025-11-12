@@ -88,16 +88,16 @@
 - [x] src/#zak#functions.fugr.#zak#get_btype_from_btypart_m.abap
 - [x] src/#zak#functions.fugr.#zak#get_btypes_from_btypart.abap
 - [x] src/#zak#functions.fugr.#zak#get_bukrs_from_bukcs.abap
-- [ ] src/#zak#functions.fugr.#zak#get_fi_szamlasz.abap
-- [ ] src/#zak#functions.fugr.#zak#get_mm_szamlasz.abap
-- [ ] src/#zak#functions.fugr.#zak#get_re_szamlasz.abap
-- [ ] src/#zak#functions.fugr.#zak#get_sd_szamlasz.abap
-- [ ] src/#zak#functions.fugr.#zak#get_segm_for_bukrs.abap
-- [ ] src/#zak#functions.fugr.#zak#kata_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#kata_file_download.abap
-- [ ] src/#zak#functions.fugr.#zak#kont_file_download.abap
-- [ ] src/#zak#functions.fugr.#zak#kulf_file_download.abap
-- [ ] src/#zak#functions.fugr.#zak#lfunctionsf01.abap
+- [x] src/#zak#functions.fugr.#zak#get_fi_szamlasz.abap
+- [x] src/#zak#functions.fugr.#zak#get_mm_szamlasz.abap
+- [x] src/#zak#functions.fugr.#zak#get_re_szamlasz.abap
+- [x] src/#zak#functions.fugr.#zak#get_sd_szamlasz.abap
+- [x] src/#zak#functions.fugr.#zak#get_segm_for_bukrs.abap
+- [x] src/#zak#functions.fugr.#zak#kata_exit.abap
+- [x] src/#zak#functions.fugr.#zak#kata_file_download.abap
+- [x] src/#zak#functions.fugr.#zak#kont_file_download.abap
+- [x] src/#zak#functions.fugr.#zak#kulf_file_download.abap
+- [x] src/#zak#functions.fugr.#zak#lfunctionsf01.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf02.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf03.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf04.abap

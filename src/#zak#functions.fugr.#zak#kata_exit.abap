@@ -1,6 +1,6 @@
 FUNCTION /ZAK/KATA_EXIT.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -14,31 +14,31 @@ FUNCTION /ZAK/KATA_EXIT.
   DATA: V_LAST_DATE TYPE SY-DATUM.
 
   DATA: L_INDEX LIKE SY-TABIX.
-* Ensure dialog execution
+* Dialógus futás biztosításhoz
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P02.
 
 
-* Determine the declaration deadline
+* Bevallás utolsó napjának meghatározás
   PERFORM GET_LAST_DAY_OF_PERIOD USING I_GJAHR
                                        I_MONAT
                                        I_BTYPE
                                   CHANGING V_LAST_DATE.
 
-* General declaration data
+* Bevallás általános adatai
   PERFORM READ_BEVALL  USING I_BUKRS
                              I_BTYPE
                              V_LAST_DATE.
 
-* Verify KATA threshold settings
+* KATA értékhatár beállítás ellenőrzés
 *++2108 #19.
 *  IF W_/ZAK/BEVALL-OLWSTE IS INITIAL OR I_INDEX NE '000'.
   IF W_/ZAK/BEVALL-OLWSTE IS INITIAL.
 *--2108 #19.
     EXIT.
 *++2108 #19.
-* Repeat the data of period '000':
+* Meg kell ismételni a '000'-ás időszak adatait:
   ELSEIF  I_INDEX NE '000'.
     PERFORM SEL_KATA_000 TABLES T_BEVALLO
                                 T_ONREV_ADOAZON
@@ -50,7 +50,7 @@ FUNCTION /ZAK/KATA_EXIT.
 *--2108 #19.
   ENDIF.
 
-* Calculate KATA data
+* KATA adatok kalkulálás
   PERFORM GET_KATA_DATA TABLES T_BEVALLO
                         USING  W_/ZAK/BEVALL
                                I_GJAHR

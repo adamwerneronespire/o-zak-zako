@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_RE_SZAMLASZ.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BELNR) TYPE  BELNR_D OPTIONAL
@@ -34,7 +34,7 @@ FUNCTION /ZAK/GET_RE_SZAMLASZ.
         OUTPUT = &1.
   END-OF-DEFINITION.
 
-* Determine the original document
+* Meghatározzuk az eredeti bizonylatot
   IF I_AWKEY IS INITIAL.
     M_CONV_ALPHA_INPUT I_BELNR.
     SELECT SINGLE * INTO LS_BKPF
@@ -50,12 +50,12 @@ FUNCTION /ZAK/GET_RE_SZAMLASZ.
 
   IF SY-SUBRC NE 0.
     MESSAGE E354(YAK) RAISING ERROR_AWKEY.
-*   Cannot determine or the reference key is invalid! (AWKEY)
+*   Nem lehet meghatározni vagy hibás referenciakulcs! (AWKEY)
   ENDIF.
 
   E_SZAMLASZ = LS_BKPF-XBLNR.
-* Normal document
-*++1365 2013.11.14 BG (treat the field as empty even if it only contains zeros)
+* Normál bizonylat
+*++1365 2013.11.14 BG (a mező ha csak 0-át tartalmaz, akkor is üresnek tekintjük)
 *  IF LS_BKPF-XREF1_HD IS INITIAL AND  LS_BKPF-STBLG IS INITIAL.
   IF ( LS_BKPF-XREF1_HD IS INITIAL OR LS_BKPF-XREF1_HD CO '0 ' )
      AND  LS_BKPF-STBLG IS INITIAL.
@@ -63,23 +63,23 @@ FUNCTION /ZAK/GET_RE_SZAMLASZ.
     E_SZAMLASZA = LS_BKPF-XBLNR.
     E_SZLATIP   = C_SZLATIP_E.
   ELSE.
-* Reversal or reversed document
+* Sztornó vagy sztornózott bizonylat
     IF NOT LS_BKPF-STBLG IS INITIAL.
       E_STORNO = 'X'.
       IF LS_BKPF-XREVERSAL = '1'.
         E_SZAMLASZA = LS_BKPF-XBLNR.
         E_SZLATIP   = C_SZLATIP_E.
-*   Reversing document
+*   Sztornózó bizonylat
       ELSEIF LS_BKPF-XREVERSAL = '2'.
         E_SZAMLASZA = LS_BKPF-XREF1_HD.
         E_SZAMLASZE = LS_BKPF-XREF1_HD.
         E_SZLATIP   = C_SZLATIP_K.
       ENDIF.
-*  Corrected document
+*  Helyesbített bizonylat
     ELSE.
       E_SZAMLASZE = LS_BKPF-XREF1_HD.
       E_SZLATIP   = C_SZLATIP_K.
-*     Determine the original invoice number
+*     Eredeti számlaszám meghatározása
       PERFORM GET_RE_SZAMLASZA USING LS_BKPF
                                      E_SZAMLASZA.
     ENDIF.

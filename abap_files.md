@@ -68,40 +68,40 @@
 - [x] src/#zak#evvalt_corr.prog.screen_9000.abap
 - [x] src/#zak#functions.fugr.#zak#abev_contact.abap
 - [x] src/#zak#functions.fugr.#zak#afa_alap_verify.abap
-- [x] src/#zak#functions.fugr.#zak#afa_ness_szla_exit.abap
-- [x] src/#zak#functions.fugr.#zak#afa_sap_sel_exit.abap
-- [x] src/#zak#functions.fugr.#zak#afa_xml_download.abap
-- [x] src/#zak#functions.fugr.#zak#afar_book_excel.abap
-- [x] src/#zak#functions.fugr.#zak#analitika_conversion.abap
-- [x] src/#zak#functions.fugr.#zak#atv_book_excel.abap
-- [x] src/#zak#functions.fugr.#zak#atv_post_adonsza.abap
-- [x] src/#zak#functions.fugr.#zak#btype_conversion.abap
-- [x] src/#zak#functions.fugr.#zak#calc_potlek.abap
-- [x] src/#zak#functions.fugr.#zak#check_adoazon.abap
-- [x] src/#zak#functions.fugr.#zak#conv_adoazon.abap
-- [x] src/#zak#functions.fugr.#zak#conv_date_user_2_internal.abap
-- [x] src/#zak#functions.fugr.#zak#convert_string_to_packed.abap
-- [x] src/#zak#functions.fugr.#zak#gen_afa_szla.abap
-- [x] src/#zak#functions.fugr.#zak#get_afcs.abap
-- [x] src/#zak#functions.fugr.#zak#get_btypart_from_btype.abap
-- [x] src/#zak#functions.fugr.#zak#get_btype_from_btypart.abap
-- [x] src/#zak#functions.fugr.#zak#get_btype_from_btypart_m.abap
-- [x] src/#zak#functions.fugr.#zak#get_btypes_from_btypart.abap
-- [x] src/#zak#functions.fugr.#zak#get_bukrs_from_bukcs.abap
-- [x] src/#zak#functions.fugr.#zak#get_fi_szamlasz.abap
-- [x] src/#zak#functions.fugr.#zak#get_mm_szamlasz.abap
-- [x] src/#zak#functions.fugr.#zak#get_re_szamlasz.abap
-- [x] src/#zak#functions.fugr.#zak#get_sd_szamlasz.abap
-- [x] src/#zak#functions.fugr.#zak#get_segm_for_bukrs.abap
-- [x] src/#zak#functions.fugr.#zak#kata_exit.abap
-- [x] src/#zak#functions.fugr.#zak#kata_file_download.abap
-- [x] src/#zak#functions.fugr.#zak#kont_file_download.abap
-- [x] src/#zak#functions.fugr.#zak#kulf_file_download.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf01.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionsf02.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionsf03.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionsf04.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionsf05.abap
+- [ ] src/#zak#functions.fugr.#zak#afa_ness_szla_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#afa_sap_sel_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#afa_xml_download.abap
+- [ ] src/#zak#functions.fugr.#zak#afar_book_excel.abap
+- [ ] src/#zak#functions.fugr.#zak#analitika_conversion.abap
+- [ ] src/#zak#functions.fugr.#zak#atv_book_excel.abap
+- [ ] src/#zak#functions.fugr.#zak#atv_post_adonsza.abap
+- [ ] src/#zak#functions.fugr.#zak#btype_conversion.abap
+- [ ] src/#zak#functions.fugr.#zak#calc_potlek.abap
+- [ ] src/#zak#functions.fugr.#zak#check_adoazon.abap
+- [ ] src/#zak#functions.fugr.#zak#conv_adoazon.abap
+- [ ] src/#zak#functions.fugr.#zak#conv_date_user_2_internal.abap
+- [ ] src/#zak#functions.fugr.#zak#convert_string_to_packed.abap
+- [ ] src/#zak#functions.fugr.#zak#gen_afa_szla.abap
+- [ ] src/#zak#functions.fugr.#zak#get_afcs.abap
+- [ ] src/#zak#functions.fugr.#zak#get_btypart_from_btype.abap
+- [ ] src/#zak#functions.fugr.#zak#get_btype_from_btypart.abap
+- [ ] src/#zak#functions.fugr.#zak#get_btype_from_btypart_m.abap
+- [ ] src/#zak#functions.fugr.#zak#get_btypes_from_btypart.abap
+- [ ] src/#zak#functions.fugr.#zak#get_bukrs_from_bukcs.abap
+- [ ] src/#zak#functions.fugr.#zak#get_fi_szamlasz.abap
+- [ ] src/#zak#functions.fugr.#zak#get_mm_szamlasz.abap
+- [ ] src/#zak#functions.fugr.#zak#get_re_szamlasz.abap
+- [ ] src/#zak#functions.fugr.#zak#get_sd_szamlasz.abap
+- [ ] src/#zak#functions.fugr.#zak#get_segm_for_bukrs.abap
+- [ ] src/#zak#functions.fugr.#zak#kata_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#kata_file_download.abap
+- [ ] src/#zak#functions.fugr.#zak#kont_file_download.abap
+- [ ] src/#zak#functions.fugr.#zak#kulf_file_download.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf01.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf02.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf03.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf04.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf05.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf14.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf15.abap
 - [ ] src/#zak#functions.fugr.#zak#lfunctionsf16.abap

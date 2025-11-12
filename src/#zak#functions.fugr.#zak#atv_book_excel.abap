@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ATV_BOOK_EXCEL.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -13,7 +13,7 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 *"      DATA_MISMATCH
 *"      DOWNLOAD_FAILED
 *"----------------------------------------------------------------------
-*  A new posting Excel was created, so the new format is required
+*  Új könyvelési Excel készült, és ezért kell az új formátum
 *
 *++S4HANA#01.
 *data: begin of i_lines occurs 20.
@@ -39,7 +39,7 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 
   IF NOT T_BEVALLO[] IS INITIAL.
 
-* Data consistency check
+* Adatkonzisztencia ellenőrzése
     LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
       CHECK W_/ZAK/BEVALLO-BUKRS  NE I_BUKRS OR
             W_/ZAK/BEVALLO-BTYPE  NE I_BTYPE OR
@@ -68,14 +68,14 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 
   CHECK V_ERROR = SPACE.
 
-* Read form data
+* Nyomtatvány adatok beolvasása
   PERFORM READ_BEVALLB_m USING i_BTYPE.
 
 
-* Interpret T_BEVALLO and convert to /ZAK/ATVEZ_SOR,
-*                                  then into /ZAK/ATVEZ_EXCEL format
+* T_BEVALLO értelmezése, konvertálása > /ZAK/ATVEZ_SOR,
+*                                  majd /ZAK/ATVEZ_EXCEL formátumba
 *++FI 20070213
-* The new Excel structure had to be reverted because the old one is needed for this (vendor) posting
+* Az új Excel struktúrát vissza kellett állítani, mert itt (szállító) könyvelésnél a régi kell
   PERFORM CONVERT_BEVALLO_NEW TABLES T_BEVALLO
                                  I_EXCEL
                           USING I_BUKRS.
@@ -83,9 +83,9 @@ FUNCTION /ZAK/ATV_BOOK_EXCEL.
 *                                  i_excel
 *                           using i_bukrs.
 *--FI 20070213
-* Create Excel file
+* Excel fájl készítése
 *++FI 20070213
-* The new Excel structure had to be reverted because the old one is needed for this (vendor) posting
+* Az új Excel struktúrát vissza kellett állítani, mert itt (szállító) könyvelésnél a régi kell
   PERFORM DOWNLOAD_FILE TABLES I_EXCEL
                         USING I_BUKRS
                               I_BTYPE

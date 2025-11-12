@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_MM_SZAMLASZ.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BELNR) TYPE  BELNR_D OPTIONAL
@@ -46,22 +46,22 @@ FUNCTION /ZAK/GET_MM_SZAMLASZ.
 *--1365 #21.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_AUDI_02 SPOTS /ZAK/FUNCTIONS_ES STATIC .
 
-* Reversal data
+* Sztornó adatok
   DATA L_STBLG TYPE RE_STBLG.
   DATA L_STJAH TYPE RE_STJAH.
 
-* Invoice group
+* Számla csoport
 *  DATA LW_SZLA_GROUP TYPE T_SZLA_GROUP.
 
-* Range definition for items
+* Range meghatározás tételekhez
   RANGES LR_VGABE_SHKZG   FOR RANGE_C2-LOW.
   RANGES LR_VGABE_SHKZG_N FOR RANGE_C2-LOW.
 
-* 2 Invoice receipt and 'S' regular vendor invoice
+* 2 Számlabeérkezés és  'S' normál szállítói számla
   M_DEF LR_VGABE_SHKZG_N 'I' 'EQ' '2S' SPACE.
-* 2 Invoice receipt and 'H' credit memo
-* 3 Subsequent debit and 'S' subsequent debit
-* 3 Subsequent debit and 'H' subsequent credit
+* 2 Számlabeérkezés és  'H' Jóváíró számla
+* 3 Utólagos terhelés  és 'S'  Utólagos terhelés
+* 3 Utólagos terhelés  és 'H'  Utólagos jóváírás
   M_DEF LR_VGABE_SHKZG   'I' 'EQ' '2S' SPACE.
   M_DEF LR_VGABE_SHKZG   'I' 'EQ' '2H' SPACE.
   M_DEF LR_VGABE_SHKZG   'I' 'EQ' '3S' SPACE.
@@ -111,7 +111,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_INVITEL_01 SPOTS /ZAK/FUNCTIONS_ES .
 *--2065 #16.
 
-*Determine the reference key
+*Meghatározzuk a referencia kulcsot
   IF I_AWKEY IS INITIAL.
     M_CONV_ALPHA_INPUT I_BELNR.
     SELECT SINGLE AWKEY INTO I_AWKEY
@@ -142,7 +142,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_INVITEL_01 SPOTS /ZAK/FUNCTIONS_ES .
   CLEAR   V_SZAMLASZA.
 
   LS_AWKDEC = I_AWKEY.
-* Collect purchasing documents
+* Beszerzési bizonylat gyűjtése
   SELECT EBELN EBELP INTO (LW_EBELN-EBELN,
                            LW_EBELN-EBELP)
                      FROM RSEG
@@ -158,7 +158,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_OTP_01 SPOTS /ZAK/FUNCTIONS_ES .
 ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_TELEN_01 SPOTS /ZAK/FUNCTIONS_ES .
 *--2465 #02.
 *++1365 #8.
-* If missing, use XBLNR as the invoice number and treat it as original.
+* Ha nincs akkor XBLNR lesz a számlaszám és eredetinek tekintjük.
   IF SY-SUBRC NE 0.
 *++1765 #27.
 *    SELECT SINGLE XBLNR INTO E_SZAMLASZ
@@ -177,7 +177,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_TELEN_01 SPOTS /ZAK/FUNCTIONS_ES .
       E_SZLATIP = C_SZLATIP_E.
     ENDIF.
 
-* Determine reversal
+* Sztornó meghatározása
   SELECT SINGLE STBLG STJAH INTO (L_STBLG, L_STJAH)
                             FROM RBKP
                            WHERE BELNR EQ LS_AWKDEC-BELNR
@@ -221,7 +221,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_TELEN_01 SPOTS /ZAK/FUNCTIONS_ES .
     SORT LI_EKBE.
   ENDIF.
 *--1865 #09.
-* Process item by item
+* Feldolgozás tételenként
   LOOP AT LI_EBELN INTO LW_EBELN.
 *++1865 #09.
 *    FREE LI_EKBE.
@@ -257,15 +257,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_AUDI_MM_01 SPOTS /ZAK/FUNCTIONS_ES .
 *--1865 #09.
       CLEAR LW_SZLA_GROUP.
       CONCATENATE LW_EKBE-VGABE LW_EKBE-SHKZG INTO L_VGABE_SHKZG.
-*     Only if the type matches
+*     Csak ha megfelelő típus
       CHECK L_VGABE_SHKZG IN LR_VGABE_SHKZG.
       CLEAR LW_SZLA_GROUP.
-*     Regular invoice
+*     Normál számla
       IF L_VGABE_SHKZG IN LR_VGABE_SHKZG_N.
         CONCATENATE LW_EKBE-BELNR LW_EKBE-GJAHR INTO V_SZAMLASZA.
         LW_SZLA_GROUP-SZLATIP = C_SZLATIP_E.
 *++2065 #14.
-*     Reversal invoice
+*     Sztornó számla
       ELSE.
         SELECT SINGLE STBLG STJAH INTO (L_STBLG, L_STJAH)
                                   FROM RBKP
@@ -286,13 +286,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_AUDI_MM_01 SPOTS /ZAK/FUNCTIONS_ES .
     ENDLOOP.
   ENDLOOP.
 
-* Determine the output data:
+* Meghatározzuk a kimeneti adatokat:
   READ TABLE I_SZLA_GROUP INTO LW_SZLA_GROUP
                           WITH KEY SZAMLASZ = I_AWKEY.
   IF SY-SUBRC NE 0.
 *++1665 #08.
 *    MESSAGE E355(/ZAK/ZAK) WITH I_AWKEY RAISING ERROR_OTHER.
-**   Error while determining the subsequent documents!
+**   Hiba a & követő bizonylatok meghatározásánál!
     PERFORM ADD_MESSAGE TABLES T_RETURN
                         USING  '/ZAK/ZAK'
                                'E'
@@ -304,7 +304,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_AUDI_MM_01 SPOTS /ZAK/FUNCTIONS_ES .
 *--1665 #08.
   ENDIF.
 *++1665 #05.
-* For freight invoices, if the vendor differs it is not a correction:
+* Fuvarszámlák miatt ha nem azonos a szállító, akkor nem korrekció:
   LM_GET_LIFNR LW_SZLA_GROUP-SZAMLASZA L_LIFNR1.
   LM_GET_LIFNR LW_SZLA_GROUP-SZAMLASZ  L_LIFNR2.
 
@@ -322,7 +322,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_AUDI_MM_01 SPOTS /ZAK/FUNCTIONS_ES .
 *--1665 #05.
   LS_AWKDEC = LW_SZLA_GROUP-SZAMLASZ.
 
-* Determine reversal
+* Sztornó meghatározása
   SELECT SINGLE STBLG STJAH INTO (L_STBLG, L_STJAH)
                             FROM RBKP
                            WHERE BELNR EQ LS_AWKDEC-BELNR
@@ -340,7 +340,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_AUDI_MM_01 SPOTS /ZAK/FUNCTIONS_ES .
 *++2465 #05.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_MATE_05 SPOTS /ZAK/FUNCTIONS_ES .
 *--2465 #05.
-* Determine invoice numbers
+* Számlaszámok meghatározása
   LM_GET_XBLNR: E_SZAMLASZA, E_SZAMLASZ, E_SZAMLASZE.
 *++2465 #05.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_MM_MATE_06 SPOTS /ZAK/FUNCTIONS_ES .

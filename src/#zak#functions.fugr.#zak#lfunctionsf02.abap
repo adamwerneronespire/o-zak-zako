@@ -52,7 +52,7 @@ FORM get_line USING    $btype
   DATA l_text(60).
 
 
-* Determine the type of the ABEV field
+* Meghatározzuk az ABEV mező típusát
   SELECT SINGLE fieldtype INTO l_fieldtype
                           FROM /zak/bevallb
                          WHERE btype  EQ $btype
@@ -60,7 +60,7 @@ FORM get_line USING    $btype
   IF sy-subrc EQ 0.
     l_begin = $begin - 1.
     CASE l_fieldtype.
-*     Character
+*     Karakteres
       WHEN 'C'.
         CONDENSE $field_c.
         l_i = strlen( $field_c ).
@@ -69,19 +69,19 @@ FORM get_line USING    $btype
         ELSE.
           $line+l_begin($lngth) = $field_c.
         ENDIF.
-*     Numeric
+*     Numerikus
       WHEN 'N'.
         WRITE $field_nrk CURRENCY $waers TO l_text NO-GROUPING.
         IF l_text IS INITIAL.
           l_text = '0'.
         ENDIF.
-*       Pad leading zeros
+*       Vezető 0-ák feltöltése
         CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
              EXPORTING
                   input  = l_text
              IMPORTING
                   output = l_text.
-*       Adjust the length
+*       Hossz beállítása
         l_i = strlen( l_text ).
         IF l_i > $lngth.
           DO.

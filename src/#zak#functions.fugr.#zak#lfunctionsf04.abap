@@ -74,7 +74,7 @@ FORM CREATE_SZJA_A TABLES   GT_XFORM2 STRUCTURE  GT_XFORM2
                    USING    BEVDATUM.
 *--BG 2006/09/29
 
-* Generate SZJA A header
+* SZJA A header előállítása
   PERFORM CREATE_SZJAA_HEADER TABLES GT_XFORM2
                                      IT_BEVALLO_ALV
                                      IT_BEVALLO_ALV_A
@@ -84,7 +84,7 @@ FORM CREATE_SZJA_A TABLES   GT_XFORM2 STRUCTURE  GT_XFORM2
 *--BG 2006/09/29
 
 
-* Read fields from BEVALLO_ALV
+* mezők kiolvasása BEVALLO_ALV-ből
   PERFORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES IT_BEVALLO_ALV_A
 *++0808 BG 2008.02.07
                                                IT_/ZAK/BEVALLB
@@ -93,7 +93,7 @@ FORM CREATE_SZJA_A TABLES   GT_XFORM2 STRUCTURE  GT_XFORM2
                                                IT_XML_DATA.
 
 
-* Generate SZJA A footer
+* SZJA A footer előállítása
   PERFORM CREATE_NYOMTATVANY_FOOTER TABLES GT_XFORM3
                                            IT_XML_DATA.
 
@@ -198,22 +198,22 @@ FORM REPLACE_VARIABLE_FROM_BEVALLO TABLES   IT_BEVALLO_ALV STRUCTURE
 
         $VAR = LINDA+0(SY-FDPOS).
 
-*     Read the field value from IT_BEVALLO_ALV
+*     kiolvassa a mezőértéket IT_BEVALLO_ALV
         IF ADOAZON IS INITIAL.
           CASE $VAR.
-*         Form identifier
+*         Nyomtatvány azonosító
             WHEN 'NYOMT'.
               PERFORM GET_NYOMT_VALUE TABLES IT_BEVALLO_ALV_A
                                        USING 'A'
                                     CHANGING $VALUE.
-*         Version
+*         Verzió
             WHEN 'VERS'.
               PERFORM GET_VERS_VALUE TABLES IT_BEVALLO_ALV_A
                                        USING 'V'
                                              BEVDATUM
                                     CHANGING $VALUE.
 
-*         ABEV code
+*         ABEV kód
             WHEN OTHERS.
               PERFORM GET_VALUE_BEVALLO_A TABLES IT_BEVALLO_ALV_A
                                            USING $VAR
@@ -222,19 +222,19 @@ FORM REPLACE_VARIABLE_FROM_BEVALLO TABLES   IT_BEVALLO_ALV STRUCTURE
 
         ELSE.
           CASE $VAR.
-*         Form identifier
+*         Nyomtatvány azonosító
             WHEN 'NYOMT'.
               PERFORM GET_NYOMT_VALUE TABLES IT_BEVALLO_ALV_A
                                        USING 'M'
                                     CHANGING $VALUE.
-*         Version
+*         Verzió
             WHEN 'VERS'.
               PERFORM GET_VERS_VALUE TABLES IT_BEVALLO_ALV_A
                                        USING 'E'
                                              BEVDATUM
                                     CHANGING $VALUE.
 
-*         ABEV code
+*         ABEV kód
             WHEN OTHERS.
               PERFORM GET_VALUE_BEVALLO_M TABLES IT_BEVALLO_ALV
                                            USING $VAR
@@ -246,11 +246,11 @@ FORM REPLACE_VARIABLE_FROM_BEVALLO TABLES   IT_BEVALLO_ALV STRUCTURE
         SHIFT LINDA BY SY-FDPOS PLACES. "átlépi $var-t
         SHIFT LINDA BY 1 PLACES.        "átlépi a var_markert
 *++0908 2009.02.10 BG
-*       On the first run save the HEAD value.
+*       Először fut elmentjük a HEAD értékét.
         IF SY-INDEX EQ 1.
           MOVE $HEAD TO L_HEAD_SAVE.
         ENDIF.
-*       Assemble the XML row
+*       az XML sor összeállítása
 *       CONCATENATE $HEAD $VALUE LINDA INTO XML_LINE.
         IF NOT $VALUE IS INITIAL.
           IF NOT XML_LINE IS INITIAL.
@@ -404,7 +404,7 @@ FORM GET_HR_TO_ABEVAZ USING    $NYOMT
                       CHANGING $ABEVAZ.
 
   CLEAR $ABEVAZ.
-*Convert the ABEV identifier
+*ABEV azonosító átalakítása
   CONCATENATE $NYOMT
               $MEZON(2)
               $MEZON+6(6)
@@ -448,7 +448,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES  IT_BEVALLO_ALV STRUCTURE
 *++BG 2006/12/06
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -477,7 +477,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES  IT_BEVALLO_ALV STRUCTURE
     CLEAR: $XML_LINE, L_MEZOE.
 
 *++0808 BG 2008.02.07
-*  Read the configuration
+*  Beállítás beolvasása
     READ  TABLE IT_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = IT_BEVALLO_ALV-BTYPE
                    ABEVAZ = IT_BEVALLO_ALV-ABEVAZ
@@ -491,7 +491,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES  IT_BEVALLO_ALV STRUCTURE
 
 *--0808 BG 2008.02.07
 
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
@@ -506,7 +506,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES  IT_BEVALLO_ALV STRUCTURE
            ( NOT W_/ZAK/BEVALLB-XMLALL IS INITIAL AND
              NOT IT_BEVALLO_ALV-OFLAG IS INITIAL ).
 *++BG 2008.03.11
-*  Remove it because the self-audit column will not be passed
+*  Kivesszük mert önrevíziós oszlopot nem fogjuk átadani
 *                                                 AND
 *             NOT IT_BEVALLO_ALV-FIELD_ON IS INITIAL ).
 *--BG 2008.03.11
@@ -517,7 +517,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES  IT_BEVALLO_ALV STRUCTURE
 
 *++BG 2006/12/06
 *      CLEAR L_ELOJEL.
-**     Watch for negative sign
+**     Negatív előjel figyelése
 *      IF IT_BEVALLO_ALV-FIELD_NR < 0.
 *        MOVE '-' TO L_ELOJEL.
 *        IT_BEVALLO_ALV-FIELD_NR = ABS( IT_BEVALLO_ALV-FIELD_NR ).
@@ -535,7 +535,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XML TABLES  IT_BEVALLO_ALV STRUCTURE
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_ONR IT_BEVALLO_ALV-WAERS.
 *--BG 2006/12/06
 *++ BG 2008.03.10
-*  Required field with value 0
+*  0-ás mező ami kell
     ELSEIF NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
 *++0808 2009.02.11 BG
       IF IT_BEVALLO_ALV-OFLAG IS INITIAL.
@@ -621,7 +621,7 @@ FORM SAVE_XML_FILE TABLES   IT_XML_DATA TYPE TTY_XML_TABLE
 
 *++0001 2007.01.03 BG (FMC)
 * 0001 ++ CST 2006.05.27
-* Download...
+* Letöltés...
   CALL FUNCTION 'GUI_DOWNLOAD'
     EXPORTING
 *     BIN_FILESIZE            =
@@ -639,7 +639,7 @@ FORM SAVE_XML_FILE TABLES   IT_XML_DATA TYPE TTY_XML_TABLE
       OTHERS                  = 5.
   IF SY-SUBRC NE 0.
     MESSAGE E175(/ZAK/ZAK) WITH $FILE RAISING ERROR_DOWNLOAD.
-*   Error downloading file &.
+*   Hiba a & fájl letöltésénél.
   ENDIF.
 *  L_FILENAME = $FILE.
 *
@@ -676,7 +676,7 @@ FORM SAVE_XML_FILE TABLES   IT_XML_DATA TYPE TTY_XML_TABLE
 *            .
 *  IF SY-SUBRC NE 0.
 *    MESSAGE E175(/ZAK/ZAK) WITH $FILE RAISING ERROR_DOWNLOAD.
-**   Error downloading file &.
+**   Hiba a & fájl letöltésénél.
 *  ENDIF.
 * 0001 -- CST 2006.05.27
 *--0001 2007.01.03 BG (FMC)
@@ -730,7 +730,7 @@ FORM CREATE_SZJA_M TABLES   GT_XFORM4 STRUCTURE GT_XFORM4
 *--BG 2006/09/29
 
 
-* Generate SZJA M header
+* SZJA M header előállítása
   PERFORM CREATE_SZJAM_HEADER TABLES GT_XFORM4
                                      IT_BEVALLO_ALV
                                      IT_XML_DATA
@@ -740,7 +740,7 @@ FORM CREATE_SZJA_M TABLES   GT_XFORM4 STRUCTURE GT_XFORM4
                                      BEVDATUM.
 *--BG 2006/09/29
 
-* Read fields from BEVALLO_ALV
+* mezők kiolvasása BEVALLO_ALV-ből
   PERFORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV
                                               IT_XML_DATA
 *++0808 BG 2008.02.07
@@ -750,7 +750,7 @@ FORM CREATE_SZJA_M TABLES   GT_XFORM4 STRUCTURE GT_XFORM4
                                               INDEX_SAVE
                                               MAX_LINE.
 
-* Generate 0608A footer
+* 0608A footer előállítása
   PERFORM CREATE_NYOMTATVANY_FOOTER TABLES GT_XFORM3
                                            IT_XML_DATA.
 
@@ -845,7 +845,7 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
 *++BG 2006/12/06
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -861,10 +861,10 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
 *--BG 2006/12/06
 
 
-* Set the table read from-to values to narrow the
-* read range.
+* Beállítjuk a tábla olvasás -tól, -ig értékét, hogy szűkítsük a
+* beolvasás tartományát.
   IF NOT MAX_LINE IS INITIAL.
-*   Set the index TO value to a 10-page interval
+*   Az index TO értékét 10 lapos intervallumra állítjuk be
     L_INDEX_TO = INDEX_SAVE + ( MAX_LINE * 10 ).
   ELSE.
     DESCRIBE TABLE IT_BEVALLO_ALV LINES L_INDEX_TO.
@@ -883,7 +883,7 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
 *--0002 BG 2007.05.09
 
 *++0808 BG 2008.02.07
-**   If BEVALLB is empty we read it
+**   Ha üres a BEVALLB beolvassuk
 *    IF I_/ZAK/BEVALLB[] IS INITIAL.
 *      SELECT * INTO TABLE I_/ZAK/BEVALLB
 *                    FROM /ZAK/BEVALLB
@@ -898,7 +898,7 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
     MOVE SY-TABIX TO INDEX_SAVE.
 
     CLEAR: $XML_LINE, L_MEZOE.
-**   Check whether the field must go into ABEV
+**   Ellenőrizzük le kell e ABEV-ba a mező
 *    SELECT SINGLE ABEV_NO INTO L_ABEV_NO
 *                          FROM /ZAK/BEVALLB
 *                         WHERE BTYPE  EQ IT_BEVALLO_ALV-BTYPE
@@ -913,7 +913,7 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
 
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALLB-ABEV_NO IS INITIAL.
 
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
@@ -936,7 +936,7 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
 
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_NR IT_BEVALLO_ALV-WAERS.
 *      CLEAR L_ELOJEL.
-**     Watch for negative sign
+**     Negatív előjel fiyelése
 *      IF IT_BEVALLO_ALV-FIELD_NR < 0.
 *        MOVE '-' TO L_ELOJEL.
 *        IT_BEVALLO_ALV-FIELD_NR = ABS( IT_BEVALLO_ALV-FIELD_NR ).
@@ -953,7 +953,7 @@ FORM FIELDS_FROM_BEVALLO_TO_XML_M TABLES IT_BEVALLO_ALV STRUCTURE
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_ONR IT_BEVALLO_ALV-WAERS.
 *--BG 2006/12/06
 *++ BG 2007.06.22
-*  Required field with value 0
+*  0-ás mező ami kell
     ELSEIF NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
 *++0808 2009.02.11 BG
       IF IT_BEVALLO_ALV-OFLAG IS INITIAL.
@@ -1016,7 +1016,7 @@ FORM READ_FORMS_N USING   $DATUM.
            AND BEGDA LE $DATUM
            AND ENDDA GE $DATUM.
 
-* XML end
+* XML vége (end)
   SELECT  XLINE AS LINDA
           INTO CORRESPONDING FIELDS OF TABLE GT_XFORM1
 *++0908/2 2009.08.04 BG
@@ -1027,7 +1027,7 @@ FORM READ_FORMS_N USING   $DATUM.
            AND BEGDA LE $DATUM
            AND ENDDA GE $DATUM.
 
-*Corporate return header
+*Vállalati bevallás head
   SELECT  XLINE AS LINDA
           INTO CORRESPONDING FIELDS OF TABLE GT_XFORM2
 *++0908/2 2009.08.04 BG
@@ -1047,7 +1047,7 @@ FORM READ_FORMS_N USING   $DATUM.
            AND BEGDA LE $DATUM
            AND ENDDA GE $DATUM.
 
-*Form end
+*Nyomtatvány vége
   SELECT  XLINE AS LINDA
          INTO CORRESPONDING FIELDS OF TABLE GT_XFORM3
 *++0908/2 2009.08.04 BG
@@ -1058,7 +1058,7 @@ FORM READ_FORMS_N USING   $DATUM.
           AND BEGDA LE $DATUM
           AND ENDDA GE $DATUM.
 
-*Individual return header
+*Egyéni bevallás head
   SELECT  XLINE AS LINDA
           INTO CORRESPONDING FIELDS OF TABLE GT_XFORM4
 *++0908/2 2009.08.04 BG
@@ -1133,7 +1133,7 @@ FORM GET_VERS_VALUE TABLES   $T_BEVALLO_ALV_A  STRUCTURE
     MOVE 'M' TO L_EXT.
   ENDIF.
 
-*Determine the form
+*Meghatározzuk a nyomtatványt
   PERFORM GET_NYOMT_VALUE TABLES $T_BEVALLO_ALV_A
                            USING L_EXT
                         CHANGING L_NYOMT.
@@ -1199,7 +1199,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -1249,7 +1249,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
 
 
   LOOP AT IT_BEVALLO_ALV.
-*  Read the configuration
+*  Beállítás beolvasása
     READ  TABLE IT_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = IT_BEVALLO_ALV-BTYPE
                    ABEVAZ = IT_BEVALLO_ALV-ABEVAZ
@@ -1257,20 +1257,20 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
 
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALLB-ABEV_NO IS INITIAL.
 *++12K79 2013.01.30
-*   Name differs by return type!
+*   Bevallás típusonként más a név!
     IF L_BTYPE_SAVE IS INITIAL.
       L_BTYPE_SAVE = IT_BEVALLO_ALV-BTYPE.
     ENDIF.
 *--12K79 2013.01.30
 
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
 *   Karakteres
     IF NOT IT_BEVALLO_ALV-FIELD_C IS INITIAL.
       MOVE IT_BEVALLO_ALV-FIELD_C TO L_MEZOE.
-*   Keep if it has a value or is a required 0 field
+*   Van érték vagy 0-ás mező és kell
     ELSEIF NOT IT_BEVALLO_ALV-FIELD_NR IS INITIAL OR
            NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_NR IT_BEVALLO_ALV-WAERS.
@@ -1292,7 +1292,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   ENDLOOP.
 
-* Split by tax number
+* Adószámonként szétszedjük
   SORT LI_TAB_MA BY ADOAZON.
   LOOP AT LI_TAB_MA.
     L_ADOAZON = LI_TAB_MA-ADOAZON.
@@ -1301,15 +1301,15 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
     AT END OF ADOAZON.
       SORT IT_TAB_M.
       CLEAR LW_TAB_MS.
-*     Tax identification number must match the
-*     ABEV code value otherwise yields an ABEV error!
+*     Adóazonosítónak meg kell egyeznie az
+*     ABEV kód értékével egyébként ABEV hiba!
 *      lw_tab_ms-adoazon = l_adoazon.
 *--12K79 2013.01.30
       IF L_BTYPE_SAVE EQ C_11K79.
 *--12K79 2013.01.30
         LM_GET_ADOAZON '0A0001C003A'
                        LW_TAB_MS-ADOAZON.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C005A'
                     '0A0001C006A'
                     '0A0001C007A'
@@ -1318,7 +1318,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
       ELSEIF L_BTYPE_SAVE EQ C_12K79.
         LM_GET_ADOAZON '0A0001C003A'
                        LW_TAB_MS-ADOAZON.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C007A'
                     '0A0001C008A'
                     ''
@@ -1328,7 +1328,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
       ELSEIF L_BTYPE_SAVE EQ C_13K79.
         LM_GET_ADOAZON '0A0001C003A'
                        LW_TAB_MS-ADOAZON.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C006A'
                     '0A0001C007A'
                     '0A0001C008A'
@@ -1338,7 +1338,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
       ELSEIF L_BTYPE_SAVE EQ C_19K79.
         LM_GET_ADOAZON '0A0001C003A'
                        LW_TAB_MS-ADOAZON.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C009A'
                     '0A0001C010A'
                     '0A0001C011A'
@@ -1348,7 +1348,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KULF  TABLES   IT_BEVALLO_ALV STRUCTURE
       ELSEIF L_BTYPE_SAVE EQ C_20K79.
         LM_GET_ADOAZON '0A0001C003A'
                        LW_TAB_MS-ADOAZON.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C009A'
                     '0A0001C010A'
                     '0A0001C011A'
@@ -1408,7 +1408,7 @@ FORM SAVE_KULF_XML_FILE USING $STRING TYPE STRING
 
   IF SY-SUBRC NE 0.
     MESSAGE E175(/ZAK/ZAK) WITH $FILENAME RAISING ERROR_DOWNLOAD.
-*   Error downloading file &.
+*   Hiba a & fájl letöltésénél.
   ENDIF.
 
 
@@ -1457,7 +1457,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX65  TABLES   IT_BEVALLO_ALV STRUCTURE
   DATA: LI_ADOAZON TYPE STANDARD TABLE OF /ZAK/ADOAZON
                    INITIAL SIZE 0 WITH HEADER LINE.
 *++1365 #9.
-* Monitor values outside this range
+* Érték figyelés ezen tartományon kívűl
   RANGES LR_ABEVAZ_VALUE FOR /ZAK/ANALITIKA-ABEVAZ.
   DATA   L_APPEND TYPE XFELD.
 *--1365 #9.
@@ -1467,7 +1467,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX65  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -1562,19 +1562,19 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX65  TABLES   IT_BEVALLO_ALV STRUCTURE
       ENDIF.
     ENDIF.
 *--1565 #02.
-*  Read the configuration
+*  Beállítás beolvasása
     READ  TABLE IT_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = IT_BEVALLO_ALV-BTYPE
                    ABEVAZ = IT_BEVALLO_ALV-ABEVAZ
                    BINARY SEARCH.
 
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALLB-ABEV_NO IS INITIAL.
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
 *++1665 #08.
-*  Set the 0 flag for M-type ABEV identifiers
+*  M-es ABEV azonosítóknál 0-ás flag feltöltés
     IF IT_BEVALLO_ALV-ABEVAZ(1) = 'M' AND W_/ZAK/BEVALLB-FIELDTYPE EQ 'N'.
       IT_BEVALLO_ALV-NULL_FLAG = C_X.
     ENDIF.
@@ -1582,7 +1582,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX65  TABLES   IT_BEVALLO_ALV STRUCTURE
 *   Karakteres
     IF NOT IT_BEVALLO_ALV-FIELD_C IS INITIAL.
       MOVE IT_BEVALLO_ALV-FIELD_C TO L_MEZOE.
-*   Keep if it has a value or is a required 0 field
+*   Van érték vagy 0-ás mező és kell
     ELSEIF NOT IT_BEVALLO_ALV-FIELD_NR IS INITIAL OR
            NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_NR IT_BEVALLO_ALV-WAERS.
@@ -1611,14 +1611,14 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX65  TABLES   IT_BEVALLO_ALV STRUCTURE
   CLEAR L_APPEND.
 *--1365 #9.
 
-* Split by tax number
+* Adószámonként szétszedjük
   SORT LI_TAB_MA BY ADOAZON.
   LOOP AT LI_TAB_MA.
     L_ADOAZON = LI_TAB_MA-ADOAZON.
     MOVE-CORRESPONDING LI_TAB_MA TO LW_TAB.
     APPEND LW_TAB TO IT_TAB_M.
 *++1365 #9.
-*   Validate values for any non-main section ABEV field
+*   Érték vizsgálat bármelyik nem fő rész abev mezőre
     IF NOT LW_TAB-ABEVAZ IN LR_ABEVAZ_VALUE AND L_APPEND IS INITIAL.
       IF NOT LW_TAB-VALUE IS INITIAL.
         L_APPEND = 'X'.
@@ -1629,12 +1629,12 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX65  TABLES   IT_BEVALLO_ALV STRUCTURE
     AT END OF ADOAZON.
       SORT IT_TAB_M.
       CLEAR LW_TAB_MS.
-*     Tax identification number must match the
-*     ABEV code value otherwise yields an ABEV error!
+*     Adóazonosítónak meg kell egyeznie az
+*     ABEV kód értékével egyébként ABEV hiba!
       LW_TAB_MS-ADOAZON = L_ADOAZON.
 *      lm_get_adoazon '0A0001C001A'
 *                     lw_tab_ms-adoazon.
-*     Assemble the name
+*     Név öszeállítása
 *++1565 #02.
 *      LM_GET_NAME '0A0001C007A'
       LM_GET_NAME L_GET_NAME_ABEVAZ
@@ -1701,14 +1701,14 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX08  TABLES   IT_BEVALLO_ALV STRUCTURE
   DATA: LI_ADOAZON TYPE STANDARD TABLE OF /ZAK/ADOAZON
                    INITIAL SIZE 0 WITH HEADER LINE.
 *++1365 #9.
-* Monitor values outside this range
+* Érték figyelés ezen tartományon kívűl
   RANGES LR_ABEVAZ_VALUE FOR /ZAK/ANALITIKA-ABEVAZ.
   DATA   L_APPEND TYPE XFELD.
 *--1365 #9.
 
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -1757,21 +1757,21 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX08  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   LOOP AT IT_BEVALLO_ALV.
     CLEAR L_MEZOE.
-*  Read the configuration
+*  Beállítás beolvasása
     READ  TABLE IT_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = IT_BEVALLO_ALV-BTYPE
                    ABEVAZ = IT_BEVALLO_ALV-ABEVAZ
                    BINARY SEARCH.
 
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALLB-ABEV_NO IS INITIAL.
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
 *   Karakteres
     IF NOT IT_BEVALLO_ALV-FIELD_C IS INITIAL.
       MOVE IT_BEVALLO_ALV-FIELD_C TO L_MEZOE.
-*   Keep if it has a value or is a required 0 field
+*   Van érték vagy 0-ás mező és kell
 *++1408 #04. 2014.05.09
 *    ELSEIF NOT it_bevallo_alv-field_nr IS INITIAL OR
 *           NOT it_bevallo_alv-null_flag IS INITIAL.
@@ -1785,7 +1785,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX08  TABLES   IT_BEVALLO_ALV STRUCTURE
     ELSEIF NOT IT_BEVALLO_ALV-FIELD_ONR IS INITIAL AND
            NOT IT_BEVALLO_ALV-OFLAG IS INITIAL.
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_ONR IT_BEVALLO_ALV-WAERS.
-*  Required field with value 0
+*  0-ás mező ami kell
     ELSEIF NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
       IF IT_BEVALLO_ALV-OFLAG IS INITIAL.
         M_SET_MEZOE IT_BEVALLO_ALV-FIELD_NR IT_BEVALLO_ALV-WAERS.
@@ -1814,13 +1814,13 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX08  TABLES   IT_BEVALLO_ALV STRUCTURE
 *  m_def lr_abevaz_value 'I' 'BT' '0A0001C001A' '0A0001D002A'.
   CLEAR L_APPEND.
 
-* Split by tax number
+* Adószámonként szétszedjük
   SORT LI_TAB_MA BY ADOAZON.
   LOOP AT LI_TAB_MA.
     L_ADOAZON = LI_TAB_MA-ADOAZON.
     MOVE-CORRESPONDING LI_TAB_MA TO LW_TAB.
     APPEND LW_TAB TO IT_TAB_M.
-*   Validate values for any non-main section ABEV field
+*   Érték vizsgálat bármelyik nem fő rész abev mezőre
     IF  L_APPEND IS INITIAL AND NOT LW_TAB-VALUE IS INITIAL.
       L_APPEND = 'X'.
     ENDIF.
@@ -1828,8 +1828,8 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX08  TABLES   IT_BEVALLO_ALV STRUCTURE
     AT END OF ADOAZON.
       SORT IT_TAB_M.
       CLEAR LW_TAB_MS.
-*     Tax identification number must match the
-*     ABEV code value otherwise yields an ABEV error!
+*     Adóazonosítónak meg kell egyeznie az
+*     ABEV kód értékével egyébként ABEV hiba!
       LW_TAB_MS-ADOAZON = L_ADOAZON.
 *      lm_get_adoazon '0A0001C001A'
 *                     lw_tab_ms-adoazon.
@@ -1844,14 +1844,14 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_XX08  TABLES   IT_BEVALLO_ALV STRUCTURE
 *++2408 #01.
       OR IT_BEVALLO_ALV-BTYPE EQ C_2408.
 *--2408 #01.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C017A'
                     '0A0001C018A'
                     '0A0001C019A'
                     LW_TAB_MS-NAME.
       ELSE.
 *--2108 #02.
-*     Assemble the name
+*     Név öszeállítása
         LM_GET_NAME '0A0001C016A'
                     '0A0001C017A'
                     '0A0001C018A'
@@ -1918,7 +1918,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KATA  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -1968,26 +1968,26 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KATA  TABLES   IT_BEVALLO_ALV STRUCTURE
 
 
   LOOP AT IT_BEVALLO_ALV.
-*  Read the configuration
+*  Beállítás beolvasása
     READ  TABLE IT_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = IT_BEVALLO_ALV-BTYPE
                    ABEVAZ = IT_BEVALLO_ALV-ABEVAZ
                    BINARY SEARCH.
 
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALLB-ABEV_NO IS INITIAL.
-*   Name differs by return type!
+*   Bevallás típusonként más a név!
     IF L_BTYPE_SAVE IS INITIAL.
       L_BTYPE_SAVE = IT_BEVALLO_ALV-BTYPE.
     ENDIF.
 
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
 *   Karakteres
     IF NOT IT_BEVALLO_ALV-FIELD_C IS INITIAL.
       MOVE IT_BEVALLO_ALV-FIELD_C TO L_MEZOE.
-*   Keep if it has a value or is a required 0 field
+*   Van érték vagy 0-ás mező és kell
     ELSEIF NOT IT_BEVALLO_ALV-FIELD_NR IS INITIAL OR
            NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_NR IT_BEVALLO_ALV-WAERS.
@@ -2009,7 +2009,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KATA  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   ENDLOOP.
 
-* Split by tax number
+* Adószámonként szétszedjük
   SORT LI_TAB_MA BY ADOAZON.
   LOOP AT LI_TAB_MA.
     L_ADOAZON = LI_TAB_MA-ADOAZON.
@@ -2018,11 +2018,11 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_KATA  TABLES   IT_BEVALLO_ALV STRUCTURE
     AT END OF ADOAZON.
       SORT IT_TAB_M.
       CLEAR LW_TAB_MS.
-*     Tax identification number must match the
-*     ABEV code value otherwise yields an ABEV error!
+*     Adóazonosítónak meg kell egyeznie az
+*     ABEV kód értékével egyébként ABEV hiba!
       LM_GET_ADOAZON '0A0001C003A'
                      LW_TAB_MS-ADOAZON.
-*     Assemble the name
+*     Név öszeállítása
       LM_GET_NAME '0A0001C004A'
                   ''
                   ''
@@ -2065,7 +2065,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_TAO  TABLES   IT_BEVALLO_ALV STRUCTURE
 
   DEFINE M_SET_MEZOE.
     CLEAR L_ELOJEL.
-*     Watch for negative sign
+*     Negatív előjel figyelése
     IF &1 < 0.
       MOVE '-' TO L_ELOJEL.
       &1 = ABS( &1 ).
@@ -2104,7 +2104,7 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_TAO  TABLES   IT_BEVALLO_ALV STRUCTURE
 
 
   LOOP AT IT_BEVALLO_ALV.
-*  Read the configuration
+*  Beállítás beolvasása
     READ  TABLE IT_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = IT_BEVALLO_ALV-BTYPE
                    ABEVAZ = IT_BEVALLO_ALV-ABEVAZ
@@ -2112,14 +2112,14 @@ FORM FIELDS_FROM_IT_BEVALLO_TO_TAO  TABLES   IT_BEVALLO_ALV STRUCTURE
 
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALLB-ABEV_NO IS INITIAL.
 
-*   Convert the APEH ABEV identifier
+*   APEH abevaz konvertálás
     PERFORM GET_ABEVAZ_TO_APEH USING IT_BEVALLO_ALV-ABEVAZ
                                      IT_BEVALLO_ALV-LAPSZ
                             CHANGING L_APEH_ABEVAZ.
 *   Karakteres
     IF NOT IT_BEVALLO_ALV-FIELD_C IS INITIAL.
       MOVE IT_BEVALLO_ALV-FIELD_C TO L_MEZOE.
-*   Keep if it has a value or is a required 0 field
+*   Van érték vagy 0-ás mező és kell
     ELSEIF NOT IT_BEVALLO_ALV-FIELD_NR IS INITIAL OR
            NOT IT_BEVALLO_ALV-NULL_FLAG IS INITIAL.
       M_SET_MEZOE IT_BEVALLO_ALV-FIELD_NR IT_BEVALLO_ALV-WAERS.

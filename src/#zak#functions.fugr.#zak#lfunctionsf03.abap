@@ -80,7 +80,7 @@ FORM GET_ABEV_CONTACT TABLES   I_BTYPE TYPE /ZAK/T_BTYPE
 
   ENDLOOP.
 
-* At the last record
+* Utolsó rekordnál
   IF L_BTYPE IS INITIAL.
     L_BTYPE = W_BTYPE.
   ENDIF.
@@ -142,7 +142,7 @@ FORM GET_ALL_BTYPE TABLES   I_BTYPE TYPE /ZAK/T_BTYPE
   ENDDO.
 
 
-* Reverse the order of the records
+* Rekordok sorrendjének megfordítása
 *++S4HANA#01.
 *  DESCRIBE TABLE I_BTYPE_LOCAL LINES L_COUNTER.
   L_COUNTER = LINES( I_BTYPE_LOCAL ).
@@ -272,7 +272,7 @@ FORM CHECK_VALIDITIES USING    $BUKRS TYPE BUKRS
 
   CLEAR $SUBRC.
 
-* Validity of BTYPE_FROM
+* BTYPE_FROM érvénessége
   PERFORM READ_BEVALL_VALID USING $BUKRS
                                   $BTYPE_FROM
                          CHANGING V_DATAB_FROM
@@ -468,7 +468,7 @@ FORM CONVERT_BEVALLO TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
 
-* Load form data for ABEV
+* Nyomtatvány adatok beolvasása abevhez
     CLEAR W_/ZAK/BEVALLB.
     READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
        WITH KEY BTYPE  = W_/ZAK/BEVALLO-BTYPE
@@ -560,7 +560,7 @@ FORM CONVERT_BEVALLO TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 
 
-* Excel format
+* Excel formátum
   LOOP AT I_LINES.
     CHECK I_LINES-WRBTR_DES > 0.
 
@@ -658,7 +658,7 @@ FORM CONVERT_BEVALLO_NEW TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
 
-* Load form data for ABEV
+* Nyomtatvány adatok beolvasása abevhez
     CLEAR W_/ZAK/BEVALLB.
     READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
        WITH KEY BTYPE  = W_/ZAK/BEVALLO-BTYPE
@@ -687,7 +687,7 @@ FORM CONVERT_BEVALLO_NEW TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
     CHECK LS_I_LINES_TMP-SOR NE '00' OR
           LS_I_LINES_TMP-SOR NE SPACE.
 *--S4HANA#01.
-*   Fill whatever is possible for Excel
+*   Amit lehet kitölt az Excelhez
 *++S4HANA#01.
 *    I_LINES_TMP-BUKRS       = W_/ZAK/BEVALLO-BUKRS.
     LS_I_LINES_TMP-BUKRS       = W_/ZAK/BEVALLO-BUKRS.
@@ -702,7 +702,7 @@ FORM CONVERT_BEVALLO_NEW TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 *    I_LINES_TMP-BIZFAJTA = 'KF'.
 *    WRITE SY-DATUM TO I_LINES_TMP-KONYVDAT.
 *    WRITE SY-DATUM TO I_LINES_TMP-BIZDATUM.
-*    I_LINES_TMP-SZOVEG = 'Tax transfer'.
+*    I_LINES_TMP-SZOVEG = 'Adó átvezetés'.
 *    I_LINES_TMP-FEJSZOVEG = ' '.
 **    I_LINES_TMP-OSSZEG
 *    I_LINES_TMP-KK1 = '27'.
@@ -727,10 +727,10 @@ FORM CONVERT_BEVALLO_NEW TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 *++S4HANA#01.
 *  SORT I_LINES_TMP.
-** Assemble the data
+** Összerakja az adatokat
 *  LOOP AT I_LINES_TMP.
   SORT LT_I_LINES_TMP.
-*  ASSEMBLE THE DATA
+*  ÖSSZERAKJA AZ ADATOKAT
   LOOP AT LT_I_LINES_TMP INTO LS_I_LINES_TMP.
 *--S4HANA#01.
 
@@ -779,7 +779,7 @@ FORM CONVERT_BEVALLO_NEW TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 
 
-* Excel format
+* Excel formátum
 *++S4HANA#01.
 *  LOOP AT I_LINES.
 *    CHECK I_LINES-WRBTR_DES > 0.
@@ -883,7 +883,7 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
 
-* Load form data for ABEV
+* Nyomtatvány adatok beolvasása abevhez
     CLEAR W_/ZAK/BEVALLB.
     READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
        WITH KEY BTYPE  = W_/ZAK/BEVALLO-BTYPE
@@ -913,7 +913,7 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
           LS_I_LINES_TMP-SOR NE SPACE.
 *--S4HANA#01.
 
-*    One identifier should group the items; currently a single item number does this
+*    Egy azonosítónak össze kell fognia a tételeket, most egy tételszám az
 *++S4HANA#01.
 *    L_SZAMLA_BELNR =    L_SZAMLA_BELNR + 1 .
 *    I_LINES_TMP-BIZ_AZON = L_SZAMLA_BELNR.
@@ -923,12 +923,12 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 *    I_LINES_TMP-BF = 'KF'.
 *    WRITE SY-DATUM TO I_LINES_TMP-KONYV_DAT.
 *    WRITE SY-DATUM TO I_LINES_TMP-BIZ_DATUM.
-*    I_LINES_TMP-SZOVEG = 'Tax transfer'.
+*    I_LINES_TMP-SZOVEG = 'Adó átvezetés'.
 *    I_LINES_TMP-FEJSZOVEG = ' '.
 *    I_LINES_TMP-KK = '27'.
 *    PERFORM GET_UZLAG USING W_/ZAK/BEVALLO-BUKRS
 *                            I_LINES_TMP-UZLETAG.
-**   Saves the first row
+**   elmenti az első sort
 *    APPEND I_LINES_TMP.
     LS_I_LINES_TMP-BIZ_AZON = L_SZAMLA_BELNR.
     LS_I_LINES_TMP-BIZ_TETEL = '0001'.
@@ -942,7 +942,7 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
     LS_I_LINES_TMP-KK = '27'.
     PERFORM GET_UZLAG USING W_/ZAK/BEVALLO-BUKRS
                             CHANGING LS_I_LINES_TMP-UZLETAG.
-*   SAVES THE FIRST ROW
+*   ELMENTI AZ ELSő SORT
     APPEND LS_I_LINES_TMP TO LT_I_LINES_TMP.
 *--S4HANA#01.
 *    I_LINES_TMP-KK  = '37'.
@@ -952,10 +952,10 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 *++S4HANA#01.
 *  SORT I_LINES_TMP.
-** Assemble the data
+** Összerakja az adatokat
 *  LOOP AT I_LINES_TMP.
   SORT LT_I_LINES_TMP.
-* Assemble the data
+* Összerakja az adatokat
   LOOP AT LT_I_LINES_TMP INTO LS_I_LINES_TMP.
 *--S4HANA#01.
 
@@ -1004,8 +1004,8 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 
 
-* Excel format
-* Create two posting lines from one row
+* Excel formátum
+* Egy sorból két könyvelési sort csinál
 *++S4HANA#01.
 *  LOOP AT I_LINES.
 *    CHECK I_LINES-WRBTR_DES > 0.
@@ -1014,7 +1014,7 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
 
     CLEAR I_EXCEL.
-*   Determine line 1
+*   1. sor meghatározása
 *++S4HANA#01.
 *    MOVE-CORRESPONDING I_LINES TO I_EXCEL.
     MOVE-CORRESPONDING LS_I_LINES TO I_EXCEL.
@@ -1046,9 +1046,9 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
               NO-GROUPING.
     ENDIF.
-*   Save line 1
+*   1 . sor mentése
     APPEND I_EXCEL.
-*   Process item 2
+*   2. tétel feldolgozása
     I_EXCEL-BIZ_TETEL = '0002'.
     I_EXCEL-KK        = '37'.
 
@@ -1060,7 +1060,7 @@ FORM CONVERT_BEVALLO_V2 TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 *         AND ADONEM = I_LINES-ADONEM_DES.
          AND ADONEM = LS_I_LINES-ADONEM_DES.
 *--S4HANA#01.
-*   Save line 2
+*   2 . sor mentése
     APPEND I_EXCEL.
   ENDLOOP.
 
@@ -1099,7 +1099,7 @@ FORM FILL_TEXTS USING P_BUKRS TYPE /ZAK/BEVALLO-BUKRS
 *--S4HANA#01.
                 CHANGING I_LINES STRUCTURE /ZAK/ATVEZ_SOR.
 
-* Tax code description - source
+* Adónem megnevezése - forrás
   IF NOT I_LINES-ADONEM_SRC IS INITIAL.
 
     SELECT SINGLE ADONEM_TXT INTO I_LINES-ADONEM_SRC_TXT
@@ -1109,7 +1109,7 @@ FORM FILL_TEXTS USING P_BUKRS TYPE /ZAK/BEVALLO-BUKRS
            AND    ADONEM  = I_LINES-ADONEM_SRC.
   ENDIF.
 
-* Tax code description - target
+* Adónem megnevezése - cél
   IF NOT I_LINES-ADONEM_DES IS INITIAL.
 
     SELECT SINGLE ADONEM_TXT INTO I_LINES-ADONEM_DES_TXT
@@ -1174,7 +1174,7 @@ FORM DOWNLOAD_FILE_V2 TABLES
     SEPARATED BY '_'.
   CONCATENATE L_DEF_FILENAME '.XLS' INTO L_DEF_FILENAME.
 
-* Read the data structure
+* Adatszerkezet beolvasása
   CALL FUNCTION 'DD_GET_DD03P_ALL'
     EXPORTING
       LANGU         = SYST-LANGU
@@ -1195,7 +1195,7 @@ FORM DOWNLOAD_FILE_V2 TABLES
 
   ENDIF.
 
-*++ BG 2006.04.20 Path determination
+*++ BG 2006.04.20 Útvonal meghatározás
   MOVE L_DEF_FILENAME TO L_FILENAME.
 
 
@@ -1251,7 +1251,7 @@ FORM DOWNLOAD_FILE_V2 TABLES
 *      FILENAME                = L_FILENAME_DOWN
 *      FILETYPE                = 'DAT'
 **++ BG 2006/03/30
-*      ITEM                    = 'Transfer posting accounting upload'(004)
+*      ITEM                    = 'Átvezetés könyvelési feladás'(004)
 **-- BG 2006/03/30
 **     FILEMASK_ALL            = 'X'
 *      FILETYPE_NO_CHANGE      = 'X'
@@ -1372,7 +1372,7 @@ FORM DOWNLOAD_FILE TABLES
     SEPARATED BY '_'.
   CONCATENATE L_DEF_FILENAME '.XLS' INTO L_DEF_FILENAME.
 
-* Read the data structure
+* Adatszerkezet beolvasása
   CALL FUNCTION 'DD_GET_DD03P_ALL'
     EXPORTING
       LANGU         = SYST-LANGU
@@ -1398,12 +1398,12 @@ FORM DOWNLOAD_FILE TABLES
     ENDLOOP.
 *++FI20070222
   ELSE.
-*  If there is an error then the error code must be set
+*  ha hiba van akkor állítani kell a hibakódot
     P_ERROR = 'X'.
 *--FI20070222
   ENDIF.
 
-*++ BG 2006.04.20 Path determination
+*++ BG 2006.04.20 Útvonal meghatározás
   MOVE L_DEF_FILENAME TO L_FILENAME.
 
 
@@ -1463,7 +1463,7 @@ FORM DOWNLOAD_FILE TABLES
 *      FILENAME                = L_FILENAME_DOWN
 *      FILETYPE                = 'DAT'
 **++ BG 2006/03/30
-*      ITEM                    = 'Transfer posting accounting upload'(004)
+*      ITEM                    = 'Átvezetés könyvelési feladás'(004)
 **-- BG 2006/03/30
 **     FILEMASK_ALL            = 'X'
 *      FILETYPE_NO_CHANGE      = 'X'
@@ -1562,7 +1562,7 @@ FORM CONVERT_BEVALLO_LINES TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
 
-* Load form data for ABEV
+* Nyomtatvány adatok beolvasása abevhez
     CLEAR W_/ZAK/BEVALLB.
     READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
        WITH KEY BTYPE  = W_/ZAK/BEVALLO-BTYPE
@@ -1685,7 +1685,7 @@ FORM UPDATE_ADONSZA TABLES   I_LINES STRUCTURE /ZAK/ATVEZ_SOR
   LOOP AT I_LINES.
     CHECK I_LINES-WRBTR_DES > 0.
 
-* Source tax code
+* Forrás adónem
     CLEAR W_/ZAK/ADONSZA.
     PERFORM GET_NUMBER USING    P_BUKRS
                        CHANGING W_/ZAK/ADONSZA-BELNR
@@ -1723,7 +1723,7 @@ FORM UPDATE_ADONSZA TABLES   I_LINES STRUCTURE /ZAK/ATVEZ_SOR
 
     CHECK P_ERROR = SPACE.
 
-* Target tax code
+* Cél adónem
     CLEAR W_/ZAK/ADONSZA.
     PERFORM GET_NUMBER USING    P_BUKRS
                        CHANGING W_/ZAK/ADONSZA-BELNR
@@ -1786,7 +1786,7 @@ FORM GET_NUMBER USING    P_BUKRS TYPE BUKRS
 *--S4HANA#01.
   CLEAR P_BELNR.
 
-* Document number range
+* bizonylatszám számkör
   CALL FUNCTION '/ZAK/NEW_BELNR'
     EXPORTING
       I_BUKRS          = P_BUKRS
@@ -1820,7 +1820,7 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
                              $SUBRC TYPE SY-SUBRC.
 *--S4HANA#01.
 
-*Define ranges to collect field names
+*Range definiálása mezo nevek gyujtéséhez
   RANGES R_ABEVAZ FOR /ZAK/BEVALLB-ABEVAZ.
   DATA   L_ABEVAZ TYPE /ZAK/ABEVAZ.
   DATA   L_FIELD_NRK TYPE WERTV9.
@@ -1828,7 +1828,7 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
   DATA:  $EXCEL1 TYPE /ZAK/SZJAEXCELV2
         ,$EXCEL2 TYPE /ZAK/SZJAEXCELV2
         .
-*Define a macro to fill the ranges
+*Macro definiálása range feltöltéshez
 *  DEFINE M_DEF.
 *    MOVE: 'I'     TO &1-SIGN,
 *          'EQ'    TO &1-OPTION,
@@ -1845,8 +1845,8 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
   CLEAR $SUBRC.
 
 
-*++BG 2007.04.23 Self-audit tax codes in /ZAK/ADONEM
-*table flagged by the ONREL field:
+*++BG 2007.04.23 Az önellenőrzés adónemek a /ZAK/ADONEM
+*táblában az ONREL mező által megjelöltek:
 *++S4HANA#01.
 *  REFRESH R_ONELL_ADONEM.
   CLEAR R_ONELL_ADONEM[].
@@ -1863,7 +1863,7 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
 *--BG 2007.04.23
 
 
-* Determine the self-audit surcharge ABEV identifier(s).
+* Meghatározzuk az önellenőrzéses pótlék ABEV azonosító(k)at.
   SELECT ABEVAZ INTO L_ABEVAZ
                 FROM /ZAK/BEVALLB
                WHERE BTYPE   EQ $W_BEVALLO-BTYPE
@@ -1871,7 +1871,7 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
 *++BG 2007.04.23
 *                AND ADONEM  EQ C_ONELL_ADONEM.
 *++BG 2008.03.11
-*Tax codes must be looked up among the self-audit tax codes
+*Az adónemeket az önrevíziós adónemeknél kell keresni
 *                AND ADONEM  IN R_ONELL_ADONEM.
                  AND ADONEM_ONR IN R_ONELL_ADONEM.
 *--BG 2008.03.11
@@ -1885,15 +1885,15 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
   CHECK NOT R_ABEVAZ IS INITIAL.
 
   CLEAR L_FIELD_NRK.
-* Sum the FIELD_NR fields.
+* Összegezzük a FIELD_NR mezőket.
   LOOP AT $BEVALLO WHERE ABEVAZ IN R_ABEVAZ.
     ADD $BEVALLO-FIELD_NRK TO L_FIELD_NRK.
   ENDLOOP.
 
-* If there is an amount, assemble the posting data
+* Ha van összeg, akkor könyvelési adatok összeállítása
   CHECK NOT L_FIELD_NRK IS INITIAL.
 
-* Read the settings
+* Beolvassuk a beállításokat
   SELECT SINGLE * INTO W_/ZAK/ONELL_BOOK
                   FROM /ZAK/ONELL_BOOK
                  WHERE BUKRS EQ $W_BEVALLO-BUKRS.
@@ -1902,14 +1902,14 @@ FORM GET_DATA_ONELL_V2 TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
   ENDIF.
 ENHANCEMENT-POINT /ZAK/ZAK_TELEKOM_ONELL_01 SPOTS /ZAK/FUNCTIONS_ES .
 
-* Populate the posting file
+* Könyvelési fájl feltöltése
   CLEAR: $EXCEL1,$EXCEL2.
 *++BG 2006/07/19
-* Document date.
+* Bizonylat dátum.
 *  MOVE $W_BEVALLO-GJAHR TO L_DATUM(4).
 *  MOVE $W_BEVALLO-MONAT TO L_DATUM+4(2).
 
-* Changed (Lehel Attila): use the last day of the submission month
+* Megváltozott (Lehel Attila): beadás hónapjának utolsó napja legyen
   MOVE SY-DATUM(4)   TO  L_DATUM(4).
   MOVE SY-DATUM+4(2) TO L_DATUM+4(2).
 *--BG 2006/07/19
@@ -1936,24 +1936,24 @@ ENHANCEMENT-POINT /ZAK/ZAK_TELEKOM_ONELL_01 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 
-* Document type
+* Bizonylat fajta
   MOVE W_/ZAK/ONELL_BOOK-BLART TO $EXCEL1-BF.
   MOVE W_/ZAK/ONELL_BOOK-BLART TO $EXCEL2-BF.
-* Company
+* Vállalat
 
 *  MOVE $W_BEVALLO-BUKRS TO $EXCEL-VALL.
-* Posting date
+* Könyvelési dátum
   WRITE L_DATUM TO  $EXCEL1-KONYV_DAT.
   WRITE L_DATUM TO  $EXCEL2-KONYV_DAT.
-* Month
+* Hónap
 *  MOVE $W_BEVALLO-MONAT TO $EXCEL1-HO.
 *  MOVE $W_BEVALLO-MONAT TO $EXCEL2-HO.
   MOVE L_DATUM+4(2) TO $EXCEL1-HO.
   MOVE L_DATUM+4(2) TO $EXCEL2-HO.
 
-* Header text
+* Fejszöveg
 *++BG 2006/08/31
-* Filled based on the document date (Lehel Attila)
+* Bizonylat dátum lapján kerül feltöltésre (Lehel Attila)
   CONCATENATE
 *              $W_BEVALLO-GJAHR
 *              $W_BEVALLO-MONAT
@@ -1965,11 +1965,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_TELEKOM_ONELL_01 SPOTS /ZAK/FUNCTIONS_ES .
   $EXCEL2-FEJSZOVEG = $EXCEL1-FEJSZOVEG.
 *--BG 2006/08/31
 
-* Account 1 (debit)
+* Számla1 (tartozik)
   MOVE W_/ZAK/ONELL_BOOK-SZAMLA1 TO $EXCEL1-FOKONYV.
-* Amount.
+* Összeg.
 *++BG 2006/07/19
-* The currency was not read into the work area, therefore divide by 100
+* Nem volt beolvasva a munkaterületbe a pénznem ezért a /100
 * hozta.
 * WRITE L_FIELD_NRK CURRENCY $W_BEVALLO-WAERS TO $EXCEL-FORINT
   WRITE L_FIELD_NRK CURRENCY $BEVALLO-WAERS  TO $EXCEL1-OSSZEG
@@ -1977,27 +1977,27 @@ ENHANCEMENT-POINT /ZAK/ZAK_TELEKOM_ONELL_01 SPOTS /ZAK/FUNCTIONS_ES .
                              NO-SIGN.
   $EXCEL2-OSSZEG = $EXCEL1-OSSZEG.
 *--BG 2006/07/19
-* Account 2 (credit)
+* Számla2 (követel)
   MOVE W_/ZAK/ONELL_BOOK-SZAMLA2 TO $EXCEL2-FOKONYV.
 * Profitcenter
   MOVE W_/ZAK/ONELL_BOOK-PRCTR   TO $EXCEL1-PRCTR .
   MOVE W_/ZAK/ONELL_BOOK-GSBER   TO $EXCEL2-UZLETAG .
 *++BG 2007/08/02
-* Assign the order to the line on which
+* A rendelést arra a sorra kell kontírozni, amelyiken
 * a profitcenter van.
 * MOVE W_/ZAK/ONELL_BOOK-AUFNR   TO $EXCEL2-RENDELES .
   MOVE W_/ZAK/ONELL_BOOK-AUFNR   TO $EXCEL1-RENDELES .
 *--BG 2007/08/02
 
 *++BG 2008/02/22
-* Fill the cost center
+* Költséghely töltése
   MOVE W_/ZAK/ONELL_BOOK-KOSTL   TO $EXCEL1-KTGH.
 *--BG 2008/02/22
 
-* Text
+* Szöveg
   MOVE $EXCEL1-FEJSZOVEG  TO $EXCEL1-SZOVEG .
   MOVE $EXCEL2-FEJSZOVEG  TO $EXCEL2-SZOVEG .
-* Save rows
+* sorok mentése
   APPEND $EXCEL1 TO $EXCEL_T.
   APPEND $EXCEL2 TO $EXCEL_T.
 
@@ -2015,13 +2015,13 @@ FORM GET_DATA_ONELL TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
                     USING    $W_BEVALLO STRUCTURE /ZAK/BEVALLO
                              $SUBRC.
 
-*Define ranges to collect field names
+*Range definiálása mezo nevek gyujtéséhez
   RANGES R_ABEVAZ FOR /ZAK/BEVALLB-ABEVAZ.
   DATA   L_ABEVAZ TYPE /ZAK/ABEVAZ.
   DATA   L_FIELD_NRK TYPE WERTV9.
   DATA   L_DATUM LIKE SY-DATUM.
 
-*Define a macro to fill the ranges
+*Macro definiálása range feltöltéshez
 *  DEFINE M_DEF.
 *    MOVE: 'I'     TO &1-SIGN,
 *          'EQ'    TO &1-OPTION,
@@ -2032,7 +2032,7 @@ FORM GET_DATA_ONELL TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
   CLEAR $SUBRC.
 
 
-* Determine the self-audit surcharge ABEV identifier(s).
+* Meghatározzuk az önellenőrzéses pótlék ABEV azonosító(k)at.
   SELECT ABEVAZ INTO L_ABEVAZ
                 FROM /ZAK/BEVALLB
                WHERE BTYPE   EQ $W_BEVALLO-BTYPE
@@ -2045,15 +2045,15 @@ FORM GET_DATA_ONELL TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
   CHECK NOT R_ABEVAZ IS INITIAL.
 
   CLEAR L_FIELD_NRK.
-* Sum the FIELD_NR fields.
+* Összegezzük a FIELD_NR mezőket.
   LOOP AT $BEVALLO WHERE ABEVAZ IN R_ABEVAZ.
     ADD $BEVALLO-FIELD_NRK TO L_FIELD_NRK.
   ENDLOOP.
 
-* If there is an amount, assemble the posting data
+* Ha van összeg, akkor könyvelési adatok összeállítása
   CHECK NOT L_FIELD_NRK IS INITIAL.
 
-* Read the settings
+* Beolvassuk a beállításokat
   SELECT SINGLE * INTO W_/ZAK/ONELL_BOOK
                   FROM /ZAK/ONELL_BOOK
                  WHERE BUKRS EQ $W_BEVALLO-BUKRS.
@@ -2061,14 +2061,14 @@ FORM GET_DATA_ONELL TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
     MOVE 4 TO $SUBRC.
   ENDIF.
 
-* Populate the posting file
+* Könyvelési fájl feltöltése
   CLEAR $EXCEL.
 *++BG 2006/07/19
-* Document date.
+* Bizonylat dátum.
 *  MOVE $W_BEVALLO-GJAHR TO L_DATUM(4).
 *  MOVE $W_BEVALLO-MONAT TO L_DATUM+4(2).
 
-* Changed (Lehel Attila): use the last day of the submission month
+* Megváltozott (Lehel Attila): beadás hónapjának utolsó napja legyen
   MOVE SY-DATUM(4)   TO  L_DATUM(4).
   MOVE SY-DATUM+4(2) TO L_DATUM+4(2).
 *--BG 2006/07/19
@@ -2080,19 +2080,19 @@ FORM GET_DATA_ONELL TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
     IMPORTING
       LAST_DAY_OF_MONTH = L_DATUM.
   MOVE L_DATUM TO $EXCEL-BIZ_DATUM.
-* Document type
+* Bizonylat fajta
   MOVE W_/ZAK/ONELL_BOOK-BLART TO $EXCEL-BF.
-* Company
+* Vállalat
 
   MOVE $W_BEVALLO-BUKRS TO $EXCEL-VALL.
-* Posting date
+* Könyvelési dátum
   MOVE L_DATUM TO  $EXCEL-KONYV_DAT.
-* Month
+* Hónap
   MOVE $W_BEVALLO-MONAT TO $EXCEL-HO.
 
-* Header text
+* Fejszöveg
 *++BG 2006/08/31
-* Filled based on the document date (Lehel Attila)
+* Bizonylat dátum lapján kerül feltöltésre (Lehel Attila)
   CONCATENATE
 *              $W_BEVALLO-GJAHR
 *              $W_BEVALLO-MONAT
@@ -2103,22 +2103,22 @@ FORM GET_DATA_ONELL TABLES   $BEVALLO STRUCTURE /ZAK/BEVALLO
               SEPARATED BY SPACE.
 *--BG 2006/08/31
 
-* Account 1 (debit)
+* Számla1 (tartozik)
   MOVE W_/ZAK/ONELL_BOOK-SZAMLA1 TO $EXCEL-SZAMLA1.
-* Amount.
+* Összeg.
 *++BG 2006/07/19
-* The currency was not read into the work area, therefore divide by 100
+* Nem volt beolvasva a munkaterületbe a pénznem ezért a /100
 * hozta.
 * WRITE L_FIELD_NRK CURRENCY $W_BEVALLO-WAERS TO $EXCEL-FORINT
   WRITE L_FIELD_NRK CURRENCY $BEVALLO-WAERS  TO $EXCEL-FORINT
                              NO-GROUPING
                              NO-SIGN.
 *--BG 2006/07/19
-* Account 2 (credit)
+* Számla2 (követel)
   MOVE W_/ZAK/ONELL_BOOK-SZAMLA2 TO $EXCEL-SZAMLA2.
 * Profitcenter
   MOVE W_/ZAK/ONELL_BOOK-PRCTR   TO $EXCEL-PRCTR1.
-* Text
+* Szöveg
 * ++ FI 20070111
 *  MOVE $EXCEL-FEJSZOVEG  TO $EXCEL-SZOVEG.
   MOVE $EXCEL-FEJSZOVEG  TO $EXCEL-SZOVEG1.
@@ -2177,7 +2177,7 @@ FORM DOWNLOAD_FILE_ONELL TABLES   $I_EXCEL STRUCTURE /ZAK/SZJAEXCELV2
 
   CHECK NOT $I_EXCEL[] IS INITIAL.
 
-* Determine the file name
+* Fájl név meghatározás
 *++BG 2007.05.17
 *  CONCATENATE $W_BEVALLO-BUKRS $W_BEVALLO-BTYPE TEXT-002
 *         INTO L_DEF_FILENAME SEPARATED BY '_'.
@@ -2193,7 +2193,7 @@ FORM DOWNLOAD_FILE_ONELL TABLES   $I_EXCEL STRUCTURE /ZAK/SZJAEXCELV2
 
   CONCATENATE L_DEF_FILENAME '.XLS' INTO L_DEF_FILENAME.
 
-* Read the data structure
+* Adatszerkezet beolvasása
   CALL FUNCTION 'DD_GET_DD03P_ALL'
     EXPORTING
       DEFSTATUS     = 'A'
@@ -2213,7 +2213,7 @@ FORM DOWNLOAD_FILE_ONELL TABLES   $I_EXCEL STRUCTURE /ZAK/SZJAEXCELV2
     ENDLOOP.
   ENDIF.
 
-*++ BG 2006.04.20 Path determination
+*++ BG 2006.04.20 Útvonal meghatározás
   MOVE L_DEF_FILENAME TO L_FILENAME.
 
 *++0001 2007.01.03 BG (FMC)
@@ -2275,7 +2275,7 @@ FORM DOWNLOAD_FILE_ONELL TABLES   $I_EXCEL STRUCTURE /ZAK/SZJAEXCELV2
 *      FILENAME                = L_FILENAME_DOWN
 **--BG 2006/06/23
 *      FILETYPE                = 'DAT'
-*      ITEM                    = 'Self-audit surcharge'(003)
+*      ITEM                    = 'Önellenőrzési pótlék'(003)
 *      FILETYPE_NO_CHANGE      = 'X'
 *      FILETYPE_NO_SHOW        = 'X'
 *    IMPORTING
@@ -2389,8 +2389,8 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
   DATA L_LAST_INDEX TYPE /ZAK/INDEX.
 *++BG 2008.03.26
-* Collect tax codes: for VAT which tax code had the
-* difference aggregation
+* Adónemek gyűjtése: ÁFA-nál melyik adónemre történt
+* különbség gyűjtés
 *++S4HANA#01.
 *  RANGES LR_ADONEM FOR /ZAK/BEVALLB-ADONEM.
   TYPES TT_ADONEM TYPE RANGE OF /ZAK/BEVALLB-ADONEM.
@@ -2413,7 +2413,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
 *--BG 2008.03.26
 
-*Define a macro to fill the ranges
+*Macro definiálása range feltöltéshez
 *  DEFINE M_DEF.
 *    MOVE: 'I'     TO &1-SIGN,
 *          'EQ'    TO &1-OPTION,
@@ -2426,7 +2426,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   SORT: $I_BEVALLO, $I_BEVALLB.
 
-* Last day of the month
+* Hónap utolsó napja
   CONCATENATE $GJAHR $MONAT '01' INTO L_DATE.
 
   CALL FUNCTION 'LAST_DAY_OF_MONTHS'  "#EC CI_USAGE_OK[2296016]
@@ -2436,7 +2436,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
       LAST_DAY_OF_MONTH = L_DATE.
 
 
-* Determine the return type
+* Meghatározzuk a bevallás típusát
 *++S4HANA#01.
 *  SELECT SINGLE * INTO LW_BEVALL
 *                  FROM /ZAK/BEVALL
@@ -2454,7 +2454,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
   ENDSELECT.
 *--S4HANA#01.
 
-* For VAT and self-audit the previous period is also required
+* AFA-nal és onrevizonal előző időszak is kell
   IF LW_BEVALL-BTYPART EQ C_BTYPART_AFA AND $INDEX NE '000'.
     L_LAST_INDEX = $INDEX - 1.
 
@@ -2481,13 +2481,13 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
   ENDIF.
 
-* Determine the due date
+* Esedékességi dátum meghatározása
   READ TABLE $I_BEVALLB INTO W_/ZAK/BEVALLB
                         WITH KEY BTYPE      = $BTYPE
                                  ESDAT_FLAG = 'X'.
-* Determine the due date based on the ABEV field
+* ABEV mező alapján esedékességi dátum meghatározása
   IF SY-SUBRC EQ 0.
-*   Determine the value of the ABEV field
+*   ABEV mező értékének meghatározása
     READ TABLE $I_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY BUKRS  = $BUKRS
                                    BTYPE  = $BTYPE
@@ -2496,7 +2496,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
                                    ZINDEX = $INDEX
                                    ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
                                    BINARY SEARCH.
-*   Once the field value is found, copy it to ESDAT
+*   Megvan a mező értékét átmásoljuk az ESDAT-ba
     IF SY-SUBRC EQ 0.
       CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
         EXPORTING
@@ -2506,7 +2506,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
     ENDIF.
   ENDIF.
 
-* Populate transfer BTYPEs
+* Átvezetéses BTYPE-ok feltöltése
 *  REFRESH $R_ATV_BTYPE.
 *
 *  SELECT BTYPE INTO L_BTYPE
@@ -2519,7 +2519,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   GET TIME.
 *++BG 2008.03.26
-* Process data
+* Adatok feldolgozása
 *++S4HANA#01.
 *  REFRESH LR_ADONEM.
   CLEAR LT_ADONEM[].
@@ -2527,7 +2527,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--BG 2008.03.26
 
   LOOP AT $I_BEVALLO INTO W_/ZAK/BEVALLO WHERE NOT FIELD_NRK IS INITIAL.
-*  Determine the tax code for the ABEV identifier
+*  ABEV azonosítóhoz adónem meghatározása
 *++BG 2006/06/23
 *    LOOP AT $I_BEVALLB INTO  W_/ZAK/BEVALLB
 *                       WHERE BTYPE  EQ W_/ZAK/BEVALLO-BTYPE
@@ -2539,7 +2539,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
     CHECK SY-SUBRC EQ 0.
 *--BG 2006/06/23
 
-*    For a normal period the ADONEM must be considered.
+*    Ha normál időszak akkor ADONEM-et kell figyelni.
     IF $INDEX EQ '000'.
       CHECK NOT W_/ZAK/BEVALLB-ADONEM IS INITIAL.
     ELSE.
@@ -2547,8 +2547,8 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
     ENDIF.
 
     CLEAR: W_/ZAK/ADONEM, W_/ZAK/ADONSZA.
-*     Determine tax code data
-*     Normal period
+*     Adónem adatok meghatározása
+*     Normál időszak
     IF $INDEX EQ '000'.
 *++S4HANA#01.
 *      SELECT SINGLE * INTO W_/ZAK/ADONEM
@@ -2560,11 +2560,11 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *++BG 2007.05.22
       IF SY-SUBRC NE 0.
         MESSAGE E219(/ZAK/ZAK) WITH $BUKRS W_/ZAK/BEVALLB-ADONEM.
-*       Missing configuration in table /ZAK/ADONEM! (Company: &, tax code: &).
+*       Nincs beállítás a /ZAK/ADONEM táblában! (Vállalat: &, adónem: & ).
       ENDIF.
 *--BG 2007.05.22
 
-*     Self-audit period
+*     Önrevíziós időszak
     ELSE.
 *++S4HANA#01.
 *      SELECT SINGLE * INTO W_/ZAK/ADONEM
@@ -2576,12 +2576,12 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *++BG 2007.05.22
       IF SY-SUBRC NE 0.
         MESSAGE E219(/ZAK/ZAK) WITH $BUKRS W_/ZAK/BEVALLB-ADONEM.
-*       Missing configuration in table /ZAK/ADONEM! (Company: &, tax code: &).
+*       Nincs beállítás a /ZAK/ADONEM táblában! (Vállalat: &, adónem: & ).
       ENDIF.
 *--BG 2007.05.22
     ENDIF.
 
-*   Calculate the due date
+*   Esedékességi dátum kiszámítása
     PERFORM GET_ESED_DAT USING W_/ZAK/BEVALLO
                                W_/ZAK/BEVALLB
                                $BUKRS
@@ -2591,7 +2591,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
                       CHANGING W_/ZAK/ADONSZA-ESDAT.
 
 *++BG 2007.10.04
-*     Rotate company
+*     Vállalat forgatás
     CALL FUNCTION '/ZAK/ROTATE_BUKRS_OUTPUT'
       EXPORTING
         I_AD_BUKRS    = W_/ZAK/BEVALLO-BUKRS
@@ -2635,8 +2635,8 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *      W_/ZAK/ADONSZA-BUKRS  =  W_/ZAK/BEVALLO-BUKRS.
 *    ENDIF.
 *++BG 2007.05.22
-*   Because the document number range is split based on SY-DATUM
-*   the system must use it here as well.
+*   Mivel a bizonylat számkör a SY-DATUM alapján osztja a
+*   rendszer, itt is azt kell használni.
 *   W_/ZAK/ADONSZA-GJAHR  =  W_/ZAK/BEVALLO-GJAHR.
     W_/ZAK/ADONSZA-GJAHR  =  SY-DATUM(4).
 *--2007.01.11 BG (FMC)
@@ -2646,7 +2646,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--2009.02.02 BG
     W_/ZAK/ADONSZA-ADONEM =  W_/ZAK/ADONEM-ADONEM.
 *++0965 2009.02.02 BG
-*   Only convert the BTYPE for 0865
+*   Konvertálni kell a BTYPE-ot csak 0865-nél
 *   IF  $INDEX NE '000'.
     IF  $INDEX NE '000' AND $BTYPE EQ C_0865.
 *--0965 2009.02.02 BG
@@ -2657,7 +2657,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
                                             W_/ZAK/ADONSZA-BTYPE.
 
-*     Do not convert the BTYPE
+*     Nem konvertálunk BTYPE-ot
     ELSE.
       W_/ZAK/ADONSZA-BTYPE  =  W_/ZAK/BEVALLO-BTYPE_DISP.
     ENDIF.
@@ -2666,12 +2666,12 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
     W_/ZAK/ADONSZA-ZINDEX =  W_/ZAK/BEVALLO-ZINDEX.
     W_/ZAK/ADONSZA-KOTEL  =  C_KOTEL_K.
 
-*     If sign reversal is flagged in the settings
+*     Ha be van jelölve a beállításokban az előjel fordítás
     IF NOT W_/ZAK/BEVALLB-ELF_ADONSZA IS INITIAL.
       MULTIPLY W_/ZAK/BEVALLO-FIELD_NRK BY -1.
     ENDIF.
 
-*   Difference creation only for VAT
+*   Különbség képzés csak AFA-nal
     IF W_/ZAK/ADONEM-ADONEM NE C_ONELL_ADONEM AND
        $INDEX NE '000' AND
        LW_BEVALL-BTYPART EQ C_BTYPART_AFA.
@@ -2706,13 +2706,13 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 *--S4HANA#01.
                                          .
 
-*     Post the normal amount to the subledger account
+*     Normál összeget könyvelünk a folyószámlára
     ELSE.
       W_/ZAK/ADONSZA-WRBTR  =  W_/ZAK/BEVALLO-FIELD_NRK.
     ENDIF.
 
 *++BG 2006/06/20
-*  If the amount is less than 0, set the ZLOCK flag
+*  Ha az összeg kisebb mint 0, akkor ZLOCK flag beállítása
     IF W_/ZAK/ADONSZA-WRBTR < 0.
       MOVE 'X' TO W_/ZAK/ADONSZA-ZLOCK.
     ENDIF.
@@ -2740,7 +2740,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 **++0001 BG 2008.05.05 /ZAK/POST_ADONSZA
 *    ELSE.
 *++2009.09.15 BG
-*   Fill the original due date
+*   Eredeti esedékességi dátum töltése
     MOVE W_/ZAK/ADONSZA-ESDAT TO W_/ZAK/ADONSZA-ZESDAT.
 *--2009.09.15 BG
     APPEND W_/ZAK/ADONSZA TO $I_ADONSZA.
@@ -2753,9 +2753,9 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
   ENDLOOP.
 
 *++0001 BG 2008.05.13 /ZAK/POST_ADONSZA
-* The subledger posting had to be changed because if
-* the tax code did not exist it raised the 'E' message
-* but the items so far had already been written to the subledger
+* A folyószámlára írást át kellett alakítani, mert ha
+* nem létezett az adónem, akkor kiadta az 'E' üzenetet
+* de az addigi tételeket már ráírta a folyószámlára
   IF $TESZT IS INITIAL.
     LOOP AT $I_ADONSZA INTO W_/ZAK/ADONSZA  WHERE NOT WRBTR IS INITIAL.
       PERFORM GET_NUMBER USING    W_/ZAK/ADONSZA-BUKRS
@@ -2772,14 +2772,14 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 
 *++BG 2008.03.26
-* For VAT determine whether a difference was created for every tax code
-* difference creation.
-* This case occurs when payable and reclaim positions
-* switch, but due to unsettled financial status it still
-* results in zero reclaimable VAT. In this case we did not
-* handle the tax subledger correctly.
+* Ha ÁFA akkor meg kell határozni, hogy minden adónemre történt e
+* különbség képzés.
+* Ez az eset akkor fordul elő, ha fizetendő és visszaigénylő pozíció
+* között átfordulás van, de a pénzügyileh nem rendezett miatt mégis
+* 0 lesz a ténylegesen visszaigényelhető ÁFA. Ebben az esetben nem
+* kezeltük megfelelően az adófolyószámlát.
   IF LW_BEVALL-BTYPART EQ C_BTYPART_AFA AND $INDEX NE '000'.
-*   Collect the tax codes.
+*   Összegyűjtjük az adónemeket.
 *++S4HANA#01.
 *    REFRESH LI_ABEV_ADON.
     CLEAR LT_LI_ABEV_ADON[].
@@ -2800,7 +2800,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
       COLLECT LS_LI_ABEV_ADON INTO LT_LI_ABEV_ADON.
 *--S4HANA#01.
     ENDLOOP.
-*   Remove the tax codes that have already been processed
+*   Kitöröljük azokat az adónemeket amiket már feldolgoztunk
 *++S4HANA#01.
 *    IF NOT LR_ADONEM[] IS INITIAL.
 *      DELETE LI_ABEV_ADON WHERE ADONEM IN LR_ADONEM.
@@ -2808,7 +2808,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
       DELETE LT_LI_ABEV_ADON WHERE ADONEM IN LT_ADONEM.
 *--S4HANA#01.
     ENDIF.
-*   Each tax code must be processed only once.
+*   Adónemenként csak egyszer kell feldolgozni.
 *++S4HANA#01.
 *    SORT LI_ABEV_ADON BY ADONEM.
 *    DELETE ADJACENT DUPLICATES FROM LI_ABEV_ADON COMPARING ADONEM.
@@ -2816,7 +2816,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
     DELETE ADJACENT DUPLICATES FROM LT_LI_ABEV_ADON COMPARING ADONEM.
 *--S4HANA#01.
 
-*   If there are remaining tax codes to process
+*   Ha marad még feldolgozandó adónem
 *++S4HANA#01.
 *    LOOP AT LI_ABEV_ADON.
 *      READ TABLE $I_BEVALLO INTO W_/ZAK/BEVALLO
@@ -2841,9 +2841,9 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
                       AND ADONEM = W_/ZAK/BEVALLB-ADONEM_ONR.
       IF SY-SUBRC NE 0.
         MESSAGE E219(/ZAK/ZAK) WITH $BUKRS W_/ZAK/BEVALLB-ADONEM.
-*       Missing configuration in table /ZAK/ADONEM! (Company: &, tax code: &).
+*       Nincs beállítás a /ZAK/ADONEM táblában! (Vállalat: &, adónem: & ).
       ENDIF.
-*   Calculate the due date
+*     Esedékességi dátum kiszámítása
       PERFORM GET_ESED_DAT USING W_/ZAK/BEVALLO
                                  W_/ZAK/BEVALLB
                                  $BUKRS
@@ -2852,7 +2852,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
                                  W_/ZAK/ADONEM-FIZHAT
                         CHANGING W_/ZAK/ADONSZA-ESDAT.
 
-*     Rotate company
+*     Vállalat forgatás
       CALL FUNCTION '/ZAK/ROTATE_BUKRS_OUTPUT'
         EXPORTING
           I_AD_BUKRS    = W_/ZAK/BEVALLO-BUKRS
@@ -2868,7 +2868,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 
       W_/ZAK/ADONSZA-GJAHR  =  SY-DATUM(4).
       W_/ZAK/ADONSZA-ADONEM =  W_/ZAK/ADONEM-ADONEM.
-*     Convert the BTYPE
+*     Konvertálni kell a BTYPE-ot
       PERFORM CONVERT_BTYPE_FROM_DISP USING W_/ZAK/BEVALLO
 *++S4HANA#01.
 *                                            $BTYPE_CONV
@@ -2880,12 +2880,12 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
       W_/ZAK/ADONSZA-ZINDEX =  W_/ZAK/BEVALLO-ZINDEX.
       W_/ZAK/ADONSZA-KOTEL  =  C_KOTEL_K.
 
-*    If sign reversal is flagged in the settings
+*    Ha be van jelölve a beállításokban az előjel fordítás
       IF NOT W_/ZAK/BEVALLB-ELF_ADONSZA IS INITIAL.
         MULTIPLY W_/ZAK/BEVALLO-FIELD_NRK BY -1.
       ENDIF.
 
-*   Difference creation only for VAT
+*   Különbség képzés csak AFA-nal
       IF W_/ZAK/ADONEM-ADONEM NE C_ONELL_ADONEM.
 *++S4HANA#01.
 *        PERFORM GET_DIFFERENT_WRBTR TABLES LI_LAST_BEVALLO
@@ -2918,7 +2918,7 @@ FORM CONVERT_BEVALLO_ADONSZA TABLES  $I_BEVALLO STRUCTURE /ZAK/BEVALLO
 
       ENDIF.
 
-*  If the amount is less than 0, set the ZLOCK flag
+*  Ha az összeg kisebb mint 0, akkor ZLOCK flag beállítása
       IF W_/ZAK/ADONSZA-WRBTR < 0.
         MOVE 'X' TO W_/ZAK/ADONSZA-ZLOCK.
       ENDIF.
@@ -2970,26 +2970,26 @@ FORM GET_ESED_DAT USING    $BEVALLO STRUCTURE /ZAK/BEVALLO
 
   CLEAR $ESDAT.
 
-* For a normal period use the BEVALLO date
+* Normál időszaknál BEVALLO dátum alapján
   IF $INDEX EQ '000'.
     CONCATENATE $BEVALLO-GJAHR
                 $BEVALLO-MONAT
                 '01' INTO $ESDAT.
-* Last day of the month
+* Hónap utolsó napja
     CALL FUNCTION 'LAST_DAY_OF_MONTHS'  "#EC CI_USAGE_OK[2296016]
       EXPORTING
         DAY_IN            = $ESDAT
       IMPORTING
         LAST_DAY_OF_MONTH = $ESDAT.
-* First day of the next month
+* Következő hó nap első napja
     ADD 1 TO $ESDAT.
     $ESDAT = $ESDAT + $FIZHAT - 1.
-* For self-audit use the due date
+* Önrevíziónál az esedékességi dátum szerint
   ELSE.
     MOVE $DATUM TO $ESDAT.
   ENDIF.
 
-*++2007.07.23 BG(FMC) Convert due date to next
+*++2007.07.23 BG(FMC) Esedékességi dátum konvertálása következő
 *munkanapra
   CALL FUNCTION 'BKK_GET_NEXT_WORKDAY'
     EXPORTING
@@ -3003,7 +3003,7 @@ FORM GET_ESED_DAT USING    $BEVALLO STRUCTURE /ZAK/BEVALLO
       OTHERS         = 2.
   IF SY-SUBRC <> 0.
     MESSAGE E226(/ZAK/ZAK) WITH $ESDAT.
-*   Error when converting the due date to the next working day!(&)
+*   Hiba az esedékességi dátum következő munkanapra konvertálásánál!(&)
   ENDIF.
 *--2007.07.23 BG(FMC)
 
@@ -3038,7 +3038,7 @@ FORM CONVERT_BTYPE_FROM_DISP USING    $BEVALLO  STRUCTURE /ZAK/BEVALLO
 
 
 
-* Determine the self-audit BTYPE
+* Önrevíziós BTYPE meghatározása
   IF  $BTYPE_CONV IS INITIAL.
 *++S4HANA#01.
 *    SELECT SINGLE *  INTO LW_BEVALL
@@ -3052,7 +3052,7 @@ FORM CONVERT_BTYPE_FROM_DISP USING    $BEVALLO  STRUCTURE /ZAK/BEVALLO
                      ORDER BY PRIMARY KEY.
     ENDSELECT.
 *--S4HANA#01.
-*   Find the self-audit BTYPE in the valid period
+*   Meg kell keresni az érvényes időszakban az önrevíziós BTYPE-ot
     CONCATENATE LW_BEVALL-BTYPART 'O' INTO L_BTYPART_O.
 *++S4HANA#01.
 *    SELECT SINGLE BTYPE INTO $BTYPE_CONV
@@ -3070,7 +3070,7 @@ FORM CONVERT_BTYPE_FROM_DISP USING    $BEVALLO  STRUCTURE /ZAK/BEVALLO
                    ORDER BY PRIMARY KEY.
     ENDSELECT.
 *--S4HANA#01.
-*   If no record is found then use the DISP BTYPE
+*   Ha nem találunk rekordot akkor a DISP BTYPE kell
     IF SY-SUBRC NE 0.
       MOVE $BEVALLO-BTYPE_DISP TO $BTYPE_CONV.
     ENDIF.
@@ -3118,7 +3118,7 @@ FORM GET_DIFFERENT_WRBTR TABLES   $I_LAST_BEVALLO STRUCTURE /ZAK/BEVALLO
 
 *  DATA L_WRBTR LIKE /ZAK/ADONSZA-WRBTR.
 
-** Determine the amount of the items posted so far
+** Meg kell határozni az eddig könyvelt tételek összegét
 *  SELECT SUM( WRBTR ) INTO L_WRBTR
 *                      FROM /ZAK/ADONSZA
 *                     WHERE BUKRS  EQ $BEVALLO-BUKRS
@@ -3126,7 +3126,7 @@ FORM GET_DIFFERENT_WRBTR TABLES   $I_LAST_BEVALLO STRUCTURE /ZAK/BEVALLO
 *                       AND ADONEM EQ $ADONEM
 *                       AND NOT BTYPE IN $R_ATV_BTYPE
 *                       AND MONAT  EQ $BEVALLO-MONAT
-*                       AND ZINDEX NE '999'          "manual entries
+*                       AND ZINDEX NE '999'          "kézi rögzítések
 *nem
 *                       AND KOTEL  EQ C_KOTEL_K.
 *
@@ -3136,7 +3136,7 @@ FORM GET_DIFFERENT_WRBTR TABLES   $I_LAST_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   LOOP AT $I_BEVALLB INTO LW_BEVALLB WHERE ADONEM EQ $ADONEM.
 *--BG 2007.05.22
-* Determine the previous period ABEV identifier
+* Meg kell határozni az előző időszak ABEV azonosítót
     READ TABLE $I_LAST_BEVALLO INTO LW_BEVALLO
                                WITH KEY BUKRS  = $BEVALLO-BUKRS
                                         BTYPE  = $BEVALLO-BTYPE
@@ -3169,7 +3169,7 @@ FORM GET_DIFFERENT_WRBTR TABLES   $I_LAST_BEVALLO STRUCTURE /ZAK/BEVALLO
     ENDIF.
   ENDLOOP.
 *++BG 2008.03.26
-* Store the tax code
+* Az adónemet eltároljuk
   M_DEF $R_ADONEM 'I' 'EQ' $ADONEM SPACE.
 *--BG 2008.03.26
 
@@ -3193,7 +3193,7 @@ FORM GET_UZLAG  USING $BUKRS TYPE /ZAK/BEVALLO-BUKRS
                       FROM /ZAK/ONELL_BOOK
                       WHERE BUKRS = $BUKRS.
   IF SY-SUBRC <> 0 OR $UZLETAG IS INITIAL.
-*   I cannot really do anything here anymore
+*   Itt már nem nagyon tudok mit csinálmi
   ENDIF.
 ENDFORM.                    " get_uzlag
 *&---------------------------------------------------------------------*
@@ -3268,7 +3268,7 @@ FORM DOWNLOAD_FILE_ARBOOK  TABLES   $I_EXCEL STRUCTURE /ZAK/SZJAEXCELV2
   CONCATENATE L_DEF_FILENAME '.XLS' INTO L_DEF_FILENAME.
 
 
-* Read the data structure
+* Adatszerkezet beolvasása
   CALL FUNCTION 'DD_GET_DD03P_ALL'
     EXPORTING
       DEFSTATUS     = 'A'
@@ -3319,7 +3319,7 @@ FORM DOWNLOAD_FILE_ARBOOK  TABLES   $I_EXCEL STRUCTURE /ZAK/SZJAEXCELV2
 *    EXPORTING
 *      FILENAME                = L_FILENAME_DOWN
 *      FILETYPE                = 'DAT'
-*      ITEM                    = 'Self-audit surcharge'(003)
+*      ITEM                    = 'Önellenőrzési pótlék'(003)
 *      FILETYPE_NO_CHANGE      = 'X'
 *      FILETYPE_NO_SHOW        = 'X'
 *    IMPORTING

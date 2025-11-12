@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_BTYPART_FROM_BTYPE.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -13,7 +13,7 @@ FUNCTION /ZAK/GET_BTYPART_FROM_BTYPE.
 
   IF I_BUKRS IS INITIAL OR I_BTYPE IS INITIAL.
     MESSAGE E197(/ZAK/ZAK) RAISING ERROR_IMP_PAR.
-*   Missing import parameter when determining declaration type (company or type).
+*   Hiányzó import paraméter bevallás fajta meghatározásnál!(Váll.vagy t
   ENDIF.
 
 

@@ -1,6 +1,6 @@
 FUNCTION /ZAK/CHECK_ADOAZON.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  EXPORTING
 *"     REFERENCE(E_HIBA) TYPE  /ZAK/ADAT_HIBA
 *"  TABLES
@@ -13,9 +13,9 @@ FUNCTION /ZAK/CHECK_ADOAZON.
   DATA L_RETURN TYPE CHAR_55.
   DATA LW_XLS TYPE ALSMEX_TABLINE.
 
-* Tax identifier
+* Adóazonosító
   CONSTANTS LC_ADOAZON TYPE ROLLNAME VALUE '/ZAK/ADOAZON'.
-* Date of birth
+* Születési dátum
   CONSTANTS LC_SZULDAT TYPE ROLLNAME VALUE '/ZAK/SZULDAT'.
 
 
@@ -32,18 +32,18 @@ FUNCTION /ZAK/CHECK_ADOAZON.
     ENDIF.
   END-OF-DEFINITION.
 
-* Determine data
+* Adatok meghatározása
   LM_GET_DATA LC_ADOAZON L_INPUT.
   LM_GET_DATA LC_SZULDAT L_SZIDO.
 
-* Tax identifier check
+* Adóazonosító ellenőrzés
   CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
     EXPORTING
       INPUT  = L_INPUT
       SZIDO  = L_SZIDO
     IMPORTING
       RETURN = L_RETURN.
-* Populate the error
+* Hiba feltöltése
   IF NOT L_RETURN IS INITIAL.
     CLEAR: E_HIBA.
     E_HIBA-SOR          = LW_XLS-ROW.

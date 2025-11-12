@@ -1,6 +1,6 @@
 FUNCTION /ZAK/AFA_SAP_SEL_EXIT.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPART) TYPE  /ZAK/BTYPART
@@ -22,28 +22,28 @@ FUNCTION /ZAK/AFA_SAP_SEL_EXIT.
   DATA L_ABEVAZ_ALAP TYPE /ZAK/ABEVAZ.
   DATA L_ABEVAZ_ADO  TYPE /ZAK/ABEVAZ.
 *--0965 2009.02.10 BG
-* Determine other data
-* Determine records outside the database selection
-* Read the database table required for advance handling
+* Egyéb adatok meghatározása
+* Itt határozzuk meg az adatbázis szelekción kívüli rekordokat
+* Beolvassuk az előleg kezeléshez szükséges adatbázis táblát
   SELECT * INTO TABLE LI_AFA_ATV
            FROM /ZAK/AFA_ATV
           WHERE BUKRS EQ I_BUKRS.
   SORT LI_AFA_ATV BY BUKRS ABEV_FROM.
-* Consider EVA vendors
+* EVA szállítók figyelembe vétele
   LOOP AT T_ANALITIKA INTO W_/ZAK/ANALITIKA.
     IF W_/ZAK/ANALITIKA-KOART EQ 'K'.
-*     Tax number check
+*     Adószám ellenőrzés
       PERFORM GET_EVA_STCD1 USING W_/ZAK/ANALITIKA-STCD1
                          CHANGING L_TRUE.
-*     Insert rows when the tax number belongs to EVA
+*     Ha EVA-s az adószám sorok beszúrása
       IF NOT L_TRUE IS INITIAL.
-*       Check whether we have already processed it
+*       Ellenőrizzük, hogy feldolgoztuk-e már
         READ TABLE LI_ANALITIKA INTO LW_ANALITIKA WITH KEY
                    BSEG_BELNR = W_/ZAK/ANALITIKA-BSEG_BELNR
                    BSEG_BUZEI = W_/ZAK/ANALITIKA-BSEG_BUZEI.
         IF SY-SUBRC NE 0.
 *++0965 2009.02.10 BG
-*       Determine BTYPE
+*       BTYPE meghatározása
           CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
             EXPORTING
               I_BUKRS     = W_/ZAK/ANALITIKA-BUKRS
@@ -82,12 +82,12 @@ FUNCTION /ZAK/AFA_SAP_SEL_EXIT.
 *--1365 #6.
           ENDIF.
 *--0965 2009.02.10 BG
-*         Tax base
+*         Adóalap
 *++0965 2009.02.10 BG
 *         MOVE '6306'  TO w_/zak/analitika-abevaz.
           MOVE L_ABEVAZ_ALAP TO W_/ZAK/ANALITIKA-ABEVAZ.
 *--0965 2009.02.10 BG
-*         Determine the item
+*         Tétel meghatározás
 *++1765 #20.
 *          PERFORM GET_ANALITIKA_ITEM(/ZAK/AFA_SAP_SEL)
           PERFORM GET_ANALITIKA_ITEM(/ZAK/AFA_SAP_SELN)
@@ -96,12 +96,12 @@ FUNCTION /ZAK/AFA_SAP_SEL_EXIT.
                                USING W_/ZAK/ANALITIKA.
           MOVE W_/ZAK/ANALITIKA-LWBAS TO W_/ZAK/ANALITIKA-FIELD_N.
           APPEND W_/ZAK/ANALITIKA TO LI_ANALITIKA.
-*         Tax amount
+*         Adóösszeg
 *++0965 2009.02.10 BG
 *         MOVE '6307'  TO w_/zak/analitika-abevaz.
           MOVE L_ABEVAZ_ADO TO W_/ZAK/ANALITIKA-ABEVAZ.
 *--0965 2009.02.10 BG
-*         Determine the item
+*         Tétel meghatározás
 *++1765 #20.
 *          PERFORM GET_ANALITIKA_ITEM(/ZAK/AFA_SAP_SEL)
           PERFORM GET_ANALITIKA_ITEM(/ZAK/AFA_SAP_SELN)
@@ -113,41 +113,41 @@ FUNCTION /ZAK/AFA_SAP_SEL_EXIT.
         ENDIF.
       ENDIF.
     ENDIF.
-*  Handling advance items
+*  Előleges tételek kezelése
     READ TABLE LI_AFA_ATV INTO LW_AFA_ATV
                           WITH KEY ABEV_FROM = W_/ZAK/ANALITIKA-ABEVAZ
                           BINARY SEARCH.
-*   Record exists, need to examine the transfer
+*   Van rekord meg kell vizsgálni az átvezetést
     IF SY-SUBRC EQ 0.
       MOVE 'X' TO L_TRUE.
-*     KOART check
+*     KOART vizsgálat
       IF LW_AFA_ATV-KOART NE W_/ZAK/ANALITIKA-KOART.
         CLEAR L_TRUE.
       ENDIF.
-*     UMSKZ check
+*     UMSKZ vizsgálat
       IF NOT W_/ZAK/ANALITIKA-UMSKZ BETWEEN LW_AFA_ATV-UMSKZ_FROM
                                        AND LW_AFA_ATV-UMSKZ_TO.
         CLEAR L_TRUE.
       ENDIF.
-*     BSCHL check
+*     BSCHL vizsgálat
       IF NOT LW_AFA_ATV-BSCHL IS INITIAL AND
          LW_AFA_ATV-BSCHL NE W_/ZAK/ANALITIKA-BSCHL.
         CLEAR L_TRUE.
       ENDIF.
-*     AUGDT check
+*     AUGDT vizsgálat
       IF NOT LW_AFA_ATV-AUGDT_FLAG IS INITIAL.
         CASE LW_AFA_ATV-AUGDT_FLAG.
-*          Initial
+*          Iniciális
           WHEN '1'.
             IF NOT W_/ZAK/ANALITIKA-AUGDT IS INITIAL.
               CLEAR L_TRUE.
             ENDIF.
-*          Less than the declaration period
+*          Kisebb mint a bevallás időszak
           WHEN '2'.
-*           Analytics YEAR+MONTH
+*           Analitika ÉV+HÓNAP
             CONCATENATE W_/ZAK/ANALITIKA-GJAHR
                         W_/ZAK/ANALITIKA-MONAT INTO L_NUMC6_1.
-*           AUGDT YEAR+MONTH
+*           AUGDT ÉV+HÓNAP
             L_NUMC6_2(4)   = W_/ZAK/ANALITIKA-AUGDT(4).
             L_NUMC6_2+4(2) = W_/ZAK/ANALITIKA-AUGDT+4(2).
             IF NOT L_NUMC6_2 < L_NUMC6_1.
@@ -155,17 +155,17 @@ FUNCTION /ZAK/AFA_SAP_SEL_EXIT.
             ENDIF.
         ENDCASE.
       ENDIF.
-*     Copy if required
+*     Ha kell másolni
       IF NOT L_TRUE IS INITIAL.
         CLEAR LW_ANALITIKA.
         MOVE-CORRESPONDING W_/ZAK/ANALITIKA TO LW_ANALITIKA.
-*       ABEV identifier replacement.
+*       Abev azonosító csere.
         MOVE LW_AFA_ATV-ABEV_TO TO LW_ANALITIKA-ABEVAZ.
         APPEND LW_ANALITIKA TO LI_ANALITIKA.
       ENDIF.
     ENDIF.
   ENDLOOP.
-* Insert the collected records
+* Gyűjtött rekordok beszúrása
   IF NOT LI_ANALITIKA[] IS INITIAL.
     LOOP AT LI_ANALITIKA INTO W_/ZAK/ANALITIKA.
       APPEND W_/ZAK/ANALITIKA TO T_ANALITIKA.

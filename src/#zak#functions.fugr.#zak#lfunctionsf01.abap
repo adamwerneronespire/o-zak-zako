@@ -137,7 +137,7 @@
 
    CASE W_/ZAK/BEVALL-BTYPART.
 
-* SJJA Calculated fields
+* SZJA Számított mezők
      WHEN C_BTYPART_SZJA.
 
        PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
@@ -148,18 +148,18 @@
        IF W_/ZAK/BEVALL-BTYPE EQ C_0608.
 
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_0608 TABLES T_BEVALLO
                                                   T_BEVALLB
                                                   T_ADOAZON
                                            USING  $INDEX
                                                   $LAST_DATE.
-*        Normal calculations
+*        Normál számítások
          PERFORM CALC_ABEV_SZJA_0608 TABLES T_BEVALLO
                                             T_BEVALLB
                                      USING  $LAST_DATE.
 *++ BG 2007.06.22
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_0608 TABLES T_BEVALLO
                                               T_ADOAZON_ALL.
 *-- BG 2007.06.22
@@ -167,18 +167,18 @@
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_06082.
 
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_06082 TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Normal calculations
+*        Normál számítások
          PERFORM CALC_ABEV_SZJA_06082  TABLES T_BEVALLO
                                               T_BEVALLB
                                       USING  $LAST_DATE.
 *++ BG 2007.06.22
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_06082 TABLES T_BEVALLO
                                                T_ADOAZON_ALL.
 *-- BG 2007.06.22
@@ -187,10 +187,10 @@
 
 
 *++BG 2008/01/14
-*       START card calculations
-*       it must be calculated sooner for the self-revision because it is already
-*       use the fields (eg: A0EC0156CA), but only that
-*       current posting is required
+*       START-kártyás számítások
+*       hamarabb kell kiszámítani az önrevízióhoz mert az már
+*       használja a mezőket (pld: A0EC0156CA), de csak az
+*       aktuális feladás kell
          PERFORM CALC_ABEV_SZJA_START_0708 TABLES T_BEVALLO
                                                   T_BEVALLB
                                                   T_ADOAZON
@@ -199,14 +199,14 @@
 
 *--BG 2008/01/14
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_0708  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 
-*        Normal calculations
+*        Normál számítások
          PERFORM CALC_ABEV_SZJA_0708  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
@@ -215,23 +215,23 @@
 *--BG 2007/01/16
                                              .
 *++ BG 2007.06.22
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_0708  TABLES T_BEVALLO
                                                T_ADOAZON_ALL.
 *-- BG 2007.06.22
 *++0808 BG 2008.01.28
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_0808.
 *++BG 2008.03.06
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_0808 TABLES T_BEVALLO
                                               T_BEVALLB.
 *--BG 2008.03.06
 
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_0808 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -240,33 +240,33 @@
 
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_0808  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_0808 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
                                              USING  $INDEX
                                                     $LAST_DATE.
-*        You have to recalculate because of the special fields.
+*        Újra kell számoltatni a speciális mezők miatt.
          IF $INDEX EQ '000'.
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
 
-*        Normal calculations
+*        Normál számítások
          PERFORM CALC_ABEV_SZJA_0808  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
 
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_0808  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
 *++0908 2009.02.27 BG
@@ -276,15 +276,15 @@
 *--0808 BG 2008.01.28
 *++0908 2009.01.20 BG
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_0908.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_0908 TABLES T_BEVALLO
                                               T_BEVALLB.
 
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_0908 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -293,33 +293,33 @@
 
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_0908  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_0908 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
                                              USING  $INDEX
                                                     $LAST_DATE.
 
-*        You have to recalculate because of the special fields.
+*        Újra kell számoltatni a speciális mezők miatt.
          IF $INDEX EQ '000'.
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
 
-*        Normal calculations
+*        Normál számítások
          PERFORM CALC_ABEV_SZJA_0908  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_0908  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
 *++0908 2009.02.27 BG
@@ -333,17 +333,17 @@
 
 *++1008 2010.01.20 BG
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1008.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1008 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1008 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -351,14 +351,14 @@
                                                       $LAST_DATE.
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1008  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1008 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -371,13 +371,13 @@
          ENDIF.
 
 
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1008  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
 
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1008  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -385,17 +385,17 @@
 *--1008 2010.01.20 BG
 *++1108 2010.01.24 BG
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1108.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1108 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1108 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -403,14 +403,14 @@
                                                       $LAST_DATE.
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1108  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1108 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -423,13 +423,13 @@
          ENDIF.
 *
 *
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1108  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
 
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1108  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -438,37 +438,37 @@
 *--1108 2010.01.24 BG
 *++1208 2012.02.01 BG
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1208.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1208 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1208 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
 
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1208  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1208 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -480,12 +480,12 @@
                                  USING  $LAST_DATE.
          ENDIF.
 
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1208  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1208  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -495,37 +495,37 @@
 *--1208 2012.02.01
 *++1308 2013.02.05 BG
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1308.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1308 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1308 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1308  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1308 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -537,12 +537,12 @@
                                  USING  $LAST_DATE.
          ENDIF.
 
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1308  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1308  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -551,8 +551,8 @@
 *--1308 2013.02.05 BG
 *++1408 2014.01.29 BG
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1408.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1408 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
@@ -560,30 +560,30 @@
                                               $LAST_DATE.
 
 *++1408 #02. 2014.03.05 BG
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1408 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
 
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1408  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 **--1408 #02. 2014.03.05 BG
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1408 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -595,12 +595,12 @@
                                  USING  $LAST_DATE.
          ENDIF.
 *
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1408  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1408  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -609,35 +609,35 @@
 *--1408 2014.01.29 BG
 *++1508 #01. 2015.02.02
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1508.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1508 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1508 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1508  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1508 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -648,12 +648,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1508  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1508  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -662,35 +662,35 @@
 *--1508 #01. 2015.02.02
 *++1608 #01. 2015.02.01
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1608.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1608 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1608 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1608  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1608 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -701,12 +701,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1608  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1608  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -717,35 +717,35 @@
 *--1608 #01. 2015.02.01
 *++1708 #01. 2017.01.31
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1708.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1708 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1708 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1708  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1708 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -756,12 +756,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1708  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1708  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -770,35 +770,35 @@
 *--1708 #01. 2017.01.31
 *++1808 #01. 2018.01.30
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1808.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1808 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1808 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1808  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1808 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -809,12 +809,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1808  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1808  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -823,35 +823,35 @@
 *--1808 #01. 2018.01.30
 *++1908 #01. 2019.01.29
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1908.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_1908 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_1908 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_1908  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_1908 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -862,12 +862,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_1908  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_1908  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -876,35 +876,35 @@
 *--1908 #01. 2019.01.29
 *++2008 #01. 2020.01.27
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2008.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_2008 TABLES T_BEVALLO
            T_BEVALLB
            T_ADOAZON_ALL
          USING  $INDEX
                $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_2008 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
                                                USING  '000'
                                                       $LAST_DATE.
-*          We need a summary because there is such a special field
-*          which must be totaled!!!! ONLY 1208 have applied so far
+*          Kell egy összesítés, mivel van olyan speciális mező
+*          amit összesíteni kell!!!! CSAK 1208-nál jelentkezett eddig
            PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_2008  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_2008 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -915,12 +915,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_2008  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_2008  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -929,18 +929,18 @@
 *--2008 #01. 2020.01.27
 *++2108 #01.
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2108.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_2108 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
 *++2108 #06.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_2108 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -954,14 +954,14 @@
 *--2108 #06.
          ENDIF.
 *++2108 #06.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_2108  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 *--2108 #06.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_2108 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -972,12 +972,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_2108  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_2108  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -986,18 +986,18 @@
 *--2108 #01.
 *++2208 #01.
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2208.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_2208 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
 *++2208 #04.
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_2208 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -1009,14 +1009,14 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_2208  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
 *--2208 #04.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_2208 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -1027,12 +1027,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_2208  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_2208  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -1041,17 +1041,17 @@
 *--2208 #01.
 *++2308 #01.
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2308.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_2308 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_2308 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -1063,13 +1063,13 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_2308  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_2308 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -1080,12 +1080,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_2308  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_2308  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -1094,17 +1094,17 @@
 *--2308 #01
 *++2408 #01.
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2408.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_2408 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_2408 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -1116,13 +1116,13 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_2408  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_2408 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -1133,12 +1133,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_2408  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_2408  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -1147,17 +1147,17 @@
 *--2408 #01.
 *++2508 #01.
        ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2508.
-*        We need a special summary of M's ABEVs
-*        summarizes it into technical ABEVs
+*        Kell egy speciális összegzés ami az M-s ABEV-eket
+*        összegzi fel technikai ABEV-ekre
          PERFORM CALC_ABEV_M_SZJA_2508 TABLES T_BEVALLO
                                               T_BEVALLB
                                               T_ADOAZON_ALL
                                        USING  $INDEX
                                               $LAST_DATE.
-*        For self-revision, the total amount is determined in the normal field
-*        and then in the self-revision fields, the information about the self-revision
+*        Önrevíziónál a normál mezőben meghatározzuk a teljes összeget
+*        majd az önrevízió mezőkben az önrevízióra vonatkozót
          IF $INDEX NE '000'.
-*          Special calculations (START card + EG-biz + Pension)
+*          Speciális számítások (START kártya + EG-biz + Nyugdij)
            PERFORM CALC_ABEV_SZJA_SPECIAL_2508 TABLES T_BEVALLO
                                                       T_BEVALLB
                                                       T_ADOAZON
@@ -1169,13 +1169,13 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Self-revision
+*        Önrevízió
          PERFORM CALC_ABEV_ONREV_SZJA_2508  TABLES T_BEVALLO
                                                    T_BEVALLB
                                                    T_ADOAZON
                                             USING  $INDEX
                                                    $LAST_DATE.
-*        Special calculations (START card + EG-biz + Pension)
+*        Speciális számítások (START kártya + EG-biz + Nyugdij)
          PERFORM CALC_ABEV_SZJA_SPECIAL_2508 TABLES T_BEVALLO
                                                     T_BEVALLB
                                                     T_ADOAZON
@@ -1186,12 +1186,12 @@
                                         T_BEVALLB
                                  USING  $LAST_DATE.
          ENDIF.
-*        Normal calculations "A"
+*        Normál számítások "A"
          PERFORM CALC_ABEV_SZJA_2508  TABLES T_BEVALLO
                                              T_BEVALLB
                                       USING  $LAST_DATE
                                              $INDEX.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_SZJA_2508  TABLES T_BEVALLO
                                                T_ADOAZON_ALL
                                         USING  SPACE  "Normál mezőre
@@ -1200,7 +1200,7 @@
 *--2508 #01.
        ENDIF.
 
-* VAT Calculated fields
+* ÁFA Számított mezők
      WHEN C_BTYPART_AFA.
 
        IF W_/ZAK/BEVALL-BTYPE EQ C_0865.
@@ -1303,25 +1303,25 @@
 
 *--1265 2012.01.31 BG
        ENDIF.
-* Condominium Calculated fields
+* Társasház Számított mezők
      WHEN C_BTYPART_TARS.
        PERFORM CALC_ABEV_TARS.
 
-* Holiday check Calculated fields
+* Üdülési csekk Számított mezők
      WHEN C_BTYPART_UCS.
        PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                     T_BEVALLB
                              USING  $LAST_DATE.
        PERFORM CALC_ABEV_UCS.
 
-* Pass-through Calculated fields
+* Átvezetés Számított mezők
      WHEN C_BTYPART_ATV.
        PERFORM CALC_ABEV_SUM TABLES T_BEVALLO
                                     T_BEVALLB
                              USING  $LAST_DATE.
        PERFORM CALC_ABEV_ATV.
 *++0004 BG 2007.04.04
-* Summary report
+* Összesítő jelentés
      WHEN C_BTYPART_ONYB.
        IF W_/ZAK/BEVALL-BTYPE EQ C_0761.
          PERFORM CALC_ABEV_ONYB_0761 TABLES T_BEVALLO
@@ -1381,7 +1381,7 @@
                            $INDEX.
 
    CASE W_/ZAK/BEVALL-BTYPART.
-* VAT Calculated fields
+* ÁFA Számított mezők
      WHEN C_BTYPART_AFA.
        IF W_/ZAK/BEVALL-BTYPE EQ C_0865.
          PERFORM CALC_ABEV_EIDSZ TABLES T_BEVALLO
@@ -1533,7 +1533,7 @@
 *--1665 #06.
 *--1465 #01. 2013.02.04 Balázs Gábor (Ness)
 *++1765 #28.
-*        Management of 0 fields
+*        0-ás mezők kezelése
          PERFORM CALC_ABEV_0_AFA_1465  TABLES T_BEVALLO.
 *--1765 #28.
 *++1565 #01. 2015.01.26
@@ -1790,7 +1790,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE SPOTS /ZAK/FUNCTIONS_ES .
                                            W_/ZAK/BEVALL-KIUTALAS.
 *--2565 #01.
        ENDIF.
-* Summary report
+* Összesítő jelentés
      WHEN C_BTYPART_ONYB.
        IF W_/ZAK/BEVALL-BTYPE EQ C_0761.
          PERFORM CALC_ABEV_ONYB_0761 TABLES T_BEVALLO
@@ -1964,12 +1964,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          END OF I_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
 
    SORT T_BEVALLB BY ABEVAZ  .
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_A0AC028A  OR
             ABEVAZ EQ     C_ABEVAZ_A0AC029A  OR
@@ -1987,7 +1987,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 *++BG 2006/05/24
@@ -2000,18 +2000,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
        WHEN C_ABEVAZ_A0AC028A.
-* always A0AC028A = first day from period
+* mindig A0AC028A = időszak-tól első nap
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -2048,12 +2048,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* always A0AC029A = last day until period
+* mindig A0AC029A = időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC029A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-* Number of taxpayers = Tax numbers
+* Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC034A.
 
 
@@ -2079,7 +2079,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          CONDENSE W_/ZAK/BEVALLO-FIELD_C.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-* Dynamic page number
+* Dinamikus lapszám
        WHEN C_ABEVAZ_M0BB001A  OR
             C_ABEVAZ_M0CB001A  OR
             C_ABEVAZ_M0DB001A  OR
@@ -2128,12 +2128,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          END OF I_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
 
    SORT T_BEVALLB BY ABEVAZ  .
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_A0AC028A  OR
             ABEVAZ EQ     C_ABEVAZ_A0AC029A  OR
@@ -2151,7 +2151,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 *++BG 2006/05/24
@@ -2164,18 +2164,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
        WHEN C_ABEVAZ_A0AC028A.
-* always A0AC028A = first day from period
+* mindig A0AC028A = időszak-tól első nap
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -2212,12 +2212,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* always A0AC029A = last day until period
+* mindig A0AC029A = időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC029A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-* Number of taxpayers = Tax numbers
+* Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC034A.
 
 
@@ -2244,7 +2244,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
 
-* Dynamic page number
+* Dinamikus lapszám
        WHEN C_ABEVAZ_M0BB001A  OR
             C_ABEVAZ_M0CB001A  OR
             C_ABEVAZ_M0DB001A  OR
@@ -2322,7 +2322,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
    DEFINE LM_GET_SPEC_SUM1.
 
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*    Field M0KB011A must be defined based on the tax number
+*    Meg kell határozni az adószám alapján a M0KB011A mezőt
        READ TABLE T_BEVALLO INTO L_M0KB011A_BEVALLO
                 WITH KEY ABEVAZ  = 'M0KB011A'
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -2344,12 +2344,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_A0AC028A OR
             ABEVAZ EQ     C_ABEVAZ_A0AC029A OR
@@ -2363,7 +2363,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2007.12.08
 
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 *++BG 2006/05/24
@@ -2378,18 +2378,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
        WHEN C_ABEVAZ_A0AC028A.
-* always A0AC028A = first day from period
+* mindig A0AC028A = időszak-tól első nap
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -2427,11 +2427,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-* always A0AC029A = last day until period
+* mindig A0AC029A = időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC029A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* Number of taxpayers = Tax numbers
+* Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC037A.
 
 
@@ -2457,10 +2457,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          CONDENSE W_/ZAK/BEVALLO-FIELD_C.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-* Special calculations
-* START card obligation
-* The value is defined for a normal period in FIELD_N
-* for self-revisions, it must be done in the FIELD_ON field.
+* Speciális számítások
+* START-kártya kötelzettség
+* Az érték meghatározást normál időszaknál a FIELD_N
+* önrevízióknál a FIELD_ON mezőben kell elvégezni.
        WHEN C_ABEVAZ_A0EC0155CA.
 *++BG 2007/01/16
 *         CLEAR W_/ZAK/BEVALLO-FIELD_N.
@@ -2601,34 +2601,34 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          L_TABIX     LIKE SY-TABIX,
          L_UPD.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
 ******************************************************** CSAK ÁFA normál
-* the type of period determines the value! monthly, yearly, etc
+* a periódus fajtája határozza meg az értéket! havi,éves, stb
 * havi 6503 = 'X'
 * negyed 6504 = 'X'
-* year 6505 = 'X'
-* VAT self-audit ONLY
+* éves 6505 = 'X'
+* CSAK ÁFA önrevizió
 *  6511 = 'X'
 
-* MUST RUN AFTER abev CALCULATION
-* (normal and self-revision)
-* considering the period before the current return
-* , at the last closed index
-* eg (monthly): 005 revision for 06 months --> I am looking for the previous 05 months
-* for the previous closed period
+* az abev SZÁMÍTÁS UTÁN KELL LEFUTNIA
+* (normál és önrevízió)
+* a mostani bevallás elötti időszak figyelembe véve az időszakot
+* , utolsó lezárt indexnél
+* pl (havi): 005 revizió 06 hónapra --> megelőző 05 hónapot keresek az
+* előző lezárt időszakra
 
-* eg: four-year-olds must watch 03-->12
-* current 347 = former 357
+* pl:negyedévesnél 03-->12 kell nézni
+* a mostani 347 = a korábbi 357
 
-* the entry for the index period preceding the current return if
-* there is a self-auditor
-* the current 360 = the previous 347
-* the current 361 = the former 349
-* the current 362 = the previous 351
-* the current 363 = the previous 353
-* the current 364 = the former 355
-* the current 365 = the former 357
+* a mostani bevallást megelöző indexü ua időszakra eső bejegyzés ha
+* önrevizó van
+* a mostani 360 = a korábbi 347
+* a mostani 361 = a korábbi 349
+* a mostani 362 = a korábbi 351
+* a mostani 363 = a korábbi 353
+* a mostani 364 = a korábbi 355
+* a mostani 365 = a korábbi 357
 
 * corrr 2006.03.29
 * EZ MINDRE IGAZ ha 349 < 0
@@ -2642,7 +2642,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
 
    SORT T_BEVALLB BY ABEVAZ  .
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_107  OR
             ABEVAZ EQ     C_ABEVAZ_351  OR
@@ -2674,7 +2674,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
             .
 
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -2702,9 +2702,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
 *++BG 2006/06/23
-*  At the request of the tax department, the 81.D recoverable tax amount
-*  I would like to enter it manually, so the calculation has been canceled.
-*  23.06.2006 Gáborné Bedő, Attila Pleskó, Gábor Balázs
+*  Adózási osztály kérésére, a 81.D visszaigényelhető adó összegét
+*  manuálisan szertnék bevinni, ezért a számítást megszüntettük.
+*  2006.06.23 Bedő Gáborné, Pleskó Attila, Balázs Gábor
 *       WHEN C_ABEVAZ_355.
 ** 355  = 349 - 353
 *         LOOP AT T_BEVALLO INTO W_SUM
@@ -2762,7 +2762,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
        WHEN C_ABEVAZ_6504.
 * 6504
-* N - Quarterly
+* N - Negyedéves
          IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
            IF W_/ZAK/BEVALLO-ZINDEX EQ '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'X'.
@@ -2772,7 +2772,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
        WHEN C_ABEVAZ_6505.
 * 6505
-* E - Year old
+* E - Éves
          IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            IF W_/ZAK/BEVALLO-ZINDEX EQ '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'X'.
@@ -2781,7 +2781,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
        WHEN C_ABEVAZ_6506.
-* only for quarter 6506 = '1' v '2' v '3' v '4'
+* csak negyedévnél 6506 = '1' v '2' v '3' v '4'
          IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
            IF W_/ZAK/BEVALLO-MONAT EQ '03'.
              W_/ZAK/BEVALLO-FIELD_C = '1'.
@@ -2797,7 +2797,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
        WHEN C_ABEVAZ_6511.
 * 6511
-* only need to be filled in for self-revision!
+* csak önrevíziónál kell tölteni!
          IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
            W_/ZAK/BEVALLO-FIELD_C = 'X'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
@@ -2805,21 +2805,21 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
        WHEN C_ABEVAZ_6509.
 * 6509 = gjahr
-* only need to be filled in for self-revision!
+* csak önrevíziónál kell tölteni!
          IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
            W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALLO-GJAHR.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
 
        WHEN C_ABEVAZ_6507.
-* only for monthly 6507 = monat
+* csak havinál 6507 = monat
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALLO-MONAT.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
 
        WHEN C_ABEVAZ_5286.
-* always 5286 = first day from period
+* mindig 5286 = időszak-tól első nap
 *         L_KAM_KEZD = $DATE.
 *         L_KAM_KEZD+6(2) = '01'.
 *         W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
@@ -2830,12 +2830,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -2877,41 +2877,41 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
 
        WHEN C_ABEVAZ_5287.
-* always 5287 = last day until period
+* mindig 5287 = időszak-ig  utolsó nap
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
        WHEN C_ABEVAZ_360.
-* the current 360 = 347 with the previous index
+* a mostani 360 = az előző indexű 347
          PERFORM SET_BEVALLO USING C_ABEVAZ_347
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
        WHEN C_ABEVAZ_361.
-* the current 361 = 349 with the previous index
+* a mostani 361 = az előző indexű 349
          PERFORM SET_BEVALLO USING C_ABEVAZ_349
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
 
        WHEN C_ABEVAZ_362.
-* the current 362 = 351 with the previous index
+* a mostani 362 = az előző indexű 351
          PERFORM SET_BEVALLO USING C_ABEVAZ_351
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
 
        WHEN C_ABEVAZ_363.
-* the current 363 = 353 with the previous index
+* a mostani 363 = az előző indexű 353
          PERFORM SET_BEVALLO USING C_ABEVAZ_353
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
 
        WHEN C_ABEVAZ_364.
-* the current 364 = 355 with the previous index
+* a mostani 364 = az előző indexű 355
          PERFORM SET_BEVALLO USING C_ABEVAZ_355
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
 
        WHEN C_ABEVAZ_365.
-* the current 365 = 357 with the previous index
+* a mostani 365 = az előző indexű 357
          PERFORM SET_BEVALLO USING C_ABEVAZ_357
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
@@ -2922,7 +2922,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
          W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-* 5271 and 5274 'X' if 355 is not blank
+* 5271 és 5274 'X' ha a 355 nem üres
        WHEN C_ABEVAZ_5271 OR C_ABEVAZ_5274.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_355.
@@ -2938,10 +2938,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
      ENDCASE.
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -2958,17 +2958,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
 ***********************************************************-
-* calculation of self-check allowance 203 = 351 - 362 + 364 - 355 if > 0
-* 203 calculation
-* if 351 - 362 > 0 then this value
-* if not then the next condition
-* (357 - 365) < 0 then the calculated value is minus
+* önellenörzési pótlék számítása 203 = 351 - 362 + 364 - 355 ha > 0
+* 203 számítása
+* ha 351 - 362 > 0 akkor ezt az értéket
+* ha nem akkor a következő feltétel
+* (357 - 365) < 0 akkor minusz a számolt érték
 * (357 - 365) > 0 akkor 0
-* 355 - 364 < 0 then the calculated value is minus
+* 355 - 364 < 0 akkor minusz a számolt érték
 * 355 - 364 > 0 akkor 0
 
    IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
-* if 351 - 362 > 0 then this value, otherwise 0
+* ha 351 - 362 > 0 akkor ezt az értéket, ellenkező esetben 0
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE  ABEVAZ EQ     C_ABEVAZ_203.
        CLEAR: L_SUM,L_SUM_203.
@@ -2986,7 +2986,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 + L_SUM.
        CLEAR L_SUM.
-* (357 - 365) < 0 then the calculated value is minus
+* (357 - 365) < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_357  OR
                 ABEVAZ EQ     C_ABEVAZ_365.
@@ -3001,7 +3001,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-* 355 - 364 < 0 then the calculated value is minus
+* 355 - 364 < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_355  OR
                 ABEVAZ EQ     C_ABEVAZ_364.
@@ -3029,7 +3029,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 *         ENDIF.
 *       ENDLOOP.
 *++BG 2008.05.23
-*     If 347-360 < 0, it must be reduced by this amount
+*     Ha a 347-360 < 0 akkor, ezzel az összeggel csökkenteni kell
 *     az L_SUM_203-at.
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                             WITH KEY ABEVAZ = C_ABEVAZ_347.
@@ -3072,8 +3072,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
-* determination of self-control allowance
-* Calculation of ABEV 205 based on 203, if the index is 2 or greater, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV 205 számítása a 203 alapján ha az index 2 vagy nagyobb akkor x1,5
 
      IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 
@@ -3086,23 +3086,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          IF SY-SUBRC = 0.
            L_SUM = W_/ZAK/BEVALLO-FIELD_NRK.
          ENDIF.
-* period definition
+* időszak meghatározása
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                               WITH KEY ABEVAZ = C_ABEVAZ_5299.
          IF SY-SUBRC EQ 0 AND
          NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
 
            SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
                                  WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
                                                   ADONEM EQ C_ADONEM_104
                                                   .
            IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
              CLEAR L_KAM_KEZD.
              L_KAM_KEZD = $DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
              CLEAR L_KAM_VEG.
              CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
                EXPORTING
@@ -3112,7 +3112,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++2012.01.06 BG
 *             L_KAM_VEG = L_KAM_VEG - 15 .
 *--2012.01.06 BG
-* allowance calculation
+* pótlék számítás
              PERFORM CALC_POTLEK USING    W_/ZAK/BEVALLO-BUKRS
 *++BG 2006/06/08
                                           W_/ZAK/BEVALLO-ZINDEX
@@ -3140,7 +3140,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                  CHANGING W_/ZAK/BEVALLO-FIELD_NR
                           W_/ZAK/BEVALLO-FIELD_NRK.
 *++BG 2009.05.18
-*              The value of the 0 flag must be handled in the form control
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
 *              miatt:
                IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL AND
                   W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
@@ -3153,7 +3153,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
        ENDIF.
 *++ BG 2009.06.17
-*      If there is a value, 203 must be corrected.
+*      Ha van érték, korrigálni kell a 203-at.
        IF NOT L_SUM_SAVE IS INITIAL.
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = C_ABEVAZ_203.
@@ -3177,9 +3177,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 *++ BG 2009.06.17
-*  0 flag field management
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+*  0 flag mező kezelés
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_205
                               "0-flag beállítás
@@ -3243,7 +3243,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA  LW_ITAB TYPE L_ITAB_TYPE.
 
    CLEAR $TRUE.
-*  We'll try to break it down at the hyphens
+*  Megpróbáljuk szétbontani a kötőjeleknél
    SPLIT $STCD1 AT '-' INTO TABLE L_ITAB.
 *++1665 #05.
 **  Ebben az esetben a második résznek kell tartalmaznia az EVA jellemzőt
@@ -3348,26 +3348,26 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT T_BEVALLO INTO  W_/ZAK/BEVALLO
                      WHERE NOT GET_ABEVAZ IS INITIAL.
 
-*    Dialog run for insurance
+*    Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
-* Source ABEV characteristics
+* Forrás ABEV jellemzői
      READ TABLE T_BEVALLB INTO L_BEVALLB
           WITH KEY ABEVAZ = W_/ZAK/BEVALLO-GET_ABEVAZ.
 
      IF L_BEVALLB-ASZKOT = SPACE.
-*      Read original line
+*      Eredeti sor beolvasása
        READ TABLE T_BEVALLO INTO L_BEVALLO
                           WITH KEY  ABEVAZ   = W_/ZAK/BEVALLO-GET_ABEVAZ
 *                                   ADOAZON  = W_/ZAK/BEVALLO-ADOAZON
                                     BINARY SEARCH.
      ELSE.
-*    Read original line
+*    Eredeti sor beolvasása
 *++ BG 2007.06.25
-*      It must be interpreted by page number, because otherwise it is bigger than one
-*      also transfers the value of sheet 001 to sheet:
+*      Lapszámonként kell értelmezni, mert egyébként az egynél nagyobb
+*      lapra is átveszi az 001 lap értékét:
 *-- BG 2007.06.25
        READ TABLE T_BEVALLO INTO L_BEVALLO
                           WITH KEY ABEVAZ  = W_/ZAK/BEVALLO-GET_ABEVAZ
@@ -3424,24 +3424,24 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT T_BEVALLO INTO  LW_/ZAK/BEVALLALV
                      WHERE NOT GET_ABEVAZ IS INITIAL.
 
-*    Dialog run for insurance
+*    Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
-*    Source ABEV characteristics
+*    Forrás ABEV jellemzői
      READ TABLE T_BEVALLB INTO L_BEVALLB
           WITH KEY ABEVAZ = LW_/ZAK/BEVALLALV-GET_ABEVAZ.
 
      IF L_BEVALLB-ASZKOT = SPACE.
-*      Read original line
+*      Eredeti sor beolvasása
        READ TABLE T_BEVALLO INTO L_BEVALLO
                           WITH KEY  ABEVAZ   =
                           LW_/ZAK/BEVALLALV-GET_ABEVAZ
 *ADOAZON  = LW_/ZAK/BEVALLALV-ADOAZON
                                     BINARY SEARCH.
      ELSE.
-*    Read original line
+*    Eredeti sor beolvasása
        READ TABLE T_BEVALLO INTO L_BEVALLO
                           WITH KEY ABEVAZ  =
                           LW_/ZAK/BEVALLALV-GET_ABEVAZ
@@ -3507,7 +3507,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++1908 #10.
    LOOP AT $I_/ZAK/SZJA_CUST ASSIGNING <SZJA_CUST> WHERE DATAB IS INITIAL
                                                      OR DATBI IS INITIAL.
-*    Filling in empty date fields
+*    Üres dátum mezők feltöltése
      IF <SZJA_CUST>-DATAB IS INITIAL.
 *++1908 #11.
        SELECT SINGLE DATAB INTO <SZJA_CUST>-DATAB
@@ -3563,7 +3563,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
  FORM AUFNR_FELTOLT TABLES   $R_AUFNR STRUCTURE R_AUFNR
                     USING    $AUFNR.
    CLEAR $R_AUFNR. REFRESH $R_AUFNR.
-*    It makes the order a condition for the selection
+*    A rendelésből feltételt csinál a szelekcióhoz
    IF NOT $AUFNR IS INITIAL.
      $R_AUFNR = 'IEQ'.
      $R_AUFNR-LOW = $AUFNR.
@@ -3583,7 +3583,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
  FORM SAKNR_FELTOLT TABLES   $R_SAKNR STRUCTURE R_SAKNR
                     USING    $SAKNR.
    CLEAR $R_SAKNR. REFRESH  $R_SAKNR.
-*    Makes the ledger a condition for the selection
+*    A főkönyvből feltételt csinál a szelekcióhoz
    IF NOT $SAKNR IS INITIAL.
      $R_SAKNR = 'IEQ'.
      $R_SAKNR-LOW = $SAKNR.
@@ -3615,7 +3615,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_W_/ZAK/ANALITIKA-ABEVAZ  = $ABEVAZ.
    L_W_/ZAK/ANALITIKA-BOOK    = 'M'. "Könyvelésre jelölve
-*  When we are done with all this, you can go to the board
+*  Ha mindezzel elkészültünk mehet a táblába
    APPEND L_W_/ZAK/ANALITIKA TO $O_/ZAK/ANALITIKA.
 
  ENDFORM.                    " /zak/analitika_tolt
@@ -3815,7 +3815,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                               WA_BEVALLB-ELOJEL
                         CHANGING $SUM.
      ELSE.
-* not a calculated field
+* nem számított mező
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                WHERE ABEVAZ EQ WA_BEVALLB-ABEVAZ.
          CLEAR W_SUM.
@@ -3843,14 +3843,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 *--BG 2006/05/29
 *++1008 2010.03.03 BG
-*        Self-revision flag does not matter here
+*        Önrevíziós flag itt nem számít
          CLEAR W_SUM-OFLAG.
 *--1008 2010.03.03 BG
          COLLECT W_SUM INTO I_SUM.
        ENDLOOP.
      ENDIF.
    ENDLOOP.
-* due to special rules!!
+* speciális szabályok miatt!!
    IF SY-SUBRC NE 0.
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
              WHERE ABEVAZ EQ W_/ZAK/BEVALLB-ABEVAZ.
@@ -3879,7 +3879,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
 *--BG 2006/05/29
 *++1008 2010.03.03 BG
-*      Self-revision flag does not matter here
+*      Önrevíziós flag itt nem számít
        CLEAR W_SUM-OFLAG.
 *--1008 2010.03.03 BG
        COLLECT W_SUM INTO I_SUM.
@@ -3931,7 +3931,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2007.10.10
                                 .
    DATA: W_T001 TYPE T001.
-* currency definition
+* pénznem meghatározás
    SELECT SINGLE * FROM T001 INTO W_T001
                              WHERE BUKRS EQ $BUKRS.
 
@@ -3956,7 +3956,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
           NOT W_/ZAK/BEVALLDEF-OVERWRITE IS INITIAL ).
 *-- BG 2007.11.09
 
-* there is no value for the abev code, you can enter the default value!
+* nincs az abev kódra érték, lehet a default értéket beírni!
 *++ BG 2007.05.17
 *      MOVE-CORRESPONDING W_/ZAK/BEVALLDEF TO W_/ZAK/BEVALLO.
        MOVE W_/ZAK/BEVALLDEF-FIELD_C TO W_/ZAK/BEVALLO-FIELD_C.
@@ -3990,7 +3990,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA: W_SZ TYPE /ZAK/BEVALLB.
 
-* insert empty calculated abev rows
+* üres számított abev sorok beszúrása
 *******************************************
    DATA: W_UPD_BEVALLO TYPE /ZAK/BEVALLO.
 
@@ -4004,12 +4004,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
                      WHERE SUM_ABEVAZ NE SPACE.
      CLEAR: W_SUM,L_SUM.
-* characteristics of the ABEV code to be summarized
+* az összegzendő ABEV kód jellemzői
      READ TABLE T_BEVALLB INTO W_X
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-SUM_ABEVAZ.
      IF SY-SUBRC EQ 0.
        IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL.
-* calculated field
+* számított mező
          PERFORM ABEV_SUM TABLES T_BEVALLO
                                  T_BEVALLB
                           USING  W_/ZAK/BEVALLB
@@ -4017,11 +4017,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                           CHANGING L_SUM.
        ELSE.
          CLEAR L_INDEX.
-* not a calculated field
+* nem számított mező
          LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                  WHERE ABEVAZ EQ W_/ZAK/BEVALLB-ABEVAZ.
 
-*          Dialog run for insurance
+*          Dialógus futás biztosításhoz
            PERFORM PROCESS_IND_ITEM USING '100000'
                                           L_INDEX
                                           TEXT-P01.
@@ -4042,10 +4042,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                              W_SUM-FIELD_NRK.
            W_SUM-ABEVAZ  = W_/ZAK/BEVALLB-SUM_ABEVAZ.
 *++BG 2006/05/29
-*          If the field does not require a tax number, we will remove it
+*          Ha a mező nem adószám köteles akkor azt kivesszük
            IF W_X-ASZKOT IS INITIAL AND NOT W_SUM-ADOAZON IS INITIAL.
              CLEAR W_SUM-ADOAZON.
-*            Page number is always 0001
+*            Lapszám mindig 0001
              W_SUM-LAPSZ = '0001'.
            ENDIF.
 *--BG 2006/05/29
@@ -4059,11 +4059,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-* insert aggregate rows!
+* összesített sorok beszúrása!
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
                      WHERE COLLECT NE SPACE.
 
-*    Dialog run for insurance
+*    Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100'
                                     L_INDEX
                                     TEXT-P07.
@@ -4089,7 +4089,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            CHANGING W_SUM-FIELD_NR
                     W_SUM-FIELD_NRK.
 * begin of insert kdenes 2006.04.20.
-* I write back the ABEVAZ_DISP field!
+* visszaírom az ABEVAZ_DISP mezőt !
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = W_SUM-ABEVAZ.
          IF SY-SUBRC EQ 0.
@@ -4098,7 +4098,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 * end of insert 2006.04.20
 *++1008 2010.03.03 BG
-*        Self-revision flag does not matter here
+*        Önrevíziós flag itt nem számít
          CLEAR W_SUM-OFLAG.
 *--1008 2010.03.03 BG
 *++2208 #09.
@@ -4116,10 +4116,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    ENDLOOP.
 
 *++1008 2010.02.04 BG
-* you need the calculated data for the summation according to the special rules
-* hand over for processing!
+* a speciális szabályok szerinti összegzéshez kell a számolt adatokat
+* feldolgozásra átadni!
 
-* If there is already a record, we will modify it
+* Ha van már rekord akkor módosítjuk
 *  APPEND LINES OF I_SUM TO T_BEVALLO.
    SORT T_BEVALLO.
    LOOP AT I_SUM INTO W_SUM.
@@ -4181,7 +4181,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          EXIT.
        ENDIF.
 *++2011.12.08 BG (Ness)
-*      If we reach '000', exit
+*      Ha elérjük a '000'-át kilépés
        IF V_INDEX EQ '000'.
          EXIT.
        ENDIF.
@@ -4346,14 +4346,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++BG 2008.04.16
      CLEAR W_/ZAK/BEVALLO-FIELD_N.
 *--BG 2008.04.16
-* PERIOD conversion!
-* E - Year old
+* IDŐSZAK konverzió!
+* E - Éves
      L_GJAHR = W_/ZAK/BEVALLO-GJAHR.
      L_MONAT = W_/ZAK/BEVALLO-MONAT.
 
      IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
        L_GJAHR = W_/ZAK/BEVALLO-GJAHR - 1.
-* N - Quarterly
+* N - Negyedéves
      ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
        IF W_/ZAK/BEVALLO-MONAT EQ '03'.
          L_GJAHR = W_/ZAK/BEVALLO-GJAHR - 1.
@@ -4376,7 +4376,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++2365 #03.
        CLEAR L_DATUM.
      ELSEIF  W_/ZAK/BEVALL-BIDOSZ = 'S'.
-*   The beginning of the special period must be determined
+*   Meg kell határozni a speciális időszak kezdetét
        SELECT SINGLE DATAB INTO L_DATUM
                        FROM /ZAK/BEVALL
                       WHERE BUKRS EQ W_/ZAK/BEVALLO-BUKRS
@@ -4392,8 +4392,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
 * index
 *++BG 2007.02.20
-*We determine the BTYPE according to the year because it might not be
-*with current
+*Meghatározzuk az év szerint a BTYPE-t mert lehet, hogy nem az
+*aktuálissal
 *kell olvasnunk.
      CLEAR L_BTYPE.
      CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
@@ -4410,18 +4410,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          OTHERS      = 3.
      IF SY-SUBRC <> 0.
        MESSAGE E208(/ZAK/ZAK) WITH C_BTYPART_AFA L_GJAHR L_MONAT.
-*      Declaration type cannot be defined! (Type: &, Year: &, Month: &)
+*      Bevallás típus nem hatrározható meg!(Fajta: &, Év: &, Hónap: &)
      ENDIF.
 *--BG 2007.02.20
 
 *++BG 2008.04.16
-* We upload what must be run
+* Feltöltjük amire mindenképp futtatni kell
      CLEAR LI_BUKRS.
      MOVE L_GJAHR TO LI_BUKRS-GJAHR.
      MOVE L_MONAT TO LI_BUKRS-MONAT.
      MOVE W_/ZAK/BEVALLO-BUKRS TO LI_BUKRS-BUKRS.
      APPEND LI_BUKRS.
-*    We define data in the company turnover
+*    Meghatározzuk van a vállalatforgatásban adat
      SELECT * INTO LW_BUKRSN                            "#EC CI_NOFIELD
               FROM /ZAK/BUKRSN
              WHERE FI_BUKRS EQ W_/ZAK/BEVALLO-BUKRS.
@@ -4493,7 +4493,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0965 2009.02.09 BG
 *--0965 2009.02.09 BG
 *++2011.12.08 BG
-*        read until we find a value up to '000'.
+*        végiolvassuk, amíg nem találunk értéket max '000'-ig.
          L_ZINDEX = W_/ZAK/BEVALLI-ZINDEX + 1.
          DO.
            SUBTRACT 1 FROM L_ZINDEX.
@@ -4558,7 +4558,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                           T_BEVALLB STRUCTURE /ZAK/BEVALLB.
 
    SORT T_BEVALLB BY ABEVAZ  .
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_M0AC017A  OR
             ABEVAZ EQ     C_ABEVAZ_M0AC018A  OR
@@ -4571,7 +4571,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
             ABEVAZ EQ     C_ABEVAZ_M0AC025A.
 
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -4622,7 +4622,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
  FORM PROCESS_IND_ITEM USING   $VALUE
                                $INDEX
                                $TEXT.
-*  Only when running dialog
+*  Csak dialógus futtatásnál
    CHECK SY-BATCH IS INITIAL.
    ADD 1 TO $INDEX.
    IF $INDEX EQ $VALUE.
@@ -4665,7 +4665,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *----------------------------------------------------------------------*
  FORM CALC_ABEV_LAPSZ TABLES   T_BEVALLO STRUCTURE /ZAK/BEVALLALV.
 
-* SZJA return to determine the tax identification page number
+* SZJA bevallás adóazonosító lapszám meghatározáshoz
    TYPES: BEGIN OF LT_MLAPSZ,
             ADOAZON LIKE /ZAK/BEVALLALV-ADOAZON,
             ABEVAZ  LIKE /ZAK/BEVALLALV-ABEVAZ,
@@ -4685,7 +4685,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CHECK NOT I_MLAP[] IS INITIAL.
 
-*  We determine the page numbers.
+*  Meghatározzuk a lapszámokat.
    LOOP AT I_MLAP INTO W_MLAP.
      CLEAR LW_MLAPSZ.
      MOVE W_MLAP-ADOAZON TO LW_MLAPSZ-ADOAZON.
@@ -4694,7 +4694,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      COLLECT LW_MLAPSZ INTO LI_MLAPSZ.
    ENDLOOP.
 
-*  Rewriting page numbers
+*  Lapszámok visszaírása
    LOOP AT LI_MLAPSZ INTO LW_MLAPSZ.
      READ TABLE T_BEVALLO INTO L_BEVALLO_ALV
                           WITH KEY ABEVAZ  = LW_MLAPSZ-ABEVAZ
@@ -4739,16 +4739,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -4772,8 +4772,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
 
-*  We delete those records that have a tax number but not
-*  nothing came of it
+*  Kitöröljük azokat a rekordokat amiknek van adószáma de nem
+*  jött rá semmi
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
      READ TABLE T_ADOAZON WITH KEY ADOAZON = W_/ZAK/BEVALLO-ADOAZON
@@ -4784,12 +4784,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        CONTINUE.
      ENDIF.
 
-*  M 11 Mark with H if your declaration is considered a correction
+*  M 11 Jelölje H-val, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AC015A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
      ENDIF.
 
-*    A-12-000-e Repeated self-check
+*    A-12-000-e Ismételt önellenőrzés
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_A0DB005A AND
         $INDEX > '001'.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
@@ -4799,7 +4799,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  A 12a Mark with H if your declaration is considered a correction
+*  A 12a Jelölje H-val, ha a bevallása helyesbítésnek minősül
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0AC030A.
    IF SY-SUBRC EQ 0.
@@ -4808,8 +4808,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
    ENDIF.
 
-*  Calculation algorithm FOR SELF-REVISION:
-*  A-12-301-d Total personal income tax (difference in liability)
+*  Számítási algoritmus ÖNREVÍZIÓHOZ:
+*  A-12-301-d Személyi jövedelemadó összesen (kötelezettség különbözete)
 *  A0DC0301DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4820,8 +4820,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-303-d From line 302, the pension commission charged to the employer. contribution
-*(18%) (obligation difference
+*A-12-303-d A 302. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(18%)(kötelezettség különböze
 *A0DC0303DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4832,8 +4832,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-304-d Pension contribution deducted from line 302 from the insured (8.5%)
-*(obligation difference
+*A-12-304-d A 302. sorból a biztosítottól levont nyugdíjjárulék (8,5%)
+*(kötelezettség különböze
 *A0DC0304DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4844,8 +4844,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-305-d Pension contribution deducted from line 302 from the insured (0.5%) *
-*(obligation difference
+*A-12-305-d A 302. sorból a biztosítottól levont nyugdíjjárulék (0,5%) *
+*(kötelezettség különböze
 *A0DC0305DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4856,8 +4856,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-306-d Pension contribution paid after service fee from line 302
-*(15%) (obligation difference
+*A-12-306-d A 302. sorból a felszolg.díj után fizetett nyugdíjjárulék
+*(15%) (kötelezettség különböze
 *A0DC0306DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4868,8 +4868,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-308-d From line 307, the employer's health insurance. contribution
-* (11%) (obligation separately
+*A-12-308-d A 307. sorból a foglalkoztatót terhelő egészségbizt. járulék
+* (11%) (kötelezettség különbö
 *A0DC0308DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4880,8 +4880,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-309-d The health insurance contribution deducted from the insured person from line 307
-* (11%) (obligation separately
+*A-12-309-d A 307. sorból a biztosítottól levont egészségbizt.-i járulék
+* (11%) (kötelezettség különbö
 *A0DC0309DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4892,8 +4892,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-310-d Accident contribution from line 307 for the partnership
-* (5%) (obligation otherwise
+*A-12-310-d A 307. sorból a társas vállalkozást terhelő baleseti járulék
+* (5%) (kötelezettség különbö
 *A0DC0310DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4904,7 +4904,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-311-d Employer contribution (difference in liability)
+*A-12-311-d Munkaadói járulék (kötelezettség különbözete)
 *A0DC0311DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4916,7 +4916,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A-12-312-d Employee contribution (difference in liability)
+*A-12-312-d Munkavállalói járulék (kötelezettség különbözete)
 *A0DC0312DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4927,7 +4927,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-313-d Entrepreneur's contribution (difference in liability)
+*A-12-313-d Vállalkozói járulék (kötelezettség különbözete)
 *A0DC0313DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4938,8 +4938,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-314-d Percentage health contribution (obligation
-*difference)
+*A-12-314-d Százalékos mértékű egészségügyi hozzájárulás (kötelezettség
+*különbözete)
 *A0DC0314DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4950,8 +4950,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  C_ABEVAZ_A0BD0030CA        "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-315-d Itemized medical contribution (obligation
-*difference)
+*A-12-315-d Tételes egészségügyi hozzájárulás (kötelezettség
+*különbözete)
 *A0DC0315DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4962,8 +4962,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-316-d The 15% charge for START card holders.
-* (obligation difference)
+*A-12-316-d A START-kártyával rendelkezőre vonatkozó 15%-os mérétkű köt.
+* (kötelezettség különbözete)
 *A0DC0316DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4975,8 +4975,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A-12-317-d The 25% charge for START card holders.
-* (obligation difference)
+*A-12-317-d A START-kártyával rendelkezőre vonatkozó 25%-os mérétkű köt.
+* (kötelezettség különbözete)
 *A0DC0317DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4987,8 +4987,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-318-d The simplified public burden on the payer.
-*20% (obligation difference
+*A-12-318-d A kifizetőt terhelő egyszerűsített köztehervis.-i hozzájár
+*20% (kötelezettség különbözet
 *A0DC0318DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -4999,8 +4999,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-319-d The simplified public burden burdening the private
-*11% (obligation difference
+*A-12-319-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*11% (kötelezettség különbözet
 *A0DC0319DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -5011,8 +5011,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-320-d The simplified public burden burdening the private
-*11.1% (obligation difference
+*A-12-320-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*11,1%(kötelezettség különbözet
 *A0DC0320DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -5023,8 +5023,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A-12-321-d The simplified public burden burdening the private
-*15% (obligation difference
+*A-12-321-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*15%(kötelezettség különbözet
 *A0DC0321DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -5090,9 +5090,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2006/12/06
 
 
-*Summaries
-*A-12-302-d Pension Commission. Total contributions due to the fund
-*(obligation difference)
+*Összegzések
+*A-12-302-d Nyugdíjbizt. Alapot megillető járulékok összesen
+*(kötelezettség különbözete)
 *A0DC0302DA
    REFRESH LR_ABEVAZ.
 *++0002 BG 2006/11/29
@@ -5108,8 +5108,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0DC0302DA.
 
-*A-12-307-d Total contributions due to the Health Insurance Fund
-*(obligation difference
+*A-12-307-d Egészségbizt.-i Alapot megillető járulékok összesen
+*(kötelezettség különböze
 *A0DC0307DA
    REFRESH LR_ABEVAZ.
 *++0002 BG 2006/11/29
@@ -5123,8 +5123,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0DC0307DA.
 
-*A-12-322-d Total data of lines 301, 302 and 307, as well as 311-321.
-*(obligation difference
+*A-12-322-d A 301, 302 és a 307, valamint a 311-321 sorok aladata össz.
+*(kötelezettség különbözet
 *A0DC0322DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DC0301DA SPACE.
@@ -5149,8 +5149,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0DC0322DA.
 
-* A 13a Mark with an X if the corrector's declaration is a self-check
-* qualifies
+* A 13a Jelölje X-szel, ha a helyesbítő bevallása önellenőrzésnek
+* minősül
 * A0AC032A
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO WHERE ABEVAZ IN LR_ABEVAZ.
      IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL.
@@ -5259,16 +5259,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -5292,8 +5292,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
 
-*  We delete those records that have a tax number but not
-*  nothing came of it
+*  Kitöröljük azokat a rekordokat amiknek van adószáma de nem
+*  jött rá semmi
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
      READ TABLE T_ADOAZON WITH KEY ADOAZON = W_/ZAK/BEVALLO-ADOAZON
@@ -5304,12 +5304,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        CONTINUE.
      ENDIF.
 
-*  M 11 Mark with H if your declaration is considered a correction
+*  M 11 Jelölje H-val, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AC018A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
      ENDIF.
 
-*    A-12-000-e Repeated self-check
+*    A-12-000-e Ismételt önellenőrzés
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_A0FB005A AND
         $INDEX > '001'.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
@@ -5319,7 +5319,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  A 12a Mark with H if your declaration is considered a correction
+*  A 12a Jelölje H-val, ha a bevallása helyesbítésnek minősül
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0AC030A.
    IF SY-SUBRC EQ 0.
@@ -5331,9 +5331,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 **  Számítási algoritmus ÖNREVÍZIÓHOZ:
 
 * A0FC0411DA
-* A-12-411-d Total personal income tax (difference in liability)
-*(This return is A0CC0044CA+A0BD0017CA (amount in HUF)) - (previous
-* the return for the period A0CC0044CA+A0BD0017CA (amount in HUF))
+* A-12-411-d Személyi jövedelemadó összesen (kötelezettség különbözete)
+*(Ez a bevallás A0CC0044CA+A0BD0017CA (forintos összeg)) - (előző erre
+* az időszakra eső bevallás A0CC0044CA+A0BD0017CA (forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5345,10 +5345,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0413DA
-* A-12-413-d From line 412, Tbj. R-5/D (1) paragraph b) (obligation
-* better.)
-*(This declaration is A0BC0003CA (amount in HUF)) - (previous for this period
-* tax return A0BC0003CA (amount in HUF))
+* A-12-413-d A 412. sorból a Tbj. R-5/D (1) bekezés b) (kötezettség
+* különb.)
+*(Ez a bevallás A0BC0003CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0BC0003CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5360,10 +5360,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0414DA
-*A-12-414-d From line 412, the pension commission charged to the employer. contribution
-*(18%) (obligation difference
-*(This declaration is A0DC0047CA+A0CC0030CA (amount in HUF)) - (previous
-* return for the period A0DC0047CA (amount in HUF))
+*A-12-414-d A 412. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(18%)(kötelezettség különböze
+*(Ez a bevallás A0DC0047CA+A0CC0030CA(forintos összeg)) - (előző erre az
+* időszakra eső bevallás A0DC0047CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5375,10 +5375,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0415DA
-*A-12-415-d Pension contribution deducted from line 412 from the insured (8.5%)
-*(obligation difference
-*(This return is A0DC0048CA (amount in HUF)) - (previous for this period
-*tax return A0DC0048CA (amount in HUF))
+*A-12-415-d A 412. sorból a biztosítottól levont nyugdíjjárulék (8,5%)
+*(kötelezettség különböze
+*(Ez a bevallás A0DC0048CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0DC0048CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5390,10 +5390,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0416DA
-*A-12-416-d Pension contribution deducted from line 412 from the insured (0.5%)
-*(obligation difference
-*(This return is A0DC0049CA (amount in HUF)) - (previous for this period
-*tax return A0DC0049CA (amount in HUF))
+*A-12-416-d A 412. sorból a biztosítottól levont nyugdíjjárulék (0,5%)
+*(kötelezettség különböze
+*(Ez a bevallás A0DC0049CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0DC0049CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5405,10 +5405,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0417DA
-*A-12-417-d Pension contribution paid after service fee from line 412
-*(15%) (obligation difference
-*(This return is A0DC0050CA (amount in HUF)) - (previous for this period
-*rain declaration A0DC0050CA (amount in HUF))
+*A-12-417-d A 412. sorból a felszolg.díj után fizetett nyugdíjjárulék
+*(15%) (kötelezettség különböze
+*(Ez a bevallás A0DC0050CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0DC0050CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5420,10 +5420,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0419DA
-*A-12-420-d From line 418, Tbj. R-5/D (1) paragraph a) (obligation
-*better.)
-*(This return is A0BC0005CA (amount in HUF)) - (previous for this period
-*tax return A0BC0005CA (amount in HUF))
+*A-12-420-d A 418. sorból a Tbj. R-5/D (1) bekezés a) (kötezettség
+*különb.)
+*(Ez a bevallás A0BC0005CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0BC0005CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5435,10 +5435,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0420DA
-*A-12-420-d From line 418, the employer's health insurance. contribution
-*(11%) (obligation separately
-* (This return is A0DC0053CA (amount in HUF)) - (previous for this period
-* tax return A0DC0053CA (amount in HUF))
+*A-12-420-d A 418. sorból a foglalkoztatót terhelő egészségbizt. járulék
+*(11%) (kötelezettség különbö
+* (Ez a bevallás A0DC0053CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0DC0053CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5449,10 +5449,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0421DA
-* A-12-421-d From line 418, the payment in kind of the employer.
-*commission contribution (7%) (obligation
-*(This return is A0DC0054CA+A0CC0031CA (amount in HUF)) - (previous
-* return for the period A0DC0054CA+A0CC0031CA (amount in HUF))
+* A-12-421-d A 418. sorból a foglalkoztatót terhelő természetbeni eg.
+*bizt. járulék (7%) (kötelezettség
+*(Ez a bevallás A0DC0054CA+A0CC0031CA(forintos összeg)) - (előző erre az
+* időszakra eső bevallás A0DC0054CA+A0CC0031CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5463,10 +5463,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0422DA
-*A-12-422-d From line 418, the financial insurance for the employer.
-*contribution (4%) (vol. misc.)
-*(This return is A0DC0055CA+A0CC0032CA (amount in HUF)) - (previous
-* return for the period A0DC0055CA+A0CC0032CA (amount in HUF))
+*A-12-422-d A 418. sorból a foglalkoztatót terhelő pénzbeni eg.bizt.
+*járulék (4%) (kötez. különb.)
+*(Ez a bevallás A0DC0055CA+A0CC0032CA(forintos összeg)) - (előző erre az
+* időszakra eső bevallás A0DC0055CA+A0CC0032CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5477,10 +5477,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0423DA
-*A-12-423-d Health insurance contribution deducted from line 418 from the insured
-*(4%) (obligation separately
-*(This return is A0DC0056CA (amount in HUF)) - (previous for this period
-*tax return A0DC0056CA (amount in HUF))
+*A-12-423-d A 418. sorból a biztosítottól levont egészségbizt.-i járulék
+*(4%) (kötelezettség különbö
+*(Ez a bevallás A0DC0056CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0DC0056CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5492,10 +5492,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0424DA
-*A-12-424-d Production income tax deducted from line 418 from the insured.
-*contribution (4%) (obligation
-* (This return is A0DC0057CA (amount in HUF)) - (previous for this period
-* tax return A0DC0057CA (amount in HUF))
+*A-12-424-d A 418. sorból a biztosítottól levont term.beniegészségbizt.
+*-i járulék (4%) (kötelezettség
+* (Ez a bevallás A0DC0057CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0DC0057CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5506,10 +5506,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0425DA
-*A-12-425-d Cash health insurance deducted from line 418 from the insured.
-*contribution (2%) (obligation
-*(This return is A0DC0058CA (amount in HUF)) - (previous for this period
-*tax return A0DC0058CA (amount in HUF))
+*A-12-425-d A 418. sorból a biztosítottól levont pénzbeni egészségbizt.
+*-i járulék (2%) (kötelezettség
+*(Ez a bevallás A0DC0058CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0DC0058CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5520,10 +5520,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0426DA
-* A-12-426-d From line 418, the accident burdening the partnership
-*contribution (5%) (obligation separately
-* (This return is A0DC0059CA (amount in HUF)) - (previous for this period
-* tax return A0DC0059CA (amount in HUF))
+* A-12-426-d A 418. sorból a társas vállalkozást terhelő baleseti
+*járulék (5%) (kötelezettség különbö
+* (Ez a bevallás A0DC0059CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0DC0059CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5535,10 +5535,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0427DA
-*A-12-427-d Accident contribution from line 418 for the partnership
-* (10%) (obligation separately
-* (This declaration is A0CC0060CA (amount in HUF)) - (previous for this period
-* tax return A0CC0060CA (amount in HUF))
+*A-12-427-d A 418. sorból a társas vállalkozást terhelő baleseti járulék
+* (10%) (kötelezettség különbö
+* (Ez a bevallás A0CC0060CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0CC0060CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5549,9 +5549,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0428DA
-*A-12-428-d Employer contribution (difference in liability)
-*(This return is A0EC0067CA+A0CC0029CA (amount in HUF)) - (previous
-* return for the period A0EC0067CA+A0CC0029CA (amount in HUF))
+*A-12-428-d Munkaadói járulék (kötelezettség különbözete)
+*(Ez a bevallás A0EC0067CA+A0CC0029CA(forintos összeg)) - (előző erre az
+* időszakra eső bevallás A0EC0067CA+A0CC0029CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5562,9 +5562,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0429DA
-*A-12-429-d Employee contribution (1%) (difference in liability)
-*(This return is A0EC0068CA (amount in HUF)) - (previous for this period
-*tax return A0EC0068CA (amount in HUF))
+*A-12-429-d Munkavállalói járulék (1%) (kötelezettség különbözete)
+*(Ez a bevallás A0EC0068CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0EC0068CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5575,9 +5575,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0430DA
-*A-12-430-d Employee contribution (1.5%) (difference in liability)
-*(This declaration is A0EC0069CA (amount in HUF)) - (previous for this period
-*tax return A0EC0069CA (amount in HUF))
+*A-12-430-d Munkavállalói járulék (1,5%) (kötelezettség különbözete)
+*(Ez a bevallás A0EC0069CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0EC0069CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5589,12 +5589,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0431DA
-*A-12-431-d Entrepreneur's contribution (difference in liability)
+*A-12-431-d Vállalkozói járulék (kötelezettség különbözete)
 
 *++BG 2006/11/10
-*(This return is A0EC0070CA+A0CC0033CA (amount in HUF)) - (previous
-* for a period
-*rain declaration A0EC0070CA+A0CC0033CA (amount in HUF))
+*(Ez a bevallás A0EC0070CA+A0CC0033CA(forintos összeg)) - (előző erre az
+* időszakra
+*eső bevallás A0EC0070CA+A0CC0033CA(forintos összeg))
 *--BG 2006/11/10
 
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
@@ -5604,7 +5604,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  C_ABEVAZ_A0EC0070CA        "Forrás 1
 *++BG 2006/11/22
 **++BG 2006/11/10
-*                                C_ABEVAZ_A0CC0033CA "Source 2
+*                                C_ABEVAZ_A0CC0033CA        "Forrás 2
                                  SPACE                      "Forrás 2
 **--BG 2006/11/10
 *--BG 2006/11/22
@@ -5613,10 +5613,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0432DA
-*A-12-432-d Percentage health contribution (obligation
-*difference)
-*(This return is A0EC0073CA (amount in HUF)) - (previous for this period
-* tax return A0EC0073CA (amount in HUF))
+*A-12-432-d Százalékos mértékű egészségügyi hozzájárulás (kötelezettség
+*különbözete)
+*(Ez a bevallás A0EC0073CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0EC0073CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5629,10 +5629,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0433DA
-* A-12-433-d Itemized medical contribution (obligation
-*difference)
-*(This return is A0EC0074CA (amount in HUF)) - (previous for this period
-* tax return A0EC0074CA (amount in HUF))
+* A-12-433-d Tételes egészségügyi hozzájárulás (kötelezettség
+*különbözete)
+*(Ez a bevallás A0EC0074CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0EC0074CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5643,10 +5643,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0434DA
-*A-12-434-d The 15% charge for START card holders.
-*(obligation difference)
-*(This declaration is A0EC0071CA (amount in HUF)) - (previous for this period
-*tax return A0EC0071CA (amount in HUF))
+*A-12-434-d A START-kártyával rendelkezőre vonatkozó 15%-os mérétkű köt.
+*(kötelezettség különbözete)
+*(Ez a bevallás A0EC0071CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0EC0071CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5657,10 +5657,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0435DA
-*A-12-435-d The 25% charge for START card holders.
-* (obligation difference)
-*(This declaration is A0EC0072CA (amount in HUF)) - (previous for this period
-* tax return A0EC0072CA (amount in HUF))
+*A-12-435-d A START-kártyával rendelkezőre vonatkozó 25%-os mérétkű köt.
+* (kötelezettség különbözete)
+*(Ez a bevallás A0EC0072CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0EC0072CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5671,10 +5671,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0436DA
-*A-12-436-d The simplified public charge burdening the payer.
-*20% (obligation difference
-*(This declaration is A0EC0075CA (amount in HUF)) - (previous for this period
-*tax return A0EC0075CA (amount in HUF))
+*A-12-436-d A kifizetőt terhelő egyszerűsített köztehervis.-i hozzájár
+*20% (kötelezettség különbözet
+*(Ez a bevallás A0EC0075CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0EC0075CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5685,10 +5685,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0437DA
-*A-12-437-d The simplified public burden burdening the private
-*11% (obligation difference
-*(This return is A0EC0076CA (amount in HUF)) - (previous for this period
-* tax return A0EC0076CA (amount in HUF))
+*A-12-437-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*11% (kötelezettség különbözet
+*(Ez a bevallás A0EC0076CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0EC0076CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5699,10 +5699,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 * A0FC0438DA
-* A-12-438-d The simplified public burden burdening the private
-* 11.1% (obligation difference
-* (This return is A0EC0077CA (amount in HUF)) - (previous for this period
-* tax return A0EC0077CA (amount in HUF))
+* A-12-438-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+* 11,1%(kötelezettség különbözet
+* (Ez a bevallás A0EC0077CA(forintos összeg)) - (előző erre az időszakra
+* eső bevallás A0EC0077CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5714,10 +5714,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 * A0FC0439DA
-*A-12-439-d The simplified public burden burdening the private
-*15% (obligation difference
-*(This return is A0EC0078CA (amount in HUF)) - (previous for this period
-*tax return A0EC0078CA (amount in HUF))
+*A-12-439-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*15%(kötelezettség különbözet
+*(Ez a bevallás A0EC0078CA(forintos összeg)) - (előző erre az időszakra
+*eső bevallás A0EC0078CA(forintos összeg))
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -5897,8 +5897,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 * A0FC0412DA
-* A-12-412-d Pension Commission. Total contributions due to the fund
-*(obligation difference)
+* A-12-412-d Nyugdíjbizt. Alapot megillető járulékok összesen
+*(kötelezettség különbözete)
 * A0FC0413DA+A0FC0414DA+A0FC0415DA+A0FC0416DA+A0FC0417DA
    REFRESH LR_ABEVAZ.
 *++0002 BG 2006/11/29
@@ -5915,8 +5915,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0FC0412DA.
 
 * A0FC0418DA
-* A-12-418-d Total contributions due to the Health Insurance Fund
-*(obligation difference
+* A-12-418-d Egészségbizt.-i Alapot megillető járulékok összesen
+*(kötelezettség különböze
 * A0FC0419DA+A0FC0420DA+A0FC0421DA+A0FC0422DA+A0FC0423DA+A0FC0424DA+
 * +A0FC0425DA+A0FC0426DA+A0FC0427DA
    REFRESH LR_ABEVAZ.
@@ -5973,8 +5973,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0003 BG 2006/12/06
 
 * A0FC0440CA
-* A-12-440-c Total data for lines 411, 412 and 418, as well as 428-439.
-* (basis of obligation)
+* A-12-440-c A 411, 412 és a 418, valamint a 428-439 sorok aladata össz.
+* (kötelezettség alapja)
 * A0FC0411CA+A0FC0412CA+A0FC0418CA+A0FC0428CA+A0FC0429CA+A0FC0430CA+
 *+A0FC0431CA+A0FC0432CA+A0FC0434CA+A0FC0435CA+A0FC0436CA+A0FC0437CA+
 *+A0FC0438CA+A0FC0439CA
@@ -6007,8 +6007,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0FC0440CA.
 
 * A0FC0440DA
-* A-12-440-d Total data of lines 411, 412 and 418, as well as 428-439.
-* (obligation difference
+* A-12-440-d A 411, 412 és a 418, valamint a 428-439 sorok aladata össz.
+* (kötelezettség különbözet
 *  A0FC0411DA+A0FC0412DA+A0FC0418DA+A0FC0428DA+A0FC0429DA+A0FC0430DA+
 * +A0FC0431DA+A0FC0432DA+A0FC0433DA+A0FC0434DA+A0FC0435DA+A0FC0436DA+
 * +A0FC0437DA+A0FC0438DA+A0FC0439DA
@@ -6042,8 +6042,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0FC0440DA.
 
 
-* A 13a Mark with an X if the corrector's declaration is a self-check
-* qualifies
+* A 13a Jelölje X-szel, ha a helyesbítő bevallása önellenőrzésnek
+* minősül
 * A0AC032A
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO WHERE ABEVAZ IN LR_ABEVAZ.
      IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL.
@@ -6095,15 +6095,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -6126,7 +6126,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -6137,15 +6137,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with H if your declaration is considered a correction
+*  M 11 Jelölje H-val, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AC018A.
 *++BG 2007.03.22 Az ABEV program hibát jelez a "H"-ra "X"-el kell
-*to fill out
+*kitölteni
 *      MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
 *--BG 2007.03.22
      ENDIF.
-*    A00-016-000-e Repeated self-check
+*    A00-016-000-e Ismételt önellenőrzés
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_A0AC036A AND
         $INDEX > '001'.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
@@ -6155,7 +6155,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  Mark 13a with an X if your return is considered a correction
+*  A 13a Jelölje X-ell, ha a bevallása helyesbítésnek minősül
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0AC032A.
    IF SY-SUBRC EQ 0.
@@ -6167,8 +6167,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 **  Számítási algoritmus ÖNREVÍZIÓHOZ:
 
 *A0HC0240DA
-*07-241-c Pension Commission. Total contributions due to the fund (fund
-*difference)
+*A 07-241-c Nyugdíjbizt. Alapot megillető járulékok összesen (alap
+*különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6181,21 +6181,21 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0HC0243CA
-*A 07-243-c From line 241, the pension commission charged to the employer. contribution
-*(18%) (base difference)
+*A 07-243-c A 241. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(18%) (alap különbözete)
    PERFORM GET_CLEAR_ABEVAZ TABLES T_BEVALLO
                                    T_BEVALLB
                              USING C_ABEVAZ_A0HC0243CA.
 *A0HC0243DA
-*A 07-243-d From line 241, the pension commission charged to the employer. contribution
-*(18%) (obligation difference
+*A 07-243-d A 241. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(18%)(kötelezettség különböze
    PERFORM GET_CLEAR_ABEVAZ TABLES T_BEVALLO
                                    T_BEVALLB
                              USING C_ABEVAZ_A0HC0243DA.
 
 *A0HC0244DA
-*A 07-244-d From line 241, the pension commission charged to the employer. contribution
-*(21%) (obligation difference
+*A 07-244-d A 241. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(21%)(kötelezettség különböze
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6207,9 +6207,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 
-*A 07-244-c From line 241, the pension commission charged to the employer. contribution
-*(21%) (base difference)
-* A0HC0244CA = A0HC0244DA value / 21%
+*A 07-244-c A 241. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(21%) (alap különbözete)
+* A0HC0244CA = A0HC0244DA értéknek / 21%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0244CA   "Módosított mező
@@ -6219,8 +6219,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0HC0245DA
-*A 07-245-d Pension contribution deducted from the insured person from line 241 (8.5%)
-*(obligation difference
+*A 07-245-d A 241. sorból a biztosítottól levont nyugdíjjárulék (8,5%)
+*(kötelezettség különböze
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6232,8 +6232,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0245CA
-*A 07-245-c Pension contribution deducted from the insured person from line 241 (8.5%)
-*(base difference)
+*A 07-245-c A 241. sorból a biztosítottól levont nyugdíjjárulék (8,5%)
+*(alap különbözete)
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0245CA   "Módosított mező
@@ -6241,8 +6241,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.085'.
 
 *A0HC0246DA
-*A 07-246-d Pension contribution deducted from the insured person from line 241 (0.5%)
-*(obligation difference
+*A 07-246-d A 241. sorból a biztosítottól levont nyugdíjjárulék (0,5%)
+*(kötelezettség különböze
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6253,7 +6253,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0HC0246CA
-*A0HC0246DA value / 0.5%
+*A0HC0246DA értéknek / 0,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0246CA   "Módosított mező
@@ -6262,8 +6262,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0HC0247DA
-*A 07-247-d Pension contribution paid after service fee from line 241
-*(15%) (obligation difference
+*A 07-247-d A 241. sorból a felszolg.díj után fizetett nyugdíjjárulék
+*(15%) (kötelezettség különböze
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6275,7 +6275,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0247CA
-*A0HC0247DA value / 15%
+*A0HC0247DA értéknek / 15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0247CA   "Módosított mező
@@ -6286,8 +6286,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0HC0241CA
-*07-241-c Pension Commission. Total contributions due to the fund (fund
-*difference)
+*A 07-241-c Nyugdíjbizt. Alapot megillető járulékok összesen (alap
+*különbözete)
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0242CA SPACE.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0243CA SPACE.
@@ -6303,8 +6303,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0241CA.
 
 *A0HC0241DA
-*07-241-d Pension Commission. Total contributions due to the fund
-*(obligation difference)
+*A 07-241-d Nyugdíjbizt. Alapot megillető járulékok összesen
+*(kötelezettség különbözete)
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0242DA SPACE.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0243DA SPACE.
@@ -6322,8 +6322,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0HC0250DA
-*A 07-250-d From line 248, the employer's health insurance. contribution
-*(11%) (obligation separately
+*A 07-250-d A 248. sorból a foglalkoztatót terhelő egészségbizt. járulék
+*(11%) (kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6335,7 +6335,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0250CA
-*of A0HC0250DA value / 11%
+*A0HC0250DA értékének / 11%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0250CA   "Módosított mező
@@ -6343,8 +6343,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.11'.
 
 *A0HC0251DA
-*A 07-251-d From line 248 in kind for the employer
-*eg.committee contribution (7%) (excl. obligation)
+*A 07-251-d A 248. sorból a foglalkoztatót terhelő természetbeni
+*eg.bizt. járulék (7%) (kötelezettség kül.)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6356,7 +6356,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0251CA
-*of A0HC0251DA value / 7%
+*A0HC0251DA értékének / 7%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0251CA   "Módosított mező
@@ -6364,8 +6364,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.07'.
 
 *A0HC0252DA
-*A 07-252-d From line 248, in kind charged to the employer
-*eg.committee contribution (5%) (excl. obligation)
+*A 07-252-d A 248. sorból a foglalkoztatót terhelő természetbeni
+*eg.bizt. járulék (5%) (kötelezettség kül.)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6376,7 +6376,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0HC0252CA
-*of A0HC0252DA value / 5%
+*A0HC0252DA értékének / 5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0252CA   "Módosított mező
@@ -6384,8 +6384,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.05'.
 
 *A0HC0253DA
-*A 07-253-d From line 248, the employer's financial insurance.
-*contribution (4%) (vol. misc.)
+*A 07-253-d A 248. sorból a foglalkoztatót terhelő pénzbeni eg.bizt.
+*járulék (4%) (kötez. különb.)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6397,7 +6397,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0253CA
-*of A0HC0253DA value / 4%
+*A0HC0253DA értékének / 4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0253CA   "Módosított mező
@@ -6405,8 +6405,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.04'.
 
 *A0HC0254DA
-*A 07-254-d From line 248, the employer's financial insurance.
-*contribution (3%) (vol. misc.)
+*A 07-254-d A 248. sorból a foglalkoztatót terhelő pénzbeni eg.bizt.
+*járulék (3%) (kötez. különb.)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6418,15 +6418,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0254CA
-*of A0HC0254DA value / 3%
+*A0HC0254DA értékének / 3%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0254CA   "Módosított mező
                                 C_ABEVAZ_A0HC0254DA
                                 '0.03'.
 *A0HC0255DA
-*A 07-255-d The health insurance contribution deducted from the insured person from line 248
-*(4%) (obligation separately
+*A 07-255-d A 248. sorból a biztosítottól levont egészségbizt.-i járulék
+*(4%) (kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6438,7 +6438,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0255CA
-*of A0HC0255DA value / 4%
+*A0HC0255DA értékének / 4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0255CA   "Módosított mező
@@ -6446,8 +6446,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.04'.
 
 *A0HC0256DA
-*Deducted from line 248 of 07-256-d from the insured
-*contribution to the Productivity Commission (4%) (separate liability
+*A 07-256-d A 248. sorból a biztosítottól levont
+*term.beniegészségbizt.-i járulék (4%) (kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6458,7 +6458,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0HC0256CA
-*of A0HC0256DA value / 4%
+*A0HC0256DA értékének / 4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0256CA   "Módosított mező
@@ -6466,8 +6466,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.04'.
 
 *A0HC0257DA
-*A 07-257-d In cash deducted from the insured from line 248
-*health insurance contribution (2%) (separate obligation
+*A 07-257-d A 248. sorból a biztosítottól levont pénzbeni
+*egészségbizt.-i járulék (2%) (kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6479,15 +6479,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0257CA
-*of A0HC0257DA value / 2%
+*A0HC0257DA értékének / 2%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0257CA   "Módosított mező
                                 C_ABEVAZ_A0HC0257DA
                                 '0.02'.
 *A0HC0258DA
-*A 07-258-d In cash deducted from the insured from line 248
-*health insurance contribution (3%) (separate obligation
+*A 07-258-d A 248. sorból a biztosítottól levont pénzbeni
+*egészségbizt.-i járulék (3%) (kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6499,7 +6499,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0258CA
-*of A0HC0258DA value / 3%
+*A0HC0258DA értékének / 3%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0258CA   "Módosított mező
@@ -6507,8 +6507,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.03'.
 
 *A0HC0259DA
-*A 07-259-d From line 248, the accident contribution charged to the social enterprise
-*(5%) (obligation otherwise
+*A 07-259-d A 248. sorból a társas vállalkozást terhelő baleseti járulék
+*(5%) (kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6520,7 +6520,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0HC0259CA
-*of A0HC0259DA value / 5%
+*A0HC0259DA értékének / 5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0259CA   "Módosított mező
@@ -6528,8 +6528,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.05'.
 
 *A0HC0248CA
-*Total contributions due to the Health Insurance Fund 07-248-c (fund
-*difference)
+*A 07-248-c Egészségbizt.-i Alapot megillető járulékok összesen (alap
+*különbözete)
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0249CA SPACE.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0250CA SPACE.
@@ -6561,8 +6561,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0248CA.
 
 *A0HC0248DA
-*Total contributions due to the Health Insurance Fund 07-248-d
-*(obligation difference
+*A 07-248-d Egészségbizt.-i Alapot megillető járulékok összesen
+*(kötelezettség különböze
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0249DA SPACE.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0250DA SPACE.
@@ -6594,8 +6594,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0HC0261DA
-*A 07-261-d From line 248, the accident contribution charged to the social enterprise
-*(obligation otherwise
+*A 07-261-d A 248. sorból a társas vállalkozást terhelő baleseti járulék
+*(kötelezettség különbö
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6609,7 +6609,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0IC0262DA
-*A 08-262-d Employer's contribution (difference in liability)
+*A 08-262-d Munkaadói járulék (kötelezettség különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6622,7 +6622,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *++BG 2007.03.22
 *A0IC0262CA
-* Employer contribution
+* Munkaadói járulék
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC0262CA   "Módosított mező
@@ -6631,7 +6631,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2007.03.22
 
 *A0IC0263DA
-*A 08-263-d Employee contribution (1%) (difference in liability)
+*A 08-263-d Munkavállalói járulék (1%) (kötelezettség különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6642,7 +6642,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0263CA
-*of A0IC0263DA value / 1%
+*A0IC0263DA értékének / 1%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC0263CA   "Módosított mező
@@ -6650,7 +6650,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.01'.
 
 *A0IC0264DA
-*Employee contribution 08-264-d (1.5%) (difference in liability)
+*A 08-264-d Munkavállalói járulék (1,5%) (kötelezettség különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6661,7 +6661,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0264CA
-*of A0IC0264DA value / 1.5%
+*A0IC0264DA értékének / 1,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC0264CA   "Módosított mező
@@ -6669,7 +6669,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.015'.
 
 *A0IC0265DA
-*A 08-265-d Entrepreneur's contribution (difference in liability)
+*A 08-265-d Vállalkozói járulék (kötelezettség különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6681,7 +6681,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0IC0265CA
-*of A0IC0265DA value / 4%
+*A0IC0265DA értékének / 4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0265CA   "Módosított mező
@@ -6689,8 +6689,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.04'.
 
 *A0IC0266DA
-*A 08-266-d Percentage health contribution (obligation
-*difference)
+*A 08-266-d Százalékos mértékű egészségügyi hozzájárulás (kötelezettség
+*különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6704,8 +6704,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0IC0267DA
-*08-267-d Itemized medical contribution (obligation
-*difference)
+*A 08-267-d Tételes egészségügyi hozzájárulás (kötelezettség
+*különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6716,8 +6716,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0268DA
-*08-268-d A 15% charge for START card holders.
-*(obligation difference)
+*A 08-268-d A START-kártyával rendelkezőre vonatkozó 15%-os mérétkű köt.
+*(kötelezettség különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6728,7 +6728,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0268CA
-*of the value of A0IC0268DA / 15%
+*A0IC0268DA értékének / 15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0268CA   "Módosított mező
@@ -6736,8 +6736,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.15'.
 
 *A0IC0269DA
-*08-269-d A 25% contract for START card holders.
-*(obligation difference)
+*A 08-269-d A START-kártyával rendelkezőre vonatkozó 25%-os mérétkű köt.
+*(kötelezettség különbözete)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6748,7 +6748,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0269CA
-*of the value of A0IC0269DA / 25%
+*A0IC0269DA értékének / 25%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0269CA   "Módosított mező
@@ -6756,8 +6756,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.25'.
 
 *A0IC0270DA
-*The 08-270-d A simplified public burden burdening the payer.
-*20% (obligation difference
+*A 08-270-d A kifizetőt terhelő egyszerűsített köztehervis.-i hozzájár
+*20% (kötelezettség különbözet
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6769,7 +6769,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0IC0270CA
-*of the value of A0IC0270DA / 20%
+*A0IC0270DA értékének / 20%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0270CA   "Módosított mező
@@ -6777,8 +6777,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.20'.
 
 *A0IC0271DA
-*The 08-271-d A simplified public burden burdening private no.
-*11% (obligation difference
+*A 08-271-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*11% (kötelezettség különbözet
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6789,7 +6789,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0271CA
-*of the value of A0IC0271DA / 11%
+*A0IC0271DA értékének / 11%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0271CA   "Módosított mező
@@ -6797,8 +6797,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.11'.
 
 *A0IC0272DA
-*The 08-272-d A ​​simplified public burden burdening private no.
-*11.1% (obligation difference
+*A 08-272-d A magánsz-t terhelő egyszerűsített köztehervis.-i hozzájár
+*11,1%(kötelezettség különbözet
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6809,7 +6809,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0272CA
-*of A0IC0272DA value / 11.1%
+*A0IC0272DA értékének / 11,1%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0272CA   "Módosított mező
@@ -6817,8 +6817,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.111'.
 
 *A0IC0273DA
-*A 08-273-d A chargeable to the private sector - not mnyptár - EKHO 15% (obligation
-*difference)
+*A 08-273-d A magánsz-t terhelő -nem mnyptár - EKHO 15% (kötelezettség
+*különbözet)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6830,7 +6830,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 *A0IC0273CA
-*of the value of A0IC0273DA / 15%
+*A0IC0273DA értékének / 15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0273CA   "Módosított mező
@@ -6838,8 +6838,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
               '0.15'.
 
 *A0IC0274DA
-*A 08-274-d A mnyptár member charged to private member - EKHO 15% (obligation
-*difference)
+*A 08-274-d A mnyptár tag magánsz-t terhelő - EKHO 15% (kötelezettség
+*különbözet)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6850,7 +6850,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 *A0IC0274CA
-*of the value of A0IC0274DA / 15%
+*A0IC0274DA értékének / 15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
               T_BEVALLB
        USING  C_ABEVAZ_A0IC0274CA   "Módosított mező
@@ -6859,7 +6859,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *++BG 2007.04.05
 *A0IC50068A
-*Calculation of special tax
+*Különadó számolása
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6873,8 +6873,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *++CST 2007.04.11
 *A0IC50067A
-*Calculation of the special tax base
-*of A0IC50068A / 4%
+*Különadó alapjának számolása
+*A0IC50068A értékének / 4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC50067A   "Módosított mező
@@ -6884,8 +6884,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--CST 2007.04.11
 
 *++BG 2008/01/14
-* 15% for holders of the 08-276-d A START PLUSZ card
-* size vol. (obligation otherwise)
+* A 08-276-d A START PLUSZ kártyával rendelkezőre vonatkozó 15%-os
+* mérétkű köt. (kötelezettség különb)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6896,16 +6896,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*The 08-276-c is 15% for holders of the START PLUSZ card
-* size vol. (basis of obligation)
+*A 08-276-c A START PLUSZ kártyával rendelkezőre vonatkozó 15%-os
+* mérétkű köt. (kötelezettség alapja)
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC50073A   "Módosított mező
                                 C_ABEVAZ_A0IC50072A
                                 '0.15'.
 
-*08-277-d 25% for holders of the START PLUSZ card
-*size vol. (obligation otherwise)
+*A 08-277-d A START PLUSZ kártyával rendelkezőre vonatkozó 25%-os
+*mérétkű köt. (kötelezettség különb)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6916,16 +6916,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*08-277-c 25% for START PLUS card holders
-*size vol. (basis of obligation)
+*A 08-277-c A START PLUSZ kártyával rendelkezőre vonatkozó 25%-os
+*mérétkű köt. (kötelezettség alapja)
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC50075A   "Módosított mező
                                 C_ABEVAZ_A0IC50074A
                                 '0.25'.
 
-* 08-278-d 15% for holders of the START EXTRA card
-* size vol. (obligation otherwise)
+* A 08-278-d A START EXTRA kártyával rendelkezőre vonatkozó 15%-os
+* mérétkű köt. (kötelezettség különb)
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
                                  T_BEVALLB
@@ -6937,8 +6937,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 
-*The 08-278-c is 15% for holders of the START EXTRA card
-*size vol. (basis of obligation)
+*A 08-278-c A START EXTRA kártyával rendelkezőre vonatkozó 15%-os
+*mérétkű köt. (kötelezettség alapja)
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC50076A   "Módosított mező
@@ -6950,8 +6950,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *A0IC0275CA
 *++0004 BG 2007.04.04
-*08-275-c Total data of lines 240, 241 and 248, as well as 262-275.
-*(basis of obligation
+*A 08-275-c A 240, 241 és a 248, valamint a 262-275 sorok aladata össz.
+*(kötelezettség alapja
 *--0004 BG 2007.04.04
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0240CA SPACE.
@@ -6986,8 +6986,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *A0IC0275DA
 *++0004 BG 2007.04.04
-*08-275-c Total data of lines 240, 241 and 248, as well as 262-274.
-*(commitment difference)
+*A 08-275-c A 240, 241 és a 248, valamint a 262-274 sorok aladata össz.
+*(kötelezettség különbözet)
 *--0004 BG 2007.04.04
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0240DA SPACE.
@@ -7022,8 +7022,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0IC0275DA.
 
 
-* A 14a Mark with an X if the corrector's declaration is a self-check
-* qualifies
+* A 14a Jelölje X-szel, ha a helyesbítő bevallása önellenőrzésnek
+* minősül
 * A0AC033A
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO WHERE ABEVAZ IN LR_ABEVAZ.
      IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL.
@@ -7044,13 +7044,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *A0ID0281BA
-*08-281-b Self-inspection supplement based on Art. 28/B §
+*A 08-281-b Önellenőrzési pótlék Art. 28/B § alapján
    PERFORM GET_CLEAR_ABEVAZ TABLES T_BEVALLO
                                    T_BEVALLB
                              USING C_ABEVAZ_A0ID0281BA.
 
 *A0ID0282BA
-*The 08-282-b Self-inspection allowance in total (line 280+281)
+*A 08-282-b Önellenőrzési pótlék összesen (280+281. sor)
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0ID0281BA SPACE.
 *++FI 20070309
@@ -7064,8 +7064,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *++BG 2007/01/21
 *  A0BC0012CA
-*  It must be aggregated here as well because at the aggregator ABEVAZ
-*  no value yet.
+*  Itt is összesíteni kell mert a összesítő ABEVAZ-nál
+*  még nincs érték.
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0155CA SPACE.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0156CA SPACE.
@@ -7138,7 +7138,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          END OF LI_KAMAT_ABEV.
 *--2408 #03.
 
-* Defining a macro for range upload
+* Macro definiálása range feltöltéshez
 *   DEFINE M_DEF.
 *     MOVE: 'I'     TO &1-SIGN,
 *           &2      TO &1-OPTION,
@@ -7147,33 +7147,33 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *     APPEND &1.
 *   END-OF-DEFINITION.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 
-*  If self-revision and SZJA
+*  Ha önrevízió és SZJA
    CHECK $INDEX NE '000' AND W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
 
-*  Determination of self-auditing allowances
-*  Determination of self-revision ABEV identifiers
+*  Önrevízós pótlékok meghatározása
+*  Önrevíziós ABEV azonosítók meghatározása
    REFRESH LR_ONREV_ABEVAZ.
    CLEAR   LR_ONREV_ABEVAZ.
 
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
                     WHERE NOT ADONEM_ONR IS INITIAL
 *++BG 2008.03.10
-*  We only charge a self-revision allowance where it is checked
-*  because from 0808 there is a self-auditing tax type where HR submits
-*  but that is already a calculated allowance, so with the old principle a
-*  we would also expect an allowance for an allowance.
+*  Csak akkor számítunk önrevíziós pótlékot ahol be van jelölve
+*  mert 0808-tól van olyan önrevíziós adónem ahova ad fel HR
+*  de az már egy kiszámított pótlék, így a régi elvvel a
+*  pótlékra is számítanánk pótlékot.
                       AND NOT ONRPOTL IS INITIAL
 *--BG 2008.03.10
                     .
      M_DEF LR_ONREV_ABEVAZ 'I' 'EQ' W_/ZAK/BEVALLB-ABEVAZ SPACE.
    ENDLOOP.
 
-* determining the deadline for calculating the allowance! the 103
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 103-as
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
    SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
 *++ FI 20070312
 *                         WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
@@ -7181,13 +7181,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *-- FI 20070312
                                           ADONEM EQ C_ADONEM_103.
    IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
      CLEAR L_KAM_KEZD.
      L_KAM_KEZD = $LAST_DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
    ENDIF.
 
-* the end date of allowance calculation is the ABEV identifier specified in ESDAT_FLAG
-* value
+* pótlék számítás vég dátuma az ESDAT_FLAG-ben megjelölt ABEV azonosító
+* értéke
    READ TABLE T_BEVALLB INTO W_/ZAK/BEVALLB
                        WITH KEY  ESDAT_FLAG = 'X'.
    IF SY-SUBRC EQ 0.
@@ -7213,10 +7213,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        IF SY-SUBRC <> 0.
          IF SY-BATCH IS INITIAL.
            MESSAGE I179(/ZAK/ZAK) WITH W_/ZAK/BEVALLO-FIELD_C.
-*        Error when converting the self-revision due date! (&)
+*        Hiba a önrevízió esedékesség dátum konvertálásnál! (&)
          ELSE.
            MESSAGE E179(/ZAK/ZAK) WITH W_/ZAK/BEVALLO-FIELD_C.
-*        Error when converting the self-revision due date! (&)
+*        Hiba a önrevízió esedékesség dátum konvertálásnál! (&)
          ENDIF.
          EXIT.
        ENDIF.
@@ -7226,11 +7226,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    ENDIF.
 
-*  Interest calculation
+*  Kamat számítás
 *++2009.11.09 BG (Ness)
-*  Lines with the value '-' on the line must also be taken into account
-*  but overall '+'. Therefore, we first collect them by tax type
-*  the values ​​and if it is '+', then we calculate the interest.
+*  Olyan sorokat is figyelembe kell venni ami a soron '-' érték
+*  viszont összesítve '+'. Ezért először összegyűjtjük adónemenként
+*  az értékeket és ha az '+', akkor számítjuk a kamatot.
 *   CLEAR L_KAMAT_SUM.
 *   LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
 *                    WHERE ABEVAZ IN LR_ONREV_ABEVAZ
@@ -7264,7 +7264,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    ENDLOOP.
 *++2408 #03.
-*  Let's read the tax-exempt ABEV assignment
+*  Beolvassuk az adónem ABEV összerendelést
    IF LI_ADONEM_ONR[] IS INITIAL AND NOT W_/ZAK/BEVALLO-BTYPE IS INITIAL.
      SELECT * INTO TABLE LI_ADONEM_ONR
               FROM /ZAK/ADONEM_ONR
@@ -7302,8 +7302,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    IF W_/ZAK/BEVALL-BTYPE EQ C_0608.
 *--BG 2006/09/22
 
-*  writeback of interest
-*  A-12-323-b Amount of self-check allowance
+*  kamat visszaírása
+*  A-12-323-b Önellenőrzési pótlék összege
 *A0DD0323BA
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0DD0323BA.
@@ -7327,7 +7327,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++BG 2006/09/22
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_06082.
 * A0FD0441BA
-*  A-12-441-b Amount of self-check allowance
+*  A-12-441-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0FD0441BA.
      IF SY-SUBRC EQ 0.
@@ -7349,7 +7349,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_0708.
 * A0ID0280BA
-*  A-08-280-b Amount of self-check allowance
+*  A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0ID0280BA.
      IF SY-SUBRC EQ 0.
@@ -7371,7 +7371,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
 *++ FI 20070312
 *A0ID0282BA
-*The 08-282-b Self-inspection allowance in total (line 280+281)
+*A 08-282-b Önellenőrzési pótlék összesen (280+281. sor)
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0ID0281BA SPACE.
 *++FI 20070309
@@ -7385,7 +7385,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++BG 2008.03.06
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_0808.
 * A0ID0270BA
-*  A-08-280-b Amount of self-check allowance
+*  A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0ID0270BA.
      IF SY-SUBRC EQ 0.
@@ -7406,7 +7406,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 *A0ID0272BA
-*The 08-282-b Self-inspection allowance in total (line 270+271)
+*A 08-282-b Önellenőrzési pótlék összesen (270+271. sor)
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0ID0270BA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0ID0271BA SPACE.
@@ -7420,7 +7420,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++0908 2009.01.20 BG
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_0908.
 * A0ID0270BA
-*  A-08-280-b Amount of self-check allowance
+*  A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HD0270BA.
      IF SY-SUBRC EQ 0.
@@ -7441,7 +7441,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 *A0ID0272BA
-*The 08-282-b Self-inspection allowance in total (line 270+271)
+*A 08-282-b Önellenőrzési pótlék összesen (270+271. sor)
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HD0270BA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HD0271BA SPACE.
@@ -7456,7 +7456,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++1008 2010.01.20 BG
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1008.
 *    A0HD0220BA
-*    A-08-280-b Amount of self-check allowance
+*    A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HD0220BA.
      IF SY-SUBRC EQ 0.
@@ -7477,7 +7477,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 *    A0HD0222BA
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HD0220BA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HD0221BA SPACE.
@@ -7490,7 +7490,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++1108 2010.01.24 BG
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1108.
 *    A0HD0210BA
-*    A-08-280-b Amount of self-check allowance
+*    A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HD0210CA.
      IF SY-SUBRC EQ 0.
@@ -7511,7 +7511,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 *    A0HD0212CA
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HD0210CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HD0211CA SPACE.
@@ -7524,7 +7524,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++1208 2012.02.01 BG
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1208.
 *    A0FD0160CA
-*    A-08-280-b Amount of self-check allowance
+*    A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0FD0160CA.
      IF SY-SUBRC EQ 0.
@@ -7545,7 +7545,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 *    A0FD0162CA
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0FD0160CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0FD0161CA SPACE.
@@ -7558,7 +7558,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++1308 2013.02.05 BG
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1308.
 *    A0FD0160CA
-*    A-08-280-b Amount of self-check allowance
+*    A-08-280-b Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0GC0190CA.
      IF SY-SUBRC EQ 0.
@@ -7579,7 +7579,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 *    A0FD0162CA
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0GC0190CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0GC0191CA SPACE.
@@ -7591,7 +7591,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1308 2013.02.05 BG
 *++1408 #02. 2014.03.05 BG
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1408.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HC0190CA.
      IF SY-SUBRC EQ 0.
@@ -7611,7 +7611,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0190CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0191CA SPACE.
@@ -7624,7 +7624,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1408 #02. 2014.03.05 BG
 *++1508 #01. 2015.02.02
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1508.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HC0190CA.
      IF SY-SUBRC EQ 0.
@@ -7644,7 +7644,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0190CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0191CA SPACE.
@@ -7657,7 +7657,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1508 #01. 2015.02.02
 *++1608 #01. 2015.02.01
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1608.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HC0240CA.
      IF SY-SUBRC EQ 0.
@@ -7677,7 +7677,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0240CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0241CA SPACE.
@@ -7689,7 +7689,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1608 #01. 2015.02.01
 *++1708 #01. 2017.01.31
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1708.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HC0240CA.
      IF SY-SUBRC EQ 0.
@@ -7709,7 +7709,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0240CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0241CA SPACE.
@@ -7721,7 +7721,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1708 #01. 2017.01.31
 *++1808 #01. 2018.01.30
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1808.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0HC0240CA.
      IF SY-SUBRC EQ 0.
@@ -7741,7 +7741,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0240CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0241CA SPACE.
@@ -7753,7 +7753,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1808 #01. 2018.01.30
 *++1908 #01. 2019.01.29
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1908.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0IC0240CA.
      IF SY-SUBRC EQ 0.
@@ -7773,7 +7773,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0IC0240CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0IC0241CA SPACE.
@@ -7785,7 +7785,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1908 #01. 2019.01.29
 *++2008 #01. 2020.01.27
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2008.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0IC0240CA.
      IF SY-SUBRC EQ 0.
@@ -7805,7 +7805,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0IC0240CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0IC0241CA SPACE.
@@ -7818,7 +7818,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--2008 #01. 2020.01.27
 *++2108 #01.
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2108.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0JC0240CA.
      IF SY-SUBRC EQ 0.
@@ -7838,7 +7838,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0JC0240CA SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0JC0241CA SPACE.
@@ -7850,7 +7850,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--2108 #01.
 *++2208 #01.
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2208.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
 *++2208 #07.
 *                            WITH KEY ABEVAZ = 'A0IC0241CA'.
@@ -7873,7 +7873,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0IC0240CA' SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0IC0241CA' SPACE.
@@ -7885,7 +7885,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--2208 #01.
 *++2308 #08.
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2308.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = 'A0HC0240CA'.
      IF SY-SUBRC EQ 0.
@@ -7905,7 +7905,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0HC0240CA' SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0HC0241CA' SPACE.
@@ -7917,7 +7917,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--2308 #08.
 *++2408 #02.
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2408.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
 *++2408 #03.
      IF LI_KAMAT_ABEV[] IS INITIAL.
        CLEAR LI_KAMAT_ABEV.
@@ -7967,7 +7967,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 *--2408 #03.
 
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0HC0240CA' SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0HC0241CA' SPACE.
@@ -7979,7 +7979,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--2408 #02.
 *++2508 #02.
    ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2508.
-*    Amount of self-check allowance
+*    Önellenőrzési pótlék összege
      IF LI_KAMAT_ABEV[] IS INITIAL.
        CLEAR LI_KAMAT_ABEV.
        LI_KAMAT_ABEV-ABEVAZ = 'A0IC0240CA'.
@@ -8007,7 +8007,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
        ENDIF.
      ENDLOOP.
-*    Total self-check allowance
+*    Önellenőrzési pótlék összesen
      REFRESH LR_ABEVAZ.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0IC0240CA' SPACE.
      M_DEF  LR_ABEVAZ 'I' 'EQ' 'A0IC0241CA' SPACE.
@@ -8065,7 +8065,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    END-OF-DEFINITION.
 
 
-*  Reading a current tax return
+*  Aktuális bevallás olvasása
    IF NOT $ABEV_F1 IS INITIAL.
      M_BEVALLO_READ $T_BEVALLO $ABEV_F1 L_SUM.
    ENDIF.
@@ -8086,7 +8086,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      M_BEVALLO_READ $T_BEVALLO $ABEV_F5 L_SUM.
    ENDIF.
 
-* Read previous period
+* Előző időszak beolvasása
    IF NOT $ABEV_F1 IS INITIAL.
      M_BEVALLO_READ $T_LAST_BEVALLO $ABEV_F1 L_SUM_LAST.
    ENDIF.
@@ -8107,10 +8107,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      M_BEVALLO_READ $T_LAST_BEVALLO $ABEV_F5 L_SUM_LAST.
    ENDIF.
 
-*  Calculation of difference
+*  Különbözet kiszámolása
    L_FIELD_NRK = L_SUM - L_SUM_LAST.
 
-*  Modify a calculated field
+*  Számított mező módosítása
    READ TABLE $T_BEVALLO INTO W_/ZAK/BEVALLO
                          WITH KEY ABEVAZ = $ABEV_MOD.
    IF SY-SUBRC EQ 0.
@@ -8144,7 +8144,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA L_TABIX LIKE SY-TABIX.
 
-*  Search field
+*  Mező keresése
    READ TABLE $T_BEVALLO INTO W_/ZAK/BEVALLO
                          WITH KEY ABEVAZ = $CLEAR_ABEVAZ.
    IF SY-SUBRC EQ 0.
@@ -8282,7 +8282,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-* Upload RANKS for SZJA tax identification page number management
+* RANGEK feltöltése SZJA adóazonosító lapszám kezeléshez
    M_DEF R_M0AC017A 'I' 'BT' 'M0BC0000000000000' 'M0BZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC018A 'I' 'BT' 'M0CC0000000000000' 'M0CZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC019A 'I' 'BT' 'M0DC0000000000000' 'M0DZZZZZZZZZZZZZZ'.
@@ -8293,10 +8293,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_M0AC024A 'I' 'BT' 'M0IC0000000000000' 'M0IZZZZZZZZZZZZZZ'.
 *++BG 2006/06/27
 
-* Exclusion of ABEV identifiers
-*M-10-267-a Duration of time spent in insurance other than the subject period
+* ABEV azonosítók kizárása
+*M-10-267-a Tárgyidőszaktól eltérő biztosításban töltött idő időtartalma
    M_DEF R_M0AC024A 'E' 'EQ' 'M0ID0267AA' SPACE.
-*M-10-267-c Duration of time spent in insurance other than the subject period
+*M-10-267-c Tárgyidőszaktól eltérő biztosításban töltött idő időtartalma
    M_DEF R_M0AC024A 'E' 'EQ' 'M0ID0267CA' SPACE.
 *--BG 2006/06/27
 
@@ -8306,7 +8306,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
@@ -8314,8 +8314,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*   Collections for tax identification number
-*   Fields 17-25
+*   Adóazonosítói lapszámhoz gyűjtések
+*   17-25 mező
        PERFORM CALL_MLAPSZ: TABLES R_M0AC017A
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AC017A,
@@ -8396,7 +8396,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS for SZJA tax identification page number management
+*  RANGEK feltöltése SZJA adóazonosító lapszám kezeléshez
    M_DEF R_M0AC020A 'I' 'BT' 'M0BC0000000000000' 'M0BZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC021A 'I' 'BT' 'M0CC0000000000000' 'M0CZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC022A 'I' 'BT' 'M0DC0000000000000' 'M0DZZZZZZZZZZZZZZ'.
@@ -8412,12 +8412,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ** ABEV azonosítók kizárása
 **M-10-267-a Tárgyidőszaktól eltérő biztosításban töltött idő
-*time content
+*időtartalma
 *   M_DEF R_M0AC024A 'E' 'EQ' 'M0ID0267AA' SPACE.
 **--BG 2006/06/27
 
 *++BG 2006.10.11
-*  Application quality is still needed due to the number of pages
+*  Alkalmazás minősége még kell a lapszám miatt
    M_DEF R_M0AC023A 'I' 'EQ' 'M0EB008A'  SPACE.
    M_DEF R_M0AC024A 'I' 'EQ' 'M0FB008A'  SPACE.
    M_DEF R_M0AC025A 'I' 'EQ' 'M0GB008A'  SPACE.
@@ -8431,7 +8431,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
@@ -8439,8 +8439,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*   Collections for tax identification number
-*   Fields 17-25
+*   Adóazonosítói lapszámhoz gyűjtések
+*   17-25 mező
        PERFORM CALL_MLAPSZ: TABLES R_M0AC020A
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AC020A,
@@ -8527,7 +8527,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS for SZJA tax identification page number management
+*  RANGEK feltöltése SZJA adóazonosító lapszám kezeléshez
    M_DEF R_M0AC020A 'I' 'BT' 'M0BC0000000000000' 'M0BZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC021A 'I' 'BT' 'M0CC0000000000000' 'M0CZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC022A 'I' 'BT' 'M0DC0000000000000' 'M0DZZZZZZZZZZZZZZ'.
@@ -8551,12 +8551,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ** ABEV azonosítók kizárása
 **M-10-267-a Tárgyidőszaktól eltérő biztosításban töltött idő
-*time content
+*időtartalma
 *   M_DEF R_M0AC024A 'E' 'EQ' 'M0ID0267AA' SPACE.
 **--BG 2006/06/27
 
 *++BG 2006.10.11
-*  Application quality is still needed due to the number of pages
+*  Alkalmazás minősége még kell a lapszám miatt
    M_DEF R_M0AC023A 'I' 'EQ' 'M0EB008A'  SPACE.
 
 *   M_DEF R_M0AC023A 'I' 'EQ' 'M0EB008A'  SPACE.
@@ -8614,7 +8614,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
@@ -8622,8 +8622,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*   Collections for tax identification number
-*   Fields 17-25
+*   Adóazonosítói lapszámhoz gyűjtések
+*   17-25 mező
        PERFORM CALL_MLAPSZ: TABLES R_M0AC020A
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AC020A,
@@ -8708,7 +8708,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                       FIELD_ONRK
                                       NULL_FLAG.
 *++BG 2007/01/21
-*        Stacking
+*        Halmozás
          PERFORM SUM_ONR TABLES T_BEVALLO
                          USING  L_ALV
                                 L_ALV-FIELD_ON
@@ -8770,12 +8770,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *++BG 2007.03.22
-*  ABEV identifiers defined in this range are not needed for 0708
+*  Ebbe a range-be definiált ABEV azonosítók nem kellenek 0708-nál
    RANGES LR_ABEV_NOT FOR /ZAK/BEVALLB-ABEVAZ.
 
 
-*We define those ABEV identifiers for which ONR is not used
-*training
+*Definiáljuk azokat az ABEV azonosítókat, amiknél nem használjuk az ONR
+*képzést
    IF W_/ZAK/BEVALL-BTYPE = C_0708.
 *    168-197-ig
      M_DEF LR_ABEV_NOT 'E' 'BT' C_ABEVAZ_A0FC0168CA C_ABEVAZ_A0FC0197CA.
@@ -8834,12 +8834,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2007.03.22
 
 
-*  Only for self-revision
+*  Csak önrevíziónál
    CHECK $INDEX NE '000'.
-*  It is necessary to define those ABEV identifiers with "A" which
-*  they are uncalculated and numerical.
-*  Since their sums include all periods, it is necessary to
-*  subtract from the previous one.
+*  Meg kell határozni azokat az "A"-s ABEV azonosítókat, amik
+*  nem számítottak és numerikusak.
+*  Mivel ezek összegei minden időszakot tartalmaznak ki kell
+*  vonni az előzőből.
    LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                         WHERE ABEVAZ(1) EQ 'A'
 *++BG 2007.03.22
@@ -8858,7 +8858,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2008.03.06
 
 
-*  Define previous index
+*  Előző index meghatározása
    L_LAST_INDEX = $INDEX - 1.
 
    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
@@ -8874,7 +8874,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MOVE LW_BEVALLO TO LW_BEVALLO_HEAD.
      ENDIF.
 *--BG 2009.07.08
-*    Delta training
+*    Delta képzés
      IF LW_BEVALLO-ABEVAZ IN LR_ABEV_DELTA.
        CLEAR LW_LAST_BEVALLO.
        SELECT SINGLE * INTO LW_LAST_BEVALLO
@@ -8885,11 +8885,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                       AND  MONAT   EQ LW_BEVALLO-MONAT
                       AND  ZINDEX  EQ L_LAST_INDEX
                       AND  ABEVAZ  EQ LW_BEVALLO-ABEVAZ.
-*      New value
+*      Új érték
        LW_BEVALLO-OFLAG = 'X'.
 *++BG 2008.05.09
-*      At 0808, ABS does not need to be handled in summer because it is ABEV
-*      can already handle negative numbers.
+*      0808-nál nem kell ABS étékben kezelni mert az ABEV
+*      már tudja kezelni a negatív számokat.
        IF LW_BEVALLO-BTYPE EQ C_0808
 *++0908 2009.01.20 BG
           OR LW_BEVALLO-BTYPE EQ C_0908
@@ -8912,7 +8912,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ELSE.
 *--BG 2008.05.09
 *++BG 2007.03.22 Ha az összeg negatív, akkor az ABEV hibát jelez
-*                therefore, we store it in the ABS value
+*                ezért ABS értékben tároljuk el
          LW_BEVALLO-FIELD_ON = ABS( LW_BEVALLO-FIELD_NRK -
                                     LW_LAST_BEVALLO-FIELD_NRK ).
 *--BG 2007.03.22
@@ -8925,7 +8925,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                         WITH KEY BTYPE  = LW_BEVALLO-BTYPE
                                  ABEVAZ = LW_BEVALLO-ABEVAZ
                                  BINARY SEARCH.
-*    Sign translation
+*    Előjel fordítás
      IF NOT W_/ZAK/BEVALLB-ELOJEL IS INITIAL.
        MULTIPLY LW_BEVALLO-FIELD_ON BY -1.
      ENDIF.
@@ -8937,7 +8937,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                   LW_BEVALLO-FIELD_ONRK.
 
      MODIFY T_BEVALLO FROM LW_BEVALLO.
-*    Stacking
+*    Halmozás
      PERFORM SUM_ONR TABLES T_BEVALLO
                      USING  LW_BEVALLO
                             LW_BEVALLO-FIELD_ON
@@ -8945,22 +8945,22 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                             LW_BEVALLO-FIELD_ONRK.
 
    ENDLOOP.
-*  We mark those records that are summative and
-*  not marked yet
+*  Megjelöljük azokat a rekordokat amik összegzendők és
+*  nincs még megjelölve
    REFRESH LR_ABEV_DELTA.
    LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                         WHERE NOT SUM_ABEVAZ IS INITIAL.
      M_DEF LR_ABEV_DELTA 'I' 'EQ' W_/ZAK/BEVALLB-ABEVAZ SPACE.
 *++BG 2008.03.06
-*    We also mark the ones we summarize into, because it is not certain
-*    data came in, but we have to treat it as a self-revision.
+*    Azokat is megjeleöljük amibe összegezzük mert nem biztos, hogy
+*    jött bele adat de önrevíziósként kell kezelnünk.
      M_DEF LR_ABEV_DELTA 'I' 'EQ' W_/ZAK/BEVALLB-SUM_ABEVAZ SPACE.
 *--BG 2008.03.06
    ENDLOOP.
 
 *++BG 2009.07.08
-*  We also mark those that will be taken over from ABEV and those
-*  are subject to self-revision calculation:
+*  Azokat is megjelöljük amik ABEV-ből lesznek átvéve és azok
+*  önrevíziós számítás alá esnek:
    LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                         WHERE NOT GET_ABEVAZ IS INITIAL.
 
@@ -9000,12 +9000,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    ENDLOOP.
 
 *++0908 2009.02.27 BG
-*  Only for ABEVs marked during self-revisions
-*  the 0-flag must be handled again:
+*  Csak az önrevízióknál megjelölt ABEV-eknél
+*  kell a 0-flag-et újra kezelni:
    REFRESH LI_BEVALLO.
    LOOP AT T_BEVALLO INTO LW_BEVALLO WHERE NOT OFLAG IS INITIAL.
      CLEAR LI_BEVALLO.
-*    We delete the value of the 0-flag for self-revisions
+*    Töröljük a 0-flag értékét az önrevízióknál
      IF NOT LW_BEVALLO-NULL_FLAG IS INITIAL.
        CLEAR LW_BEVALLO-NULL_FLAG.
      ENDIF.
@@ -9014,13 +9014,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    ENDLOOP.
 
    IF $BTYPE EQ C_0808.
-*    Management of 0 fields for self-revision
+*    0-ás mezők kezelése önrevízióra
      PERFORM CALC_ABEV_0_SZJA_0808  TABLES LI_BEVALLO
                                            T_ADOAZON_ALL
                                     USING  'X'. "Önrevíziós mezőre
 
    ELSEIF $BTYPE EQ C_0908.
-*    Management of 0 fields for self-revision
+*    0-ás mezők kezelése önrevízióra
      PERFORM CALC_ABEV_0_SZJA_0908  TABLES LI_BEVALLO
                                            T_ADOAZON_ALL
                                     USING  'X'  "Önrevíziós mezőre
@@ -9029,7 +9029,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0908/2 2009.12.09 BG
 *++1008 2010.03.03 BG
    ELSEIF $BTYPE EQ C_1008.
-*    Management of 0 fields for self-revision
+*    0-ás mezők kezelése önrevízióra
      PERFORM CALC_ABEV_0_SZJA_1008  TABLES LI_BEVALLO
                                            T_ADOAZON_ALL
                                     USING  'X'  "Önrevíziós mezőre
@@ -9037,7 +9037,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1008 2010.03.03 BG
 *++1108 2011.02.18 BG
    ELSEIF $BTYPE EQ C_1108.
-*    Management of 0 fields for self-revision
+*    0-ás mezők kezelése önrevízióra
      PERFORM CALC_ABEV_0_SZJA_1108  TABLES LI_BEVALLO
                                            T_ADOAZON_ALL
                                     USING  'X'  "Önrevíziós mezőre
@@ -9047,7 +9047,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1108 2011.02.18 BG
 *++1208 2012.03.08 BG
    ELSEIF $BTYPE EQ C_1208.
-*    Management of 0 fields for self-revision
+*    0-ás mezők kezelése önrevízióra
      PERFORM CALC_ABEV_0_SZJA_1208  TABLES LI_BEVALLO
                                            T_ADOAZON_ALL
                                     USING  'X'  "Önrevíziós mezőre
@@ -9057,7 +9057,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1208 2012.03.08 BG
    ENDIF.
 
-*  Write back NULL_FLAG values:
+*  NULL_FLAG értékek visszaírása:
    LOOP AT LI_BEVALLO WHERE NOT OFLAG IS INITIAL
                         AND NOT NULL_FLAG IS INITIAL.
      READ TABLE T_BEVALLO INTO LW_BEVALLO
@@ -9125,7 +9125,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                    ZINDEX = W_BEVALLO-ZINDEX
                                    ABEVAZ = W_/ZAK/BEVALLB-SUM_ABEVAZ
 *++BG 2007.05.30
-*                                  Due to performance increase
+*                                  Performancia növelés miatt
                                    BINARY SEARCH
 *--BG 2007.05.30
                                    .
@@ -9133,8 +9133,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MOVE SY-TABIX TO L_TABIX.
        MOVE 'X' TO LW_BEVALLO-OFLAG.
 *++BG 2007.07.10
-*    The addition is always done in absolute value because
-*    otherwise, the sign translation will spoil it
+*    Az összeadást mindig abszout értékben végezzük mert
+*    egyébként az előjel fordítás elrontja
 *    ADD FIELD_ON TO LW_BEVALLO-FIELD_ON.
 *--BG 2007.07.10
 
@@ -9142,11 +9142,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          WITH KEY BTYPE  = W_BEVALLO-BTYPE
                                   ABEVAZ = W_/ZAK/BEVALLB-SUM_ABEVAZ
                                   BINARY SEARCH.
-*      Sign translation
+*      Előjel fordítás
        IF NOT W_/ZAK/BEVALLB-ELOJEL IS INITIAL.
 *++BG 2007.07.10
-*      The sign translation is not performed on the field to be aggregated
-*      but on the aggregate!
+*      Az előjel fordítás nem az összesítendő mezőn történik
+*      hanem az összesítőn!
 *        MULTIPLY LW_BEVALLO-FIELD_ON BY -1.
          MULTIPLY FIELD_ON BY -1.
 *--BG 2007.07.10
@@ -9196,7 +9196,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA L_SUBRC LIKE SY-SUBRC.
 *--BG 2008.06.24
 
-*  Let's read the basis of the calculation
+*  Beolvassuk a számítás alapját
    READ TABLE $T_BEVALLO INTO W_/ZAK/BEVALLO
                          WITH KEY ABEVAZ = $ABEV_F1.
    IF SY-SUBRC EQ 0.
@@ -9208,7 +9208,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      MOVE SY-SUBRC TO L_SUBRC.
 *--BG 2008.06.24
 
-*    Calculate the ratio
+*    Hányados kiszámolása
      CATCH SYSTEM-EXCEPTIONS  BCD_FIELD_OVERFLOW  = 1
                               BCD_OVERFLOW        = 2
                               BCD_ZERODIVIDE      = 3
@@ -9216,7 +9216,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++BG 2008.06.24
        IF L_SUBRC EQ 0 AND NOT W_/ZAK/BEVALLB-COLLN IS INITIAL
 *++BG 2008.07.09
-*      We only count in this way if the rounded unfolded is not 0
+*      Csak akkor számolunk így ha a kerekített kibontott nem 0
           AND NOT W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
 *--BG 2008.07.09
          L_FIELD_NRK = W_/ZAK/BEVALLO-FIELD_N / $DIV.
@@ -9228,7 +9228,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2008.06.24
      ENDCATCH.
      IF SY-SUBRC EQ 0.
-*  Modify a calculated field
+*  Számított mező módosítása
        READ TABLE $T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = $ABEV_MOD.
        IF SY-SUBRC EQ 0.
@@ -9275,12 +9275,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA L_FIELD_ONRK LIKE /ZAK/BEVALLO-FIELD_ONRK.
    DATA L_TABIX LIKE SY-TABIX.
 
-*  Let's read the basis of the calculation
+*  Beolvassuk a számítás alapját
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEV_F1.
    IF SY-SUBRC EQ 0.
 
-*    Calculate the ratio
+*    Hányados kiszámolása
      CATCH SYSTEM-EXCEPTIONS  BCD_FIELD_OVERFLOW  = 1
                               BCD_OVERFLOW        = 2
                               BCD_ZERODIVIDE      = 3
@@ -9288,7 +9288,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        L_FIELD_ONRK = LW_/ZAK/BEVALLALV-FIELD_ONRK / $DIV.
      ENDCATCH.
      IF SY-SUBRC EQ 0.
-*  Modify a calculated field
+*  Számított mező módosítása
        READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                              WITH KEY ABEVAZ = $ABEV_MOD.
        IF SY-SUBRC EQ 0.
@@ -9360,10 +9360,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *     ENDIF.
 *   ENDIF.
 
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -9374,7 +9374,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_24
         OR  ABEVAZ EQ     C_ABEVAZ_17
@@ -9384,7 +9384,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
         OR  ABEVAZ EQ     C_ABEVAZ_15.
 *--0004 BG 2007.05.24
 
-* this line must be modified!
+* ezt a sort kell módosítani!
 *     READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
 *     WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 *     CHECK SY-SUBRC EQ 0.
@@ -9394,18 +9394,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*    Signature date (sy-datum)
+*    Aláírás dátuma (sy-datum)
          WHEN  C_ABEVAZ_24.
            W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_17.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_20.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
 *++0004 BG 2007.05.24
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_14 OR C_ABEVAZ_15.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = C_X.
@@ -9441,10 +9441,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -9454,7 +9454,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_24
         OR  ABEVAZ EQ     C_ABEVAZ_17
@@ -9462,23 +9462,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
         OR  ABEVAZ EQ     C_ABEVAZ_278
         OR  ABEVAZ EQ     C_ABEVAZ_279.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*    Signature date (sy-datum)
+*    Aláírás dátuma (sy-datum)
          WHEN  C_ABEVAZ_24.
            W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_17.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_20.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_278 OR C_ABEVAZ_279.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = C_X.
@@ -9514,10 +9514,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -9527,30 +9527,30 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_24
         OR  ABEVAZ EQ     C_ABEVAZ_17
         OR  ABEVAZ EQ     C_ABEVAZ_20
         OR  ABEVAZ EQ     C_ABEVAZ_1078.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*    Signature date (sy-datum)
+*    Aláírás dátuma (sy-datum)
          WHEN  C_ABEVAZ_24.
            W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_17.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_20.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_1078.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
@@ -9585,10 +9585,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -9598,38 +9598,38 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_17
         OR  ABEVAZ EQ     C_ABEVAZ_20
         OR  ABEVAZ EQ     C_ABEVAZ_1078
         OR  ABEVAZ EQ     C_ABEVAZ_10419.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
 *++2010.02.11 RN
-* this field is no longer on the 10A60
+* ez a mező már nincs rajta a 10A60-on
 **    Aláírás dátuma (sy-datum)
 *         WHEN  C_ABEVAZ_24.
 *           W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
 *--2010.02.11 RN
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_17.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_20.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_1078.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
-*    Frequency of reporting
+*    Bevallás gyakorisága
          WHEN  C_ABEVAZ_10419.
            IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
@@ -9665,10 +9665,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -9678,38 +9678,38 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_23335
         OR  ABEVAZ EQ     C_ABEVAZ_23336
         OR  ABEVAZ EQ     C_ABEVAZ_23338
         OR  ABEVAZ EQ     C_ABEVAZ_23339.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
 *++2010.02.11 RN
-* this field is no longer on the 10A60
+* ez a mező már nincs rajta a 10A60-on
 **    Aláírás dátuma (sy-datum)
 *         WHEN  C_ABEVAZ_24.
 *           W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
 *--2010.02.11 RN
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_23335.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_23336.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_23338.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
-*    Frequency of reporting
+*    Bevallás gyakorisága
          WHEN  C_ABEVAZ_23339.
            IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
@@ -9736,7 +9736,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 
-*M0BC0062CA >= M0BC0062BA then M0BC0062DA = 0 and set flag
+*M0BC0062CA >= M0BC0062BA akkor M0BC0062DA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0062CA
@@ -9760,7 +9760,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 
-*M0BC0082CA >= M0BC0082BA then M0BC0082DA = 0 and set flag
+*M0BC0082CA >= M0BC0082BA akkor M0BC0082DA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0082CA
@@ -9783,7 +9783,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 
-*M0BC0082CA >= M0BC0082BA then M0BC0082DA = 0 and set flag
+*M0BC0082CA >= M0BC0082BA akkor M0BC0082DA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0382CA
@@ -9848,14 +9848,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
             &1-FIELD_ON, &1-FIELD_ONR, &1-FIELD_ONRK.
    END-OF-DEFINITION.
 
-*  Let's read through each tax code
+*  Végigolvassuk adószámonként
    LOOP AT T_ADOAZON_ALL.
      L_M_GET_VALUE $ABEV1
                  T_ADOAZON_ALL-ADOAZON
                  T_ADOAZON_ALL-LAPSZ
                  L_TABIX1
                  L_O1.
-*    If there is no value in the first field, no further investigation is necessary
+*    Ha nincs érték az első mezőben, akkor nem kell tovább vizsgálni
      CHECK NOT L_TABIX1 IS INITIAL.
      L_M_GET_VALUE $ABEV2
                  T_ADOAZON_ALL-ADOAZON
@@ -9879,7 +9879,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *        AND NOT L_O2-FIELD_N IS INITIAL.
 *++BG 2008.04.09
 
-*    Condition examination
+*    Feltétel vizsgálat
      IF L_FIELD1 GE L_FIELD2
         AND NOT L_FIELD1 IS INITIAL
         AND NOT L_FIELD2 IS INITIAL.
@@ -9889,7 +9889,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                    T_ADOAZON_ALL-LAPSZ
                    L_TABIX3
                    L_O3.
-*      There is a record value of 0 and it does not need to be deleted
+*      Van rekord érték 0 és nem kell törölni
        IF NOT L_TABIX3 IS INITIAL.
          L_M_CLEAR_FIELD_N L_O3.
          MOVE C_X TO L_O3-NULL_FLAG.
@@ -9897,7 +9897,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                           TRANSPORTING FIELD_N FIELD_NR FIELD_NRK
                                        FIELD_ON FIELD_ONR FIELD_ONRK
                                        NULL_FLAG.
-*      No value needs to be created.
+*      Nincs érték létre kell hozni.
        ELSE.
          CLEAR L_O3.
          MOVE L_O1 TO L_O3.
@@ -9949,7 +9949,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DEFINE LM_GET_SPEC_SUM1.
 
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*    Field M0KB011A must be defined based on the tax number
+*    Meg kell határozni az adószám alapján a M0KB011A mezőt
        READ TABLE T_BEVALLO INTO L_M0KB011A_BEVALLO
                 WITH KEY ABEVAZ  = 'M0KB011A'
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -9969,12 +9969,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    CHECK $INDEX NE '000'.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE
 *++BG 2007.12.08
@@ -9986,7 +9986,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2007.12.08
 
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 *++BG 2006/05/24
@@ -9999,8 +9999,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 *++BG 2007.12.08
-* Special calculations
-* START card obligation
+* Speciális számítások
+* START-kártya kötelzettség
        WHEN C_ABEVAZ_A0EC0155CA.
          CLEAR W_/ZAK/BEVALLO-FIELD_N.
          LM_GET_SPEC_SUM1 'M0KC0649CA' '01' '07'.
@@ -10070,8 +10070,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *++BG 2007/01/16
-*  Moved before calculation routines
-*  We delete records that are not in the given period
+*  Áthelyezve a számítási rutinok elé
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -10082,15 +10082,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with H if your declaration is considered a correction
+*  M 11 Jelölje H-val, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AC018A.
 *++BG 2007.03.22 Az ABEV program hibát jelez a "H"-ra "X"-el kell
-*to fill out
+*kitölteni
 *      MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
 *--BG 2007.03.22
      ENDIF.
-*    A00-016-000-e Repeated self-check
+*    A00-016-000-e Ismételt önellenőrzés
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_A0AC036A AND
         $INDEX > '001'.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
@@ -10144,8 +10144,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    DEFINE LM_GET_SPEC_SUM1.
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
        READ TABLE T_BEVALLO INTO L_TMP_BEVALLO
                 WITH KEY ABEVAZ  = &2
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -10164,7 +10164,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ.
 
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE ABEVAZ EQ C_ABEVAZ_A0CC0040CA OR
            ABEVAZ EQ C_ABEVAZ_A0CC0041CA OR
@@ -10188,7 +10188,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
 *++BG 2008.06.10
@@ -10199,11 +10199,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      V_TABIX = SY-TABIX .
 
-*    Special calculations
+*    Speciális számítások
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      02-40-c The total burden of the pension commission
+*      A 02-40-c A fogl terh nyugdíjbizt összesen
        WHEN  C_ABEVAZ_A0CC0040CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -10222,9 +10222,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      02-41-c The employee is unemployed, the employment circle pays pension insurance
+*      A 02-41-c A fogl terh munkanélk, állásker fiz nyugbizt
        WHEN  C_ABEVAZ_A0CC0041CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -10241,9 +10241,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-40-c The nursing care fee for the patient pension commission
+*      A 02-40-c A fogl terh ápolási díj nyugdíjbizt
        WHEN  C_ABEVAZ_A0CC0042CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '94' SPACE.
          LM_GET_FIELD $INDEX.
@@ -10258,9 +10258,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-43-c The private burden pension
+*      A 02-43-c A magánsz terh nyugdíjj
        WHEN  C_ABEVAZ_A0CC0043CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -10280,9 +10280,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-44-c Private burden unemployment, employment pension
+*      A 02-44-c A magánsz terh munkanélk, állásker fiz nyug
        WHEN  C_ABEVAZ_A0CC0044CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -10299,9 +10299,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-45-c The private sector pays pension after GYED, S, T
+*      A 02-45-c A magánsz terh GYED, S, T után fiz nyugdíj
        WHEN  C_ABEVAZ_A0CC0045CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -10318,9 +10318,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-46-c Mnypt member private pension
+*      A 02-46-c A Mnypt tag magánsz terh nyugdíj
        WHEN  C_ABEVAZ_A0CC0046CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -10340,9 +10340,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-47-c Mnypt member private tax unemployment, unemployment pension
+*      A 02-47-c A  Mnypt tag magánsz terh munkanélk, állásker nyugdíj
        WHEN  C_ABEVAZ_A0CC0047CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -10359,9 +10359,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      The 02-48-cA Mnypt member pays private tax GYED,S,T pension
+*      A 02-48-cA  Mnypt tag magánsz terh GYED,S,T fiz nyugdíj
        WHEN  C_ABEVAZ_A0CC0048CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -10380,7 +10380,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *      A 03-60-c A fogl terh term egbizt
        WHEN  C_ABEVAZ_A0DC0060CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -10397,9 +10397,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      The 03-61-c The burden of unemployment benefits the employee
+*      A 03-61-c A fogl terh munkanélk állásker fiz term egbizt
        WHEN  C_ABEVAZ_A0DC0061CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -10416,9 +10416,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      The 03-62-c The prisoner is charged with money insurance
+*      A 03-62-c A fogl terh pénz egbizt
        WHEN  C_ABEVAZ_A0DC0062CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -10435,9 +10435,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      The 03-63-c The unemployment insurance of the employee
+*      A 03-63-c A fogl terh munkanélk állásker pénzb egbizt
        WHEN  C_ABEVAZ_A0DC0063CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -10454,9 +10454,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      03-80-c The START card is 15%
+*      A 03-80-c A START-kártyával rend 15%-os
        WHEN  C_ABEVAZ_A0DC0080CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '01' SPACE.
          M_DEF LR_COND 'I' 'EQ' '07' SPACE.
@@ -10471,9 +10471,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      03-81-c With the START card, the order is 25%
+*      A 03-81-c  A START-kártyával rend 25%-os
        WHEN  C_ABEVAZ_A0DC0081CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '01' SPACE.
          M_DEF LR_COND 'I' 'EQ' '07' SPACE.
@@ -10490,7 +10490,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *      A 03-82-c  A START PLUSZ rend 15%-os
        WHEN  C_ABEVAZ_A0DC0082CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '11' SPACE.
          M_DEF LR_COND 'I' 'EQ' '12' SPACE.
@@ -10507,7 +10507,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *      A 03-83-c A START PLUSZ rend 25%-os
        WHEN  C_ABEVAZ_A0DC0083CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '11' SPACE.
          M_DEF LR_COND 'I' 'EQ' '12' SPACE.
@@ -10522,9 +10522,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      With the 03-84-c A START EXTRA card, the order is 0%
+*      A 03-84-c A START EXTRA kártyával rend 0%-os
        WHEN  C_ABEVAZ_A0DC0084CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '13' SPACE.
          M_DEF LR_COND 'I' 'EQ' '14' SPACE.
@@ -10539,9 +10539,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      With the 03-85-c A START EXTRA card, the rate is 15%
+*      A 03-85-c A START EXTRA kártyával rend 15%-os
        WHEN  C_ABEVAZ_A0DC0085CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '13' SPACE.
          M_DEF LR_COND 'I' 'EQ' '14' SPACE.
@@ -10602,15 +10602,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -10633,7 +10633,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -10644,14 +10644,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AC018A.
        MOVE C_X TO W_/ZAK/BEVALLO-FIELD_C.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO TRANSPORTING FIELD_C.
      ENDIF.
    ENDLOOP.
 
-*  Mark with an X if your return is considered a correction
+*  Jelölje X-ell, ha a bevallása helyesbítésnek minősül
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                              WITH KEY ABEVAZ = C_ABEVAZ_A0AC033A.
    IF SY-SUBRC EQ 0.
@@ -10662,8 +10662,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 **  Számítási algoritmus ÖNREVÍZIÓHOZ:
 
-* A 07-199-d From line 198: personal not linked to a private individual
-* income tax
+* A 07-199-d A 198. sorból: magánszemélyhez nem köthető személyi
+* jövedelemadó
 * A0HC0199DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10676,7 +10676,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 
-*A 07-200-c From line 198: personal income tax due to an individual
+*A 07-200-c A 198. sorból: magánszemélyhez köthető személyi jövedelemadó
 *A0HC0200CA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                 LI_LAST_BEVALLO
@@ -10688,15 +10688,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 SPACE                       "Forrás 3
                                 SPACE                       "Forrás 4
                                 SPACE.                      "Forrás 5
-*                               C_ABEVAZ_M0CC0415DA "Source 1
-*                               C_ABEVAZ_M0CF0430BA "Source 2
-*                               C_ABEVAZ_M0CF0431BA "Source 3
-*                               C_ABEVAZ_M0CF0434BA "Source 4
-*                               C_ABEVAZ_M0CF0435CA.        "Source 5
+*                               C_ABEVAZ_M0CC0415DA         "Forrás 1
+*                               C_ABEVAZ_M0CF0430BA         "Forrás 2
+*                               C_ABEVAZ_M0CF0431BA         "Forrás 3
+*                               C_ABEVAZ_M0CF0434BA         "Forrás 4
+*                               C_ABEVAZ_M0CF0435CA.        "Forrás 5
 *--BG 2008.03.06
 
-*A 07-200-d From line 198: personal related to an individual
-*income tax
+*A 07-200-d A 198. sorból: magánszemélyhez köthető személyi
+*jövedelemadó
 *A0HC0200DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10708,7 +10708,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*Special Tax 08-201-d (obligation difference)
+*A 08-201-d Különadó(kötelezettség különbözet)
 *A0HC0201DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10721,7 +10721,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 
-*Special tax 07-201-c (basis of obligation)
+*A 07-201-c Különadó (kötelezettség alapja)
 *A0HC0201CA = A0HC0201DA/4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10729,8 +10729,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0201DA
                                 '0.04'.
 
-*A 07-203-d From line 202, the pension commission charged to the employer.
-*contribution (obligation difference
+*A 07-203-d A 202. sorból a foglalkoztatót terhelő nyugdíjbizt.
+*járulék (kötelezettség különböze
 *A0HC0203DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10742,8 +10742,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  C_ABEVAZ_A0CC0042CA        "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-203-c From line 202, the pension commission charged to the employer. contribution
-*(base difference)
+*A 07-203-c A 202. sorból a foglalkoztatót terhelő nyugdíjbizt. járulék
+*(alap különbözete)
 *A0HC0203CA = A0HC0203DA/24%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10751,8 +10751,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0203DA
                                 '0.24'.
 
-*A 07-204-d The pension contribution deducted from the insured person from line 202
-*(obligation difference
+*A 07-204-d A 202. sorból a biztosítottól levont nyugdíjjárulék
+*(kötelezettség különböze
 *A0HC0204DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10764,8 +10764,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-204-c The pension contribution deducted from the insured person from line 202
-*(base difference)
+*A 07-204-c A 202. sorból a biztosítottól levont nyugdíjjárulék
+*(alap különbözete)
 *A0HC0204CA = A0HC0204DA/9,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10773,8 +10773,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0204DA
                                 '0.095'.
 
-*A 07-205-d Pension contribution deducted from Mnypt insured person from line 202
-*(obligation difference
+*A 07-205-d A 202. sorból a Mnypt biztosítottól levont nyugdíjjárulék
+*(kötelezettség különböze
 *A0HC0205DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10786,8 +10786,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-205-c Pension contribution deducted from the Mnypt insured person from line 202
-*(base difference)
+*A 07-205-c A 202. sorból a Mnypt biztosítottól levont nyugdíjjárulék
+*(alap különbözete)
 *A0HC0205CA = A0HC0205DA/1,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10795,8 +10795,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0205DA
                                 '0.015'.
 
-*A 07-206-d Retirement commission paid after the service fee from line 202
-*contribution (15%) (obligation
+*A 07-206-d A 202. sorból a felszolgálási díj után fizetett nyugbizt
+*járulék (15%)(kötelezettség
 *A0HC0206DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10808,8 +10808,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-206-c Retirement commission paid after the service fee from line 202
-*contribution (15%) (excl. fund)
+*A 07-206-c A 202. sorból a felszolgálási díj után fizetett nyugbizt
+*járulék (15%) (alap kül)
 *A0HC0206CA = A0HC0206DA/15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10817,9 +10817,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0206DA
                                 '0.15'.
 
-*A 07-209-d From line 208, in kind charged to the employer
+*A 07-209-d A 208. sorból a foglalkoztatót terhelő természetbeni
 *eg.bizt.
-*contribution (obligation
+*járulék (kötelezettség
 *A0HC0209DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10831,8 +10831,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-209-c From line 208, the in-kind payment burdening the employer.
-*commission contribution (fund differ
+*A 07-209-c  A 208. sorból a foglalkoztatót terhelő természetbeni eg.
+*bizt. járulék (alap különbö
 *A0HC0209CA = A0HC0209DA/4,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10841,8 +10841,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.045'.
 
 
-*A 07-210-d From line 208, the financial insurance for the employer.
-*contribution (vol. misc.)
+*A 07-210-d A 208. sorból a foglalkoztatót terhelő pénzbeni eg.bizt.
+*járulék (kötez. különb.)
 *A0HC0210DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10854,8 +10854,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-210-c From line 208, the financial insurance for the employer.
-*contribution (base difference)
+*A 07-210-c  A 208. sorból a foglalkoztatót terhelő pénzbeni eg.bizt.
+*járulék (alap különbözete)
 *A0HC0210CA = A0HC0210DA/0,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10863,9 +10863,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0210DA
                                 '0.005'.
 
-*A 07-211-c From line 208, the health burden on the social enterprise
+*A 07-211-c  A 208. sorból a társas vállalkozást terhelő egészségügyi
 *szolg.
-*(base difference)
+*(alap különbözete)
 *A0HC0211DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10878,9 +10878,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 
-*07-212-d The product deducted from the insured from line 208.  health insurance
-*contribution
-*(obligation
+*A 07-212-d A 208. sorból a biztosítottól levont term.  egészségbizt.-i
+*járulék
+*(kötelezettség
 *A0HC0212DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10892,8 +10892,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*07-212-c The product deducted from the insured from line 208. health insurance
-*contribution (base diff
+*A 07-212-c  A 208.sorból a biztosítottól levont term. egészségbizt.-i
+*járulék (alap különböz
 *A0HC0212CA = A0HC0212DA/4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10901,9 +10901,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0212DA
                                 '0.04'.
 
-*A 07-213-d Deducted from the insured from line 208 in cash
-*health insurance contribution
-*(obligation
+*A 07-213-d A 208. sorból a biztosítottól levont pénzbeni
+*egészségbizt.-i járulék
+*(kötelezettség
 *A0HC0213DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10915,8 +10915,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-213-c Cash health insurance deducted from the insured person from line 208.
-*contribution (base difference
+*A 07-213-c  A 208.sorból a biztosítottól levont pénzbeni egészségbizt.
+*-i járulék (alap különböz
 *A0HC0213CA = A0HC0213DA/2%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10925,7 +10925,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.02'.
 
 
-*A 07-215-d Age discount insurance contribution (difference in liability)
+*A 07-215-d Korkedvezmény-biztosítási járulék(kötelezettség különbözete)
 *A0HC0215DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10936,7 +10936,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 07-215-c Age discount insurance contribution (base difference)
+*A 07-215-c Korkedvezmény-biztosítási járulék (alap különbözete)
 *A0HC0215CA = A0HC0215DA/3,25%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10945,7 +10945,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.0325'.
 
 
-*A 07-216-d Employer's contribution (difference in liability)
+*A 07-216-d Munkaadói járulék (kötelezettség különbözete)
 *A0HC0216DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10956,7 +10956,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 07-216-c Employer's contribution (base difference)
+*A 07-216-c Munkaadói járulék (alap különbözete)
 *A0HC0216CA = A0HC0216DA/3%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10964,7 +10964,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0216DA
                                 '0.03'.
 
-*A 07-217-d Employee contribution (difference in liability)
+*A 07-217-d Munkavállalói járulék (kötelezettség különbözete)
 *A0HC0217DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10975,7 +10975,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 07-217-c Employee contribution (base difference)
+*A 07-217-c Munkavállalói járulék  (alap különbözete)
 *A0HC0217CA = A0HC0217DA/1,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -10983,7 +10983,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0217DA
                                 '0.015'.
 
-*A 07-218-d Entrepreneur's contribution (difference in liability)
+*A 07-218-d Vállalkozói járulék (kötelezettség különbözete)
 *A0HC0218DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -10994,7 +10994,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 07-218-c Entrepreneur's contribution (base difference)
+*A 07-218-c Vállalkozói járulék (alap különbözete)
 *A0HC0218CA = A0HC0218DA/4%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11002,8 +11002,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0218DA
                                 '0.04'.
 
-*A 07-220-d From line 219 Pertains to START card holders
-*15% vol. (distinction)
+*A 07-220-d A 219. sorból A START-kártyával rendelkezőre vonatkozó
+*15%-os mérétkű köt. (különbözete)
 *A0HC0220DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11015,8 +11015,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-220-c From line 219 The 15% for START card holders
-*volume of os. (basis)
+*A 07-220-c A 219. sorból A START-kártyával rendelkezőre vonatkozó 15%-
+*os mérétkű köt. (alapja)
 *A0HC0220CA = A0HC0220DA/15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11025,8 +11025,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '0.15'.
 
 
-*A 07-221-d From line 219 Pertains to START card holders
-*25% vol. (distinction)
+*A 07-221-d A 219. sorból A START-kártyával rendelkezőre vonatkozó
+*25%-os mérétkű köt. (különbözete)
 *A0HC0221DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11038,8 +11038,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-221-c From line 219 The 25% for START card holders
-*volume of os. (page)
+*A 07-221-c A 219. sorból A START-kártyával rendelkezőre vonatkozó 25%-
+*os mérétkű köt. (lapja)
 *A0HC0221CA = A0HC0221DA/25%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11047,8 +11047,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0221DA
                                 '0.25'.
 
-*A 07-221-d From line 219 Pertains to START card holders
-*25% vol. (distinction)
+*A 07-221-d A 219. sorból A START-kártyával rendelkezőre vonatkozó
+*25%-os mérétkű köt. (különbözete)
 *A0HC0221DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11060,8 +11060,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-222-c From line 219 concerning START PLUS card holders
-*15% vol. (better)
+*A 07-222-c A 219. sorból A START PLUSZ kártyával rendelkezőre vonatkozó
+*15%-os mérétkű köt. (különb)
 *A0HC0222CA = A0HC0222DA/15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11069,8 +11069,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0222DA
                                 '0.15'.
 
-*A 07-223-d From line 219 concerning START PLUS card holders
-* 25% vol. (basis)
+*A 07-223-d A 219. sorból A START PLUSZ kártyával rendelkezőre vonatkozó
+* 25%-os mérétkű köt. (alapja)
 *A0HC0223DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11082,8 +11082,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-223-c From line 219 concerning START PLUS card holders
-* 25% vol. (better)
+*A 07-223-c A 219. sorból A START PLUSZ kártyával rendelkezőre vonatkozó
+* 25%-os mérétkű köt. (különb)
 *A0HC0223CA = A0HC0223DA/25%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11091,8 +11091,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0223DA
                                 '0.25'.
 
-*A 07-224-d from line 219 applies to START EXTRA card holders
-*15% vol. (basis)
+*A 07-224-d A 219. sorból A START EXTRA kártyával rendelkezőre vonatkozó
+*15%-os mérétkű köt. (alapja)
 *A0HC0224DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11103,8 +11103,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 07-224-c From line 219 applies to START EXTRA card holders
-* 15% vol. (better)
+*A 07-224-c A 219. sorból A START EXTRA kártyával rendelkezőre vonatkozó
+* 15%-os mérétkű köt. (különb)
 *A0HC0224CA = A0HC0224DA/15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11112,8 +11112,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0HC0224DA
                                 '0.15'.
 
-*A 07-225-c Percentage health contribution
-*(base difference)
+*A 07-225-c Százalékos mértékű egészségügyi hozzájárulás
+*(alap különbözete)
 *A0HC0225CA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11125,16 +11125,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*                                C_ABEVAZ_M0EC0461CA "Source 1
-*                                C_ABEVAZ_M0EC0463CA "Source 2
-*                                SPACE "Source 3
-*                                SPACE "Source 4
-*                                SPACE.                     "Source 5
+*                                C_ABEVAZ_M0EC0461CA        "Forrás 1
+*                                C_ABEVAZ_M0EC0463CA        "Forrás 2
+*                                SPACE                      "Forrás 3
+*                                SPACE                      "Forrás 4
+*                                SPACE.                     "Forrás 5
 *--BG 2008.03.06
 
 
-*A 07-225-d Percentage health contribution
-* (obligation difference)
+*A 07-225-d Százalékos mértékű egészségügyi hozzájárulás
+* (kötelezettség különbözete)
 *A0HC0225DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11146,8 +11146,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-227-d From line 226 Item Eho in full time
-*(obligation difference)
+*A 07-227-d A 226. sorból Tételes Eho a teljes munkaidőben
+*(kötelezettség különbözete)
 *A0HC0227DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11159,8 +11159,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 07-228-d From line 226 Item Eho in part-time work
-*(obligation difference)
+*A 07-228-d A 226. sorból Tételes Eho a részmunkaidőben
+*(kötelezettség különbözete)
 *A0HC0228DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11173,8 +11173,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE.                     "Forrás 5
 
 
-*A 07-229-d From line 226 Eho tv. Section 11 (4) (obligation
-*difference)
+*A 07-229-d A 226. sorból Eho tv. 11. § (4) bek  (kötelezettség
+*különbözete)
 *A0HC0229DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11186,8 +11186,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 08-230-d A simplified public burden on the payer.
-*-i contributes 20% (obligation difference
+*A 08-230-d A kifizetőt terhelő egyszerűsített köztehervis.
+*-i hozzájár 20% (kötelezettség különbözet
 *A0IC0230DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11199,8 +11199,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 08-230-c The simplified public burden on the payer.-i
-*contributes 20% (basis of obligation)
+*A 08-230-c A kifizetőt terhelő egyszerűsített köztehervis.-i
+*hozzájár 20% (kötelezettség alapja)
 *A0IC0230CA = A0IC0230DA/20%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11208,8 +11208,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0230DA
                                 '0.20'.
 
-*A 08-231-a Part of the health insurance contribution calculated from line 230
-*(basis of obligation)
+*A 08-231-a A 230. sorból számított egészségbiztosítási járulék rész
+*(kötelezettség alapja)
 *A0IC0231AA
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11217,8 +11217,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0230CA
                                 '30.30303'.
 
-*A 08-232-a Part of the health insurance contribution calculated from line 230
-*(obligation difference
+*A 08-232-a A 230. sorból számított egészségbiztosítási járulék rész
+*(kötelezettség különbözet
 *A0IC0232AA
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11226,8 +11226,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0230CA
                                 '5.98802'.
 
-*A 08-233-d Ekho burdening a retired individual (obligation
-*difference
+*A 08-233-d A nyugdíjas magánszemélyt terhelő Ekho (kötelezettség
+*különbözet
 *A0IC0233DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11238,7 +11238,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 08-233-c Ekho burdening a retired individual (obligation
+*A 08-233-c A nyugdíjas magánszemélyt terhelő Ekho (kötelezettség
 *alapja)
 *A0IC0233CA = A0IC0233DA/11%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
@@ -11247,8 +11247,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0233DA
                                 '0.11'.
 
-*A 08-234-d Ekho charged to a private individual who is not a Mnypt member (15%)
-*(obligation difference
+*A 08-234-d A nem Mnypt tag magánszemélyt terhelő Ekho (15%)
+*(kötelezettség különbözet
 *A0IC0234DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11259,16 +11259,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 08-234-d Ekho charged to a private individual who is not a Mnypt member (15%)
-*(obligation)
+*A 08-234-d A nem Mnypt tag magánszemélyt terhelő Ekho (15%)
+*(kötelezettség)
 *A0IC0234CA = A0IC0234DA/15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0IC0234CA   "Módosított mező
                                 C_ABEVAZ_A0IC0234DA
                                 '0.15'.
-*08-235-a Part of the pension contribution calculated from line 234
-*(basis of obligation)
+*A 08-235-a A 234. sorból számított nyugdíjjárulék rész
+*(kötelezettség alapja)
 *A0IC0235AA
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11276,8 +11276,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0234CA
                                 '25.64102'.
 
-*08-236-a The product calculated from line 234. insurance contribution part
-*(obligation difference
+*A 08-236-a A 234. sorból számított term. egbizt járulék rész
+*(kötelezettség különbözet
 *A0IC0236AA
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11286,8 +11286,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 '62.5'.
 
 
-*08-237-d A Mnypt member is responsible for Ekho (15%) in total
-*(obligation difference
+*A 08-237-d A Mnypt tag magánszemélyt terh Ekho (15%) összesen
+*(kötelezettség különbözet
 *A0IC0237DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11298,8 +11298,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 3
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
-*A 08-237-c A Mnypt member is liable to an individual Ekho (15%) in total
-*(obligation)
+*A 08-237-c A Mnypt tag magánszemélyt terh Ekho (15%) összesen
+*(kötelezettség)
 *A0IC0237CA = A0IC0237DA/15%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11307,7 +11307,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0237DA
                                 '0.15'.
 
-*08-238-a Part of the pension contribution calculated from line 237
+*A 08-238-a A 237. sorból számított nyugdíjjárulék rész
 *A0IC0238AA
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11315,7 +11315,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0237CA
                                 '1000.00'.
 
-*08-239-a The product calculated from line 237. I'm sure. part
+*A 08-239-a A 237. sorból számított term. egbizt. rész
 *A0IC0239AA
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11323,8 +11323,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0237CA
                                 '62.5'.
 
-*A 08-260-d Ekho deducted from a person insured in an EEA member state
-*(obligation difference
+*A 08-260-d Az EGT tagállamban biztosított személytől levont Ekho
+*(kötelezettség különbözet
 *A0IC0260DA
    PERFORM GET_ONREV_CALC TABLES T_BEVALLO
                                  LI_LAST_BEVALLO
@@ -11336,8 +11336,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  SPACE                      "Forrás 4
                                  SPACE.                     "Forrás 5
 
-*A 08-260-c Ekho deducted from a person insured in an EEA member state
-*(obligation base)
+*A 08-260-c Az EGT tagállamban biztosított személytől levont Ekho
+*(kötelezettség alap)
 *A0IC0260CA = A0IC0260DA/9,5%
    PERFORM GET_ONREV_DIV TABLES T_BEVALLO
                                 T_BEVALLB
@@ -11345,8 +11345,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0IC0260DA
                                 '0.095'.
 
-*COMPOUNDS
-*Total personal income tax 07-198-c (base difference)
+*ÖSSZESÍTÉSEK
+*A 07-198-c Személyi jövedelemadó összesen (alap különbözete)
 *A0HC0198CA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0199CA SPACE.
@@ -11358,7 +11358,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0198CA.
 
 
-*Total personal income tax 07-198-d (difference in liability)
+*A 07-198-d Személyi jövedelemadó összesen (kötelezettség különbözete)
 *A0HC0198DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0199DA SPACE.
@@ -11369,8 +11369,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0198DA.
 
-*07-202-c Pension Commission. Total contributions due to the fund
-*(base difference)
+*A 07-202-c Nyugdíjbizt. Alapot megillető járulékok összesen
+*(alap különbözete)
 *A0HC0202CA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0203CA SPACE.
@@ -11383,8 +11383,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 T_BEVALLB
                          USING  C_ABEVAZ_A0HC0202CA.
 
-*07-202-d Pension Commission. Total contributions due to the fund
-*(obligation difference)
+*A 07-202-d Nyugdíjbizt. Alapot megillető járulékok összesen
+*(kötelezettség különbözete)
 *A0HC0202DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0203DA SPACE.
@@ -11398,8 +11398,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0202DA.
 
 
-*Total contributions due to the Health Insurance Fund 07-208-c
-*(base difference)
+*A 07-208-c Egészségbizt.-i Alapot megillető járulékok összesen
+*(alap különbözete)
 *A0HC0208CA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0209CA SPACE.
@@ -11415,8 +11415,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0208CA.
 
 
-*Total contributions due to the Health Insurance Fund 07-208-d
-*(obligation difference
+*A 07-208-d Egészségbizt.-i Alapot megillető járulékok összesen
+*(kötelezettség különböze
 *A0HC0208DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0209DA SPACE.
@@ -11432,8 +11432,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0208DA.
 
 
-*With the 07-219-c A START (START, PLUST, EXTRA) card 15
-*and/or 25% bond base
+*A 07-219-c A START (START,  PLUST,  EXTRA) kártyával 15
+*és/vagy 25%-os köt alapja
 *A0HC0219CA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0220CA SPACE.
@@ -11449,8 +11449,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0219CA.
 
 
-*With the 07-219-d A START (START, PLUST, EXTRA) card
-*15 and/or 25% bond
+*A 07-219-d A START (START,  PLUST,  EXTRA) kártyával
+*15 és/vagy 25%-os köt kül
 *A0HC0219DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0220DA SPACE.
@@ -11465,8 +11465,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC0219DA.
 
 
-*A 07-226-d Itemized medical contribution
-*(obligation difference)
+*A 07-226-d Tételes egészségügyi hozzájárulás
+*(kötelezettség különbözete)
 *A0HC0226DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0227DA SPACE.
@@ -11480,7 +11480,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 *++0808 2009.02.11 BG
    REFRESH LR_ABEVAZ.
-*  A numerical value must be searched for in this range
+*  Ebben a tartományban kell keresni numerikus értéket
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0HC0198CA C_ABEVAZ_A0HC0229DA.
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0IC0230CA C_ABEVAZ_A0ID0272BA.
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0JC0280CA C_ABEVAZ_A0JC0307EA.
@@ -11491,10 +11491,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                    AND NOT FIELD_N IS INITIAL.
      EXIT.
    ENDLOOP.
-*  There is value:
+*  Van érték:
    IF SY-SUBRC EQ 0.
 *--0808 2009.02.11 BG
-*  Mark with an X if your declaration qualifies as a self-verification
+*  Jelölje X-ell, ha a bevallása önellenőrzésnek minősül
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                                WITH KEY ABEVAZ = C_ABEVAZ_A0AC035A.
      IF SY-SUBRC EQ 0.
@@ -11503,7 +11503,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX L_TABIX.
      ENDIF.
 
-*  Mark with an X if your declaration is considered a repeated self-check
+*  Jelölje X-ell, ha a bevallása ismételt önellenőrzésnek minősül
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                                WITH KEY ABEVAZ = C_ABEVAZ_A0AC036A.
 
@@ -11543,12 +11543,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_A0AC029A
         OR  ABEVAZ EQ     C_ABEVAZ_A0AC030A
@@ -11556,7 +11556,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
 *++BG 2008.06.10
@@ -11568,19 +11568,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* always A0AC029A = first day from period
+* mindig A0AC029A = időszak-tól első nap
        WHEN C_ABEVAZ_A0AC029A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -11618,12 +11618,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      always A0AC030A = last day until period
+*      mindig A0AC030A = időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC030A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC039A.
 
          REFRESH LI_ADOAZON.
@@ -11663,40 +11663,40 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++0908 2009.02.27 BG
                              USING   $ONREV.
 
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
    CLEAR V_ONREV.
    IF NOT $ONREV IS INITIAL.
      MOVE $ONREV TO V_ONREV.
    ENDIF.
 *--0908 2009.02.27 BG
 
-*M0BC0382CA >= M0BC0382BA then M0BC0382DA = 0 and set flag
+*M0BC0382CA >= M0BC0382BA akkor M0BC0382DA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0382CA
                                 C_ABEVAZ_M0BC0382BA
                                 C_ABEVAZ_M0BC0382DA.
-*M0BC0382DA >= M0BC0382BA then M0BC0382CA = 0 and set flag
+*M0BC0382DA >= M0BC0382BA akkor M0BC0382CA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0382DA
                                 C_ABEVAZ_M0BC0382BA
                                 C_ABEVAZ_M0BC0382CA.
-*M0BC0386CA >= M0BC0386BA then M0BC0386DA = 0 and set flag
+*M0BC0386CA >= M0BC0386BA akkor M0BC0386DA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0386CA
                                 C_ABEVAZ_M0BC0386BA
                                 C_ABEVAZ_M0BC0386DA.
-*M0BC0386DA >= M0BC0386BA then M0BC0386CA = 0 and set flag
+*M0BC0386DA >= M0BC0386BA akkor M0BC0386CA = 0 és flag beállítása
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0386DA
                                 C_ABEVAZ_M0BC0386BA
                                 C_ABEVAZ_M0BC0386CA.
 
-*  If field1+field2+field3+field4 > 0 then 0 flag setting
+*  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
                               USING  C_ABEVAZ_A0JC0283EA
                               "0-flag beállítás
@@ -11857,8 +11857,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                      C_ABEVAZ_A0LC0358DA    "mező3
                                      SPACE.                 "mező4
 
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_A0HC0202CA
                               "0-flag beállítás
@@ -11985,8 +11985,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--BG 2009.07.16
 
 
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 is not 0 or field 6 is not 0 then 0 flag setting on page M
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 vagy mező6 ne 0 akkor 0 flag beállítás M-s lapon
    PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
                                       T_ADOAZON_ALL
                                USING  C_ABEVAZ_M0CC0416DA
@@ -12019,7 +12019,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS for SZJA tax identification page number management
+*  RANGEK feltöltése SZJA adóazonosító lapszám kezeléshez
    M_DEF R_M0AC022A 'I' 'BT' 'M0BC0000000000000' 'M0BZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC023A 'I' 'BT' 'M0CC0000000000000' 'M0CZZZZZZZZZZZZZZ'.
    M_DEF R_M0AC024A 'I' 'BT' 'M0DC0000000000000' 'M0DZZZZZZZZZZZZZZ'.
@@ -12035,14 +12035,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*   Collections for tax identification number
+*   Adóazonosítói lapszámhoz gyűjtések
        PERFORM CALL_MLAPSZ: TABLES R_M0AC022A
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AC022A,
@@ -12098,9 +12098,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *         CLEAR L_NULL_FLAG.
 *       ENDIF.
 **--0908 2009.02.27 BG
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
        IF NOT L_ALV-OFLAG IS INITIAL.
          L_NULL_FLAG = L_ALV-NULL_FLAG.
        ELSE.
@@ -12159,14 +12159,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                              T_BEVALLB STRUCTURE /ZAK/BEVALLB
                       USING  $INDEX.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
-*A 07-200-c From line 198: personal income tax due to an individual
+*A 07-200-c A 198. sorból: magánszemélyhez köthető személyi jövedelemadó
 *A0HC0199CA : A0BC0002CA/25% + A0BC0005CA/54% + A0BC0006CA/54% +
 *             A0BC0008CA/33% + A0BC0009CA/10% + A0BC0012CA/54%
    PERFORM GET_ONELL_DIV: TABLES T_BEVALLO
@@ -12200,7 +12200,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                  C_ABEVAZ_A0BC0012CA
                                  '0.54'.
 
-*  Due to modification A0HC0199CA
+*  A0HC0199CA módosítás miatt
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0HC0199CA SPACE.
 
@@ -12211,8 +12211,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 
-*A 07-225-c Percentage health contribution (base
-*difference)
+*A 07-225-c Százalékos mértékű egészségügyi hozzájárulás (alap
+*különbözete)
 *A0HC0225CA = A0BC0017CA/25% + A0BC0018CA/11%
    PERFORM GET_ONELL_DIV: TABLES T_BEVALLO
                                  T_BEVALLB
@@ -12241,7 +12241,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  It is the basis of obligation
+*  Szja kötelezettség alapja
 *  A0ZZ000001
    PERFORM GET_SUM_CALC  TABLES T_BEVALLO
                                 T_BEVALLB
@@ -12257,7 +12257,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 SPACE                       "Forrás 9
                                 SPACE.                      "Forrás 10
 
-*  The basis of Eho's obligation
+*  Eho kötelezettség alapja
 *  A0ZZ000002
    PERFORM GET_SUM_CALC  TABLES T_BEVALLO
                                 T_BEVALLB
@@ -12317,7 +12317,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    END-OF-DEFINITION.
 
 
-*  Reading a current tax return
+*  Aktuális bevallás olvasása
    IF NOT $ABEV_F1 IS INITIAL.
      M_BEVALLO_READ $T_BEVALLO $ABEV_F1 L_SUM.
    ENDIF.
@@ -12359,10 +12359,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 
-*  Summary
+*  Összegzés
    L_FIELD_NRK = L_SUM.
 
-*  Modify a calculated field
+*  Számított mező módosítása
    READ TABLE $T_BEVALLO INTO W_/ZAK/BEVALLO
                          WITH KEY ABEVAZ = $ABEV_MOD.
    IF SY-SUBRC EQ 0.
@@ -12528,10 +12528,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                       BINARY SEARCH.
 *++0908 2009.02.27 BG
 *++BG 2008.07.09
-*      FIELD_NRK should be examined as it may be
-*      FIELD_N is not empty but FIELD_NRK is.
+*      A FIELD_NRK kell vizsgálni, mivel előfordulhat, hogy
+*      a FIELD_N nem üres de a FIELD_NRK igen.
 *       IF SY-SUBRC EQ 0 AND NOT $T_BEVALLO-FIELD_N IS INITIAL.
-*      It must be dismantled due to self-revision treatment.
+*      Önrevízió kezelés miatt meg kell bontani.
 *      IF SY-SUBRC EQ 0 AND NOT $T_BEVALLO-FIELD_NRK IS INITIAL.
 *--BG 2008.07.09
        IF SY-SUBRC EQ 0 AND V_ONREV IS INITIAL.
@@ -12590,9 +12590,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      IF NOT &1 IS INITIAL AND L_TRUE IS INITIAL.
        READ TABLE $T_BEVALLO WITH KEY ABEVAZ = &1
                                       BINARY SEARCH.
-*      We examine FILED_N because if FIELD_NRK is 0 then
-*      we write the field with 0 and ABEV in this case
-*      it also expects 0 on the summary line.
+*      FILED_N-t vizsgáljuk, mert ha a FIELD_NRK 0 akkor
+*      kiírjuk a mezőt 0-val és az ABEV ebben az esetben
+*      az összesítő soron is 0-át vár.
        IF SY-SUBRC EQ 0 AND V_ONREV IS INITIAL.
          IF NOT $T_BEVALLO-FIELD_N IS INITIAL.
            MOVE C_X TO L_TRUE.
@@ -12805,8 +12805,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                       LAPSZ   = &3
                                       BINARY SEARCH.
 *++ 2010.06.10 RN
-* there is no need to handle the self-revision field separately, because field_c
-* it has no self-rev field pairs
+* nem kell az önrevíziós mezőt külön kezelni, mert field_c-nek
+* nincs önrev-es mezőpárja
 **++0908 2009.02.27 BG
 *       IF SY-SUBRC EQ 0 AND V_ONREV IS INITIAL.
 *         IF NOT $T_BEVALLO-FIELD_N IS INITIAL.
@@ -12862,10 +12862,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *----------------------------------------------------------------------*
  FORM CHANGE_ELOJEL  TABLES   $T_BEVALLO STRUCTURE /ZAK/BEVALLALV
                               $T_BEVALLB STRUCTURE /ZAK/BEVALLB.
-* If sign translation is checked in BEVALLB, then it is
-* in self-revision fields it is suitable due to the calculation, but not in ABEV
-* should be treated appropriately. Therefore, let's read through it based on the setting
-* and we reverse the sign in the self-revision fields.
+* Ha a BEVALLB-ben be van jelölve az előjel fordítás, akkor az
+* önrevízió mezőkön a számítás miatt megfelel de az ABEV-be nem
+* előjelesen kell kezelni. Ezért végigolvassuk a beállítás alapján
+* és az önrevíziós mezőkön visszafordítjuk az előjelet.
    LOOP AT $T_BEVALLB WHERE NOT ELOJEL IS INITIAL.
      LOOP AT $T_BEVALLO WHERE ABEVAZ EQ $T_BEVALLB-ABEVAZ
                           AND OFLAG  EQ 'X'
@@ -12920,8 +12920,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    DEFINE LM_GET_SPEC_SUM1.
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
        READ TABLE T_BEVALLO INTO L_TMP_BEVALLO
                 WITH KEY ABEVAZ  = &2
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -12955,7 +12955,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ.
 
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE ABEVAZ EQ C_ABEVAZ_A0CC0040CA OR
            ABEVAZ EQ C_ABEVAZ_A0CC0041CA OR
@@ -12982,7 +12982,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
               BINARY SEARCH.
@@ -12991,11 +12991,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      V_TABIX = SY-TABIX .
 
-*    Special calculations
+*    Speciális számítások
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      02-40-c The total burden of the pension commission
+*      A 02-40-c A fogl terh nyugdíjbizt összesen
        WHEN  C_ABEVAZ_A0CC0040CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13017,9 +13017,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      02-41-c The employee is unemployed, the employment circle pays pension insurance
+*      A 02-41-c A fogl terh munkanélk, állásker fiz nyugbizt
        WHEN  C_ABEVAZ_A0CC0041CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13040,9 +13040,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-40-c The nursing care fee for the patient pension commission
+*      A 02-40-c A fogl terh ápolási díj nyugdíjbizt
        WHEN  C_ABEVAZ_A0CC0042CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '94' SPACE.
          LM_GET_FIELD $INDEX.
@@ -13061,9 +13061,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-43-c The private burden pension
+*      A 02-43-c A magánsz terh nyugdíjj
        WHEN  C_ABEVAZ_A0CC0043CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13089,9 +13089,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-44-c Private burden unemployment, employment pension
+*      A 02-44-c A magánsz terh munkanélk, állásker fiz nyug
        WHEN  C_ABEVAZ_A0CC0044CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13114,9 +13114,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-45-c The private sector pays pension after GYED, S, T
+*      A 02-45-c A magánsz terh GYED, S, T után fiz nyugdíj
        WHEN  C_ABEVAZ_A0CC0045CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -13139,9 +13139,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-46-c Mnypt member private pension
+*      A 02-46-c A Mnypt tag magánsz terh nyugdíj
        WHEN  C_ABEVAZ_A0CC0046CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13167,9 +13167,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 02-47-c Mnypt member private tax unemployment, unemployment pension
+*      A 02-47-c A  Mnypt tag magánsz terh munkanélk, állásker nyugdíj
        WHEN  C_ABEVAZ_A0CC0047CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13192,9 +13192,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      The 02-48-cA Mnypt member pays private tax GYED,S,T pension
+*      A 02-48-cA  Mnypt tag magánsz terh GYED,S,T fiz nyugdíj
        WHEN  C_ABEVAZ_A0CC0048CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -13222,7 +13222,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++0908/2 2009.08.04 BG
          IF $DATE(6) <= '200906'.
 *--0908/2 2009.08.04 BG
-*        Upload condition
+*        Feltétel feltöltése
            REFRESH LR_COND.
            M_DEF LR_COND 'E' 'EQ' '25' SPACE.
            M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13241,9 +13241,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *++0908/2 2009.08.04 BG
          ENDIF.
-*      Employer's unemployment insurance 1.5% not 25, 42, 81
+*      Foglalkoztatói term egbizt 1,5% nem 25, 42, 81
        WHEN  C_ABEVAZ_A0ZZ000004.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13260,9 +13260,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      Employer's unemployment insurance 4.5% not 25, 42, 81
+*      Foglalkoztatói term egbizt 4,5% nem 25, 42, 81
        WHEN  C_ABEVAZ_A0ZZ000006.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13280,12 +13280,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *--0908/2 2009.08.04 BG
-*      The 03-61-c The burden of unemployment benefits the employee
+*      A 03-61-c A fogl terh munkanélk állásker fiz term egbizt
        WHEN  C_ABEVAZ_A0DC0061CA.
 *++0908/2 2009.08.04 BG
          IF $DATE(6) <= '200906'.
 *--0908/2 2009.08.04 BG
-*        Upload condition
+*        Feltétel feltöltése
            REFRESH LR_COND.
            M_DEF LR_COND 'I' 'EQ' '25' SPACE.
            M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13304,9 +13304,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *++0908/2 2009.08.04 BG
          ENDIF.
-*      Employer's unemployment insurance 1.5% not 25, 42, 81
+*      Foglalkoztatói term egbizt 1,5% nem 25, 42, 81
        WHEN  C_ABEVAZ_A0ZZ000005.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13323,9 +13323,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      Employer's unemployment insurance 4.5% not 25, 42, 81
+*      Foglalkoztatói term egbizt 4,5% nem 25, 42, 81
        WHEN  C_ABEVAZ_A0ZZ000007.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13343,9 +13343,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *--0908/2 2009.08.04 BG
-*      The 03-62-c The prisoner is charged with money insurance
+*      A 03-62-c A fogl terh pénz egbizt
        WHEN  C_ABEVAZ_A0DC0062CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -13366,9 +13366,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      The 03-63-c The unemployment insurance of the employee
+*      A 03-63-c A fogl terh munkanélk állásker pénzb egbizt
        WHEN  C_ABEVAZ_A0DC0063CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -13389,9 +13389,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      With the 03-79-c A START EXTRA card, the order is 0%
+*      A 03-79-c A START EXTRA kártyával rend 0%-os
        WHEN  C_ABEVAZ_A0DC0079CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' 'X' SPACE.
          LM_GET_FIELD $INDEX.
@@ -13408,9 +13408,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MOVE 'X' TO W_/ZAK/BEVALLO-OFLAG.
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*      A 03-80-c A Pmtv. 0% in the case of § 8
+*      A 03-80-c A Pmtv. 8. § esetén 0%-os
        WHEN  C_ABEVAZ_A0DC0080CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' 'X' SPACE.
          LM_GET_FIELD $INDEX.
@@ -13431,7 +13431,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    ENDLOOP.
 
 *++0908/2 2009.08.07 BG
-* Special summaries only from 07.2009
+* Speciális összegzések csak 2009.07.től
    IF $DATE(6) > '200906'.
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE ABEVAZ EQ C_ABEVAZ_A0DC0060CA OR
@@ -13439,7 +13439,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
        CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
        WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
                 BINARY SEARCH.
@@ -13518,15 +13518,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -13549,7 +13549,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -13560,7 +13560,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AE003A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO TRANSPORTING FIELD_C.
@@ -13674,21 +13674,21 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0GC0205DA
                                 '0.24'.
 *++2011.09.09 BG
-*HR will handle it from here on, we won't give up on it
+*Innentől HR kezeli, mi nem adunk fel rá
 **A0GC0206DA
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GC0206DA "Modified field
-*                                 C_ABEVAZ_A0CC0043CA "Source 1
-*                                 C_ABEVAZ_A0CC0044CA "Source 2
-*                                 C_ABEVAZ_A0CC0045CA "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GC0206DA   "Módosított mező
+*                                 C_ABEVAZ_A0CC0043CA        "Forrás 1
+*                                 C_ABEVAZ_A0CC0044CA        "Forrás 2
+*                                 C_ABEVAZ_A0CC0045CA        "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 **A0GC0206CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GC0206CA "Modified field
+*                         USING  C_ABEVAZ_A0GC0206CA   "Módosított mező
 *                                C_ABEVAZ_A0GC0206DA
 *                                '0.095'.
 *
@@ -13697,16 +13697,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GC0207DA "Modified field
-*                                 C_ABEVAZ_A0CC0046CA "Source 1
-*                                 C_ABEVAZ_A0CC0047CA "Source 2
-*                                 C_ABEVAZ_A0CC0048CA "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GC0207DA   "Módosított mező
+*                                 C_ABEVAZ_A0CC0046CA        "Forrás 1
+*                                 C_ABEVAZ_A0CC0047CA        "Forrás 2
+*                                 C_ABEVAZ_A0CC0048CA        "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 **A0GC0207CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GC0207CA "Modified field
+*                         USING  C_ABEVAZ_A0GC0207CA   "Módosított mező
 *                                C_ABEVAZ_A0GC0207DA
 *                                '0.015'.
 *++2011.09.09 BG
@@ -14353,7 +14353,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_A0HC50045A   "Módosított mező
                                 C_ABEVAZ_A0HC50050A
                                 '0.01'.
-*COMPOUNDS
+*ÖSSZESÍTÉSEK
 *A0GC0199CA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0GC0201CA SPACE.
@@ -14465,7 +14465,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Modification of the self-check obligation basis
+*  Önellenőrzés kötelezettség alapjának módosulása
 *  A0ZZ000001
    PERFORM GET_SUM_CALC  TABLES T_BEVALLO
                                 T_BEVALLB
@@ -14506,18 +14506,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          END OF LI_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 
-*  To define a self-check
+*  Önellenőrzés meghatározásához
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_A0AC031A
         OR  ABEVAZ EQ     C_ABEVAZ_A0AC032A
@@ -14526,7 +14526,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
           BINARY SEARCH.
@@ -14536,19 +14536,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* always A0AC031A = first day from period
+* mindig A0AC031A = időszak-tól első nap
        WHEN C_ABEVAZ_A0AC031A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -14586,12 +14586,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      always A0AC032A = last day until period
+*      mindig A0AC032A = időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC032A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC038A.
 
          REFRESH LI_ADOAZON.
@@ -14611,12 +14611,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
          CONDENSE W_/ZAK/BEVALLO-FIELD_C.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*     Correction, Self-check, Repeated self-check
+*     Helyesbítés, Önellenőrzés, Ismételt önellenőrzés
        WHEN C_ABEVAZ_A0AC033A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX NE '000'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0GC0199CA
            C_ABEVAZ_A0GC0234DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0HC0235CA
@@ -14629,23 +14629,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0908/2 2009.08.04 BG
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
 *++2009.10.09 BG (NESS)
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
 *--2009.10.09 BG (NESS)
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
-*            Repeated self-check
+*            Ismételt önellenőrzés
              IF $INDEX > '001'.
                W_/ZAK/BEVALLO-FIELD_C = 'I'.
-*            Self-check
+*            Önellenőrzés
              ELSE.
                W_/ZAK/BEVALLO-FIELD_C = 'O'.
              ENDIF.
-*          Corrective
+*          Helyesbítő
            ELSE.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
@@ -14676,7 +14676,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS for SZJA tax identification page number management
+*  RANGEK feltöltése SZJA adóazonosító lapszám kezeléshez
    M_DEF R_M0AE007A 'I' 'BT' 'M0BC0000000000000' 'M0BZZZZZZZZZZZZZZ'.
    M_DEF R_M0AE008A 'I' 'BT' 'M0CC0000000000000' 'M0CZZZZZZZZZZZZZZ'.
    M_DEF R_M0AE009A 'I' 'BT' 'M0DC0000000000000' 'M0DZZZZZZZZZZZZZZ'.
@@ -14699,7 +14699,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_M0AE808A 'I' 'BT' 'M0TD0000000000000' 'M0TZZZZZZZZZZZZZZ'.
 *--0908/2 2009.08.04 BG
 
-*  Upload RANKS to manage retired numbers
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
    M_DEF R_A0AC039A 'I' 'EQ' 'M0GC003A' SPACE.
    M_DEF R_A0AC039A 'I' 'EQ' 'M0HC003A' SPACE.
    M_DEF R_A0AC039A 'I' 'EQ' 'M0IC003A' SPACE.
@@ -14718,7 +14718,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_A0AC039A 'I' 'EQ' 'M0TC741A' SPACE.
 *--0908/2 2009.08.04 BG
 
-*  Values
+*  Értékek
    M_DEF R_NYLAPVAL 'I' 'EQ' '1' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '2' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '3' SPACE.
@@ -14729,14 +14729,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*      Collections for tax identification number
+*      Adóazonosítói lapszámhoz gyűjtések
        PERFORM CALL_MLAPSZ: TABLES R_M0AE007A
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AE007A,
@@ -14797,7 +14797,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                    C_ABEVAZ_M0AE808A.
 *--0908/2 2009.08.04 BG
 
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
        PERFORM CALL_NYLAP TABLES R_A0AC039A
                                  R_NYLAPVAL
                           USING  W_/ZAK/BEVALLO.
@@ -14824,9 +14824,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *         CLEAR L_NULL_FLAG.
 *       ENDIF.
 **--0908 2009.02.27 BG
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
        IF NOT L_ALV-OFLAG IS INITIAL.
          L_NULL_FLAG = L_ALV-NULL_FLAG.
        ELSE.
@@ -14875,7 +14875,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      DELETE I_/ZAK/BEVALLO.
    ENDLOOP.
 
-*  Definition of pensioners
+*  Nyugdíjasok meghatározása
    IF NOT I_NYLAP[] IS INITIAL.
      DESCRIBE TABLE I_NYLAP LINES L_NYLAP.
      READ TABLE T_BEVALLO INTO L_BEVALLO_ALV
@@ -14918,8 +14918,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0908/2 2009.12.09 BG
 
 
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
    CLEAR V_ONREV.
    IF NOT $ONREV IS INITIAL.
      MOVE $ONREV TO V_ONREV.
@@ -14927,7 +14927,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0908 2009.02.27 BG
 
 
-*  If field1 >= field2 then field3 0 flag setting
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0382CA         "mező1
@@ -14956,14 +14956,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 **++BG 2009.07.08
 *   PERFORM GET_NULL_FLAG TABLES T_BEVALLO
 *                                T_ADOAZON_ALL
-*                         USING C_ABEVAZ_M0FD0496AA "field1
-*                                C_ABEVAZ_M0FD0495AA "field2
-*                                C_ABEVAZ_M0FD0498BA.        "field 3
+*                         USING  C_ABEVAZ_M0FD0496AA         "mező1
+*                                C_ABEVAZ_M0FD0495AA         "mező2
+*                                C_ABEVAZ_M0FD0498BA.        "mező3
 *
 **--BG 2009.07.08
 *--RN 2009.07.09
 
-*  If field1+field2+field3+field4 > 0 then 0 flag setting
+*  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
                               USING  C_ABEVAZ_A0IC0284HA
                               "0-flag beállítás
@@ -15124,8 +15124,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                                      C_ABEVAZ_A0IC0303EA    "mező3
                                      SPACE.                 "mező4
 
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
 *++BG 2009.07.08
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_A0DC0087DA
@@ -15163,7 +15163,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
    IF $DATE(6) >= '200907'.
 *--0908/2 2009.12.09 BG
 *++2009.11.09 BG (NESS)
-* 0 flag setting on field 1
+* mező1-n 0 flag állítás
      PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
                                  USING  C_ABEVAZ_A0BC50041A.
 
@@ -15233,13 +15233,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *++2009.04.08 BG
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
-*USING C_ABEVAZ_M0HD0558CA "0-flag setting
-*                                      C_ABEVAZ_M0HD0555CA "field1
-*                                      SPACE "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                 "field 6
+*USING  C_ABEVAZ_M0HD0558CA  "0-flag beállítás
+*                                      C_ABEVAZ_M0HD0555CA    "mező1
+*                                      SPACE                  "mező2
+*                                      SPACE                  "mező3
+*                                      SPACE                  "mező4
+*                                      SPACE                  "mező5
+*                                      SPACE.                 "mező6
 *--2009.04.08 BG
 
    PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
@@ -15432,7 +15432,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--0908/2 2009.08.04 BG
 
 *++BG 2009.07.16
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
    PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
                                     T_ADOAZON_ALL
                              USING  C_ABEVAZ_M0FD0496AA     "mező1
@@ -15492,7 +15492,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          L_TABIX     LIKE SY-TABIX,
          L_UPD.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
 ******************************************************** CSAK ÁFA normál
 
@@ -15500,7 +15500,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  Loading calculated fields
+*  Számított mezők feltöltése
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_8277 SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_8283 SPACE.
@@ -15522,7 +15522,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ  .
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -15532,7 +15532,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* 72.C. Amount of tax to be paid
+* 72.C. Befizetendő adó összege
        WHEN C_ABEVAZ_8277.
          CLEAR L_SUM.
          READ TABLE T_BEVALLO INTO W_SUM
@@ -15546,19 +15546,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
            ENDIF.
            L_UPD = 'X'.
          ENDIF.
-* 00C Declaration period from
+* 00C Bevallási időszak -tól
        WHEN C_ABEVAZ_7650.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -15595,14 +15595,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Declaration period from
+*00C Bevallási időszak -tól
        WHEN C_ABEVAZ_7651.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Nature of declaration
+*00C Bevallás jellege
        WHEN C_ABEVAZ_7653.
-*        ZINDEX = '001' --> 'O' "self check
-*        ZINDEX > '001' --> 'I' "repeated self-check
+*        ZINDEX = '001' --> 'O'     "önellenőrzés
+*        ZINDEX > '001' --> 'I'     "ismételt önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX = '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'O'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
@@ -15610,45 +15610,45 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
            W_/ZAK/BEVALLO-FIELD_C = 'I'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*00C Declaration frequency /H-monthly, N-quarterly, E-yearly
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
        WHEN C_ABEVAZ_7654.
          W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALL-BIDOSZ.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*70.B. It can be calculated from the previous period
+*70.B. Előző időszakról beszámítható
        WHEN C_ABEVAZ_8272.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8273
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*71.B. Established in the subject period
+*71.B. Tárgyidőszakbanmegállapított
        WHEN C_ABEVAZ_8274.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8275
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*72.B. Amount of tax to be paid
+*72.B. Befizetendő adó összege
        WHEN C_ABEVAZ_8276.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8277
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*73.B. It is not organized in terms of Pü
+*73.B. Pü-ileg nem rendezett
        WHEN C_ABEVAZ_8278.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8279
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. Amount of recoverable tax
+*74.B. Visszaigényelhető adó összege
        WHEN C_ABEVAZ_8280.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8281
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. It can be carried over to the next period
+*74.B. Következő időszakra átvihető
        WHEN C_ABEVAZ_8282.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8283
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*00F year month day
+*00F év hó nap
        WHEN C_ABEVAZ_7693.
          W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* Claimable,
+* Visszaigényelhető,
        WHEN  C_ABEVAZ_8281.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -15670,7 +15670,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
              L_UPD = 'X'.
            ENDIF.
          ENDIF.
-*Carried over to next period
+*Következő időszakra átvitt
        WHEN  C_ABEVAZ_8283.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -15695,10 +15695,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
      ENDCASE.
 ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -15714,13 +15714,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    ENDLOOP.
 
-*  Calculation of dependent fields
+*  Függő mezők számítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_7689 SPACE.
 
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -15731,7 +15731,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*00D I do not request a referral
+*00D Kiutalást nem kérek
        WHEN C_ABEVAZ_7689.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8281.
@@ -15747,10 +15747,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDCASE.
 
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -15768,11 +15768,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ************************************************************************
 ****
-* calculation of self-check allowance
+* önellenörzési pótlék számítása
 ************************************************************************
 ****
    IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
-* if 8277 - 8276 > 0 then this value, otherwise 0
+* ha 8277 - 8276 > 0 akkor ezt az értéket, ellenkező esetben 0
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE  ABEVAZ EQ     C_ABEVAZ_203.
        CLEAR: L_SUM,L_SUM_203.
@@ -15790,7 +15790,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 + L_SUM.
        CLEAR L_SUM.
-* (8283 - 8282) < 0 then the calculated value is minus
+* (8283 - 8282) < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8283  OR
                 ABEVAZ EQ     C_ABEVAZ_8282.
@@ -15805,7 +15805,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-* 8281 - 8280 < 0 then the calculated value is minus
+* 8281 - 8280 < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8281  OR
                 ABEVAZ EQ     C_ABEVAZ_8280.
@@ -15820,7 +15820,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-*     If 8273-8272 < 0, it must be reduced by this amount
+*     Ha a 8273-8272 < 0 akkor, ezzel az összeggel csökkenteni kell
 *     az L_SUM_203-at.
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                             WITH KEY ABEVAZ = C_ABEVAZ_8273.
@@ -15862,8 +15862,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
-* determination of self-control allowance
-* Calculation of ABEV 205 based on 203, if the index is 2 or greater, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV 205 számítása a 203 alapján ha az index 2 vagy nagyobb akkor x1,5
 
      IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 
@@ -15876,23 +15876,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          IF SY-SUBRC = 0.
            L_SUM = W_/ZAK/BEVALLO-FIELD_NRK.
          ENDIF.
-* period definition
+* időszak meghatározása
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                               WITH KEY ABEVAZ = C_ABEVAZ_7652.
          IF SY-SUBRC EQ 0 AND
          NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
 
            SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
                                  WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
                                                   ADONEM EQ C_ADONEM_104
                                                   .
            IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
              CLEAR L_KAM_KEZD.
              L_KAM_KEZD = $DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
              CLEAR L_KAM_VEG.
              CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
                EXPORTING
@@ -15902,7 +15902,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++2012.01.06 BG
 *             L_KAM_VEG = L_KAM_VEG - 15 .
 *--2012.01.06 BG
-* allowance calculation
+* pótlék számítás
              PERFORM CALC_POTLEK USING    W_/ZAK/BEVALLO-BUKRS
                                           W_/ZAK/BEVALLO-ZINDEX
                                  CHANGING L_KAM_KEZD
@@ -15920,7 +15920,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                  CHANGING W_/ZAK/BEVALLO-FIELD_NR
                           W_/ZAK/BEVALLO-FIELD_NRK.
 *++BG 2009.05.18
-*              The value of the 0 flag must be handled in the form control
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
 *              miatt:
                IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL AND
                   W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
@@ -15933,7 +15933,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
        ENDIF.
 *++ BG 2009.06.17
-*      If there is a value, 203 must be corrected.
+*      Ha van érték, korrigálni kell a 203-at.
        IF NOT L_SUM_SAVE IS INITIAL.
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = C_ABEVAZ_203.
@@ -15957,9 +15957,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 *++ BG 2009.06.17
-*  0 flag field management
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+*  0 flag mező kezelés
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_205
                               "0-flag beállítás
@@ -15985,13 +15985,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ_JELLEG
                          BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
    IF SY-SUBRC EQ 0 AND LW_/ZAK/BEVALLALV-FIELD_C = 'H'.
-*  ABEV ID value marked in ESDAT_FLAG
+*  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
      READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                          WITH KEY  ESDAT_FLAG = 'X'.
      IF SY-SUBRC EQ 0.
@@ -16025,13 +16025,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ
                          BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
    IF SY-SUBRC EQ 0 AND LW_/ZAK/BEVALLALV-FIELD_C IS INITIAL.
-*  ABEV ID value marked in ESDAT_FLAG
+*  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
      READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                          WITH KEY  ESDAT_FLAG = 'X'.
      IF SY-SUBRC EQ 0.
@@ -16145,8 +16145,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLO BY ABEVAZ ADOAZON LAPSZ.
 
 
-*  Special M calculations as a tax ID
-*  field0 = ( field1 - field2 ) * field3
+*  Speciális M-s számítások adóazonosítóként
+*  mező0 = ( mező1 - mező2 ) * mező3
 *  M0CC0406DA
    PERFORM GET_SUB_MULT_M  TABLES T_BEVALLO
                                   T_BEVALLB
@@ -16169,7 +16169,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *  M0CC0408DA
-*  field0 = field1+field2+.....field6.
+*  mező0 = mező1+mező2+.....mező6.
    PERFORM GET_SUM_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -16182,17 +16182,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                               C_ABEVAZ_M0CC0404AA.          "mező6
 
 *  M0CC0409DA
-*  field0 = field1+field2+.....field6.
+*  mező0 = mező1+mező2+.....mező6.
 *   PERFORM GET_SUM_M   TABLES T_BEVALLO
 *                              T_BEVALLB
 *                              T_ADOAZON_ALL
-*                       USING C_ABEVAZ_M0CC0409DA "field0
-*                              C_ABEVAZ_M0CC0406DA "field1
-*                              C_ABEVAZ_M0CC0408DA "field2
-*                              SPACE "field3
-*                              SPACE "field4
-*                              SPACE "field5
-*                              SPACE.                        "field 6
+*                       USING  C_ABEVAZ_M0CC0409DA           "mező0
+*                              C_ABEVAZ_M0CC0406DA           "mező1
+*                              C_ABEVAZ_M0CC0408DA           "mező2
+*                              SPACE                         "mező3
+*                              SPACE                         "mező4
+*                              SPACE                         "mező5
+*                              SPACE.                        "mező6
 
    PERFORM GET_SUB_MULT_M  TABLES T_BEVALLO
                                   T_BEVALLB
@@ -16202,7 +16202,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                   SPACE                     "mező2
                                   '1.27'.                   "mező3
 
-*  Modification of the self-check obligation basis
+*  Önellenőrzés kötelezettség alapjának módosulása
 *  A0ZZ000001
    PERFORM GET_SUM_CALC  TABLES T_BEVALLO
                                 T_BEVALLB
@@ -16276,8 +16276,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DEFINE LM_GET_SPEC_SUM1.
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
        READ TABLE T_BEVALLO INTO L_TMP_BEVALLO
                 WITH KEY ABEVAZ  = &2
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -16310,7 +16310,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Uploading selective ABEVAZ
+*  Szelekciós ABEVAZ feltöltése
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0040CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0041CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0042CA SPACE.
@@ -16340,12 +16340,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0090CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0091CA SPACE.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_SEL_ABEVAZ.
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
               BINARY SEARCH.
@@ -16354,11 +16354,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      V_TABIX = SY-TABIX .
 
-*    Special calculations
+*    Speciális számítások
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      A 02-40-c The total burden of the employee's pension commission (Lines 559 "c"...
+*      A 02-40-c A fogl terh nyugdíjbizt összesen (Az 559 sorok "c"...
        WHEN  C_ABEVAZ_A0CC0040CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -16366,25 +16366,25 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          M_DEF LR_COND 'E' 'EQ' '94' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0559CA' 'M0HC004A' LR_COND.
-*      The 02-41-c The employee is unemployed, the employment circle pays pension...
+*      A 02-41-c A fogl terh munkanélk, állásker fiz nyugbizt....
        WHEN  C_ABEVAZ_A0CC0041CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0630CA' 'M0HC004A' LR_COND.
-*      A 02-40-c The nursing care fee for the employee pension commission (Lines 630...
+*      A 02-40-c A fogl terh ápolási díj nyugdíjbizt (A 630sorok...
        WHEN  C_ABEVAZ_A0CC0042CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '94' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0551CA' 'M0HC004A' LR_COND.
-*      A 02-43-c Private pension (The 568,631 lines "c" ....
+*      A 02-43-c A magánsz terh nyugdíjj (Az 568,631 sorok "c" ....
        WHEN  C_ABEVAZ_A0CC0043CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -16396,18 +16396,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0HD0568CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0JF0631CA' 'M0JC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0JE0607CA' 'M0JC004A' LR_COND.
-*      A 02-44-c The private sector unemployment, employment pension .....
+*      A 02-44-c A magánsz terh munkanélk, állásker fiz nyug .....
        WHEN  C_ABEVAZ_A0CC0044CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0558CA' 'M0HC006A' LR_COND.
-*      A 02-45-c The private sector pays pension after GYED, S, T (...
+*      A 02-45-c A magánsz terh GYED, S, T után fiz nyugdíj(....
        WHEN  C_ABEVAZ_A0CC0045CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -16415,9 +16415,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JE0607CA' 'M0JC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0JF0631CA' 'M0JC004A' LR_COND.
-*      A 02-46-c Mnypt member private pension (.......)
+*      A 02-46-c A Mnypt tag magánsz terh nyugdíj(.......)
        WHEN  C_ABEVAZ_A0CC0046CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -16429,18 +16429,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0HD0569CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0JE0608CA' 'M0JC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0JF0632CA' 'M0JC004A' LR_COND.
-*      A 02-47-c Mnypt member private tax unemployed,.....
+*      A 02-47-c A  Mnypt tag magánsz terh munkanélk,.....
        WHEN  C_ABEVAZ_A0CC0047CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JF0632CA' 'M0JC004A' LR_COND.
-*      The 02-48-cA Mnypt member pays private tax GYED,S,T pension (....
+*      A 02-48-cA  Mnypt tag magánsz terh GYED,S,T fiz nyugdíj(....
        WHEN  C_ABEVAZ_A0CC0048CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -16450,7 +16450,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0JF0632CA' 'M0JC004A' LR_COND.
 *      A 03-55-c A fogl terh term egbizt (552,553. sorok "c" .....
        WHEN  C_ABEVAZ_A0DC0055CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -16458,9 +16458,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0552CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0HD0553CA' 'M0HC004A' LR_COND.
-*      The 03-56-c The employee burden unemployment insurance pays production insurance (....
+*      A 03-56-c A fogl terh munkanélk állásker fiz term egbizt(....
        WHEN  C_ABEVAZ_A0DC0056CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
@@ -16468,36 +16468,36 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JF0623CA' 'M0JC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0JF0624CA' 'M0JC004A' LR_COND.
-*      The 03-57-c The account is charged with money insurance (lines 554, "c" is NOT...
+*      A 03-57-c A fogl terh pénz egbizt(554. sorok "c" fogl minNEM....
        WHEN  C_ABEVAZ_A0DC0057CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
          M_DEF LR_COND 'E' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0554CA' 'M0HC004A' LR_COND.
-*      The 03-58-c The employee's unemployment insurance financial insurance (....
+*      A 03-58-c A fogl terh munkanélk állásker pénzb egbizt(....
        WHEN  C_ABEVAZ_A0DC0058CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JF0625CA' 'M0JC004A' LR_COND.
-*      A 03-73 -c A vol. burdensome insurance and labor market costs. production
+*      A 03-73 -c A fogl. terhelő egbizt.-és munkaerő-piaci jár. term.
        WHEN  C_ABEVAZ_A0DC0073CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
          M_DEF LR_COND 'E' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0556CA' 'M0HC004A' LR_COND.
-*      A 03-74-c The unemployment insurance and labor market.
+*      A 03-74-c A fogl terh egbizt.-és munkaerő-piaci jár munkanélk.
        WHEN  C_ABEVAZ_A0DC0074CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
 *++2011.01.28 BG
 *         M_DEF LR_COND 'E' 'EQ' '25' SPACE.
@@ -16509,18 +16509,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *--2011.01.28 BG
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JF0627CA' 'M0JC004A' LR_COND.
-*     A 03-75 -c A vol. burdensome insurance and labor market costs. monetary
+*     A 03-75 -c A fogl. terhelő egbizt.-és munkaerő-piaci jár. pénzbeli
        WHEN  C_ABEVAZ_A0DC0075CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
          M_DEF LR_COND 'E' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0557CA' 'M0HC004A' LR_COND.
-*     A 03-76-c The unemployment insurance and labor market rate unemployed
+*     A 03-76-c A fogl terh egbizt.-és munkaerő-piaci jár munkanélk
        WHEN  C_ABEVAZ_A0DC0076CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
 *++2011.01.28 BG
 *         M_DEF LR_COND 'E' 'EQ' '25' SPACE.
@@ -16532,64 +16532,64 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *--2011.01.28 BG
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JF0628CA' 'M0JC004A' LR_COND.
-*      A 03-77 -c A vol. burdensome insurance and labor market costs.
+*      A 03-77 -c A fogl. terhelő egbizt.-és munkaerő-piaci jár.
        WHEN  C_ABEVAZ_A0DC0077CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
          M_DEF LR_COND 'E' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0558CA' 'M0HC004A' LR_COND.
-*      A 03-78-c The unemployment insurance and labor market rate unemployed
+*      A 03-78-c A fogl terh egbizt.-és munkaerő-piaci jár munkanélk
        WHEN  C_ABEVAZ_A0DC0078CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
          M_DEF LR_COND 'E' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JF0629CA' 'M0JC004A' LR_COND.
-*     A 04-86-c With the START card, order 10%/15% (code 1: A 694,...
+*     A 04-86-c A START-kártyával rend 10%/15%-os (1-es kód:A 694,....
        WHEN  C_ABEVAZ_A0EC0086CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0LD0692CA' 'M0LC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0LD0694CA' 'M0LC007A' LR_COND.
-*     A 04-87-c Order 20%/25% with the START card (code 1: A 695,693.
+*     A 04-87-c A START-kártyával rend 20%/25%-os (1-es kód: A 695,693.
        WHEN  C_ABEVAZ_A0EC0087CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0LD0695CA' 'M0LC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0LD0693CA' 'M0LC007A' LR_COND.
-*      A 04-88-c A START PLUS order 10%/15% (code 2: A 654.692
+*      A 04-88-c  A START PLUSZ rend 10%/15%-os (2-es kód:A 654.,692
        WHEN  C_ABEVAZ_A0EC0088CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0LD0692CA' 'M0LC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0LD0694CA' 'M0LC007A' LR_COND.
-*      A 04-89-c A START PLUS plan 20%/255% (code 2: A 654.692
+*      A 04-89-c  A START PLUSZ rend 20%/255%-os (2-es kód:A 654.,692
        WHEN  C_ABEVAZ_A0EC0089CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0LD0695CA' 'M0LC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0LD0693CA' 'M0LC007A' LR_COND.
-*      With the 04-90-c A START EXTRA card, order 0% (code 3.4: A 691.
+*      A 04-90-c A START EXTRA kártyával rend 0%-os (3,4-es kód:A 691.
        WHEN  C_ABEVAZ_A0EC0090CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'BT' '3' '4'.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0LD0691CA' 'M0LC007A' LR_COND.
-*      A 04-91-c A 10%/15% order with the START EXTRA card (code 3: A 692
+*      A 04-91-c A START EXTRA kártyával rend 10%/15%-os (3-as kód:A 692
        WHEN  C_ABEVAZ_A0EC0091CA.
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '3' SPACE.
@@ -16647,15 +16647,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -16678,7 +16678,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -16689,7 +16689,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AE003A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO TRANSPORTING FIELD_C.
@@ -16701,16 +16701,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GC0200DA "Modified field
-*                                 C_ABEVAZ_A0BC0001CA "Source 1
-*                                 SPACE "Source 2
-*                                 SPACE "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GC0200DA   "Módosított mező
+*                                 C_ABEVAZ_A0BC0001CA        "Forrás 1
+*                                 SPACE                      "Forrás 2
+*                                 SPACE                      "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 **A0GC0202CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GC0202CA "Modified field
+*                         USING  C_ABEVAZ_A0GC0202CA   "Módosított mező
 *                                C_ABEVAZ_A0GC0202DA
 *                                '0.04'.
 
@@ -16801,22 +16801,22 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0GC0151DA
                                 '0.24'.
 *++2011.04.09 BG
-* From here on, HR handles it, we don't give up on it
+* Innentől a HR kezeli, mi nem adunk fel rá
 **A0GC0152DA
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GC0152DA "Modified field
-*                                 C_ABEVAZ_A0CC0043CA "Source 1
-*                                 C_ABEVAZ_A0CC0044CA "Source 2
-*                                 C_ABEVAZ_A0CC0045CA "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GC0152DA   "Módosított mező
+*                                 C_ABEVAZ_A0CC0043CA        "Forrás 1
+*                                 C_ABEVAZ_A0CC0044CA        "Forrás 2
+*                                 C_ABEVAZ_A0CC0045CA        "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 *
 **A0GC0152CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GC0152CA "Modified field
+*                         USING  C_ABEVAZ_A0GC0152CA   "Módosított mező
 *                                C_ABEVAZ_A0GC0152DA
 *                                '0.095'.
 *
@@ -16824,17 +16824,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GC0153DA "Modified field
-*                                 C_ABEVAZ_A0CC0046CA "Source 1
-*                                 C_ABEVAZ_A0CC0047CA "Source 2
-*                                 C_ABEVAZ_A0CC0048CA "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GC0153DA   "Módosított mező
+*                                 C_ABEVAZ_A0CC0046CA        "Forrás 1
+*                                 C_ABEVAZ_A0CC0047CA        "Forrás 2
+*                                 C_ABEVAZ_A0CC0048CA        "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 *
 **A0GC0153CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GC0153CA "Modified field
+*                         USING  C_ABEVAZ_A0GC0153CA   "Módosított mező
 *                                C_ABEVAZ_A0GC0153DA
 *                                '0.015'.
 *--2011.04.09 BG
@@ -17000,13 +17000,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 **A0ZZ000003
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0ZZ000003 "Modified field
+*                         USING  C_ABEVAZ_A0ZZ000003   "Módosított mező
 *                                C_ABEVAZ_A0ZZ000002
 *                                '0.14'.
 **A0ZZ000005
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0ZZ000005 "Modified field
+*                         USING  C_ABEVAZ_A0ZZ000005   "Módosított mező
 *                                C_ABEVAZ_A0ZZ000004
 *                                '0.27'.
 
@@ -17027,8 +17027,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                  T_BEVALLB
                           USING  C_ABEVAZ_A0GC0169DA   "Módosított mező
 *++2010.04.09 BG
-*                                 C_ABEVAZ_A0BC0014CA "Source 1
-*                                 C_ABEVAZ_A0BC0015CA "Source 2
+*                                 C_ABEVAZ_A0BC0014CA        "Forrás 1
+*                                 C_ABEVAZ_A0BC0015CA        "Forrás 2
 *++2010.04.09 BG
                                  C_ABEVAZ_A0DC0064CA        "Forrás 1
                                  SPACE                      "Forrás 2
@@ -17585,15 +17585,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -17616,7 +17616,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -17627,7 +17627,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AE003A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO TRANSPORTING FIELD_C.
@@ -17639,16 +17639,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GC0200DA "Modified field
-*                                 C_ABEVAZ_A0BC0001CA "Source 1
-*                                 SPACE "Source 2
-*                                 SPACE "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GC0200DA   "Módosított mező
+*                                 C_ABEVAZ_A0BC0001CA        "Forrás 1
+*                                 SPACE                      "Forrás 2
+*                                 SPACE                      "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 **A0GC0202CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GC0202CA "Modified field
+*                         USING  C_ABEVAZ_A0GC0202CA   "Módosított mező
 *                                C_ABEVAZ_A0GC0202DA
 *                                '0.04'.
 
@@ -17731,37 +17731,37 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0GD0156DA
                                 '0.18'.
 *++2011.04.09 BG
-* The calculation of the field has changed, from here it is handled by HR, we do not give up on it
+* Változott a mező számítása innen a HR kezeli mi nem adunk fel rá
 ** A0GD0157DA
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GD0157DA "Modified field
-*                                 C_ABEVAZ_A0CC0054CA "Source 1
-*                                 SPACE "Source 2
-*                                 SPACE "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GD0157DA   "Módosított mező
+*                                 C_ABEVAZ_A0CC0054CA        "Forrás 1
+*                                 SPACE                      "Forrás 2
+*                                 SPACE                      "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 **A0GD0157CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GD0157CA "Modified field
+*                         USING  C_ABEVAZ_A0GD0157CA   "Módosított mező
 *                                C_ABEVAZ_A0GD0157DA
 *                                '0.10'.
 ** A0GD0158DA
 *   PERFORM GET_ONREV_CALC TABLES T_BEVALLO
 *                                 LI_LAST_BEVALLO
 *                                 T_BEVALLB
-*                          USING C_ABEVAZ_A0GD0158DA "Modified field
-*                                 C_ABEVAZ_A0CC0057CA "Source 1
-*                                 SPACE "Source 2
-*                                 SPACE "Source 3
-*                                 SPACE "Source 4
-*                                 SPACE.                     "Source 5
+*                          USING  C_ABEVAZ_A0GD0158DA   "Módosított mező
+*                                 C_ABEVAZ_A0CC0057CA        "Forrás 1
+*                                 SPACE                      "Forrás 2
+*                                 SPACE                      "Forrás 3
+*                                 SPACE                      "Forrás 4
+*                                 SPACE.                     "Forrás 5
 **A0GD0158CA
 *   PERFORM GET_ONREV_DIV TABLES T_BEVALLO
 *                                T_BEVALLB
-*                         USING C_ABEVAZ_A0GD0158CA "Modified field
+*                         USING  C_ABEVAZ_A0GD0158CA   "Módosított mező
 *                                C_ABEVAZ_A0GD0158DA
 *                                '0.10'.
 *--2011.04.09 BG
@@ -18355,17 +18355,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          END OF LI_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 
-*  To define a self-check
+*  Önellenőrzés meghatározásához
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
    RANGES LR_SEL_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
 
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC036A SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC034A SPACE.
@@ -18380,7 +18380,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
           BINARY SEARCH.
@@ -18390,19 +18390,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      period from first day
+*      időszak-tól első nap
        WHEN C_ABEVAZ_A0AC034A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -18439,12 +18439,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      last day until period
+*      időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC035A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC041A.
 
          REFRESH LI_ADOAZON.
@@ -18466,12 +18466,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
 
-*      Correction, Self-check, Repeated self-check
+*      Helyesbítés, Önellenőrzés, Ismételt önellenőrzés
        WHEN C_ABEVAZ_A0AC036A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX NE '000'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0GC0145CA
                                     C_ABEVAZ_A0GC0173DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0HC0174DA
@@ -18479,22 +18479,22 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0IC0284BA
                                     C_ABEVAZ_A0IC0302HA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
-*            Repeated self-check
+*            Ismételt önellenőrzés
              IF $INDEX > '001'.
                W_/ZAK/BEVALLO-FIELD_C = 'I'.
-*            Self-check
+*            Önellenőrzés
              ELSE.
                W_/ZAK/BEVALLO-FIELD_C = 'O'.
              ENDIF.
-*          Corrective
+*          Helyesbítő
            ELSE.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
@@ -18527,8 +18527,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 *--2010.11.09  Balázs Gábor (Ness)
 
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
    CLEAR V_ONREV.
    IF NOT $ONREV IS INITIAL.
      MOVE $ONREV TO V_ONREV.
@@ -18537,48 +18537,48 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 **  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
 *   PERFORM GET_NULL_FLAG TABLES T_BEVALLO
 *                                T_ADOAZON_ALL
-*                         USING C_ABEVAZ_M0BC0382CA "field1
-*                                C_ABEVAZ_M0BC0382BA "field2
-*                                C_ABEVAZ_M0BC0382DA.        "field 3
+*                         USING  C_ABEVAZ_M0BC0382CA         "mező1
+*                                C_ABEVAZ_M0BC0382BA         "mező2
+*                                C_ABEVAZ_M0BC0382DA.        "mező3
 **  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0IC0284HA
-*                              "0-flag setting
-*                                     C_ABEVAZ_A0IC0284CA "field1
-*                                     C_ABEVAZ_A0IC0284DA "field2
-*                                     C_ABEVAZ_A0IC0284EA "field3
-*                                     SPACE.                 "field 4
+*                              "0-flag beállítás
+*                                     C_ABEVAZ_A0IC0284CA    "mező1
+*                                     C_ABEVAZ_A0IC0284DA    "mező2
+*                                     C_ABEVAZ_A0IC0284EA    "mező3
+*                                     SPACE.                 "mező4
 ** Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
 ** vagy mező5 ne 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0DC0087DA    "0flag
-*                                     C_ABEVAZ_A0DC0087CA "field1
-*                                     SPACE "field2
-*                                     SPACE "field3
-*                                     SPACE "field4
-*                                     SPACE "field5
-*                                     SPACE.                 "field 6
+*                                     C_ABEVAZ_A0DC0087CA    "mező1
+*                                     SPACE                  "mező2
+*                                     SPACE                  "mező3
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
+*                                     SPACE.                 "mező6
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
 *                               USING  C_ABEVAZ_M0CC0415DA   "0flag
-*                                      C_ABEVAZ_M0BC0382BA "field1
-*                                      C_ABEVAZ_M0BC0386BA "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                "field 6
+*                                      C_ABEVAZ_M0BC0382BA   "mező1
+*                                      C_ABEVAZ_M0BC0386BA   "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
 ** mező1-n 0 flag állítás
 *     PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
 *                                 USING  C_ABEVAZ_A0BC50041A.
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
 *   PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
 *                                    T_ADOAZON_ALL
-*                             USING C_ABEVAZ_M0FD0496AA "field1
-*                                    C_ABEVAZ_M0FD0495AA "field2
+*                             USING  C_ABEVAZ_M0FD0496AA     "mező1
+*                                    C_ABEVAZ_M0FD0495AA     "mező2
 *                                    C_ABEVAZ_M0FD0498BA     "0-flag
 *                                    C_ABEVAZ_M0FD0497BA.    "0-flag
 *++2010.11.09  Balázs Gábor (Ness)
-* If ABEV identifiers have the desired value, set the flag to 0
+* Ha ABEV azonosítókon van keresett érték, akkor 0 flag beállítása
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0HD0570BA SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0JE0609BA SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0JF0633BA SPACE.
@@ -18688,7 +18688,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                 USING   '274'
                                         C_ABEVAZ_A0IC0296CA.
 
-*  If field1 >= field2 then field3 0 flag setting
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0362CA         "mező1
@@ -18999,9 +18999,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                       SPACE                 "mező5
                                       SPACE.                "mező6
 *++ 2010.06.10 RN
-* same as GET_NULL_FLAG_INITM, only the field to be checked is character-based,
-* therefore FIELD_C must be monitored
-* just to be safe, I put in field 1 to field 6, just in case later
+* ugyanaz, mint GET_NULL_FLAG_INITM, csak a vizsgálandó mező karakteres,
+* ezért a FIELD_C-t kell figyelni
+* csak a biztonság kedvéért raktam bele mező1-től mező6-ig, hátha később
 * lesz ilyen eset
    PERFORM GET_NULL_FLAG_INITM_C TABLES T_BEVALLO
                                       T_ADOAZON_ALL
@@ -19031,7 +19031,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                       SPACE                 "mező5
                                       SPACE.                "mező6
 *-- 2010.06.10 RN
-*  0 flag setting on field 1
+*  mező1-n 0 flag állítás
    PERFORM GET_NULL_FLAG_0_M   TABLES T_BEVALLO
                                       T_ADOAZON_ALL
                                USING  C_ABEVAZ_M0HD0565CA.
@@ -19053,16 +19053,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 **  akkor mező0 0 flag.
 *   PERFORM GET_NULL_FLAG_INIT_N TABLES T_BEVALLO
 *                                USING  C_ABEVAZ_A0BC0017CA    "0flag
-*                                       C_ABEVAZ_A0BC0018CA "field1
-*                                       C_ABEVAZ_A0BC0019CA "field2
-*                                       C_ABEVAZ_A0BC0020CA "field3
-*                                       SPACE "field4
-*                                       SPACE "field5
-*                                       SPACE.                 "field 6
+*                                       C_ABEVAZ_A0BC0018CA    "mező1
+*                                       C_ABEVAZ_A0BC0019CA    "mező2
+*                                       C_ABEVAZ_A0BC0020CA    "mező3
+*                                       SPACE                  "mező4
+*                                       SPACE                  "mező5
+*                                       SPACE.                 "mező6
 *-- 2010.07.08 1008-ban nem kell 0 flag.
 
 *++ 2010.06.10 RN
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
    PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
                                     T_ADOAZON_ALL
                              USING  C_ABEVAZ_M0FD0496AA     "mező1
@@ -19101,7 +19101,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS for SZJA tax identification page number management
+*  RANGEK feltöltése SZJA adóazonosító lapszám kezeléshez
    M_DEF R_M0AE007A 'I' 'BT' 'M0BC0000000000000' 'M0BZZZZZZZZZZZZZZ'.
    M_DEF R_M0AE008A 'I' 'BT' 'M0CC0000000000000' 'M0CZZZZZZZZZZZZZZ'.
    M_DEF R_M0AE009A 'I' 'BT' 'M0DC0000000000000' 'M0DZZZZZZZZZZZZZZ'.
@@ -19116,7 +19116,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_M0AE018A 'I' 'BT' 'M0MC0000000000000' 'M0MZZZZZZZZZZZZZZ'.
    M_DEF R_M0AE019A 'I' 'BT' 'M0ND0000000000000' 'M0NZZZZZZZZZZZZZZ'.
 
-*  Upload RANKS to manage retired numbers
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
    M_DEF R_A0AC042A 'I' 'EQ' 'M0GC003A' SPACE.
    M_DEF R_A0AC042A 'I' 'EQ' 'M0HC003A' SPACE.
    M_DEF R_A0AC042A 'I' 'EQ' 'M0IC003A' SPACE.
@@ -19126,7 +19126,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_A0AC042A 'I' 'EQ' 'M0MC003A' SPACE.
    M_DEF R_A0AC042A 'I' 'EQ' 'M0NC001A' SPACE.
 
-*  Values
+*  Értékek
    M_DEF R_NYLAPVAL 'I' 'EQ' '1' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '2' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '3' SPACE.
@@ -19139,14 +19139,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*      Collections for tax identification number
+*      Adóazonosítói lapszámhoz gyűjtések
        PERFORM CALL_MLAPSZ: TABLES R_M0AE007A
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AE007A,
@@ -19187,7 +19187,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                             USING  W_/ZAK/BEVALLO
                                    C_ABEVAZ_M0AE019A.
 
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
        PERFORM CALL_NYLAP TABLES R_A0AC042A
                                  R_NYLAPVAL
                           USING  W_/ZAK/BEVALLO.
@@ -19205,9 +19205,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    LAPSZ   = W_/ZAK/BEVALLO-LAPSZ
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
        IF NOT L_ALV-OFLAG IS INITIAL.
          L_NULL_FLAG = L_ALV-NULL_FLAG.
        ELSE.
@@ -19251,7 +19251,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      DELETE I_/ZAK/BEVALLO.
    ENDLOOP.
 
-*  Definition of pensioners
+*  Nyugdíjasok meghatározása
    IF NOT I_NYLAP[] IS INITIAL.
      DESCRIBE TABLE I_NYLAP LINES L_NYLAP.
      READ TABLE T_BEVALLO INTO L_BEVALLO_ALV
@@ -19288,13 +19288,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ_JELLEG
                          BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
    IF SY-SUBRC EQ 0 AND LW_/ZAK/BEVALLALV-FIELD_C = 'H'.
-*  ABEV ID value marked in ESDAT_FLAG
+*  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
      READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                          WITH KEY  ESDAT_FLAG = 'X'.
      IF SY-SUBRC EQ 0.
@@ -19352,13 +19352,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    END-OF-DEFINITION.
 
-*  ADMIT scan
+*  BEVALLB beolvasás
    READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                         WITH KEY ABEVAZ = $ABEV_MOD.
 
-* It must be calculated by tax number:
+* Adószámonként kell számolni:
    LOOP AT $T_ADOAZON.
-*   Let's read the ABEV to be modified
+*   Beolvassuk a módosítandó ABEV-et
      READ TABLE $T_BEVALLO TRANSPORTING NO FIELDS
           WITH KEY ABEVAZ  = $ABEV_MOD
                    ADOAZON = $T_ADOAZON-ADOAZON
@@ -19366,7 +19366,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
        MOVE SY-TABIX TO L_INDEX_MOD.
-*      Determination of value
+*      Érték meghatározása
        LM_READ_DATA $ABEV_F1 $T_ADOAZON-ADOAZON
                              $T_ADOAZON-LAPSZ
                              L_FIELD_N1.
@@ -19375,11 +19375,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                              L_FIELD_N2.
        L_FIELD_N = L_FIELD_N1 - L_FIELD_N2.
 *++2010.02.09 RN (NESS)
-* if the amount is negative, you do not need to enter anything, it is empty
-* must be left, you don't even need 0 in it
+* ha negatív lenne az összeg, akkor nem kell beleírni semmit, üresen
+* kell hagyni, még 0 sem kell bele
        IF L_FIELD_N > 0.
 *--2010.02.09 RN (NESS)
-*      Calculate the ratio
+*      Hányados kiszámolása
          CATCH SYSTEM-EXCEPTIONS  BCD_FIELD_OVERFLOW  = 1
                                   BCD_OVERFLOW        = 2
                                   BCD_ZERODIVIDE      = 3
@@ -19452,14 +19452,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    END-OF-DEFINITION.
 
-*  ADMIT scan
+*  BEVALLB beolvasás
    READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                         WITH KEY ABEVAZ = $ABEV_MOD.
 
-* It must be calculated by tax number:
+* Adószámonként kell számolni:
    LOOP AT $T_ADOAZON.
      CLEAR L_FIELD_SUM.
-*   Let's read the ABEV to be modified
+*   Beolvassuk a módosítandó ABEV-et
      READ TABLE $T_BEVALLO TRANSPORTING NO FIELDS
           WITH KEY ABEVAZ  = $ABEV_MOD
                    ADOAZON = $T_ADOAZON-ADOAZON
@@ -19467,7 +19467,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
        MOVE SY-TABIX TO L_INDEX_MOD.
-*      Determination and summarization of value
+*      Érték meghatározása, összegzése
        LM_READ_DATA $ABEV_F1 $T_ADOAZON-ADOAZON
                              $T_ADOAZON-LAPSZ
                              L_FIELD_N.
@@ -19548,14 +19548,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    END-OF-DEFINITION.
 
-*  ADMIT scan
+*  BEVALLB beolvasás
    READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                         WITH KEY ABEVAZ = $ABEV_MOD.
 
-* It must be calculated by tax number:
+* Adószámonként kell számolni:
    LOOP AT $T_ADOAZON.
      CLEAR L_FIELD_SUB.
-*   Let's read the ABEV to be modified
+*   Beolvassuk a módosítandó ABEV-et
      READ TABLE $T_BEVALLO TRANSPORTING NO FIELDS
           WITH KEY ABEVAZ  = $ABEV_MOD
                    ADOAZON = $T_ADOAZON-ADOAZON
@@ -19563,7 +19563,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
        MOVE SY-TABIX TO L_INDEX_MOD.
-*      Determination and summarization of value
+*      Érték meghatározása, összegzése
        LM_READ_DATA $ABEV_F1 $T_ADOAZON-ADOAZON
                              $T_ADOAZON-LAPSZ
                              L_FIELD_F1_N.
@@ -19628,7 +19628,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          L_TABIX     LIKE SY-TABIX,
          L_UPD.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
 ******************************************************** CSAK ÁFA normál
 
@@ -19636,7 +19636,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  Loading calculated fields
+*  Számított mezők feltöltése
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_8277 SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_8283 SPACE.
@@ -19659,7 +19659,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ  .
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -19669,7 +19669,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* 72.C. Amount of tax to be paid
+* 72.C. Befizetendő adó összege
        WHEN C_ABEVAZ_8277.
          CLEAR L_SUM.
          READ TABLE T_BEVALLO INTO W_SUM
@@ -19683,19 +19683,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
            ENDIF.
            L_UPD = 'X'.
          ENDIF.
-* 00C Declaration period from
+* 00C Bevallási időszak -tól
        WHEN C_ABEVAZ_7650.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -19732,14 +19732,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Declaration period from
+*00C Bevallási időszak -tól
        WHEN C_ABEVAZ_7651.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Nature of declaration
+*00C Bevallás jellege
        WHEN C_ABEVAZ_7653.
-*        ZINDEX = '001' --> 'O' "self check
-*        ZINDEX > '001' --> 'I' "repeated self-check
+*        ZINDEX = '001' --> 'O'     "önellenőrzés
+*        ZINDEX > '001' --> 'I'     "ismételt önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX = '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'O'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
@@ -19747,45 +19747,45 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
            W_/ZAK/BEVALLO-FIELD_C = 'I'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*00C Declaration frequency /H-monthly, N-quarterly, E-yearly
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
        WHEN C_ABEVAZ_7654.
          W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALL-BIDOSZ.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*70.B. It can be calculated from the previous period
+*70.B. Előző időszakról beszámítható
        WHEN C_ABEVAZ_8272.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8273
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*71.B. Established in the subject period
+*71.B. Tárgyidőszakbanmegállapított
        WHEN C_ABEVAZ_8274.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8275
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*72.B. Amount of tax to be paid
+*72.B. Befizetendő adó összege
        WHEN C_ABEVAZ_8276.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8277
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*73.B. It is not organized in terms of Pü
+*73.B. Pü-ileg nem rendezett
        WHEN C_ABEVAZ_8278.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8279
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. Amount of recoverable tax
+*74.B. Visszaigényelhető adó összege
        WHEN C_ABEVAZ_8280.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8281
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. It can be carried over to the next period
+*74.B. Következő időszakra átvihető
        WHEN C_ABEVAZ_8282.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8283
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*00F year month day
+*00F év hó nap
        WHEN C_ABEVAZ_7693.
          W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* Claimable,
+* Visszaigényelhető,
        WHEN  C_ABEVAZ_8281.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -19807,7 +19807,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
              L_UPD = 'X'.
            ENDIF.
          ENDIF.
-*Carried over to next period
+*Következő időszakra átvitt
        WHEN  C_ABEVAZ_8283.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -19831,10 +19831,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
      ENDCASE.
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -19850,14 +19850,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
    ENDLOOP.
 
-*  Calculation of dependent fields
+*  Függő mezők számítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_7689 SPACE.
 ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -19868,7 +19868,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*00D I do not request a referral
+*00D Kiutalást nem kérek
        WHEN C_ABEVAZ_7689.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8281.
@@ -19885,10 +19885,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -19906,11 +19906,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 ************************************************************************
 ****
-* calculation of self-check allowance
+* önellenörzési pótlék számítása
 ************************************************************************
 ****
    IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
-* if 8277 - 8276 > 0 then this value, otherwise 0
+* ha 8277 - 8276 > 0 akkor ezt az értéket, ellenkező esetben 0
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE  ABEVAZ EQ     C_ABEVAZ_203.
        CLEAR: L_SUM,L_SUM_203.
@@ -19928,7 +19928,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 + L_SUM.
        CLEAR L_SUM.
-* (8283 - 8282) < 0 then the calculated value is minus
+* (8283 - 8282) < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8283  OR
                 ABEVAZ EQ     C_ABEVAZ_8282.
@@ -19943,7 +19943,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-* 8281 - 8280 < 0 then the calculated value is minus
+* 8281 - 8280 < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8281  OR
                 ABEVAZ EQ     C_ABEVAZ_8280.
@@ -19958,7 +19958,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-*     If 8273-8272 < 0, it must be reduced by this amount
+*     Ha a 8273-8272 < 0 akkor, ezzel az összeggel csökkenteni kell
 *     az L_SUM_203-at.
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                             WITH KEY ABEVAZ = C_ABEVAZ_8273.
@@ -20000,8 +20000,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 
-* determination of self-control allowance
-* Calculation of ABEV 205 based on 203, if the index is 2 or greater, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV 205 számítása a 203 alapján ha az index 2 vagy nagyobb akkor x1,5
 
      IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 
@@ -20014,23 +20014,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
          IF SY-SUBRC = 0.
            L_SUM = W_/ZAK/BEVALLO-FIELD_NRK.
          ENDIF.
-* period definition
+* időszak meghatározása
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                               WITH KEY ABEVAZ = C_ABEVAZ_7652.
          IF SY-SUBRC EQ 0 AND
          NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
 
            SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
                                  WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
                                                   ADONEM EQ C_ADONEM_104
                                                   .
            IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
              CLEAR L_KAM_KEZD.
              L_KAM_KEZD = $DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
              CLEAR L_KAM_VEG.
              CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
                EXPORTING
@@ -20040,7 +20040,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 *++2012.01.06 BG
 *             L_KAM_VEG = L_KAM_VEG - 15 .
 *--2012.01.06 BG
-* allowance calculation
+* pótlék számítás
              PERFORM CALC_POTLEK USING    W_/ZAK/BEVALLO-BUKRS
                                           W_/ZAK/BEVALLO-ZINDEX
                                  CHANGING L_KAM_KEZD
@@ -20058,7 +20058,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
                  CHANGING W_/ZAK/BEVALLO-FIELD_NR
                           W_/ZAK/BEVALLO-FIELD_NRK.
 *++BG 2009.05.18
-*              The value of the 0 flag must be handled in the form control
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
 *              miatt:
                IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL AND
                   W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
@@ -20071,7 +20071,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
        ENDIF.
 *++ BG 2009.06.17
-*      If there is a value, 203 must be corrected.
+*      Ha van érték, korrigálni kell a 203-at.
        IF NOT L_SUM_SAVE IS INITIAL.
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = C_ABEVAZ_203.
@@ -20095,9 +20095,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 *++ BG 2009.06.17
-*  0 flag field management
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+*  0 flag mező kezelés
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_205
                               "0-flag beállítás
@@ -20136,7 +20136,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
          L_TABIX     LIKE SY-TABIX,
          L_UPD.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
 ******************************************************** CSAK ÁFA normál
 
@@ -20144,7 +20144,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  Loading calculated fields
+*  Számított mezők feltöltése
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_8272 C_ABEVAZ_8283.
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_23335 C_ABEVAZ_23339.
@@ -20159,7 +20159,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ  .
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -20169,7 +20169,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* 72.C. Amount of tax to be paid
+* 72.C. Befizetendő adó összege
        WHEN C_ABEVAZ_8277.
          CLEAR L_SUM.
          READ TABLE T_BEVALLO INTO W_SUM
@@ -20183,19 +20183,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
            ENDIF.
            L_UPD = 'X'.
          ENDIF.
-* 00C Declaration period from
+* 00C Bevallási időszak -tól
        WHEN C_ABEVAZ_23335.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -20232,11 +20232,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Declaration period from
+*00C Bevallási időszak -tól
        WHEN C_ABEVAZ_23336.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Nature of declaration
+*00C Bevallás jellege
        WHEN C_ABEVAZ_23338.
 *++ 20110418 RN ismételt önrev. kezelés módosult a 1065-höz képest
 **        ZINDEX = '001' --> 'O'     "önellenőrzés
@@ -20249,58 +20249,58 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 *           MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *         ENDIF.
 
-*        ZINDEX >= '001' --> 'O' "self check
+*        ZINDEX >= '001' --> 'O'     "önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX GE '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'O'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*-04 sheets Self-revision (repeated)
+*-04 lap Önrevízió (ismételt)
        WHEN C_ABEVAZ_23700.
-*        ZINDEX > '001' --> 'X' "repeated self-check
+*        ZINDEX > '001' --> 'X'     "ismételt önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX > '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'X'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
 *-- 20110418 RN
-*00C Declaration frequency /H-monthly, N-quarterly, E-yearly
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
        WHEN C_ABEVAZ_23339.
          W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALL-BIDOSZ.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*70.B. It can be calculated from the previous period
+*70.B. Előző időszakról beszámítható
        WHEN C_ABEVAZ_8272.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8273
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*71.B. Established in the subject period
+*71.B. Tárgyidőszakbanmegállapított
        WHEN C_ABEVAZ_8274.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8275
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*72.B. Amount of tax to be paid
+*72.B. Befizetendő adó összege
        WHEN C_ABEVAZ_8276.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8277
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*73.B. It is not organized in terms of Pü
+*73.B. Pü-ileg nem rendezett
        WHEN C_ABEVAZ_8278.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8279
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. Amount of recoverable tax
+*74.B. Visszaigényelhető adó összege
        WHEN C_ABEVAZ_8280.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8281
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. It can be carried over to the next period
+*74.B. Következő időszakra átvihető
        WHEN C_ABEVAZ_8282.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8283
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*00F year month day
+*00F év hó nap
        WHEN C_ABEVAZ_24008.
          W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* Claimable,
+* Visszaigényelhető,
        WHEN  C_ABEVAZ_8281.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -20322,7 +20322,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
              L_UPD = 'X'.
            ENDIF.
          ENDIF.
-*Carried over to next period
+*Következő időszakra átvitt
        WHEN  C_ABEVAZ_8283.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -20346,10 +20346,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 
      ENDCASE.
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -20365,14 +20365,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
 
    ENDLOOP.
 
-*  Calculation of dependent fields
+*  Függő mezők számítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_24004 SPACE.
 ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -20383,7 +20383,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*00D I do not request a referral
+*00D Kiutalást nem kérek
        WHEN C_ABEVAZ_24004.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8281.
@@ -20400,10 +20400,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -20421,11 +20421,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ************************************************************************
 ****
-* calculation of self-check allowance
+* önellenörzési pótlék számítása
 ************************************************************************
 ****
    IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
-* if 8277 - 8276 > 0 then this value, otherwise 0
+* ha 8277 - 8276 > 0 akkor ezt az értéket, ellenkező esetben 0
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE  ABEVAZ EQ     C_ABEVAZ_203.
        CLEAR: L_SUM,L_SUM_203.
@@ -20443,7 +20443,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 + L_SUM.
        CLEAR L_SUM.
-* (8283 - 8282) < 0 then the calculated value is minus
+* (8283 - 8282) < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8283  OR
                 ABEVAZ EQ     C_ABEVAZ_8282.
@@ -20458,7 +20458,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-* 8281 - 8280 < 0 then the calculated value is minus
+* 8281 - 8280 < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8281  OR
                 ABEVAZ EQ     C_ABEVAZ_8280.
@@ -20473,7 +20473,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-*     If 8273-8272 < 0, it must be reduced by this amount
+*     Ha a 8273-8272 < 0 akkor, ezzel az összeggel csökkenteni kell
 *     az L_SUM_203-at.
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                             WITH KEY ABEVAZ = C_ABEVAZ_8273.
@@ -20515,8 +20515,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
-* determination of self-control allowance
-* Calculation of ABEV 205 based on 203, if the index is 2 or greater, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV 205 számítása a 203 alapján ha az index 2 vagy nagyobb akkor x1,5
 
      IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 
@@ -20529,23 +20529,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          IF SY-SUBRC = 0.
            L_SUM = W_/ZAK/BEVALLO-FIELD_NRK.
          ENDIF.
-* period definition
+* időszak meghatározása
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                               WITH KEY ABEVAZ = C_ABEVAZ_23337.
          IF SY-SUBRC EQ 0 AND
          NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
 
            SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
                                  WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
                                                   ADONEM EQ C_ADONEM_104
                                                   .
            IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
              CLEAR L_KAM_KEZD.
              L_KAM_KEZD = $DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
              CLEAR L_KAM_VEG.
              CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
                EXPORTING
@@ -20555,7 +20555,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++2012.01.06 BG
 *             L_KAM_VEG = L_KAM_VEG - 15 .
 *--2012.01.06 BG
-* allowance calculation
+* pótlék számítás
              PERFORM CALC_POTLEK USING    W_/ZAK/BEVALLO-BUKRS
                                           W_/ZAK/BEVALLO-ZINDEX
                                  CHANGING L_KAM_KEZD
@@ -20573,7 +20573,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                  CHANGING W_/ZAK/BEVALLO-FIELD_NR
                           W_/ZAK/BEVALLO-FIELD_NRK.
 *++BG 2009.05.18
-*              The value of the 0 flag must be handled in the form control
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
 *              miatt:
                IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL AND
                   W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
@@ -20586,7 +20586,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
        ENDIF.
 *++ BG 2009.06.17
-*      If there is a value, 203 must be corrected.
+*      Ha van érték, korrigálni kell a 203-at.
        IF NOT L_SUM_SAVE IS INITIAL.
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = C_ABEVAZ_203.
@@ -20610,9 +20610,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 *++ BG 2009.06.17
-*  0 flag field management
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+*  0 flag mező kezelés
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_205
                               "0-flag beállítás
@@ -20696,7 +20696,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      MOVE SY-TABIX TO L_TABIX.
    ENDIF.
 
-*  Search for value
+*  Érték keresése
    LOOP AT $T_BEVALLO WHERE ABEVAZ IN $R_ABEVAZ
                                AND FIELD_C EQ $VALUE.
      EXIT.
@@ -20727,7 +20727,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA L_TABIX LIKE SY-TABIX.
 
 
-*  Search for value
+*  Érték keresése
    LOOP AT $T_ADOAZON_ALL.
 *++BG 2011.02.28
 *     READ TABLE $T_BEVALLO WITH KEY ABEVAZ = $ABEV_0
@@ -20805,7 +20805,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA L_TABIX LIKE SY-TABIX.
 
 
-*  Search for value
+*  Érték keresése
    LOOP AT $T_ADOAZON_ALL.
 *++BG 2011.02.28
 *     READ TABLE $T_BEVALLO WITH KEY ABEVAZ = $ABEV_0
@@ -20894,7 +20894,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA L_TABIX LIKE SY-TABIX.
 
 
-*  Search for value
+*  Érték keresése
    LOOP AT $T_ADOAZON_ALL.
 *++BG 2011.02.28
 *     READ TABLE $T_BEVALLO WITH KEY ABEVAZ = $ABEV_0
@@ -20980,20 +20980,20 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLO BY ABEVAZ ADOAZON LAPSZ.
 
 
-*  Special M calculations as a tax ID
-*  field0 = ( field1 - field2 ) * field3
+*  Speciális M-s számítások adóazonosítóként
+*  mező0 = ( mező1 - mező2 ) * mező3
 *++2011.03.10 BG
 **  M0BC0372DA
 *   PERFORM GET_SUB_MULT_M  TABLES T_BEVALLO
 *                                  T_BEVALLB
 *                                  T_ADOAZON_ALL
-*                           USING C_ABEVAZ_M0BC0372DA "field0
-*                                  C_ABEVAZ_M0BC0371DA "field1
-*                                  SPACE "field2
-*                                  '0.27'.                   "field 3
+*                           USING  C_ABEVAZ_M0BC0372DA       "mező0
+*                                  C_ABEVAZ_M0BC0371DA       "mező1
+*                                  SPACE                     "mező2
+*                                  '0.27'.                   "mező3
 *--2011.03.10 BG
 *  M0BC0373DA
-*  field0 = field1+field2+.....field6.
+*  mező0 = mező1+mező2+.....mező6.
    PERFORM GET_SUM_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -21006,7 +21006,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                               SPACE.                        "mező6
 
 *  M0BC0375DA
-*  field0 = field1-field2.
+*  mező0 = mező1-mező2.
    PERFORM GET_SUB_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -21018,7 +21018,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *--1408 2014.02.10 BG
 
 *  M0BC0376DA
-*  field0 = field1+field2+.....field6.
+*  mező0 = mező1+mező2+.....mező6.
    PERFORM GET_SUM_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -21108,17 +21108,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          END OF LI_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 
-*  To define a self-check
+*  Önellenőrzés meghatározásához
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
    RANGES LR_SEL_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
 
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC042A SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0GC001A SPACE.
@@ -21131,7 +21131,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
           BINARY SEARCH.
@@ -21141,19 +21141,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      period from first day
+*      időszak-tól első nap
        WHEN C_ABEVAZ_A0AC040A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -21190,12 +21190,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      last day until period
+*      időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC041A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC046A.
 
          REFRESH LI_ADOAZON.
@@ -21216,12 +21216,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          CONDENSE W_/ZAK/BEVALLO-FIELD_C.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Correction, Self-check
+*      Helyesbítés, Önellenőrzés
        WHEN C_ABEVAZ_A0AC042A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX NE '000'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0GD0150CA
                                     C_ABEVAZ_A0GD0180DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0HC0181DA
@@ -21229,28 +21229,28 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0IC0230CA
                                     C_ABEVAZ_A0IC0248IA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
              W_/ZAK/BEVALLO-FIELD_C = 'O'.
-*          Corrective
+*          Helyesbítő
            ELSE.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
            CONDENSE W_/ZAK/BEVALLO-FIELD_C.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*      Repeated self-check
+*      Ismételt önellenőrzés
        WHEN C_ABEVAZ_A0GC001A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX > '001'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0GD0150CA
                                     C_ABEVAZ_A0GD0180DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0HC0181DA
@@ -21258,13 +21258,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0IC0230CA
                                     C_ABEVAZ_A0IC0248IA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
              W_/ZAK/BEVALLO-FIELD_C = 'X'.
            ENDIF.
@@ -21301,8 +21301,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++2011.07.11 BG
    DATA   LR_VALUE2 LIKE RANGE_C3 OCCURS 0 WITH HEADER LINE.
 *--2011.07.11 BG
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
    CLEAR V_ONREV.
    IF NOT $ONREV IS INITIAL.
      MOVE $ONREV TO V_ONREV.
@@ -21311,49 +21311,49 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 **  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
 *   PERFORM GET_NULL_FLAG TABLES T_BEVALLO
 *                                T_ADOAZON_ALL
-*                         USING C_ABEVAZ_M0BC0382CA "field1
-*                                C_ABEVAZ_M0BC0382BA "field2
-*                                C_ABEVAZ_M0BC0382DA.        "field 3
+*                         USING  C_ABEVAZ_M0BC0382CA         "mező1
+*                                C_ABEVAZ_M0BC0382BA         "mező2
+*                                C_ABEVAZ_M0BC0382DA.        "mező3
 **  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0IC0284HA
-*                              "0-flag setting
-*                                     C_ABEVAZ_A0IC0284CA "field1
-*                                     C_ABEVAZ_A0IC0284DA "field2
-*                                     C_ABEVAZ_A0IC0284EA "field3
-*                                     SPACE.                 "field 4
+*                              "0-flag beállítás
+*                                     C_ABEVAZ_A0IC0284CA    "mező1
+*                                     C_ABEVAZ_A0IC0284DA    "mező2
+*                                     C_ABEVAZ_A0IC0284EA    "mező3
+*                                     SPACE.                 "mező4
 ** Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
 ** vagy mező5 ne 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0DC0087DA    "0flag
-*                                     C_ABEVAZ_A0DC0087CA "field1
-*                                     SPACE "field2
-*                                     SPACE "field3
-*                                     SPACE "field4
-*                                     SPACE "field5
-*                                     SPACE.                 "field 6
+*                                     C_ABEVAZ_A0DC0087CA    "mező1
+*                                     SPACE                  "mező2
+*                                     SPACE                  "mező3
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
+*                                     SPACE.                 "mező6
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
 *                               USING  C_ABEVAZ_M0CC0415DA   "0flag
-*                                      C_ABEVAZ_M0BC0382BA "field1
-*                                      C_ABEVAZ_M0BC0386BA "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                "field 6
+*                                      C_ABEVAZ_M0BC0382BA   "mező1
+*                                      C_ABEVAZ_M0BC0386BA   "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
 ** mező1-n 0 flag állítás
 *     PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
 *                                 USING  C_ABEVAZ_A0BC50041A.
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
 *   PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
 *                                    T_ADOAZON_ALL
-*                             USING C_ABEVAZ_M0FD0496AA "field1
-*                                    C_ABEVAZ_M0FD0495AA "field2
+*                             USING  C_ABEVAZ_M0FD0496AA     "mező1
+*                                    C_ABEVAZ_M0FD0495AA     "mező2
 *                                    C_ABEVAZ_M0FD0498BA     "0-flag
 *                                    C_ABEVAZ_M0FD0497BA.    "0-flag
 
 
-* If ABEV identifiers have the desired value, set the flag to 0
+* Ha ABEV azonosítókon van keresett érték, akkor 0 flag beállítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0HD0570BA SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0IE0609BA SPACE.
@@ -21629,7 +21629,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                      C_ABEVAZ_A0IC0248FA    "mező3
                                      SPACE.                 "mező4
 
-*  If field1 >= field2 then field3 0 flag setting
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0361CA         "mező1
@@ -21734,16 +21734,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
 *                               USING  C_ABEVAZ_M0HD0565CA   "0flag
-*                                      C_ABEVAZ_M0HD0570BA "field1
-*                                      SPACE "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                "field 6
+*                                      C_ABEVAZ_M0HD0570BA   "mező1
+*                                      SPACE                 "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
 *--2011.05.10 BG
 *++2011.07.11 BG
-*  Value field 2 is in LR_VALUE2, then it looks up according to value field 1.
-*  ATTENTION ONLY SEARCH ON PAGE NUMBER 0001
+*  Értékmező 2 LR_VALUE2-ben van, akkor nézi értékmező 1 szerint a felt.
+*  FIGYELEM CSAK 0001-ES LAPSZÁMON KERES
    REFRESH: LR_VALUE, LR_VALUE2.
    M_DEF LR_VALUE   'I' 'EQ' 'N' SPACE.
    M_DEF LR_VALUE2  'E' 'BT' '2' '3'.
@@ -21758,8 +21758,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *--2011.07.11 BG
 
 *++2011.04.08 BG
-*  If value field 2 is not initial, it is checked according to value field 1.
-*  ATTENTION ONLY SEARCH ON PAGE NUMBER 0001
+*  Értékmező 2 ha nem iniciális, akkor nézi értékmező 1 szerint a felt.
+*  FIGYELEM CSAK 0001-ES LAPSZÁMON KERES
    REFRESH LR_VALUE.
    M_DEF LR_VALUE  'I' 'EQ' 'N' SPACE.
 
@@ -21900,7 +21900,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                       SPACE                 "mező4
                                       SPACE                 "mező5
                                       SPACE.                "mező6
-* Self-audit supplement if self-audit
+* Önellenőrzési pótlék ha önrevízió
    IF $INDEX NE '000'.
      PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
                                  USING  C_ABEVAZ_A0HD0210CA.
@@ -21910,7 +21910,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *-- 2011.03.08 RN
    ENDIF.
 *++2011.06.09 BG
-* If ABEV identifiers have the desired value, set the flag to 0
+* Ha ABEV azonosítókon van keresett érték, akkor 0 flag beállítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC042A SPACE.
 
@@ -21952,7 +21952,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *-- 2011.04.08 BG
 
 *++ 2011.08.10 BG
-*  0 flag setting on field 1
+*  mező1-n 0 flag állítás
    PERFORM GET_NULL_FLAG_0_M   TABLES T_BEVALLO
                                       T_ADOAZON_ALL
                                USING  C_ABEVAZ_M0BD0401BA.
@@ -21979,7 +21979,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS to manage retired numbers
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
    M_DEF R_A0AC047A 'I' 'EQ' 'M0GC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0HC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0IC003A' SPACE.
@@ -21989,7 +21989,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_A0AC047A 'I' 'EQ' 'M0MC003A' SPACE.
 *   M_DEF R_A0AC047A 'I' 'EQ' 'M0NC001A' SPACE.
 
-*  Values
+*  Értékek
    M_DEF R_NYLAPVAL 'I' 'EQ' '1' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '2' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '3' SPACE.
@@ -22002,14 +22002,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
        PERFORM CALL_NYLAP TABLES R_A0AC047A
                                  R_NYLAPVAL
                           USING  W_/ZAK/BEVALLO.
@@ -22027,9 +22027,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    LAPSZ   = W_/ZAK/BEVALLO-LAPSZ
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
        IF NOT L_ALV-OFLAG IS INITIAL.
          L_NULL_FLAG = L_ALV-NULL_FLAG.
        ELSE.
@@ -22073,7 +22073,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      DELETE I_/ZAK/BEVALLO.
    ENDLOOP.
 
-*  Definition of pensioners
+*  Nyugdíjasok meghatározása
    IF NOT I_NYLAP[] IS INITIAL.
      DESCRIBE TABLE I_NYLAP LINES L_NYLAP.
      READ TABLE T_BEVALLO INTO L_BEVALLO_ALV
@@ -22140,8 +22140,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DEFINE LM_GET_SPEC_SUM1.
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
        READ TABLE T_BEVALLO INTO L_TMP_BEVALLO
                 WITH KEY ABEVAZ  = &2
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -22174,7 +22174,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Uploading selective ABEVAZ
+*  Szelekciós ABEVAZ feltöltése
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0050CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0052CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0053CA SPACE.
@@ -22197,12 +22197,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0104CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0105CA SPACE.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_SEL_ABEVAZ.
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
               BINARY SEARCH.
@@ -22211,11 +22211,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      V_TABIX = SY-TABIX .
 
-*    Special calculations
+*    Speciális számítások
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      The 02-50-c The total burden of the pension commission (The 559,630...
+*      A 02-50-c A fogl terh nyugdíjbizt összesen (Az 559.,630. ...
        WHEN  C_ABEVAZ_A0CC0050CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -22223,24 +22223,24 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0559CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0630CA' 'M0HC004A' LR_COND.
-*      A 02-52-c The employee is unemployed, the employment circle pays pension insurance (A 630. ..
+*      A 02-52-c A fogl terh munkanélk, állásker fiz nyugbizt(A 630. ..
        WHEN  C_ABEVAZ_A0CC0052CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0630CA' 'M0HC004A' LR_COND.
-*      A 02-53-c The nursing care fee for the employee pension commission (Lines 630 ...
+*      A 02-53-c A fogl terh ápolási díj nyugdíjbizt (Az 630. sorok ...
        WHEN  C_ABEVAZ_A0CC0053CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '94' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0630CA' 'M0HC004A' LR_COND.
-*      A 02-53-c Private pension (Lines 568, 607, 631...
+*      A 02-53-c A magánsz terh nyugdíjj (Az 568., 607.,631. sorok ...
        WHEN  C_ABEVAZ_A0CC0054CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -22252,18 +22252,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0HD0568CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IE0607CA' 'M0IC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0631CA' 'M0IC004A' LR_COND.
-*      A 02-54-c The burden of unemployment, employment pension (631.....
+*      A 02-54-c A megánsz terh munkanélk,állásker nyugdíj (631.....
        WHEN  C_ABEVAZ_A0CC0055CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0IF0631CA' 'M0IC004A' LR_COND.
-*      A 02-56-c The private sector pays pension after GYED, S, T (A 607.....
+*      A 02-56-c A magánsz terh GYED, S, T után fiz nyugdíj(A 607.....
        WHEN  C_ABEVAZ_A0CC0056CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -22271,9 +22271,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0IE0607CA' 'M0IC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0631CA' 'M0IC004A' LR_COND.
-*      A 02-57-c Mnypt member private pension (Az 559,608,632 ....
+*      A 02-57-c A Mnypt tag magánsz terh nyugdíj(Az 559,608,632 ....
        WHEN  C_ABEVAZ_A0CC0057CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -22285,18 +22285,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0HD0569CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IE0608CA' 'M0IC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0632CA' 'M0IC004A' LR_COND.
-*      A 02-47-c Mnypt member private burden unemployment, job circle pension..
+*      A 02-47-c A  Mnypt tag magánsz terh munkanélk, állásker nyugdíj..
        WHEN  C_ABEVAZ_A0CC0058CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0IF0632CA' 'M0IC004A' LR_COND.
-*      The 02-59-cA Mnypt member pays private tax GYED,S,T pension (608,...
+*      A 02-59-cA  Mnypt tag magánsz terh GYED,S,T fiz nyugdíj (608,...
        WHEN  C_ABEVAZ_A0CC0059CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -22304,9 +22304,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0IE0608CA' 'M0IC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0632CA' 'M0IC004A' LR_COND.
-*      A 03-80 -c A vol. burdensome insurance and labor market costs. ...
+*      A 03-80 -c A fogl. terhelő egbizt.-és munkaerő-piaci jár. ...
        WHEN  C_ABEVAZ_A0DC0080CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -22314,18 +22314,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0556CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0627CA' 'M0IC004A' LR_COND.
-*      A 03-74-c The unemployment insurance and labor market rate for the unemployed.
+*      A 03-74-c A fogl terh egbizt.-és munkaerő-piaci jár munkanélk..
        WHEN  C_ABEVAZ_A0DC0082CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0IF0627CA' 'M0IC004A' LR_COND.
-*     A 03-75 -c A vol. burdensome insurance and labor market costs. monetary
+*     A 03-75 -c A fogl. terhelő egbizt.-és munkaerő-piaci jár. pénzbeli
        WHEN  C_ABEVAZ_A0DC0083CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -22333,55 +22333,55 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0HD0557CA' 'M0HC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0IF0628CA' 'M0IC004A' LR_COND.
-*     The 03-76-c The unemployment insurance and labor market rate for the unemployed ...
+*     A 03-76-c A fogl terh egbizt.-és munkaerő-piaci jár munkanélk ...
        WHEN  C_ABEVAZ_A0DC0085CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0IF0628CA' 'M0IC004A' LR_COND.
-*     A 04-100-c Order 10%/15% with the START card (code 1: A 694,...
+*     A 04-100-c A START-kártyával rend 10%/15%-os (1-es kód:A 694,...
        WHEN  C_ABEVAZ_A0EC0100CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0KD0692CA' 'M0KC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0KD0694CA' 'M0KC007A' LR_COND.
-*     A 04-101-c Order 20%/25% with the START card (code 1: A 695,693.
+*     A 04-101-c A START-kártyával rend 20%/25%-os (1-es kód: A 695,693.
        WHEN  C_ABEVAZ_A0EC0101CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0KD0693CA' 'M0KC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0KD0695CA' 'M0KC007A' LR_COND.
-*      A 04-102-c A START PLUS plan 10%/15% (code 2: A 654.692
+*      A 04-102-c  A START PLUSZ rend 10%/15%-os (2-es kód:A 654.,692
        WHEN  C_ABEVAZ_A0EC0102CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0KD0692CA' 'M0KC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0KD0694CA' 'M0KC007A' LR_COND.
-*      A 04-103-c A START PLUS order 20%/255% (code 2: A 654.,692
+*      A 04-103-c  A START PLUSZ rend 20%/255%-os (2-es kód:A 654.,692
        WHEN  C_ABEVAZ_A0EC0103CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0KD0693CA' 'M0KC007A' LR_COND.
          LM_GET_SPEC_SUM1 'M0KD0695CA' 'M0KC007A' LR_COND.
-*      Order 04-104-c with the START EXTRA card is 0% (code 3.4: A 691.
+*      A 04-104-c A START EXTRA kártyával rend 0%-os (3,4-es kód:A 691.
        WHEN  C_ABEVAZ_A0EC0104CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'BT' '3' '4'.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0KD0691CA' 'M0KC007A' LR_COND.
-*      A 04-91-c A 10%/15% order with the START EXTRA card (code 3: A 692
+*      A 04-91-c A START EXTRA kártyával rend 10%/15%-os (3-as kód:A 692
        WHEN  C_ABEVAZ_A0EC0105CA.
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '3' SPACE.
@@ -22419,13 +22419,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ_JELLEG
                          BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
    IF SY-SUBRC EQ 0 AND LW_/ZAK/BEVALLALV-FIELD_C = 'H'.
-*  ABEV ID value marked in ESDAT_FLAG
+*  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
      READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                          WITH KEY  ESDAT_FLAG = 'X'.
      IF SY-SUBRC EQ 0.
@@ -22440,7 +22440,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
      ENDIF.
 *++2011.04.09 BG
-*  For correctors, there is no need for 0 flag in the self-check allowance either
+*  Helyesbítőnél nem kell az önellenőrzési pótlékban sem 0 flag
      READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = C_ABEVAZ_A0HD0210CA
                          BINARY SEARCH.
@@ -22472,7 +22472,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
    DATA L_TABIX LIKE SY-TABIX.
 
-*  We determine the number of taxpayers:
+*  Meghatározzuk az adózók számát:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ_ADOSZ
                          BINARY SEARCH.
@@ -22502,9 +22502,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLO BY ABEVAZ ADOAZON LAPSZ.
 
 
-*  Special M calculations as a tax ID
+*  Speciális M-s számítások adóazonosítóként
 *  M0BC0373DA
-*  field0 = field1+field2+.....field6.
+*  mező0 = mező1+mező2+.....mező6.
    PERFORM GET_SUM_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -22517,7 +22517,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                               SPACE.                        "mező6
 
 *  M0BC0375DA
-*  field0 = field1-field2.
+*  mező0 = mező1-mező2.
    PERFORM GET_SUB_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -22530,7 +22530,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 *  M0BC0376DA
-*  field0 = field1+field2+.....field6.
+*  mező0 = mező1+mező2+.....mező6.
    PERFORM GET_SUM_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -22600,8 +22600,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DEFINE LM_GET_SPEC_SUM1.
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
        READ TABLE T_BEVALLO INTO L_TMP_BEVALLO
                 WITH KEY ABEVAZ  = &2
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -22634,7 +22634,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Uploading selective ABEVAZ
+*  Szelekciós ABEVAZ feltöltése
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0038CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0039CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0CC0040CA SPACE.
@@ -22645,12 +22645,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DC0056CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DC0057CA SPACE.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_SEL_ABEVAZ.
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
               BINARY SEARCH.
@@ -22659,52 +22659,52 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      V_TABIX = SY-TABIX .
 
-*    Special calculations
+*    Speciális számítások
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*02-038 With the START card, there is a 10% social security tax (1
-*code: line 643 "c")
+*A 02-038 A START kártyával rend 10%-os szociális hozz jár adó (1-es
+*kód: 643. sor "c")
        WHEN  C_ABEVAZ_A0CC0038CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0643CA' 'M0IC007A' LR_COND.
-*02-039 With the START card, there is a 20% social security tax (1
-*code: line 644 "c")
+*A 02-039 A START kártyával rend 20%-os szociális hozz jár adó (1-es
+*kód: 644. sor "c")
        WHEN  C_ABEVAZ_A0CC0039CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0644CA' 'M0IC007A' LR_COND.
-*The 02-040 A START PLUSZ card comes with a 10% social security tax
-*(Code 2: line 643 "c")
+*A 02-040 A START  PLUSZ kártyával rend 10%-os szociális hozz jár adó
+*(2-es kód: 643. sor "c")
        WHEN  C_ABEVAZ_A0CC0040CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0643CA' 'M0IC007A' LR_COND.
-*The 02-041 START PLUSZ card comes with a 20% social security tax
-*(Code 2: line 644 "c")
+*A 02-041 A START PLUSZ kártyával rend 20%-os szociális hozz jár adó
+*(2-es kód: 644. sor "c")
        WHEN  C_ABEVAZ_A0CC0041CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0644CA' 'M0IC007A' LR_COND.
-*With the 02-042 A START EXTRA card, you get a 10% social bonus
-*tax (code 3: line 643 "c")
+*A 02-042 A START EXTRA kártyával rend 10%-os szociális hozz jár
+*adó (3-es kód: 643. sor "c")
        WHEN  C_ABEVAZ_A0CC0042CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '3' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0643CA' 'M0IC007A' LR_COND.
-*A 03-055 The private individual's pension contribution (lines 563,603,611
+*A 03-055 A magánszemélyt terelő nyugdíjjárulék (563,603,611. sorok
 *"c" fodl min NEM 25,42,81,83,92,93)
        WHEN  C_ABEVAZ_A0DC0055CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -22716,20 +22716,20 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0GD0563CA' 'M0GC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0GF0602CA' 'M0GC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0GG0611CA' 'M0GC004A' LR_COND.
-*A 03-56-c The burden of unemployment, employment pension
+*A 03-56-c A megánsz terh munkanélk,állásker nyugdíj
 *(611.sorok "c" fogl min 25,42,81)
        WHEN  C_ABEVAZ_A0DC0056CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0GG0611CA' 'M0GC004A' LR_COND.
-*A 03-57-c The private sector pays pension after GYED, S, T (lines 603, 611
+*A 03-57-c A magánsz terh GYED, S, T után fiz nyugdíj(A 603.,611. sorok
 *"c" a fogl min 83, 92, 93)
        WHEN C_ABEVAZ_A0DC0057CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -22785,15 +22785,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -22816,7 +22816,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -22827,7 +22827,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AE003A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO TRANSPORTING FIELD_C.
@@ -23243,17 +23243,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          END OF LI_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 
-*  To define a self-check
+*  Önellenőrzés meghatározásához
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
    RANGES LR_SEL_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
 
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC039A SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC040A SPACE.
@@ -23266,7 +23266,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
           BINARY SEARCH.
@@ -23276,19 +23276,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      period from first day
+*      időszak-tól első nap
        WHEN C_ABEVAZ_A0AC039A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -23325,12 +23325,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      last day until period
+*      időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC040A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC044A.
 
          REFRESH LI_ADOAZON.
@@ -23351,51 +23351,51 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          CONDENSE W_/ZAK/BEVALLO-FIELD_C.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Correction, Self-check
+*      Helyesbítés, Önellenőrzés
        WHEN C_ABEVAZ_A0AC041A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX NE '000'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0ED0115DA
                                     C_ABEVAZ_A0ED0137DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0FC0138CA
                                     C_ABEVAZ_A0FC0175CA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
              W_/ZAK/BEVALLO-FIELD_C = 'O'.
-*          Corrective
+*          Helyesbítő
            ELSE.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
            CONDENSE W_/ZAK/BEVALLO-FIELD_C.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*      Repeated self-check
+*      Ismételt önellenőrzés
        WHEN C_ABEVAZ_A0EC001A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX > '001'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0ED0115DA
                                     C_ABEVAZ_A0ED0137DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0FC0138CA
                                     C_ABEVAZ_A0FC0175CA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
              W_/ZAK/BEVALLO-FIELD_C = 'X'.
            ENDIF.
@@ -23430,8 +23430,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++2011.07.11 BG
    DATA   LR_VALUE2 LIKE RANGE_C3 OCCURS 0 WITH HEADER LINE.
 *--2011.07.11 BG
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
    CLEAR V_ONREV.
    IF NOT $ONREV IS INITIAL.
      MOVE $ONREV TO V_ONREV.
@@ -23440,47 +23440,47 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 **  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
 *   PERFORM GET_NULL_FLAG TABLES T_BEVALLO
 *                                T_ADOAZON_ALL
-*                         USING C_ABEVAZ_M0BC0382CA "field1
-*                                C_ABEVAZ_M0BC0382BA "field2
-*                                C_ABEVAZ_M0BC0382DA.        "field 3
+*                         USING  C_ABEVAZ_M0BC0382CA         "mező1
+*                                C_ABEVAZ_M0BC0382BA         "mező2
+*                                C_ABEVAZ_M0BC0382DA.        "mező3
 **  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0IC0284HA
-*                              "0-flag setting
-*                                     C_ABEVAZ_A0IC0284CA "field1
-*                                     C_ABEVAZ_A0IC0284DA "field2
-*                                     C_ABEVAZ_A0IC0284EA "field3
-*                                     SPACE.                 "field 4
+*                              "0-flag beállítás
+*                                     C_ABEVAZ_A0IC0284CA    "mező1
+*                                     C_ABEVAZ_A0IC0284DA    "mező2
+*                                     C_ABEVAZ_A0IC0284EA    "mező3
+*                                     SPACE.                 "mező4
 ** Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
 ** vagy mező5 ne 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0DC0087DA    "0flag
-*                                     C_ABEVAZ_A0DC0087CA "field1
-*                                     SPACE "field2
-*                                     SPACE "field3
-*                                     SPACE "field4
-*                                     SPACE "field5
-*                                     SPACE.                 "field 6
+*                                     C_ABEVAZ_A0DC0087CA    "mező1
+*                                     SPACE                  "mező2
+*                                     SPACE                  "mező3
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
+*                                     SPACE.                 "mező6
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
 *                               USING  C_ABEVAZ_M0CC0415DA   "0flag
-*                                      C_ABEVAZ_M0BC0382BA "field1
-*                                      C_ABEVAZ_M0BC0386BA "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                "field 6
+*                                      C_ABEVAZ_M0BC0382BA   "mező1
+*                                      C_ABEVAZ_M0BC0386BA   "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
 ** mező1-n 0 flag állítás
 *     PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
 *                                 USING  C_ABEVAZ_A0BC50041A.
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
 *   PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
 *                                    T_ADOAZON_ALL
-*                             USING C_ABEVAZ_M0FD0496AA "field1
-*                                    C_ABEVAZ_M0FD0495AA "field2
+*                             USING  C_ABEVAZ_M0FD0496AA     "mező1
+*                                    C_ABEVAZ_M0FD0495AA     "mező2
 *                                    C_ABEVAZ_M0FD0498BA     "0-flag
 *                                    C_ABEVAZ_M0FD0497BA.    "0-flag
-*  If field1 >= field2 then field3 0 flag setting
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0361CA         "mező1
@@ -23515,7 +23515,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                       SPACE                 "mező4
                                       SPACE                 "mező5
                                       SPACE.                "mező6
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
 ** vagy mező5 nem üres (karakteres) akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INITM_C TABLES T_BEVALLO
                                       T_ADOAZON_ALL
@@ -23538,7 +23538,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                       SPACE.                "mező6
 
 
-* Self-audit supplement if self-audit
+* Önellenőrzési pótlék ha önrevízió
    IF $INDEX NE '000'.
      PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
                                  USING  C_ABEVAZ_A0FD0160CA.
@@ -23547,7 +23547,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 *++2012.03.09 BG
-*  0 flag setting on field 1
+*  mező1-n 0 flag állítás
    PERFORM GET_NULL_FLAG_0_M   TABLES T_BEVALLO
                                       T_ADOAZON_ALL
                                USING  C_ABEVAZ_M0BC0370DA.
@@ -23660,7 +23660,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS to manage retired numbers
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
    M_DEF R_A0AC047A 'I' 'EQ' 'M0FC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0GC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0HC003A' SPACE.
@@ -23669,7 +23669,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_A0AC047A 'I' 'EQ' 'M0JC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0KC003A' SPACE.
 
-*  Values
+*  Értékek
    M_DEF R_NYLAPVAL 'I' 'EQ' '1' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '2' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '3' SPACE.
@@ -23682,14 +23682,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
        PERFORM CALL_NYLAP TABLES R_A0AC047A
                                  R_NYLAPVAL
                           USING  W_/ZAK/BEVALLO.
@@ -23707,9 +23707,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    LAPSZ   = W_/ZAK/BEVALLO-LAPSZ
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
        IF NOT L_ALV-OFLAG IS INITIAL.
          L_NULL_FLAG = L_ALV-NULL_FLAG.
        ELSE.
@@ -23753,7 +23753,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      DELETE I_/ZAK/BEVALLO.
    ENDLOOP.
 
-*  Definition of pensioners
+*  Nyugdíjasok meghatározása
    IF NOT I_NYLAP[] IS INITIAL.
      DESCRIBE TABLE I_NYLAP LINES L_NYLAP.
      READ TABLE T_BEVALLO INTO L_BEVALLO_ALV
@@ -23791,11 +23791,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ_JELLEG
                          BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
    IF SY-SUBRC EQ 0 AND LW_/ZAK/BEVALLALV-FIELD_C = 'H'.
 **  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
 *     READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
@@ -23811,7 +23811,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *                               INDEX V_TABIX TRANSPORTING FIELD_C.
 *       ENDIF.
 *     ENDIF.
-*  For correctors, there is no need for 0 flag in the self-check allowance either
+*  Helyesbítőnél nem kell az önellenőrzési pótlékban sem 0 flag
      READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = C_ABEVAZ_A0FD0160CA
                          BINARY SEARCH.
@@ -23851,7 +23851,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          L_TABIX     LIKE SY-TABIX,
          L_UPD.
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
 ******************************************************** CSAK ÁFA normál
 
@@ -23859,7 +23859,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  Loading calculated fields
+*  Számított mezők feltöltése
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_8272 C_ABEVAZ_8283.
    M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_23335 C_ABEVAZ_23339.
@@ -23874,7 +23874,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ  .
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -23884,7 +23884,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* 72.C. Amount of tax to be paid
+* 72.C. Befizetendő adó összege
        WHEN C_ABEVAZ_8277.
          CLEAR L_SUM.
          READ TABLE T_BEVALLO INTO W_SUM
@@ -23898,19 +23898,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            ENDIF.
            L_UPD = 'X'.
          ENDIF.
-* 00C Declaration period from
+* 00C Bevallási időszak -tól
        WHEN C_ABEVAZ_23335.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -23947,11 +23947,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Declaration period from
+*00C Bevallási időszak -tól
        WHEN C_ABEVAZ_23336.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Nature of declaration
+*00C Bevallás jellege
        WHEN C_ABEVAZ_23338.
 *++ 20110418 RN ismételt önrev. kezelés módosult a 1065-höz képest
 **        ZINDEX = '001' --> 'O'     "önellenőrzés
@@ -23964,34 +23964,34 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *           MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 *         ENDIF.
 
-*        ZINDEX >= '001' --> 'O' "self check
+*        ZINDEX >= '001' --> 'O'     "önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX GE '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'O'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*-04 sheets Self-revision (repeated)
+*-04 lap Önrevízió (ismételt)
        WHEN C_ABEVAZ_23700.
-*        ZINDEX > '001' --> 'X' "repeated self-check
+*        ZINDEX > '001' --> 'X'     "ismételt önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX > '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'X'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
 *-- 20110418 RN
-*00C Declaration frequency /H-monthly, N-quarterly, E-yearly
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
        WHEN C_ABEVAZ_23339.
          W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALL-BIDOSZ.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*70.B. It can be calculated from the previous period
+*70.B. Előző időszakról beszámítható
        WHEN C_ABEVAZ_8272.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8273
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*71.B. Established in the subject period
+*71.B. Tárgyidőszakbanmegállapított
        WHEN C_ABEVAZ_8274.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8275
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*72.B. Amount of tax to be paid
+*72.B. Befizetendő adó összege
        WHEN C_ABEVAZ_8276.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8277
                              CHANGING W_/ZAK/BEVALLO.
@@ -24001,21 +24001,21 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *         PERFORM SET_BEVALLO USING C_ABEVAZ_8279
 *                             CHANGING W_/ZAK/BEVALLO.
 *         L_UPD = 'X'.
-*74.B. Amount of recoverable tax
+*74.B. Visszaigényelhető adó összege
        WHEN C_ABEVAZ_8280.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8281
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*74.B. It can be carried over to the next period
+*74.B. Következő időszakra átvihető
        WHEN C_ABEVAZ_8282.
          PERFORM SET_BEVALLO USING C_ABEVAZ_8283
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*00F year month day
+*00F év hó nap
        WHEN C_ABEVAZ_24008.
          W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-* Claimable,
+* Visszaigényelhető,
        WHEN  C_ABEVAZ_8281.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -24032,7 +24032,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
              L_UPD = 'X'.
            ENDIF.
          ENDIF.
-*Carried over to next period
+*Következő időszakra átvitt
        WHEN  C_ABEVAZ_8283.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8275.
@@ -24052,10 +24052,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      ENDCASE.
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -24071,14 +24071,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    ENDLOOP.
 
-*  Calculation of dependent fields
+*  Függő mezők számítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_24004 SPACE.
 ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -24089,7 +24089,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*00D I do not request a referral
+*00D Kiutalást nem kérek
        WHEN C_ABEVAZ_24004.
          READ TABLE T_BEVALLO INTO W_SUM
               WITH KEY ABEVAZ = C_ABEVAZ_8281.
@@ -24105,10 +24105,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
      ENDCASE.
 ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -24124,7 +24124,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    ENDLOOP.
 *++1265 2012.02.20 BG
-*  Calculation of 3077 and 3079
+*  3077, és 3079 számítása
    REFRESH LR_ABEVAZ.
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
                     WHERE NOT ONYBF IS INITIAL.
@@ -24136,13 +24136,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                         AND FIELD_NRK IS NOT INITIAL.
        EXIT.
      ENDLOOP.
-*    There is value
+*    Van érték
      IF SY-SUBRC EQ 0.
-*    The value of 23956 should be examined
+*    Meg kell vizsgálni a 23956 értékét
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                         WITH KEY ABEVAZ = C_ABEVAZ_23956.
        IF SY-SUBRC EQ 0 AND NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL.
-* this line must be modified!
+* ezt a sort kell módosítani!
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_3079.
          IF SY-SUBRC EQ 0.
@@ -24150,7 +24150,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            W_/ZAK/BEVALLO-FIELD_C = C_X.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-* this line must be filled
+* ezt a sort tötölni kell
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_3077.
          IF SY-SUBRC EQ 0.
@@ -24159,7 +24159,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
        ELSEIF SY-SUBRC EQ 0 AND  W_/ZAK/BEVALLO-FIELD_C IS INITIAL.
-* this line must be modified!
+* ezt a sort kell módosítani!
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_3077.
          IF SY-SUBRC EQ 0.
@@ -24167,7 +24167,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            W_/ZAK/BEVALLO-FIELD_C = C_X.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-* this line must be filled
+* ezt a sort tötölni kell
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_3079.
          IF SY-SUBRC EQ 0.
@@ -24183,11 +24183,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ************************************************************************
 ****
-* calculation of self-check allowance
+* önellenörzési pótlék számítása
 ************************************************************************
 ****
    IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
-* if 8277 - 8276 > 0 then this value, otherwise 0
+* ha 8277 - 8276 > 0 akkor ezt az értéket, ellenkező esetben 0
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE  ABEVAZ EQ     C_ABEVAZ_203.
        CLEAR: L_SUM,L_SUM_203.
@@ -24205,7 +24205,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 + L_SUM.
        CLEAR L_SUM.
-* (8283 - 8282) < 0 then the calculated value is minus
+* (8283 - 8282) < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8283  OR
                 ABEVAZ EQ     C_ABEVAZ_8282.
@@ -24220,7 +24220,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-* 8281 - 8280 < 0 then the calculated value is minus
+* 8281 - 8280 < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_8281  OR
                 ABEVAZ EQ     C_ABEVAZ_8280.
@@ -24235,7 +24235,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_203 = L_SUM_203 - L_SUM.
        CLEAR L_SUM.
-*     If 8273-8272 < 0, it must be reduced by this amount
+*     Ha a 8273-8272 < 0 akkor, ezzel az összeggel csökkenteni kell
 *     az L_SUM_203-at.
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                             WITH KEY ABEVAZ = C_ABEVAZ_8273.
@@ -24277,8 +24277,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
-* determination of self-control allowance
-* Calculation of ABEV 205 based on 203, if the index is 2 or greater, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV 205 számítása a 203 alapján ha az index 2 vagy nagyobb akkor x1,5
 
      IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 
@@ -24291,23 +24291,23 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          IF SY-SUBRC = 0.
            L_SUM = W_/ZAK/BEVALLO-FIELD_NRK.
          ENDIF.
-* period definition
+* időszak meghatározása
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                               WITH KEY ABEVAZ = C_ABEVAZ_23337.
          IF SY-SUBRC EQ 0 AND
          NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
 
            SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
                                  WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
                                                   ADONEM EQ C_ADONEM_104
                                                   .
            IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
              CLEAR L_KAM_KEZD.
              L_KAM_KEZD = $DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
              CLEAR L_KAM_VEG.
              CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
                EXPORTING
@@ -24317,7 +24317,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++2012.01.10 BG
 *             L_KAM_VEG = L_KAM_VEG - 15 .
 *--2012.01.10 BG
-* allowance calculation
+* pótlék számítás
              PERFORM CALC_POTLEK USING    W_/ZAK/BEVALLO-BUKRS
                                           W_/ZAK/BEVALLO-ZINDEX
                                  CHANGING L_KAM_KEZD
@@ -24335,7 +24335,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                  CHANGING W_/ZAK/BEVALLO-FIELD_NR
                           W_/ZAK/BEVALLO-FIELD_NRK.
 *++BG 2009.05.18
-*              The value of the 0 flag must be handled in the form control
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
 *              miatt:
                IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL AND
                   W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
@@ -24348,7 +24348,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
        ENDIF.
 *++ BG 2009.06.17
-*      If there is a value, 203 must be corrected.
+*      Ha van érték, korrigálni kell a 203-at.
        IF NOT L_SUM_SAVE IS INITIAL.
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = C_ABEVAZ_203.
@@ -24372,9 +24372,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    ENDIF.
 
 *++ BG 2009.06.17
-*  0 flag field management
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+*  0 flag mező kezelés
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_205
                               "0-flag beállítás
@@ -24409,10 +24409,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -24422,38 +24422,38 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_23335
         OR  ABEVAZ EQ     C_ABEVAZ_23336
         OR  ABEVAZ EQ     C_ABEVAZ_23338
         OR  ABEVAZ EQ     C_ABEVAZ_23339.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
 *++2010.02.11 RN
-* this field is no longer on the 10A60
+* ez a mező már nincs rajta a 10A60-on
 **    Aláírás dátuma (sy-datum)
 *         WHEN  C_ABEVAZ_24.
 *           W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
 *--2010.02.11 RN
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_23335.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_23336.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_23338.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
-*    Frequency of reporting
+*    Bevallás gyakorisága
          WHEN  C_ABEVAZ_23339.
            IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
@@ -24508,14 +24508,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   LW_ADOAZ_SZAMLASZA_SUM TYPE LT_ADOAZ_SZAMLASZA_SUM.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 
 ******************************************************** CSAK ÁFA normál
 
    DATA: W_SZ TYPE /ZAK/BEVALLB.
 
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
-*  Loading calculated fields
+*  Számított mezők feltöltése
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DD0084CA SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AF001A   SPACE.
@@ -24540,7 +24540,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLB BY ABEVAZ  .
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -24550,7 +24550,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-* 84.C. Amount of tax to be paid (data of line 83, if unsigned)
+* 84.C. Befizetendő adó összege (a 83. sor adata, ha előjel nélküli)
        WHEN C_ABEVAZ_A0DD0084CA.
 *++1765 #01.
          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
@@ -24566,22 +24566,22 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
              CLEAR W_/ZAK/BEVALLO-FIELD_N.
            ENDIF.
 *++1765 #01.
-*         L_UPD = 'X'. "You always have to update, because if the amount changes, you have to empty it
+*         L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
 *--1765 #01.
          ENDIF.
-* 00C Declaration period from
+* 00C Bevallási időszak -tól
        WHEN C_ABEVAZ_A0AF001A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -24618,57 +24618,57 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
 
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Declaration period until
+*00C Bevallási időszak -ig
        WHEN C_ABEVAZ_A0AF002A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*00C Nature of declaration
+*00C Bevallás jellege
        WHEN C_ABEVAZ_A0AF004A.
          IF W_/ZAK/BEVALLO-ZINDEX GE '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'O'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*04 (O) Mark repeated self-check (x)
+*04 (O) Ismételt önellenőrzés jelölése (x)
        WHEN C_ABEVAZ_A0JC001A.
-*        ZINDEX > '001' --> 'X' "repeated self-check
+*        ZINDEX > '001' --> 'X'     "ismételt önellenőrzés
          IF W_/ZAK/BEVALLO-ZINDEX > '001'.
            W_/ZAK/BEVALLO-FIELD_C = 'X'.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*00C Declaration frequency /H-monthly, N-quarterly, E-yearly
+*00C Bevallás gyakorisága /H-havi, N-negyedéves, E-éves
        WHEN C_ABEVAZ_A0AF005A.
          W_/ZAK/BEVALLO-FIELD_C = W_/ZAK/BEVALL-BIDOSZ.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*82.B. The amount of the reducing item that can be calculated from the previous period (previous year
+*82.B. Előző időszakról beszámítható csökkentő tétel összege (előző id.
        WHEN C_ABEVAZ_A0DD0082BA.
          PERFORM SET_BEVALLO USING C_ABEVAZ_A0DD0082CA
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*83.C. The total amount of tax payable in the subject period.
+*83.C. Tárgyidőszakban megállapított fizetendő adó együttes összegének.
        WHEN C_ABEVAZ_A0DD0083BA.
          PERFORM SET_BEVALLO USING C_ABEVAZ_A0DD0083CA
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*84.B. Amount of tax to be paid (data of line 83, if unsigned)
+*84.B. Befizetendő adó összege (a 83. sor adata, ha előjel nélküli)
        WHEN C_ABEVAZ_A0DD0084BA.
          PERFORM SET_BEVALLO USING C_ABEVAZ_A0DD0084CA
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*85.B. The amount of tax that can be reclaimed (line 83 with a negative sign, ...
+*85.B. Visszaigényelhető adó összege (a negatív előjelű 83. sor, ...
        WHEN C_ABEVAZ_A0DD0085BA.
          PERFORM SET_BEVALLO USING C_ABEVAZ_A0DD0085CA
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*86.B. Amount of claim that can be carried over to the next period
+*86.B. Következő időszakra átvihető követelés összege
        WHEN C_ABEVAZ_A0DD0086BA.
          PERFORM SET_BEVALLO USING C_ABEVAZ_A0DD0086CA
                              CHANGING W_/ZAK/BEVALLO.
          L_UPD = 'X'.
-*00F year month day
+*00F év hó nap
        WHEN C_ABEVAZ_A0AI002A.
          W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
-*85.C. The amount of tax that can be reclaimed (line 83 with a negative sign...
+*85.C. Visszaigényelhető adó összege (a negatív előjelű 83. sor...
        WHEN  C_ABEVAZ_A0DD0085CA.
 *++1765 #01.
          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
@@ -24683,16 +24683,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            IF SY-SUBRC EQ 0 AND NOT W_SUM-FIELD_C IS INITIAL.
              W_/ZAK/BEVALLO-FIELD_N = ABS( L_SUM ).
 *++1765 #01.
-*          L_UPD = 'X'. "You always have to update, because if the amount changes, you have to empty it
+*          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
 *--1765 #01.
            ELSEIF SY-SUBRC EQ 0 AND W_SUM-FIELD_C IS INITIAL.
              CLEAR W_/ZAK/BEVALLO-FIELD_N.
 *++1765 #01.
-*          L_UPD = 'X'. "You always have to update, because if the amount changes, you have to empty it
+*          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
 *--1765 #01.
            ENDIF.
          ENDIF.
-*Carried over to next period
+*Következő időszakra átvitt
        WHEN  C_ABEVAZ_A0DD0086CA.
 *++1765 #01.
          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
@@ -24707,21 +24707,21 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            IF SY-SUBRC EQ 0 AND NOT W_SUM-FIELD_C IS INITIAL.
              CLEAR W_/ZAK/BEVALLO-FIELD_N.
 *++1765 #01.
-*          L_UPD = 'X'. "You always have to update, because if the amount changes, you have to empty it
+*          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
 *--1765 #01.
            ELSEIF SY-SUBRC EQ 0 AND W_SUM-FIELD_C IS INITIAL.
              W_/ZAK/BEVALLO-FIELD_N = ABS( L_SUM ).
 *++1765 #01.
-*          L_UPD = 'X'. "You always have to update, because if the amount changes, you have to empty it
+*          L_UPD = 'X'. "Mindig kell update, mert ha megfordul az összeg, akkor űríteni kell
 *--1765 #01.
            ENDIF.
          ENDIF.
 
      ENDCASE.
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -24737,14 +24737,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    ENDLOOP.
 
-*  Calculation of dependent fields
+*  Függő mezők számítása
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AG016A SPACE.
 ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_ABEVAZ.
      CLEAR : L_SUM,W_/ZAK/BEVALLO.
-* this line must be modified!
+* ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
      V_TABIX = SY-TABIX .
@@ -24755,7 +24755,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
 
-*00D I do not request a referral
+*00D Kiutalást nem kérek
        WHEN C_ABEVAZ_A0AG016A.
 *++1665 #06.
          IF NOT $KIUTALAS IS INITIAL.
@@ -24778,10 +24778,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
      ENDCASE.
 ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
-* fill in all numerical values ​​for calculated fields!
-* the procedure for forming an amount is as follows:
+* számított mezőnél minden numerikus értéket tölteni!
+* összeg képzésnél a következő az eljárás:
 * pl: ABEV3 field_n = ABEV1 field_nrk + ABEV2 field_nrk
-* then apply the default rounding rule!
+* majd a beálított kerekítési szabályt alkalmazni!
      IF NOT W_/ZAK/BEVALLB-COLLECT IS INITIAL AND
         L_UPD EQ 'X'.
        CLEAR L_ROUND.
@@ -24796,7 +24796,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      CLEAR: L_UPD,L_SUM,L_ROUND.
 
    ENDLOOP.
-*  Calculation of A0AE005A and A0AE006A
+*  A0AE005A, és A0AE006A számítása
    REFRESH LR_ABEVAZ.
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
                     WHERE NOT ONYBF IS INITIAL.
@@ -24808,13 +24808,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                         AND FIELD_NRK IS NOT INITIAL.
        EXIT.
      ENDLOOP.
-*    There is value
+*    Van érték
      IF SY-SUBRC EQ 0.
-*    The value of A0AE004A should be checked
+*    Meg kell vizsgálni a A0AE004A értékét
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                         WITH KEY ABEVAZ = C_ABEVAZ_A0AE004A.
        IF SY-SUBRC EQ 0 AND NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL.
-* this line must be modified!
+* ezt a sort kell módosítani!
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_A0AE006A.
          IF SY-SUBRC EQ 0.
@@ -24822,7 +24822,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            W_/ZAK/BEVALLO-FIELD_C = C_X.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-* this line must be filled
+* ezt a sort tötölni kell
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_A0AE005A.
          IF SY-SUBRC EQ 0.
@@ -24831,7 +24831,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
        ELSEIF SY-SUBRC EQ 0 AND  W_/ZAK/BEVALLO-FIELD_C IS INITIAL.
-* this line must be modified!
+* ezt a sort kell módosítani!
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_A0AE005A.
          IF SY-SUBRC EQ 0.
@@ -24839,7 +24839,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            W_/ZAK/BEVALLO-FIELD_C = C_X.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-* this line must be filled
+* ezt a sort tötölni kell
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                           WITH KEY ABEVAZ = C_ABEVAZ_A0AE006A.
          IF SY-SUBRC EQ 0.
@@ -24851,9 +24851,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    ENDIF.
 
-*  Summary report Calculation of fields below the VAT value limit
+*  Összesítő jelentés ÁFA értékhatár alatti mezők számítása
    IF NOT $OMREL IS INITIAL.
-*  Value limit
+*  Értékhatár
      L_AMOUNT_EXTERNAL = W_/ZAK/BEVALL-OLWSTE.
      CALL FUNCTION 'BAPI_CURRENCY_CONV_TO_INTERNAL'
        EXPORTING
@@ -24865,7 +24865,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *        RETURN               =
        .
 *++1365 #17.
-*  Month treatment
+*  Hónap kezelése
      REFRESH LR_MONAT.
      IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
        M_DEF LR_MONAT 'I' 'EQ' $DATE+4(2) SPACE.
@@ -24884,12 +24884,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        M_DEF LR_MONAT 'I' 'BT' '01' '12'.
      ENDIF.
 *--1365 #17.
-*    Determination of amount per tax number, per invoice
+*    Összeg meghatározása adószámonként, számlánként
      LOOP AT T_AFA_SZLA_SUM INTO LW_AFA_SZLA_SUM
                            WHERE MLAP   IS INITIAL
                              AND NYLAPAZON(3) = C_NYLAPAZON_M02.
 *++1365 #16.
-*      It must only be aggregated within the month
+*      Csak a hónapon belül kell összesíteni
        CHECK LW_AFA_SZLA_SUM-GJAHR EQ $DATE(4) AND
 *++1365 #17.
 *             LW_AFA_SZLA_SUM-MONAT EQ $DATE+4(2).
@@ -24901,7 +24901,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        LW_ADOAZ_SZAMLASZA_SUM-LWSTE      = LW_AFA_SZLA_SUM-LWSTE.
        COLLECT LW_ADOAZ_SZAMLASZA_SUM INTO LI_ADOAZ_SZAMLASZA_SUM.
      ENDLOOP.
-*    Determination of value limit
+*    Értékhatár meghatározása
 *++1365 #3.
 *     DELETE LI_ADOAZ_SZAMLASZA_SUM WHERE LWSTE < L_OLWSTE.
 *--1365 #3.*    Összeg visszaírása adószámonként
@@ -24910,7 +24910,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      LOOP AT LI_ADOAZ_SZAMLASZA_SUM INTO LW_ADOAZ_SZAMLASZA_SUM.
 *++1365 #3.
-*      If it is listed on sheet M or the value limit is greater than the set one
+*      Ha szerepel M-es lapon vagy az értékhatár nagyobb a beállítottnál
        READ TABLE T_AFA_SZLA_SUM TRANSPORTING NO FIELDS
                   WITH KEY ADOAZON = LW_ADOAZ_SZAMLASZA_SUM-ADOAZON
 *++1365 #11.
@@ -24926,14 +24926,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
          CONTINUE.
        ENDIF.
 *--1365 #3.
-*      this line must be modified!
+*      ezt a sort kell módosítani!
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
             WITH KEY ABEVAZ  = C_ABEVAZ_M0AE0006DA
                      ADOAZON = LW_ADOAZ_SZAMLASZA_SUM-ADOAZON.
        IF SY-SUBRC EQ 0.
          V_TABIX = SY-TABIX.
        ELSE.
-*        Creation of tax number ABEV
+*        Létrehozás adószámos ABEV
          PERFORM CREATE_ADOSZ_ABEV_IN_BEVALLO TABLES T_BEVALLO
                                               USING  W_/ZAK/BEVALLO
                                                      W_/ZAK/BEVALLB
@@ -24955,7 +24955,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
                    W_/ZAK/BEVALLO-FIELD_NRK.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*    Filling filling of other calculated fields of main sheet M
+*    M-es főlap egyéb számított mezők töltése töltése
        PERFORM CALC_ABEV_AFA_1365_M TABLES T_BEVALLO
                                            T_BEVALLB
                                     USING  LW_ADOAZ_SZAMLASZA_SUM-ADOAZON
@@ -24965,9 +24965,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
      ENDLOOP.
 
-*    Management of calculated fields also on M flat fields
+*    Számított mezők kezelése az M lapos mezőkön is
      FREE LI_ADOAZ_SZAMLASZA_SUM.
-*    Determination of amount per tax number, per invoice
+*    Összeg meghatározása adószámonként, számlánként
      LOOP AT T_AFA_SZLA_SUM INTO LW_AFA_SZLA_SUM
                            WHERE NOT MLAP   IS INITIAL.
        LW_ADOAZ_SZAMLASZA_SUM-ADOAZON    = LW_AFA_SZLA_SUM-ADOAZON.
@@ -24975,7 +24975,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 
      LOOP AT LI_ADOAZ_SZAMLASZA_SUM INTO LW_ADOAZ_SZAMLASZA_SUM.
-*       Filling filling of other calculated fields of main sheet M
+*       M-es főlap egyéb számított mezők töltése töltése
        PERFORM CALC_ABEV_AFA_1365_M TABLES T_BEVALLO
                                            T_BEVALLB
                                     USING  LW_ADOAZ_SZAMLASZA_SUM-ADOAZON
@@ -24994,14 +24994,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
 ************************************************************************
 ****
-* calculation of self-check allowance
+* önellenörzési pótlék számítása
 ************************************************************************
 ****
 *++1365 2013.01.22 Balázs Gábor (Ness)
    IF $INDEX NE '000'.
 *   IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 *--1365 2013.01.22 Balázs Gábor (Ness)
-* if A0DD0084CA - A0DD0084BA > 0 then this value, otherwise 0
+* ha A0DD0084CA - A0DD0084BA > 0 akkor ezt az értéket, ellenkező esetben 0
      LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
        WHERE  ABEVAZ EQ     C_ABEVAZ_A0JD0001CA.
        CLEAR: L_SUM,L_SUM_A0JD0001CA.
@@ -25019,7 +25019,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_A0JD0001CA = L_SUM_A0JD0001CA + L_SUM.
        CLEAR L_SUM.
-* (A0DD0086CA - A0DD0086BA) < 0 then the calculated value is minus
+* (A0DD0086CA - A0DD0086BA) < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_A0DD0086CA  OR
                 ABEVAZ EQ     C_ABEVAZ_A0DD0086BA.
@@ -25034,7 +25034,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_A0JD0001CA = L_SUM_A0JD0001CA - L_SUM.
        CLEAR L_SUM.
-* A0DD0085CA - A0DD0085BA < 0 then the calculated value is minus
+* A0DD0085CA - A0DD0085BA < 0 akkor minusz a számolt érték
        LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
          WHERE  ABEVAZ EQ     C_ABEVAZ_A0DD0085CA  OR
                 ABEVAZ EQ     C_ABEVAZ_A0DD0085BA.
@@ -25049,7 +25049,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
        ENDIF.
        L_SUM_A0JD0001CA = L_SUM_A0JD0001CA - L_SUM.
        CLEAR L_SUM.
-*     If A0DD0082CA-A0DD0082BA < 0 then it must be reduced by this amount
+*     Ha a A0DD0082CA-A0DD0082BA < 0 akkor, ezzel az összeggel csökkenteni kell
 *     az L_SUM_A0JD0001CA-at.
        READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                             WITH KEY ABEVAZ = C_ABEVAZ_A0DD0082CA.
@@ -25087,8 +25087,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
 ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
-* determination of self-control allowance
-* Calculation of ABEV A0JD0002CA based on A0JD0001CA, if the index is 2 or greater, then x1.5
+* önellenörzési pótlék  meghatározása
+* ABEV A0JD0002CA számítása a A0JD0001CA alapján ha az index 2 vagy nagyobb akkor x1,5
      IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
 
        READ TABLE T_BEVALLB INTO W_/ZAK/BEVALLB
@@ -25100,29 +25100,29 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          IF SY-SUBRC = 0.
            L_SUM = W_/ZAK/BEVALLO-FIELD_NRK.
          ENDIF.
-* period definition
+* időszak meghatározása
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
                               WITH KEY ABEVAZ = C_ABEVAZ_23337.
          IF SY-SUBRC EQ 0 AND
          NOT W_/ZAK/BEVALLO-FIELD_C IS INITIAL .
-* determining the deadline for calculating the allowance! the 104
-* I don't need a tax for the /ZAK/ADONEM table key !!
+* a pótlék számitás határidejének meghatározása! a 104-es
+* adónem kell a /ZAK/ADONEM tábla kulcshoz !!
            SELECT SINGLE FIZHAT INTO W_/ZAK/ADONEM-FIZHAT FROM /ZAK/ADONEM
                                  WHERE BUKRS  EQ W_/ZAK/BEVALLO-BUKRS AND
                                                   ADONEM EQ C_ADONEM_104
                                                   .
            IF SY-SUBRC EQ 0.
-* start date of allowance calculation
+* pótlék számítás kezdeti dátuma
              CLEAR L_KAM_KEZD.
              L_KAM_KEZD = $DATE + 1 + W_/ZAK/ADONEM-FIZHAT.
-* end date of allowance calculation in the character field of row 5299 above
+* pótlék számítás vég dátuma az 5299 abev sor karakteres mezőjében
              CLEAR L_KAM_VEG.
              CALL FUNCTION 'CONVERSION_EXIT_IDATE_INPUT'
                EXPORTING
                  INPUT  = W_/ZAK/BEVALLO-FIELD_C
                IMPORTING
                  OUTPUT = L_KAM_VEG.
-* allowance calculation
+* pótlék számítás
              PERFORM CALC_POTLEK USING    W_/ZAK/BEVALLO-BUKRS
                                           W_/ZAK/BEVALLO-ZINDEX
                                  CHANGING L_KAM_KEZD
@@ -25139,7 +25139,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                           W_/ZAK/BEVALLO-WAERS
                  CHANGING W_/ZAK/BEVALLO-FIELD_NR
                           W_/ZAK/BEVALLO-FIELD_NRK.
-*              The value of the 0 flag must be handled in the form control
+*              Kezelni kell a 0 flag értékét a nyomtatvány ellenőrzés
 *              miatt:
                IF NOT W_/ZAK/BEVALLO-FIELD_N IS INITIAL AND
                   W_/ZAK/BEVALLO-FIELD_NRK IS INITIAL.
@@ -25150,7 +25150,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            ENDIF.
          ENDIF.
        ENDIF.
-*      If there is a value, A0JD0001CA must be corrected.
+*      Ha van érték, korrigálni kell a A0JD0001CA-at.
        IF NOT L_SUM_SAVE IS INITIAL.
          READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
          WITH KEY ABEVAZ = C_ABEVAZ_A0JD0001CA.
@@ -25176,9 +25176,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
 
-*  0 flag field management
-* If field1 is not 0 or field2 is not 0 or field3 is not 0 or field4 is not 0
-* or field 5 not 0 then 0 flag setting
+*  0 flag mező kezelés
+* Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
+* vagy mező5 ne 0 akkor 0 flag beállítás
    PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
                               USING  C_ABEVAZ_A0JD0002CA
                               "0-flag beállítás
@@ -25261,10 +25261,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Éves
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
-* N - Quarterly
+* N - Negyedéves
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      SUBTRACT 2 FROM L_MONAT.
 * H - Havi
@@ -25274,38 +25274,38 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    CONCATENATE L_GJAHR L_MONAT '01' INTO L_BEGIN_DAY.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_23335
         OR  ABEVAZ EQ     C_ABEVAZ_23336
         OR  ABEVAZ EQ     C_ABEVAZ_23338
         OR  ABEVAZ EQ     C_ABEVAZ_23339.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
 *++2010.02.11 RN
-* this field is no longer on the 10A60
+* ez a mező már nincs rajta a 10A60-on
 **    Aláírás dátuma (sy-datum)
 *         WHEN  C_ABEVAZ_24.
 *           W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
 *--2010.02.11 RN
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_23335.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_23336.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_23338.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
-*    Frequency of reporting
+*    Bevallás gyakorisága
          WHEN  C_ABEVAZ_23339.
            IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
@@ -25317,38 +25317,38 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDLOOP.
    ENDLOOP.
 *++1765 #07.
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB
      WHERE  ABEVAZ EQ     C_ABEVAZ_A0AD001A
         OR  ABEVAZ EQ     C_ABEVAZ_A0AD002A
         OR  ABEVAZ EQ     C_ABEVAZ_A0AD003A
         OR  ABEVAZ EQ     C_ABEVAZ_A0AD004A.
 
-* this line must be modified!
+* ezt a sort kell módosítani!
      LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                        WHERE ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ.
 
        CASE W_/ZAK/BEVALLB-ABEVAZ.
 
 *++2010.02.11 RN
-* this field is no longer on the 10A60
+* ez a mező már nincs rajta a 10A60-on
 **    Aláírás dátuma (sy-datum)
 *         WHEN  C_ABEVAZ_24.
 *           W_/ZAK/BEVALLO-FIELD_C = SY-DATUM.
 *--2010.02.11 RN
-*    PERIOD start date
+*    IDŐSZAK kezdő dátuma
          WHEN  C_ABEVAZ_A0AD001A.
            W_/ZAK/BEVALLO-FIELD_C = L_BEGIN_DAY.
-*    PERIOD closing date
+*    IDŐSZAK záró dátuma
          WHEN  C_ABEVAZ_A0AD002A.
            W_/ZAK/BEVALLO-FIELD_C = $LAST_DATE.
-*    Loading correction flags
-*    We always upload if self-revision:
+*    Helyebítési flagek töltése
+*    Mindig feltöltjük ha önrevízió:
          WHEN  C_ABEVAZ_A0AD003A.
            IF W_/ZAK/BEVALLO-ZINDEX NE '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
-*    Frequency of reporting
+*    Bevallás gyakorisága
          WHEN  C_ABEVAZ_A0AD004A.
            IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
@@ -25384,47 +25384,47 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    RANGES LR_MONAT FOR /ZAK/ANALITIKA-MONAT.
 *--1365 #4.
 
-*  M0AC001A Tax number of the taxpayer, can be taken from: A0AE001A
+*  M0AC001A   Adózó adószáma, át lehet venni: A0AE001A-ból
    PERFORM GET_AFA_M_ABEVAZ TABLES $T_BEVALLO
                                    $T_BEVALLB
                             USING  C_ABEVAZ_M0AC001A
                                    C_ABEVAZ_A0AE001A
                                    $ADOAZON.
-*  M0AC003A Tax number of your legal predecessor, can be taken if it is not empty: from A0AE004A
+*  M0AC003A   Jogelőd adószáma, át lehet venni, ha nem üres: A0AE004A-ból
    PERFORM GET_AFA_M_ABEVAZ TABLES $T_BEVALLO
                                    $T_BEVALLB
                             USING  C_ABEVAZ_M0AC003A
                                    C_ABEVAZ_A0AE004A
                                    $ADOAZON.
 
-*  M0AC004A Taxpayer name, can be taken from: A0AE008A
+*  M0AC004A Adózó neve, át lehet venni: A0AE008A-ból
    PERFORM GET_AFA_M_ABEVAZ TABLES $T_BEVALLO
                                    $T_BEVALLB
                             USING  C_ABEVAZ_M0AC004A
                                    C_ABEVAZ_A0AE008A
                                    $ADOAZON.
 
-*  M0AD001A Declaration period from, can be taken from: A0AF001A
+*  M0AD001A Bevallási időszak -tól, át lehet venni: A0AF001A-ból
    PERFORM GET_AFA_M_ABEVAZ TABLES $T_BEVALLO
                                    $T_BEVALLB
                             USING  C_ABEVAZ_M0AD001A
                                    C_ABEVAZ_A0AF001A
                                    $ADOAZON.
 
-*  M0AD002A Declaration period until , can be taken from: A0AF002A
+*  M0AD002A Bevallási időszak -ig, át lehet venni: A0AF002A-ból
    PERFORM GET_AFA_M_ABEVAZ TABLES $T_BEVALLO
                                    $T_BEVALLB
                             USING  C_ABEVAZ_M0AD002A
                                    C_ABEVAZ_A0AF002A
                                    $ADOAZON.
 
-* M0AC005A Partner's tax number: the M paper ADOAZON must be entered here,
-*if it was loaded from STCD1 (the receiver or
-*carrier code+KOART specifies how to ship. Or customer!)
-*M0AC006A if loaded from STCD3
+* M0AC005A Partner adószáma: ebbe kell tenni az M-es lapi ADOAZON-t,
+*ha STCD1-ből töltöttük (/ZAK/ANALITIKA-ból ki kell venni a vevő vagy
+*szállító kódot+KOART megadja hogy száll. Vagy vevő!)
+*M0AC006A ha STCD3-ból töltöttük
    READ TABLE $T_BEVALLO INTO LW_BEVALLO INDEX 1.
 *++1365 #4.
-*  Upload month:
+*  Hónap feltöltése:
    REFRESH LR_MONAT.
    IF $BEVALL-BIDOSZ EQ 'H'.
      M_DEF LR_MONAT 'I' 'EQ' LW_BEVALLO-MONAT SPACE.
@@ -25505,7 +25505,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                        $ADOAZON.
 *--1365 #7.
      ENDIF.
-*    Customer name:
+*    Vevő neve:
      IF LW_ANALITIKA-KOART EQ 'D'.
        SELECT SINGLE NAME1 INTO L_NAME1
                            FROM KNA1
@@ -25513,7 +25513,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++1765 #26.
                             AND XCPDK NE 'X'.    "ha nem CPD
 *--1765 #26.
-*    Supplier name
+*    Szállító neve
      ELSEIF LW_ANALITIKA-KOART EQ 'K'.
        SELECT SINGLE NAME1 INTO L_NAME1
                            FROM LFA1
@@ -25523,7 +25523,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *--1765 #26.
      ENDIF.
 *++1365 #21.
-*    There is a name in field_c on a DUMMY_R record
+*    DUMMY_R-es rekordon a field_c-ben van név
      IF L_NAME1 IS INITIAL AND NOT LW_ANALITIKA-FIELD_C IS INITIAL.
        L_NAME1 = LW_ANALITIKA-FIELD_C.
      ENDIF.
@@ -25537,7 +25537,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                        $ADOAZON.
 *++1365 #3.
      ELSE.
-*      M0AC007A <- DUMMY_R FIELD_C field
+*      M0AC007A <- DUMMY_R FIELD_C mező
        PERFORM GET_AFA_M_FROM_ABEV TABLES $T_BEVALLO
                                           $T_BEVALLB
                                    USING  C_ABEVAZ_M0AC007A
@@ -25571,18 +25571,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA LW_/ZAK/BEVALLB TYPE /ZAK/BEVALLB.
    DATA L_TABIX LIKE SY-TABIX.
 
-*  Read the ABEV to be modified
+*  Módosítandó ABEV beolvasása
    READ TABLE $T_BEVALLB INTO LW_/ZAK/BEVALLB
                       WITH KEY ABEVAZ = $ABEVAZ_TO.
    CHECK SY-SUBRC EQ 0.
-*  this line must be modified!
+*  ezt a sort kell módosítani!
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLO
         WITH KEY ABEVAZ  = $ABEVAZ_TO
                  ADOAZON = $ADOAZON.
    IF SY-SUBRC EQ 0.
      L_TABIX = SY-TABIX.
    ELSE.
-*    Creation of tax number ABEV
+*    Létrehozás adószámos ABEV
      PERFORM CREATE_ADOSZ_ABEV_IN_BEVALLO TABLES $T_BEVALLO
                                           USING  LW_/ZAK/BEVALLO
                                                  LW_/ZAK/BEVALLB
@@ -25591,7 +25591,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                                  L_TABIX.
 
    ENDIF.
-*  Let's read the source line first with the Tax ID number, if not, then without it
+*  Beolvassuk a forrás sort először Adóazonosítóval ha nincs akkor a nélkül
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLO_FROM
         WITH KEY ABEVAZ  = $ABEVAZ_FROM
                  ADOAZON = $ADOAZON.
@@ -25630,18 +25630,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA LW_/ZAK/BEVALLB TYPE /ZAK/BEVALLB.
    DATA L_TABIX LIKE SY-TABIX.
 
-*  Read the ABEV to be modified
+*  Módosítandó ABEV beolvasása
    READ TABLE $T_BEVALLB INTO LW_/ZAK/BEVALLB
                       WITH KEY ABEVAZ = $ABEVAZ_TO.
    CHECK SY-SUBRC EQ 0.
-*  this line must be modified!
+*  ezt a sort kell módosítani!
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLO
         WITH KEY ABEVAZ  = $ABEVAZ_TO
                  ADOAZON = $ADOAZON.
    IF SY-SUBRC EQ 0.
      L_TABIX = SY-TABIX.
    ELSE.
-*    Creation of tax number ABEV
+*    Létrehozás adószámos ABEV
      PERFORM CREATE_ADOSZ_ABEV_IN_BEVALLO TABLES $T_BEVALLO
                                           USING  LW_/ZAK/BEVALLO
                                                  LW_/ZAK/BEVALLB
@@ -25650,7 +25650,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                                  L_TABIX.
 
    ENDIF.
-*  If the ABEV is type C
+*  Ha a ABEV C típus
    IF LW_/ZAK/BEVALLB-FIELDTYPE EQ 'C'.
      LW_/ZAK/BEVALLO-FIELD_C = $VALUE.
    ELSEIF LW_/ZAK/BEVALLB-FIELDTYPE EQ 'N'.
@@ -25689,9 +25689,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    SORT T_BEVALLO BY ABEVAZ ADOAZON LAPSZ.
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLB-ABEVAZ.
 
-*  Special M calculations as a tax ID
-*  M0BC0370DA M 02-370 d Combined tax base (sum of lines 360-369 "D")
-*  field0 = field1+field2+...fieldN as much as is in RANGE
+*  Speciális M-s számítások adóazonosítóként
+*  M0BC0370DA M 02-370 d Összevont adóalap ( a 360-369. sorok "D"összege)
+*  mező0 = mező1+mező2+...mezőN amennyi a RANGE-ben van
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0BC0360DA SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0BC0361DA SPACE.
@@ -25711,7 +25711,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                        USING  C_ABEVAZ_M0BC0370DA.          "mező0
 
 * M0BC0372DA
-* field0 = field1-field2.
+* mező0 = mező1-mező2.
    PERFORM GET_SUB_M   TABLES T_BEVALLO
                               T_BEVALLB
                               T_ADOAZON_ALL
@@ -25723,7 +25723,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *--1408 2014.02.10 BG
 
 *  M0BC0373DA
-*  field0 = field1+field2+...fieldN as much as is in RANGE
+*  mező0 = mező1+mező2+...mezőN amennyi a RANGE-ben van
    REFRESH LR_ABEVAZ.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0BC0360DA SPACE.
    M_DEF LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_M0BC0361DA SPACE.
@@ -25772,14 +25772,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    END-OF-DEFINITION.
 
-*  ADMIT scan
+*  BEVALLB beolvasás
    READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                         WITH KEY ABEVAZ = $ABEV_MOD.
 
-* It must be calculated by tax number:
+* Adószámonként kell számolni:
    LOOP AT $T_ADOAZON.
      CLEAR L_FIELD_SUM.
-*   Let's read the ABEV to be modified
+*   Beolvassuk a módosítandó ABEV-et
      READ TABLE $T_BEVALLO TRANSPORTING NO FIELDS
           WITH KEY ABEVAZ  = $ABEV_MOD
                    ADOAZON = $T_ADOAZON-ADOAZON
@@ -25787,7 +25787,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
        MOVE SY-TABIX TO L_INDEX_MOD.
-*      Determination and summarization of value
+*      Érték meghatározása, összegzése
        LOOP AT $R_ABEV WHERE SIGN   EQ 'I'
                          AND OPTION EQ 'EQ'.
          LM_READ_DATA $R_ABEV-LOW $T_ADOAZON-ADOAZON
@@ -25855,8 +25855,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DEFINE LM_GET_SPEC_SUM1.
      LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ = &1.
-*      The ABEV for the condition must be determined
-*      ID value
+*      Meg kell határozni a feltételhez tartozó ABEV
+*      azonosító értékét
        READ TABLE T_BEVALLO INTO L_TMP_BEVALLO
                 WITH KEY ABEVAZ  = &2
                          ADOAZON = L_BEVALLO-ADOAZON
@@ -25889,7 +25889,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Uploading selective ABEVAZ
+*  Szelekciós ABEVAZ feltöltése
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DC0081CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DC0082CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0DC0083CA SPACE.
@@ -25905,12 +25905,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0101CA SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0EC0102CA SPACE.
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
    LOOP AT T_BEVALLB INTO W_/ZAK/BEVALLB WHERE ABEVAZ IN LR_SEL_ABEVAZ.
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
               BINARY SEARCH.
@@ -25919,90 +25919,90 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      V_TABIX = SY-TABIX .
 
-*    Special calculations
+*    Speciális számítások
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*The 03-081 START card comes with a 10% social security tax
-*(Code 1: line 643 ""c"")
+*A 03-081 A START kártyával rend 10%-os szociális hozz jár adó
+*(1-es kód: 643. sor ""c"")
        WHEN  C_ABEVAZ_A0DC0081CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0643CA' 'M0IC007A' LR_COND.
-*02-039 With the START card, there is a 20% social security tax (1
-*code: line 644 "c")
+*A 02-039 A START kártyával rend 20%-os szociális hozz jár adó (1-es
+*kód: 644. sor "c")
        WHEN  C_ABEVAZ_A0DC0082CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '1' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0644CA' 'M0IC007A' LR_COND.
-*The 02-040 A START PLUSZ card comes with a 10% social security tax
-*(Code 2: line 643 "c")
+*A 02-040 A START  PLUSZ kártyával rend 10%-os szociális hozz jár adó
+*(2-es kód: 643. sor "c")
        WHEN  C_ABEVAZ_A0DC0083CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0643CA' 'M0IC007A' LR_COND.
-*The 02-041 START PLUSZ card comes with a 20% social security tax
-*(Code 2: line 644 "c")
+*A 02-041 A START PLUSZ kártyával rend 20%-os szociális hozz jár adó
+*(2-es kód: 644. sor "c")
        WHEN  C_ABEVAZ_A0DC0084CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '2' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0644CA' 'M0IC007A' LR_COND.
-*With the 02-042 A START EXTRA card, you get a 10% social bonus
-*tax (code 3: line 643 "c")
+*A 02-042 A START EXTRA kártyával rend 10%-os szociális hozz jár
+*adó (3-es kód: 643. sor "c")
        WHEN  C_ABEVAZ_A0DC0085CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '3' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0ID0643CA' 'M0IC007A' LR_COND.
-*A 03-091 He works in a position that does not require a s/zak/zak qualification
-*12.5% ​​socho (code 1: line 679 "c")
+*A 03-091 A s/zak/zakképzésettségen nem igénylő munkakörben fogl
+*12,5%-os szocho (1-es kód:679.sor "c")
        WHEN  C_ABEVAZ_A0DC0091CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '05' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JD0679CA' 'M0JC007A' LR_COND.
-*A 03-092 Under 25 years of age with more than 180 days of employment
+*A 03-092 A 180 napnál több munkaviszonnyal rend 25 év alatti
 *12,5% szocho (7-es kód:679.sor "c")
        WHEN  C_ABEVAZ_A0DC0092CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '07' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JD0679CA' 'M0JC007A' LR_COND.
-*A 03-093 Persons over 55 years of age 12.5% ​​socho (code 8: line 679 "c")
+*A 03-093 Az 55 év feletti fogl 12,5% szocho (8-as kód: 679. sor "c")
        WHEN  C_ABEVAZ_A0DC0093CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '08' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JD0679CA' 'M0JC007A' LR_COND.
-*03-094 A GYED,GYES,GYET will take 12.5% ​​socho (code 10: line 679 "c")
+*A 03-094 A GYED,GYES,GYET  fogl 12,5% szocho (10-es kód: 679. sor "c")
        WHEN  C_ABEVAZ_A0DC0094CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '10' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JD0679CA' 'M0JC007A' LR_COND.
-*A 03-095 The shoulder operating in the free shoulder zone is 12.5% ​​socho
-*(Code 11: line 679 "c")
+*A 03-095 A szabad váll zónában működő váll 12,5% szocho
+*(11-es kód:679. sor "c")
        WHEN  C_ABEVAZ_A0DC0095CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '11' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0JD0679CA' 'M0JC007A' LR_COND.
-*A 03-055 The private individual's pension contribution (lines 563,603,611
+*A 03-055 A magánszemélyt terelő nyugdíjjárulék (563,603,611. sorok
 *"c" fodl min NEM 25,42,81,83,92,93)
        WHEN  C_ABEVAZ_A0EC0100CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'E' 'EQ' '25' SPACE.
          M_DEF LR_COND 'E' 'EQ' '42' SPACE.
@@ -26014,20 +26014,20 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          LM_GET_SPEC_SUM1 'M0GD0563CA' 'M0GC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0GF0602CA' 'M0GC004A' LR_COND.
          LM_GET_SPEC_SUM1 'M0GG0611CA' 'M0GC004A' LR_COND.
-*A 03-56-c The burden of unemployment, employment pension
+*A 03-56-c A megánsz terh munkanélk,állásker nyugdíj
 *(611.sorok "c" fogl min 25,42,81)
        WHEN  C_ABEVAZ_A0EC0101CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '25' SPACE.
          M_DEF LR_COND 'I' 'EQ' '42' SPACE.
          M_DEF LR_COND 'I' 'EQ' '81' SPACE.
          LM_GET_FIELD $INDEX.
          LM_GET_SPEC_SUM1 'M0GG0611CA' 'M0GC004A' LR_COND.
-*A 03-57-c The private sector pays pension after GYED, S, T (lines 603, 611
+*A 03-57-c A magánsz terh GYED, S, T után fiz nyugdíj(A 603.,611. sorok
 *"c" a fogl min 83, 92, 93)
        WHEN C_ABEVAZ_A0EC0102CA.
-*        Upload condition
+*        Feltétel feltöltése
          REFRESH LR_COND.
          M_DEF LR_COND 'I' 'EQ' '83' SPACE.
          M_DEF LR_COND 'I' 'EQ' '92' SPACE.
@@ -26072,17 +26072,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          END OF LI_ADOAZON.
    DATA: L_BEVALLO TYPE /ZAK/BEVALLO.
 
-*  To define a self-check
+*  Önellenőrzés meghatározásához
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
    RANGES LR_SEL_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
 ************************************************************************
-* Special abev fields
+* Speciális abev mezők
 ************************************************************************
 
    SORT T_BEVALLB BY ABEVAZ  .
 
-* the following abev codes can only occur once, summary v. char
+* a következő abev kódok csak egyszer fordulhatnak elő, összegző v. char
 
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC039A SPACE.
    M_DEF LR_SEL_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0AC040A SPACE.
@@ -26095,7 +26095,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
      CLEAR W_/ZAK/BEVALLO.
 
-*    this line must be modified!
+*    ezt a sort kell módosítani!
      READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO
      WITH KEY ABEVAZ = W_/ZAK/BEVALLB-ABEVAZ
           BINARY SEARCH.
@@ -26105,19 +26105,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
 
      CASE W_/ZAK/BEVALLB-ABEVAZ.
-*      period from first day
+*      időszak-tól első nap
        WHEN C_ABEVAZ_A0AC039A.
 * Havi
          IF W_/ZAK/BEVALL-BIDOSZ = 'H'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Éves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* He is four years old
+* Negyedéves
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 
            L_KAM_KEZD = $DATE.
@@ -26154,12 +26154,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          ENDIF.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      last day until period
+*      időszak-ig utolsó nap
        WHEN C_ABEVAZ_A0AC040A.
          W_/ZAK/BEVALLO-FIELD_C = $DATE.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Number of taxpayers = Tax numbers
+*      Adózók száma = Adószámok
        WHEN C_ABEVAZ_A0AC044A.
 
          REFRESH LI_ADOAZON.
@@ -26180,51 +26180,51 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
          CONDENSE W_/ZAK/BEVALLO-FIELD_C.
          MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
 
-*      Correction, Self-check
+*      Helyesbítés, Önellenőrzés
        WHEN C_ABEVAZ_A0AC041A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX NE '000'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0FD0150DA
                                     C_ABEVAZ_A0FD0180DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0GC0190CA
                                     C_ABEVAZ_A0GE0200CA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
              W_/ZAK/BEVALLO-FIELD_C = 'O'.
-*          Corrective
+*          Helyesbítő
            ELSE.
              W_/ZAK/BEVALLO-FIELD_C = 'H'.
            ENDIF.
            CONDENSE W_/ZAK/BEVALLO-FIELD_C.
            MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO INDEX V_TABIX.
          ENDIF.
-*      Repeated self-check
+*      Ismételt önellenőrzés
        WHEN C_ABEVAZ_A0FC001A.
-*        Only in self-check
+*        Csak önellenőrzésénél
          IF $INDEX > '001'.
            REFRESH LR_ABEVAZ.
-*          A numerical value must be searched for in this range
+*          Ebben a tartományban kell keresni numerikus értéket
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0FD0150DA
                                     C_ABEVAZ_A0FD0180DA.
            M_DEF LR_ABEVAZ 'I' 'BT' C_ABEVAZ_A0GC0190CA
                                     C_ABEVAZ_A0GE0200CA.
            LOOP AT T_BEVALLO INTO L_BEVALLO WHERE ABEVAZ IN LR_ABEVAZ
-*          We monitor the rounded sum because it may be FIELD_N
-*          it is not empty, but no value is added to the return because of the fkator.
+*          A kerekített összeget figyeljük mert lehet hogy a FIELD_N
+*          nem üres de a bevallásba nem kerül érték a fkator miatt.
 *                                          AND NOT FIELD_N  IS INITIAL.
                                            AND NOT FIELD_NR IS INITIAL.
              EXIT.
            ENDLOOP.
-*          There is value:
+*          Van érték:
            IF SY-SUBRC EQ 0.
              W_/ZAK/BEVALLO-FIELD_C = 'X'.
            ENDIF.
@@ -26258,8 +26258,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *++2011.07.11 BG
    DATA   LR_VALUE2 LIKE RANGE_C3 OCCURS 0 WITH HEADER LINE.
 *--2011.07.11 BG
-* So that you don't have to expand the self-revision to a global one for every FORM
-* treated as a variable:
+* Hogy ne kellessen minden FORM-ot bővíteni az önrevíziót egy globális
+* változóba kezeljük:
    CLEAR V_ONREV.
    IF NOT $ONREV IS INITIAL.
      MOVE $ONREV TO V_ONREV.
@@ -26268,48 +26268,48 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 **  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
 *   PERFORM GET_NULL_FLAG TABLES T_BEVALLO
 *                                T_ADOAZON_ALL
-*                         USING C_ABEVAZ_M0BC0382CA "field1
-*                                C_ABEVAZ_M0BC0382BA "field2
-*                                C_ABEVAZ_M0BC0382DA.        "field 3
+*                         USING  C_ABEVAZ_M0BC0382CA         "mező1
+*                                C_ABEVAZ_M0BC0382BA         "mező2
+*                                C_ABEVAZ_M0BC0382DA.        "mező3
 **  Ha mező1+mező2+mező3+mező4 > 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_ASUM TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0IC0284HA
-*                              "0-flag setting
-*                                     C_ABEVAZ_A0IC0284CA "field1
-*                                     C_ABEVAZ_A0IC0284DA "field2
-*                                     C_ABEVAZ_A0IC0284EA "field3
-*                                     SPACE.                 "field 4
+*                              "0-flag beállítás
+*                                     C_ABEVAZ_A0IC0284CA    "mező1
+*                                     C_ABEVAZ_A0IC0284DA    "mező2
+*                                     C_ABEVAZ_A0IC0284EA    "mező3
+*                                     SPACE.                 "mező4
 ** Ha mező1 ne 0 vagy mező2 ne 0 vagy mező3 ne 0 vagy mező4 ne 0
 ** vagy mező5 ne 0 akkor 0 flag beállítás
 *   PERFORM GET_NULL_FLAG_INIT TABLES T_BEVALLO
 *                              USING  C_ABEVAZ_A0DC0087DA    "0flag
-*                                     C_ABEVAZ_A0DC0087CA "field1
-*                                     SPACE "field2
-*                                     SPACE "field3
-*                                     SPACE "field4
-*                                     SPACE "field5
-*                                     SPACE.                 "field 6
+*                                     C_ABEVAZ_A0DC0087CA    "mező1
+*                                     SPACE                  "mező2
+*                                     SPACE                  "mező3
+*                                     SPACE                  "mező4
+*                                     SPACE                  "mező5
+*                                     SPACE.                 "mező6
 *   PERFORM GET_NULL_FLAG_INITM TABLES T_BEVALLO
 *                                      T_ADOAZON_ALL
 *                               USING  C_ABEVAZ_M0CC0415DA   "0flag
-*                                      C_ABEVAZ_M0BC0382BA "field1
-*                                      C_ABEVAZ_M0BC0386BA "field2
-*                                      SPACE "field3
-*                                      SPACE "field4
-*                                      SPACE "field5
-*                                      SPACE.                "field 6
+*                                      C_ABEVAZ_M0BC0382BA   "mező1
+*                                      C_ABEVAZ_M0BC0386BA   "mező2
+*                                      SPACE                 "mező3
+*                                      SPACE                 "mező4
+*                                      SPACE                 "mező5
+*                                      SPACE.                "mező6
 ** mező1-n 0 flag állítás
 *     PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
 *                                 USING  C_ABEVAZ_A0BC50041A.
-* If field1 = field2 then 0 flag is set
+* Ha mező1 = mező2 akkor  0 flag állítás
 *   PERFORM GET_NULL_FLAG_EQM TABLES T_BEVALLO
 *                                    T_ADOAZON_ALL
-*                             USING C_ABEVAZ_M0FD0496AA "field1
-*                                    C_ABEVAZ_M0FD0495AA "field2
+*                             USING  C_ABEVAZ_M0FD0496AA     "mező1
+*                                    C_ABEVAZ_M0FD0495AA     "mező2
 *                                    C_ABEVAZ_M0FD0498BA     "0-flag
 *                                    C_ABEVAZ_M0FD0497BA.    "0-flag
 
-*  If field1 >= field2 then field3 0 flag setting
+*  Ha mező1 >= mező2 akkor mező3 0 flag beállítás
    PERFORM GET_NULL_FLAG TABLES T_BEVALLO
                                 T_ADOAZON_ALL
                          USING  C_ABEVAZ_M0BC0361CA         "mező1
@@ -26369,7 +26369,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                          USING  C_ABEVAZ_M0BC0367DA         "mező1
                                 C_ABEVAZ_M0BC0367BA         "mező2
                                 C_ABEVAZ_M0BC0367CA.        "mező3
-*  0 flag setting on field 1
+*  mező1-n 0 flag állítás
    PERFORM GET_NULL_FLAG_0_M   TABLES T_BEVALLO
                                       T_ADOAZON_ALL
                                USING  C_ABEVAZ_M0BC0370DA.
@@ -26430,7 +26430,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                       SPACE                 "mező5
                                       SPACE.                "mező6
 *++1308 2013.03.08
-* Self-audit supplement if self-audit
+* Önellenőrzési pótlék ha önrevízió
    IF $INDEX NE '000'.
      PERFORM GET_NULL_FLAG_0     TABLES T_BEVALLO
                                  USING  C_ABEVAZ_A0GC0190CA.
@@ -26479,7 +26479,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    CLEAR L_INDEX.
 
-*  Upload RANKS to manage retired numbers
+*  RANGEK feltöltése Nyugdíjas darabszám kezeléshez
    M_DEF R_A0AC047A 'I' 'EQ' 'M0FC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0GC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0HC003A' SPACE.
@@ -26487,7 +26487,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    M_DEF R_A0AC047A 'I' 'EQ' 'M0JC003A' SPACE.
    M_DEF R_A0AC047A 'I' 'EQ' 'M0KC003A' SPACE.
 
-*  Values
+*  Értékek
    M_DEF R_NYLAPVAL 'I' 'EQ' '7' SPACE.
    M_DEF R_NYLAPVAL 'I' 'EQ' '8' SPACE.
 
@@ -26497,14 +26497,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
      L_TABIX = SY-TABIX.
 
-*   Dialog run for insurance
+*   Dialógus futás biztosításhoz
      PERFORM PROCESS_IND_ITEM USING '100000'
                                     L_INDEX
                                     TEXT-P01.
 
 *   Csak SZJA-nal
      IF  W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_SZJA.
-*      Collection of pensioner tax numbers
+*      Nyugdíjas adószámok gyűjtése
        PERFORM CALL_NYLAP TABLES R_A0AC047A
                                  R_NYLAPVAL
                           USING  W_/ZAK/BEVALLO.
@@ -26522,9 +26522,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                    LAPSZ   = W_/ZAK/BEVALLO-LAPSZ
                    BINARY SEARCH.
      IF SY-SUBRC EQ 0.
-*  The 0 flag handling was not appropriate
-*  If it is a self-revision calculation, the T_BEVALLO 0 flag is required
-*  otherwise, the I_/ZAK/BEVALLO 0 flag.
+*  Nem volt megfelelő a 0 flag kezelés
+*  Ha önrevíziós számítás akkor a T_BEVALLO 0 flag kell
+*  egyébként a I_/ZAK/BEVALLO 0 flag.
        IF NOT L_ALV-OFLAG IS INITIAL.
          L_NULL_FLAG = L_ALV-NULL_FLAG.
        ELSE.
@@ -26568,7 +26568,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      DELETE I_/ZAK/BEVALLO.
    ENDLOOP.
 
-*  Definition of pensioners
+*  Nyugdíjasok meghatározása
    IF NOT I_NYLAP[] IS INITIAL.
      DESCRIBE TABLE I_NYLAP LINES L_NYLAP.
      READ TABLE T_BEVALLO INTO L_BEVALLO_ALV
@@ -26605,11 +26605,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    DATA LW_/ZAK/BEVALLALV TYPE /ZAK/BEVALLALV.
 
-*  We define the character:
+*  Meghatározzuk a jelleget:
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = $ABEVAZ_JELLEG
                          BINARY SEARCH.
-*  In this case, you do not need to fill in the due date:
+*  Ebben az esetben nem kell tölteni az esedékesség dátumát:
    IF SY-SUBRC EQ 0 AND LW_/ZAK/BEVALLALV-FIELD_C = 'H'.
 **  ESDAT_FLAG-ben megjelölt ABEV azonosító értéke
 *     READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
@@ -26625,7 +26625,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 *                               INDEX V_TABIX TRANSPORTING FIELD_C.
 *       ENDIF.
 *     ENDIF.
-*  For correctors, there is no need for 0 flag in the self-check allowance either
+*  Helyesbítőnél nem kell az önellenőrzési pótlékban sem 0 flag
      READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLALV
                          WITH KEY ABEVAZ = C_ABEVAZ_A0GC0190CA
                          BINARY SEARCH.
@@ -26661,18 +26661,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA LW_/ZAK/BEVALLB TYPE /ZAK/BEVALLB.
    DATA L_TABIX LIKE SY-TABIX.
 
-*  Read the ABEV to be modified
+*  Módosítandó ABEV beolvasása
    READ TABLE $T_BEVALLB INTO LW_/ZAK/BEVALLB
                       WITH KEY ABEVAZ = $ABEVAZ_TO.
    CHECK SY-SUBRC EQ 0.
-*  this line must be modified!
+*  ezt a sort kell módosítani!
    READ TABLE $T_BEVALLO INTO LW_/ZAK/BEVALLO
         WITH KEY ABEVAZ  = $ABEVAZ_TO
                  ADOAZON = $ADOAZON.
    IF SY-SUBRC EQ 0.
      L_TABIX = SY-TABIX.
    ELSE.
-*    Creation of tax number ABEV
+*    Létrehozás adószámos ABEV
      PERFORM CREATE_ADOSZ_ABEV_IN_BEVALLO TABLES $T_BEVALLO
                                           USING  LW_/ZAK/BEVALLO
                                                  LW_/ZAK/BEVALLB
@@ -26685,7 +26685,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                      WITH KEY  ADOAZON = $ADOAZON
                                ABEVAZ = $ABEVAZ_FROM.
    CHECK SY-SUBRC EQ 0.
-*  If the ABEV is type C
+*  Ha a ABEV C típus
    IF LW_/ZAK/BEVALLB-FIELDTYPE EQ 'C'.
      LW_/ZAK/BEVALLO-FIELD_C = LW_/ZAK/BEVALLO_FROM-FIELD_C.
    ELSEIF LW_/ZAK/BEVALLB-FIELDTYPE EQ 'N'.
@@ -26739,15 +26739,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    DATA   L_KAMAT LIKE /ZAK/BEVALLO-FIELD_N.
    DATA   L_KAMAT_SUM LIKE /ZAK/BEVALLO-FIELD_N.
 
-*  To upload fields to be summarized
+*  Összegzendő mezők feltöltéséhez
    RANGES LR_ABEVAZ FOR /ZAK/BEVALLO-ABEVAZ.
 
-*  If self-revision
+*  Ha önrevízió
    CHECK $INDEX NE '000'.
 
    SORT T_BEVALLB BY ABEVAZ.
 
-*  Let's read the 'A' abev identifiers of the previous period
+*  Beolvassuk az előző időszak 'A'-s abev azonosítóit
    READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
    CHECK SY-SUBRC EQ 0.
    L_LAST_INDEX = $INDEX - 1.
@@ -26770,7 +26770,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    SORT LI_LAST_BEVALLO BY BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ.
 
-*  We delete records that are not in the given period
+*  Kitöröljük azokat a rekordokat amikeket nem az adott időszakban
 *  adtak fel.
    LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO
                      WHERE NOT ADOAZON IS INITIAL.
@@ -26781,7 +26781,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
        DELETE T_BEVALLO.
        CONTINUE.
      ENDIF.
-*  M 11 Mark with an X if your declaration is considered a correction
+*  M 11 Jelölje X-szel, ha a bevallása helyesbítésnek minősül
      IF W_/ZAK/BEVALLO-ABEVAZ EQ C_ABEVAZ_M0AE003A.
        MOVE 'H' TO W_/ZAK/BEVALLO-FIELD_C.
        MODIFY T_BEVALLO FROM W_/ZAK/BEVALLO TRANSPORTING FIELD_C.
@@ -27187,7 +27187,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
                                 C_ABEVAZ_A0FD0180DA
                                 '0.13'.
 
-*COMPOUNDS
+*ÖSSZESÍTÉSEK
 * A0FD0151DA
    REFRESH LR_ABEVAZ.
    M_DEF  LR_ABEVAZ 'I' 'EQ' C_ABEVAZ_A0FD0152DA SPACE.
@@ -27275,17 +27275,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      ENDIF.
    END-OF-DEFINITION.
 
-*  ADMIT scan
+*  BEVALLB beolvasás
    READ TABLE $T_BEVALLB INTO W_/ZAK/BEVALLB
                         WITH KEY ABEVAZ = $ABEV_MOD.
 
-* It must be calculated by tax number:
+* Adószámonként kell számolni:
    LOOP AT $T_ADOAZON.
      CLEAR L_FIELD_SUB.
 *++1608 #01. 2015.02.08
      CLEAR L_FIRST.
 *--1608 #01. 2015.02.08
-*   Let's read the ABEV to be modified
+*   Beolvassuk a módosítandó ABEV-et
      READ TABLE $T_BEVALLO TRANSPORTING NO FIELDS
           WITH KEY ABEVAZ  = $ABEV_MOD
                    ADOAZON = $T_ADOAZON-ADOAZON
@@ -27294,7 +27294,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      IF SY-SUBRC EQ 0.
        MOVE SY-TABIX TO L_INDEX_MOD.
        LOOP AT $T_BEVALLB INTO LW_BEVALLB WHERE ABEVAZ IN $R_ABEV.
-*      Determination and summarization of value
+*      Érték meghatározása, összegzése
          LM_READ_DATA LW_BEVALLB-ABEVAZ
                       $T_ADOAZON-ADOAZON
                       $T_ADOAZON-LAPSZ
@@ -27461,7 +27461,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
    END-OF-DEFINITION.
 
 
-*  Reading a current tax return
+*  Aktuális bevallás olvasása
    IF NOT $ABEV_F1 IS INITIAL.
      M_BEVALLO_READ $T_BEVALLO $ABEV_F1 L_SUM.
    ENDIF.
@@ -27482,7 +27482,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      M_BEVALLO_READ $T_BEVALLO $ABEV_F5 L_SUM.
    ENDIF.
 
-* Read previous period
+* Előző időszak beolvasása
    IF NOT $ABEV_F1 IS INITIAL.
      M_BEVALLO_READ $T_LAST_BEVALLO $ABEV_F1 L_SUM_LAST.
    ENDIF.
@@ -27503,10 +27503,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
      M_BEVALLO_READ $T_LAST_BEVALLO $ABEV_F5 L_SUM_LAST.
    ENDIF.
 
-*  Calculation of difference
+*  Különbözet kiszámolása
    L_FIELD_NRK = L_SUM - L_SUM_LAST.
 
-*  Modify a calculated field
+*  Számított mező módosítása
    READ TABLE $T_BEVALLO INTO W_/ZAK/BEVALLO
                          WITH KEY ABEVAZ = $ABEV_MOD.
    IF SY-SUBRC EQ 0.

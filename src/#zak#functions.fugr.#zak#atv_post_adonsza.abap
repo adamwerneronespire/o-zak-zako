@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ATV_POST_ADONSZA.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -20,7 +20,7 @@ DATA: END OF I_lines.
 
 data: v_error.
 
-* Data consistency check
+* Adatkonzisztencia ellenőrzése
 loop at t_bevallo into w_/zak/bevallo.
    check w_/zak/bevallo-bukrs  ne i_bukrs or
          w_/zak/bevallo-btype  ne i_btype or
@@ -36,11 +36,11 @@ endloop.
 
 check v_error = space.
 
-* Read form data
+* Nyomtatvány adatok beolvasása
    PERFORM READ_BEVALLB_m USING i_BTYPE.
 
 
-* Interpret T_BEVALLO and convert to /ZAK/ATVEZ_SOR
+* T_BEVALLO értelmezése, konvertálása > /ZAK/ATVEZ_SOR
    perform convert_bevallo_lines tables t_bevallo
                                         i_lines
                                   using i_bukrs.
@@ -48,7 +48,7 @@ check v_error = space.
 
 
 
-* Update the tax current account
+* Adófolyószámla aktualizálása
   perform update_adonsza tables i_lines
                          using  i_bukrs
                                 i_btype

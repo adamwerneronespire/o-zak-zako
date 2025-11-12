@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_SEGM_FOR_BUKRS.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"  EXPORTING

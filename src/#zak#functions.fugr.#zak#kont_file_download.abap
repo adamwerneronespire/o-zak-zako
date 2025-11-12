@@ -1,6 +1,6 @@
 FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  TABLES
 *"      T_/ZAK/BEVALLALV STRUCTURE  /ZAK/BEVALLALV OPTIONAL
 *"  CHANGING
@@ -10,7 +10,7 @@ FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
 *"      ERROR_T001Z
 *"      ERROR_FILE_DOWNLOAD
 *"----------------------------------------------------------------------
-* Parameter type
+* Paraméter-típus
   CONSTANTS C_PARTY LIKE T001Z-PARTY VALUE 'YHRASZ'.
 
   DATA: L_FILENAME LIKE RLGRAP-FILENAME.
@@ -43,58 +43,58 @@ FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
   DATA  L_TABIX LIKE SY-TABIX.
 
 
-* Save table
+* Tábla mentése
   LI_BEVALLO[] =  T_/ZAK/BEVALLALV[].
 
-* Read the first row (due to parameters).
+* Beolvassuk az első sort (parméterek miatt).
   READ TABLE LI_BEVALLO INTO LW_BEVALLO INDEX 1.
 
-* Load settings
+* Beállítások beolvasása
   SELECT * INTO TABLE LI_KFILE
                 FROM  /ZAK/KFILE
                WHERE  BTYPE EQ LW_BEVALLO-BTYPE.
   IF SY-SUBRC NE 0.
     MESSAGE E097(/ZAK/ZAK) WITH LW_BEVALLO-BTYPE
             RAISING ERROR_CUST_FILE_DATA.
-*   File structure cannot be determined for declaration type &!
+*   Fájl szerkezet nem határozható meg & bevallás típushoz!
   ENDIF.
 
-* Sort data
+* Adatok rendezése
   SORT LI_BEVALLO BY  ADOAZON ABEVAZ.
 
-* Select T001Z to determine the payer tax ID
+* T001Z szelektálás kifizető adóazonosító száma meghatározásához
   SELECT SINGLE PAVAL INTO L_PAVAL
                       FROM T001Z
                      WHERE BUKRS EQ LW_BEVALLO-BUKRS
                        AND PARTY EQ C_PARTY.
   IF SY-SUBRC NE 0.
     MESSAGE E098(/ZAK/ZAK) WITH LW_BEVALLO-BUKRS RAISING ERROR_T001Z.
-*   Error determining payer identifier for company &! (table T001Z)
+*   Kifizető azonosító meghatározás hiba & vállalatnál! (T001Z tábla)
   ENDIF.
 
-* Convert parameter
+* Paraméter átalakítása
   TRANSLATE L_PAVAL USING '- '.
   CONDENSE  L_PAVAL NO-GAPS .
 
-* If a tax ID exists
+* Ha van adóazonosító
   LOOP AT LI_BEVALLO INTO LW_BEVALLO WHERE
                       NOT ADOAZON IS INITIAL.
     CHECK L_ADOAZON_SAVE NE LW_BEVALLO-ADOAZON.
-* Determine file header positions 1-17
-* 1 - 5  alphanumeric record marker, fixed value 05K33, mandatory
-* 6 - 6  single alpha character, blank (space)
-* 7 - 17  payer tax ID, eleven alphanumeric characters, mandatory,
-*                   left aligned, padded with blanks on the right
+* Fájl eleje meghatározás 1-17
+* 1 - 5  5 alfanum Rekordjel, fix adat: 05K33, kitöltése kötelező
+* 6 - 6  1 alfa üres (blank)
+* 7 - 17 11 alfanum A kifizető adóazonosító száma, kitöltése kötelező,
+*                   balra igazított, jobbról blank feltöltéssel
     CLEAR LW_FILE.
     PERFORM GET_HEAD USING LW_BEVALLO-BTYPE
                            L_PAVAL
                            L_BEGIN
                            LW_FILE-LINE
                            L_SORSZ.
-*     Iterate through the field structure
+*     Végig olvassuk a  mezőszerkezetet
     LOOP AT LI_KFILE INTO LW_KFILE.
       CLEAR LW_BEVALLO_TMP.
-*       Read records with tax ID
+*       Olvassuk adóazonosítóval
       READ TABLE LI_BEVALLO INTO LW_BEVALLO_TMP
                             WITH KEY BUKRS   = LW_BEVALLO-BUKRS
                                      BTYPE   = LW_BEVALLO-BTYPE
@@ -103,7 +103,7 @@ FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
                                      ZINDEX  = LW_BEVALLO-ZINDEX
                                      ABEVAZ  = LW_KFILE-ABEVAZ
                                      ADOAZON = LW_BEVALLO-ADOAZON.
-*       If nothing is found, search without the tax number
+*       Ha nem találunk, akkor megnézzük adószám nélkül
       IF SY-SUBRC NE 0.
         READ TABLE LI_BEVALLO INTO LW_BEVALLO_TMP
                               WITH KEY BUKRS   = LW_BEVALLO-BUKRS
@@ -115,7 +115,7 @@ FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
                                        ADOAZON = ''.
 
       ENDIF.
-*       If a value exists, populate it
+*       Ha van érték, akkor feltöltés
       IF NOT LW_BEVALLO_TMP IS INITIAL.
         PERFORM GET_LINE USING  LW_BEVALLO_TMP-BTYPE
                                 LW_BEVALLO_TMP-ABEVAZ
@@ -125,28 +125,28 @@ FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
                                 L_BEGIN
                                 LW_KFILE-LNGTH
                                 LW_FILE-LINE.
-*       No value found, set starting position
+*       Nincs érték, kezdő pozíció beállítás
       ELSE.
         ADD LW_KFILE-LNGTH TO L_BEGIN.
       ENDIF.
     ENDLOOP.
-*++2010.08.17 Unicode correction Balazs Gabor (Ness)
-*   Code page 852
+*++2010.08.17 Unicode javítás Balázs Gábor (Ness)
+*   852 kódkészlet
 *    TRANSLATE LW_FILE TO CODE PAGE '1403'.
     perform translate_codepage using '1404'
                                      '1403'
                                      LW_FILE.
-*--2010.08.17 Unicode correction Balazs Gabor (Ness)
+*--2010.08.17 Unicode javítás Balázs Gábor (Ness)
     APPEND LW_FILE TO LI_FILE.
     MOVE LW_BEVALLO-ADOAZON TO L_ADOAZON_SAVE.
   ENDLOOP.
 
-* Modify file name
+* Fájl név módosítás
   SPLIT I_FILE AT '\' INTO TABLE LI_FILENAME.
   DESCRIBE TABLE LI_FILENAME LINES L_TABIX.
   READ TABLE LI_FILENAME INDEX L_TABIX.
   CLEAR LI_FILENAME-LINE.
-* First 8 characters of the file name
+* Fájl név első 8 karaktere
   LI_FILENAME-LINE(8)   = L_PAVAL(8).
 * '.'
   LI_FILENAME-LINE+8(1) = '.'.
@@ -169,7 +169,7 @@ FUNCTION /ZAK/KONT_FILE_DOWNLOAD.
   CONDENSE I_FILE.
 
 
-* FILE DOWNLOAD
+* FÁJL LETÖLTÉS
 *++0001 2007.01.03 BG (FMC)
 * 0001 ++ CST 2006.05.27
   CALL METHOD CL_GUI_FRONTEND_SERVICES=>GUI_DOWNLOAD

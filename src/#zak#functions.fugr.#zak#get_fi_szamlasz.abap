@@ -1,6 +1,6 @@
 FUNCTION /ZAK/GET_FI_SZAMLASZ.
 *"----------------------------------------------------------------------
-*"* Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BELNR) TYPE  BELNR_D OPTIONAL
@@ -30,7 +30,7 @@ FUNCTION /ZAK/GET_FI_SZAMLASZ.
   DATA LS_BKPF   TYPE BKPF.
   DATA L_ZUONR   TYPE DZUONR.
 *++1465 #03.
-* Reversal data
+* Sztornó adatok
   DATA L_STBLG TYPE RE_STBLG.
   DATA L_STJAH TYPE RE_STJAH.
   DATA L_SZAMLASZA TYPE  /ZAK/SZAMLASZA.
@@ -54,7 +54,7 @@ FUNCTION /ZAK/GET_FI_SZAMLASZ.
         OUTPUT = &1.
   END-OF-DEFINITION.
 
-* Determine the original document
+* Meghatározzuk az eredeti bizonylatot
   IF I_AWKEY IS INITIAL.
     M_CONV_ALPHA_INPUT I_BELNR.
     SELECT SINGLE * INTO LS_BKPF
@@ -70,8 +70,8 @@ FUNCTION /ZAK/GET_FI_SZAMLASZ.
 *                       WHERE BUKRS EQ LS_AWKDEC-BUKRS
 *                         AND BELNR EQ LS_AWKDEC-BELNR
 *                         AND GJAHR EQ LS_AWKDEC-GJAHR.
-*  For preposted documents the same AWKEY may appear on multiple entries
-*  but we must identify the normal document
+*  Előrögzített bizonylatnál előfordulhat, hogy ua. az AWKEY
+*  több bizonylatnál, de nekünk a normál bizonylatot kell meghatározni
     SELECT SINGLE * INTO LS_BKPF
                         FROM BKPF
                        WHERE AWKEY EQ I_AWKEY
@@ -88,7 +88,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_MOL_02 SPOTS /ZAK/FUNCTIONS_ES .
 **    MESSAGE E354(/ZAK/ZAK) RAISING ERROR_AWKEY.
 *    MESSAGE E354(/ZAK/ZAK) WITH I_AWKEY RAISING ERROR_AWKEY.
 **--1365 #9.
-*   Cannot determine or the reference key is invalid! (AWKEY)
+*   Nem lehet meghatározni vagy hibás referenciakulcs! (AWKEY)
     PERFORM ADD_MESSAGE TABLES T_RETURN
                         USING  '/ZAK/ZAK'
                                'E'
@@ -101,7 +101,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_MOL_02 SPOTS /ZAK/FUNCTIONS_ES .
   ENDIF.
 
 *++1465 #03.
-* Save the data for reversal processing
+* Elmentjük az adatokat a sztornó kezeléshez
   LS_BKPF_SAVE = LS_BKPF.
 *--1465 #03.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_ZF_01 SPOTS /ZAK/FUNCTIONS_ES .
@@ -110,7 +110,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_ZF_01 SPOTS /ZAK/FUNCTIONS_ES .
   IF LS_BKPF-XBLNR IS INITIAL.
 *++1665 #08.
 *    MESSAGE I359(/ZAK/ZAK) WITH LS_BKPF-BUKRS LS_BKPF-BELNR LS_BKPF-GJAHR RAISING ERROR_OTHER.
-*   Empty reference, invoice number cannot be determined! (&/&/&)
+*   Üres referencia, számlaszámot nem lehet meghatározni! (&/&/&)
     PERFORM ADD_MESSAGE TABLES T_RETURN
                         USING  '/ZAK/ZAK'
                                'I'
@@ -146,7 +146,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_INVITEL_02 SPOTS /ZAK/FUNCTIONS_ES .
 *  CLEAR V_INF_COUNT.
 **--2065 #04.
 *--2165 #01.
-*     Search previous documents for Cargo XBLNR
+*     Előző bizonylatok keresése Cargo XBLNR
 *++1765 #31.
 *++2265 #07.
   CLEAR V_INF_COUNT.
@@ -163,7 +163,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_INVITEL_02 SPOTS /ZAK/FUNCTIONS_ES .
 *--1665 #06.
 ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_ZF_04 SPOTS /ZAK/FUNCTIONS_ES .
 
-* If empty, use the current value as the original
+* Ha üres akkor önmaga lesz az eredeti
   IF E_SZAMLASZA IS INITIAL.
     E_SZAMLASZA = E_SZAMLASZ.
   ENDIF.
@@ -172,7 +172,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_GET_FI_ZF_04 SPOTS /ZAK/FUNCTIONS_ES .
     E_SZLATIP = C_SZLATIP_E.
   ENDIF.
 *++1465 #03.
-* Determine reversal
+* Sztornó meghatározása
   IF NOT LS_BKPF-STBLG IS INITIAL AND NOT LS_BKPF-STJAH IS INITIAL
      AND LS_BKPF-XREVERSAL EQ '2'.
     CLEAR: L_SZAMLASZA, L_SZAMLASZ, L_SZAMLASZE, L_STORNO, L_SZLATIP.

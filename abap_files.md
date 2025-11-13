@@ -237,7 +237,7 @@
 - [x] src/#zak#szja_book.prog.screen_9001.abap
 - [x] src/#zak#szja_egyeztet.prog.abap
 - [x] src/#zak#szja_egyeztet.prog.screen_9001.abap
-- [ ] src/#zak#szja_sap_sel.prog.abap
+- [X] src/#zak#szja_sap_sel.prog.abap
 - [x] src/#zak#szja_sap_sel.prog.screen_9000.abap
 - [x] src/#zak#szja_sap_sel.prog.screen_9001.abap
 - [x] src/#zak#szja_sap_sel_check.prog.abap

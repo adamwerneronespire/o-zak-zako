@@ -8,7 +8,7 @@ REPORT /ZAK/MIGR_SZJA_SEL MESSAGE-ID /ZAK/ZAK.
 *& Author            : Balázs Gábor
 *& Creation date     : 2018.12.06
 *& Functional spec by: Balázs Gábor
-*& SAP modul neve    : ADO
+*& SAP module name    : ADO
 *& Program  type     : ________
 *& SAP version       : ________
 *&---------------------------------------------------------------------*

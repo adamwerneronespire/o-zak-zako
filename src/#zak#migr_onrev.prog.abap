@@ -1,27 +1,27 @@
 *&---------------------------------------------------------------------*
-*& Program: Migrációs program önrevízióhoz - státuszok kezelése
+*& Program: Migration program for self-revision - status handling
 *&---------------------------------------------------------------------*
 REPORT /ZAK/MIGR_ONREV MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Migrációs program önrevízióhoz - státuszok kezelése
+*& Function description: Migration program for self-revision - status handling
 *&---------------------------------------------------------------------*
-*& Szerző            : Cserhegyi Tímea - fmc
-*& Létrehozás dátuma : 2006.04.05
-*& Funkc.spec.készítő: ________
+*& Author            : Cserhegyi Tímea - fmc
+*& Creation date     : 2006.04.05
+*& Functional spec by: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program  type     : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION      TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0001   2006/05/27   Cserhegyi T.  CL_GUI_FRONTEND_SERVICES
-*&                                   cseréje hagyományosra
-*& 0002   2007/05/09   Balázs G.     Általánosítás, hogy ne csak ÁFA
-*&                                   migrációhoz lehessen használni.
+*&                                   replaced with the classic version
+*& 0002   2007/05/09   Balázs G.     Generalization so that it can be
+*&                                   used for more than just VAT migration.
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 DATA: L_SUBRC TYPE SY-SUBRC.
@@ -30,13 +30,13 @@ INCLUDE /ZAK/COMMON_STRUCT.
 INCLUDE /ZAK/READ_TOP.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
-* file típusok
+* File types
 CONSTANTS: C_FILE_XLS(2) TYPE C VALUE   '02',
            C_FILE_TXT(2) TYPE C VALUE   '01',
            C_FILE_XML(2) TYPE C VALUE   '03',
@@ -47,23 +47,23 @@ CONSTANTS: C_FILE_XLS(2) TYPE C VALUE   '02',
            C_BEGIN_ROW   TYPE I VALUE    '1'.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant             -   (C_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
+*      Range                -   (R_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
+*      Field symbol         -   (FS_xxx...)                             *
+*      Method               -   (METH_xxx...)                           *
+*      Object               -   (O_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 TYPES: BEGIN OF /ZAK/ZAK_MIGR,
@@ -87,13 +87,13 @@ DATA: I_XLS      TYPE STANDARD TABLE OF ALSMEX_TABLINE
 DATA: I_OUTTAB    TYPE STANDARD TABLE OF /ZAK/MIGRACI01 INITIAL SIZE 0,
       I_OUTTAB_EX TYPE STANDARD TABLE OF /ZAK/ANALITIKA INITIAL SIZE 0.
 
-* Hiba adaszerkezet tábla
+* Error data-structure table
 DATA: I_HIBA TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA   INITIAL SIZE 0.
 DATA: I_LINE TYPE STANDARD TABLE OF /ZAK/LINE            INITIAL SIZE 0.
 
 
 
-* excel betöltéshez
+* for Excel loading
 DATA: W_XLS      TYPE ALSMEX_TABLINE,
       W_DD03P    TYPE DD03P,
       W_MAIN_STR TYPE DD03P,
@@ -105,11 +105,11 @@ DATA: W_XLS      TYPE ALSMEX_TABLINE,
 DATA: W_OUTTAB  TYPE /ZAK/MIGRACI01,
       W_BEVALLI TYPE /ZAK/BEVALLI,
       W_ELSO    TYPE /ZAK/BEVALLI.
-* adatszerkezet hiba
+* data structure error
 DATA: W_HIBA    TYPE /ZAK/ADAT_HIBA.
 
 
-* ALV kezelési változók
+* ALV control variables
 DATA: V_OK_CODE          LIKE SY-UCOMM,
       V_SAVE_OK          LIKE SY-UCOMM,
       V_REPID            LIKE SY-REPID,
@@ -175,7 +175,7 @@ INITIALIZATION.
 
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -183,7 +183,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -213,22 +213,22 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-*  Bevallás fajta meghatározása
+*  Determine tax return category
   PERFORM READ_BEVALL USING P_BUKRS
                             P_BTYPE.
 
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 W_/ZAK/BEVALL-BTYPART
                                 C_ACTVT_01.
 
-* vezérlő táblák olvasása
+* Read control tables
   PERFORM READ_CUST_TABLE USING P_BUKRS
                                 P_BTYPE
                                 P_BSZNUM.
 
   CLEAR: V_TYPE,V_STRNAME.
-* Adatszerkezet meghatározás és meglétének ellenörzése
+* Determine the data structure and verify its existence
   PERFORM CHECK_BEVALLD USING P_BUKRS
                               P_BTYPE
                               P_BSZNUM
@@ -237,29 +237,29 @@ START-OF-SELECTION.
 
 
 
-* Adatszerkezethez tartozó mező ellenörzések, és
-* az oszlopok számának meghatározása.
+* Field checks belonging to the data structure,
+* and determining the number of columns.
   PERFORM CHECK_FIELDTYP USING    V_STRNAME
                          CHANGING V_END_COL.
 
 
-* Analitika tábla szerkezet
+* Analytics table structure
   PERFORM GET_ANALITIKA_STRUCT USING '/ZAK/ANALITIKA'.
 
-* Adatszerkezet-mező összerendelés meghatározása
-* Csak ABEV azonosítóval rendelkező mezőket dolgozunk fel!
+* Determine the data structure-field mapping
+* Only fields that have an ABEV ID are processed!
   PERFORM CHECK_BEVALLC USING P_BUKRS
                               P_BTYPE
                               V_STRNAME
                               P_BSZNUM.
 
 
-* Adatszolgáltatás fájl formátuma alapján meghívom a betöltő funkciókat
+* Call the upload functions based on the data-supply file format
   CASE V_TYPE.
     WHEN C_FILE_XLS.
 *
       V_BEGIN_COL = 1.
-* a hibák a I_HIBA táblában!
+* the errors are stored in table I_HIBA!
       CALL FUNCTION '/ZAK/XLS'
         EXPORTING
           FILENAME                = P_FDIR
@@ -288,7 +288,7 @@ START-OF-SELECTION.
         MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ELSE.
-* Belső tábla kitöltés I_OUTTAB
+* Populate internal table I_OUTTAB
         PERFORM FILL_DATATAB USING I_XLS[]
                                    I_DD03P[]
                                    I_MAIN_STR[]
@@ -325,7 +325,7 @@ START-OF-SELECTION.
         MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
                 WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ELSE.
-* Belső tábla kitöltés I_OUTTAB
+* Populate internal table I_OUTTAB
         PERFORM FILL_DATATAB USING I_XLS[]
                                    I_DD03P[]
                                    I_MAIN_STR[]
@@ -385,7 +385,7 @@ END-OF-SELECTION.
 *  <--  p2        text
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
-* Vállalat megnevezése
+* Company name
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -576,7 +576,7 @@ FORM CHECK_PARAMS.
   DATA: LV_ACTIVE TYPE ABAP_BOOL,
         LV_STRING TYPE STRING.
 
-* Vállalat + Bevallás típus
+* Company + tax return type
   IF NOT P_BUKRS IS INITIAL AND
      NOT P_BTYPE IS INITIAL.
 
@@ -596,12 +596,12 @@ FORM CHECK_PARAMS.
 
   ENDIF.
 
-* Adatszolgáltatás
+* Data supply
   IF P_BSZNUM IS INITIAL.
     MESSAGE E161(/ZAK/ZAK) WITH P_BUKRS P_BTYPE .
   ENDIF.
 
-* Adatszerkezet meghatározás és meglétének ellenörzése
+* Determine the data structure and verify its existence
   PERFORM CHECK_BEVALLD USING P_BUKRS
                               P_BTYPE
                               P_BSZNUM
@@ -609,7 +609,7 @@ FORM CHECK_PARAMS.
                               V_STRNAME.
 
 
-* Összes adatszolgáltatás
+* All data supplies
   PERFORM GET_BEVALLD   USING P_BUKRS
                               P_BTYPE.
 
@@ -659,7 +659,7 @@ FORM CHECK_PARAMS.
 
   CONDENSE L_RET NO-GAPS.
   IF L_RET EQ SPACE.
-*   A megadott fájlt (&) nem lehet megnyitni!
+*   The specified file (&) cannot be opened!
     MESSAGE E004(/ZAK/ZAK) WITH P_FDIR.
   ENDIF.
 
@@ -692,7 +692,7 @@ FORM CHECK_BEVALLD USING    $BUKRS TYPE T001-BUKRS
   DATA: W_DD02L TYPE DD02L.
 
   CLEAR: W_/ZAK/BEVALLD.
-* Adatszerkezet meghatározás
+* Determine data structure
   SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
                   WHERE BUKRS  EQ $BUKRS AND
                   BTYPE  EQ $BTYPE AND
@@ -701,10 +701,10 @@ FORM CHECK_BEVALLD USING    $BUKRS TYPE T001-BUKRS
     MESSAGE E011(/ZAK/ZAK) WITH $BUKRS $BTYPE $BSZNUM.
   ELSE.
     IF W_/ZAK/BEVALLD-FILETYPE EQ '04'.
-* SAP adatszolgáltatást jelenleg nem engedélyezett !
+* SAP data supply is not permitted at the moment!
       MESSAGE E006(/ZAK/ZAK).
     ENDIF.
-* Adatszerkezet meglétének ellenörzése!
+* Checking for the existence of the data structure!
 *++S4HANA#01.
 *    SELECT SINGLE * INTO W_DD02L FROM DD02L
 *                    WHERE TABNAME  EQ W_/ZAK/BEVALLD-STRNAME AND
@@ -715,7 +715,7 @@ FORM CHECK_BEVALLD USING    $BUKRS TYPE T001-BUKRS
                       AS4LOCAL EQ @C_A AND
                       TABCLASS EQ @C_CLASS INTO @W_DD02L.
 *--S4HANA#01.
-* aktivált?
+* activated?
     IF SY-SUBRC NE 0.
       MESSAGE E050(/ZAK/ZAK) WITH W_/ZAK/BEVALLD-STRNAME .
     ELSE.
@@ -739,8 +739,8 @@ ENDFORM.                    " CHECK_BEVALLD
 FORM READ_BEVALL USING    $BUKRS TYPE /ZAK/BEVALL-BUKRS
                           $BTYPE TYPE /ZAK/BEVALL-BTYPE.
 *--S4HANA#01.
-* egy bevallás típus csak egy bevallás fajtához tartozhat, így
-* a bevallás fajta meghatározásánál elég az első bejegyzést vizsgálni!
+* A tax return type can belong to only one tax return category, so
+* it is enough to check the first entry when determining the category!
   SELECT * UP TO 1 ROWS INTO W_/ZAK/BEVALL FROM /ZAK/BEVALL
                        WHERE BUKRS EQ $BUKRS AND
                              BTYPE EQ $BTYPE
@@ -761,7 +761,7 @@ ENDFORM.                    " READ_BEVALL
 FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
                               $BTYPE  LIKE /ZAK/BEVALL-BTYPE
                               $BSZNUM LIKE /ZAK/BEVALLD-BSZNUM.
-* Bevallás adatszolgáltatás feltöltések  !
+* Tax return data supply uploads!
   SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
                             WHERE BUKRS  EQ $BUKRS AND
                                   BTYPE  EQ $BTYPE AND
@@ -770,7 +770,7 @@ FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
 *   MESSAGE E011 WITH $BUKRS $BTYPE $BSZNUM.
   ENDIF.
 
-* Adatszerkezet-mező összerendelés meghatározása
+* Determine the data structure-field mapping
 *++S4HANA#01.
 *  SELECT * INTO TABLE I_/ZAK/BEVALLC FROM /ZAK/BEVALLC
 *                            WHERE BTYPE EQ $BTYPE AND
@@ -994,8 +994,8 @@ FORM MOVE_CORR USING    $XLS       LIKE I_XLS[]
 
   DATA: WA_XLS TYPE ALSMEX_TABLINE.
   CLEAR WA_XLS.
-* analitika mezők megfeleltetése az adatszerkezetnek!
-* Ha a mező név azonos, akkor töltöm a /ZAK/ANALITIKA táblát
+* Matching analytics fields to the data structure!
+* If the field names are identical, load the /ZAK/ANALITIKA table
   LOOP AT $MAIN_STR INTO W_MAIN_STR.
     READ TABLE $DD03P INTO WA_DD03P
                       WITH KEY FIELDNAME = W_MAIN_STR-FIELDNAME .
@@ -1076,11 +1076,11 @@ FORM CREATE_AND_INIT_ALV CHANGING PT_OUTTAB   LIKE I_OUTTAB[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Building the field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING PT_FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   PS_LAYOUT-CWIDTH_OPT = C_X.
@@ -1147,7 +1147,7 @@ MODULE PAI_9000 INPUT.
       SET SCREEN 0.
       LEAVE SCREEN.
 
-* Kilépés
+* Exit
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
 
@@ -1261,7 +1261,7 @@ FORM UPDATE_STATUS.
     ENDIF.
 
   ENDLOOP.
-* Listára csak a BEVALLI rekordok kellenek.
+* Only the BEVALLI records are required on the list.
   DELETE I_OUTTAB WHERE LIGHT EQ 2.
 
   LOOP AT I_OUTTAB INTO W_OUTTAB.

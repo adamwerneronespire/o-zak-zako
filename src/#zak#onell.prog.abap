@@ -1,5 +1,5 @@
 *&---------------------------------------------------------------------*
-*& Program: Önellenőrzési jegyzőkönyv készítés
+*& Program: Preparation of self-revision protocol
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/ONELL MESSAGE-ID /ZAK/ZAK
@@ -7,24 +7,24 @@ REPORT  /ZAK/ONELL MESSAGE-ID /ZAK/ZAK
                              LINE-COUNT 65.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott adatok alapján
-*& levállogatja a bevallás adataokat és elkészíti az önellenőrzés
-*  jegyzőkönyvet.
+*& Function description: Based on the data provided on the selection,
+*& the program collects the tax return data and prepares the
+*  self-revision protocol.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2008.04.26
-*& Funkc.spec.készítő: Róth Nándor
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2008.04.26
+*& Functional spec by: Róth Nándor
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program  type     : Report
+*& SAP version       : 46C
 *&--------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                 DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2008.11.26   Balázs Gábor  Szelekció módosítása, készült
-*&                                   dátum  megadható bevallásonként
+*& 0001   2008.11.26   Balázs Gábor  Selection modification, completion
+*&                                   date can be specified per return
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 DATA LI_FCODE TYPE TABLE OF SY-UCOMM.
@@ -33,37 +33,37 @@ DATA LT_EXCL_FUNC TYPE UI_FUNCTIONS.
 *--S4HANA#01.
 INCLUDE /ZAK/COMMON_STRUCT.
 
-*Adatdeklaráció
+*Data declaration
 INCLUDE /ZAK/ONJTOP.
-*Közös rutinok
+*Common routines
 INCLUDE /ZAK/ONJF01.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant             -   (C_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
+*      Range                -   (R_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
+*      Field symbol         -   (FS_xxx...)                             *
+*      Method               -   (METH_xxx...)                           *
+*      Object               -   (O_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA G_INDEX LIKE SY-TABIX.
 
-*Önellenőrzési pótlék összege.
+*Amount of the self-revision surcharge.
 
 
 * local class to handle semantic checks
@@ -76,34 +76,34 @@ DATA: G_EVENT_RECEIVER TYPE REF TO LCL_EVENT_RECEIVER.
 *&---------------------------------------------------------------------*
 
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-*Űrlap neve:
+*Form name:
   PARAMETERS P_FNAME LIKE SSFSCREEN-FNAME DEFAULT '/ZAK/ONJ_JEGYZOKONYV'
                                           MODIF ID DIS.
-*Vállalat
+*Company
   PARAMETERS P_BUKRS LIKE T001-BUKRS OBLIGATORY MEMORY ID BUK
                                      VALUE CHECK.
-*Bevallás típus:
+*Tax return type:
   PARAMETERS P_BTYPE LIKE /ZAK/BEVALLB-BTYPE OBLIGATORY.
 *++0001 2008.11.26 (BG)
-**Készült
+**Completed
 *PARAMETERS P_KESZD LIKE /ZAK/ONJDATA-KESZULT DEFAULT SY-DATUM.
 *--0001 2008.11.26 (BG)
 SELECTION-SCREEN: END OF BLOCK BL01.
 
 *++0001 2008.11.26 (BG)
 SELECTION-SCREEN: BEGIN OF BLOCK BL03 WITH FRAME TITLE TEXT-T03.
-*Gazdasági év
+*Fiscal year
   SELECT-OPTIONS S_GJAHR FOR /ZAK/ONJDATA-GJAHR.
-*Gazdasági hónap
+*Fiscal month
   SELECT-OPTIONS S_MONAT FOR /ZAK/ONJDATA-MONAT.
-*Bevallás sorszáma időszakon belül
+*Tax return serial number within the period
   SELECT-OPTIONS S_INDEX FOR /ZAK/ONJDATA-ZINDEX.
-*Készült
+*Completed on
   SELECT-OPTIONS S_KESZD FOR /ZAK/ONJDATA-KESZULT.
   SELECTION-SCREEN SKIP.
 *--0001 2008.11.26 (BG)
   SELECTION-SCREEN: BEGIN OF BLOCK BL02 WITH FRAME TITLE TEXT-T02.
-*Teszt futás
+*Test run
     PARAMETERS:
       P_TEST RADIOBUTTON GROUP GR1 DEFAULT 'X',
       P_PROC RADIOBUTTON GROUP GR1,
@@ -180,7 +180,7 @@ INITIALIZATION.
 
   G_REPID = SY-REPID.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -188,7 +188,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -218,7 +218,7 @@ AT SELECTION-SCREEN.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Bevallás fajta meghatározás
+* Determine tax return category
   CALL FUNCTION '/ZAK/GET_BTYPART_FROM_BTYPE'
     EXPORTING
       I_BUKRS       = P_BUKRS
@@ -233,7 +233,7 @@ START-OF-SELECTION.
             WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
   ENDIF.
 
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING
                                 P_BUKRS
                                 G_BTYPART
@@ -242,15 +242,15 @@ START-OF-SELECTION.
 
   PERFORM MESSAGES_INITIALIZE.
 
-* Vállalati adatok beolvasása
+* Reading company data
   PERFORM GET_T001 USING P_BUKRS.
 
-* Meghatározzuk a bevallás fajtát:
+* Determining the type of tax return:
   PERFORM GET_BTYPART USING P_BUKRS
                             P_BTYPE
                    CHANGING G_BTYPART.
 
-* Adatok meghatározása (teszt és előfeldolgozás)
+* Determining data (test and pre-processing)
   PERFORM GET_DATA TABLES I_ONJALV
                           I_ONJALV_SAVE
                           I_/ZAK/ADONEM
@@ -270,7 +270,7 @@ START-OF-SELECTION.
                           P_TEST
                           P_PROD.
 
-* Adatok meghatározása (éles futás)
+* Determining data (production run)
   PERFORM GET_DATA_PROD TABLES I_ONJALV
                                I_/ZAK/ONJDATA
                                I_/ZAK/ONJDANA
@@ -279,7 +279,7 @@ START-OF-SELECTION.
                                P_PROD.
 
 
-* Adatok meghatározása (megjelenítés)
+* Determining data (display)
   PERFORM GET_DATA_LIST TABLES I_ONJALV
                                I_/ZAK/ONJDATA
                                I_/ZAK/ONJDANA
@@ -293,23 +293,23 @@ START-OF-SELECTION.
 
   IF I_ONJALV[] IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain any records that can be processed!
     EXIT.
   ENDIF.
 
-* Üzenetek menetése
+* Saving messages
 *++S4HANA#01.
 *  PERFORM MESSAGE_SAVE_STORE USING G_INDEX
   PERFORM MESSAGE_SAVE_STORE CHANGING G_INDEX
                                       G_ERROR.
 *--S4HANA#01.
 
-* Üzenetek megjelenítése
+* Displaying messages
   PERFORM SHOW_MESSAGES USING G_INDEX
                               P_TEST.
 
 
-* Éles futás űrlap nyomtatás, adatok módosítás
+* Production run form printing, data modification
   PERFORM PRODUCTIVE_RUN TABLES I_ONJALV
                                 I_/ZAK/ONJDATA
                                 I_/ZAK/BEVALLI
@@ -378,12 +378,12 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
 
   CHECK $PROD IS INITIAL.
 
-*Adónemek meghatározása
+*Determining tax types
   SELECT * INTO TABLE $I_/ZAK/ADONEM
            FROM /ZAK/ADONEM
           WHERE BUKRS EQ $BUKRS.
 
-* Önellenőrzés releváns adónemek meghatározása
+* Determining tax types relevant for self-revision
   SELECT ADONEM INTO L_ADONEM
                 FROM /ZAK/ADONEM
                WHERE BUKRS EQ $BUKRS
@@ -391,13 +391,13 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
     M_DEF LR_ADONEM_ONELL 'I' 'EQ' L_ADONEM SPACE.
   ENDSELECT.
 
-* Meghatározzuk az esedékesség dátum abev azonosítóját
+* Determining the due date ABEV identifier
   SELECT SINGLE ABEVAZ INTO L_ESDAT_ABEVAZ
          FROM /ZAK/BEVALLB
         WHERE BTYPE EQ $BTYPE
           AND ESDAT_FLAG EQ C_X.
   IF SY-SUBRC NE 0.
-* Hiba a & bevallás esedékességi dátum meghatározásánál!
+* Error determining the due date for return &!
     PERFORM MESSAGE_STORE USING G_INDEX
                                 'E'
                                 '/ZAK/ZAK'
@@ -408,7 +408,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
                                 SY-MSGV4.
   ENDIF.
 
-* Meghatározzuk az időszakokat:
+* Determining the periods:
   M_DEF LR_FLAG 'I' 'EQ' 'Z' SPACE.
   M_DEF LR_FLAG 'I' 'EQ' 'X' SPACE.
 
@@ -430,7 +430,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
     EXIT.
   ENDIF.
 
-* Adatok meghatározása adófolyószámla alapján
+* Determining data based on the tax account
   LOOP AT $I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI.
 *++S4HANA#01.
 *    REFRESH: I_/ZAK/BEVALLO, I_/ZAK/ADONSZA.
@@ -458,7 +458,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
                                      SEPARATED BY '/'.
 
     IF SY-SUBRC NE 0.
-* Nem található adat a bevalláshoz (/ZAK/BEVALLO)! (&)
+* No data found for the return (/ZAK/BEVALLO)! (&)
       PERFORM MESSAGE_STORE USING G_INDEX
                                   'E'
                                   '/ZAK/ZAK'
@@ -470,7 +470,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
 
 
     ELSE.
-*     Meghatározzuk létezik-e adat az előfeldolgozásban
+*     Determine whether data exists in pre-processing
 *++0001 2008.11.26 (BG)
 *     SELECT SINGLE /ZAK/TEXT ONEPOT
       SELECT SINGLE /ZAK/TEXT ONEPOT KESZULT
@@ -510,7 +510,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
           OTHER_ERROR   = 2
           OTHERS        = 3.
       IF SY-SUBRC <> 0.
-*       Hiba az adófolyószámla adatok meghatározásánál! (&)
+*       Error determining the tax account data! (&)
         PERFORM MESSAGE_STORE USING G_INDEX
                                     'E'
                                     '/ZAK/ZAK'
@@ -522,11 +522,11 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
       ELSE.
         LOOP AT I_/ZAK/ADONSZA INTO W_/ZAK/ADONSZA.
           CLEAR W_ONJALV.
-*         Ha már volt feltöltve adat
+*         If data has already been uploaded
           IF NOT L_/ZAK/TEXT IS INITIAL.
             MOVE L_/ZAK/TEXT TO W_ONJALV-/ZAK/TEXT.
           ENDIF.
-*         Ha nem önellenőrzési adónem
+*         If it is not a self-revision tax type
 *++1908 #09.
 *          IF NOT W_/ZAK/ADONSZA-ADONEM IN LR_ADONEM_ONELL.
           IF NOT W_/ZAK/ADONSZA-ADONEM IN LR_ADONEM_ONELL OR LR_ADONEM_ONELL[] IS INITIAL.
@@ -542,8 +542,8 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
               MOVE L_KESZULT TO W_ONJALV-KESZULT.
             ENDIF.
 *--0001 2008.11.26 (BG)
-*           Esedékességi dátum meghatározása
-*           Beolvassuk az adónemet
+*           Determining the due date
+*           Reading the tax type
             READ TABLE $I_/ZAK/ADONEM INTO W_/ZAK/ADONEM
                        WITH KEY BUKRS  = W_/ZAK/ADONSZA-BUKRS
                                 ADONEM = W_/ZAK/ADONSZA-ADONEM.
@@ -552,7 +552,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
             MOVE W_/ZAK/BEVALLI-BTYPE TO W_/ZAK/BEVALLO-BTYPE.
             MOVE W_/ZAK/BEVALLI-GJAHR TO W_/ZAK/BEVALLO-GJAHR.
             MOVE W_/ZAK/BEVALLI-MONAT TO W_/ZAK/BEVALLO-MONAT.
-*          Esedékességi dátum kiszámítása (/ZAK/POST_ADONSZA alapján)
+*          Calculating the due date (based on /ZAK/POST_ADONSZA)
 *++S4HANA#01.
 *            PERFORM GET_ESED_DAT(/ZAK/SAPLFUNCTIONS) USING W_/ZAK/BEVALLO
             PERFORM GET_ESED_DAT IN PROGRAM /ZAK/SAPLFUNCTIONS USING W_/ZAK/BEVALLO
@@ -564,7 +564,7 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
                                   W_/ZAK/ADONEM-FIZHAT
                          CHANGING W_ONJALV-ESDAT.
             IF W_ONJALV-ESDAT IS INITIAL.
-*             Nem lehet meghatározni az eredeti esedékesség dátumát! (&)
+*             The original due date cannot be determined! (&)
               PERFORM MESSAGE_STORE USING G_INDEX
                                           'E'
                                           '/ZAK/ZAK'
@@ -579,18 +579,18 @@ FORM GET_DATA  TABLES   $I_ONJALV      LIKE I_ONJALV
             MOVE W_/ZAK/ADONSZA-WAERS  TO W_ONJALV-WAERS.
             MOVE W_/ZAK/ADONSZA-ESDAT  TO W_ONJALV-ONDAT.
             COLLECT W_ONJALV INTO $I_ONJALV.
-*         Az önellenőrzési adónemeket összesítjük egy összegbe
+*         Sum the self-revision tax types into one amount
           ELSE.
             MOVE W_/ZAK/ADONSZA-WAERS TO L_WAERS.
             ADD W_/ZAK/ADONSZA-WRBTR TO L_ONELL_OSSZEG.
           ENDIF.
         ENDLOOP.
         CLEAR W_ONJALV.
-*       Ha már volt feltöltve adat
+*       If data has already been uploaded
         IF NOT L_/ZAK/TEXT IS INITIAL.
           MOVE L_/ZAK/TEXT TO W_ONJALV-/ZAK/TEXT.
         ENDIF.
-*       Önellenőrzés hozzáadás
+*       Add self-revision
         MOVE W_/ZAK/BEVALLI-BUKRS TO W_ONJALV-BUKRS.
         MOVE W_/ZAK/BEVALLI-BTYPE TO W_ONJALV-BTYPE.
         MOVE W_/ZAK/BEVALLI-GJAHR TO W_ONJALV-GJAHR.
@@ -744,7 +744,7 @@ FORM SHOW_MESSAGES USING $INDEX TYPE SY-TABIX
         I_USE_GRID = 'X'.
   ELSEIF NOT $TEST IS INITIAL.
     MESSAGE I257.
-*   A feldolgozás nem tartalmaz hibát!
+*   Processing does not contain errors!
   ENDIF.
 
 ENDFORM.                    " show_messages
@@ -758,10 +758,10 @@ ENDFORM.                    " show_messages
 *----------------------------------------------------------------------*
 FORM LIST_DISPLAY .
 
-* Nem háttér futás
+* Not a background run
   IF SY-BATCH IS INITIAL.
     CALL SCREEN 100.
-* Háttér futás
+* Background run
   ELSE.
     PERFORM GRID_DISPLAY.
   ENDIF.
@@ -788,14 +788,13 @@ MODULE PBO_0100 OUTPUT.
     SET TITLEBAR 'MAIN100'.
   ENDIF.
 
-* Menteni csak előfeldolgozásben lehet
+* Saving is only possible in pre-processing
   IF P_PROC IS INITIAL.
     APPEND 'SAVE' TO LI_FCODE.
     APPEND 'MODONELL' TO LI_FCODE.
   ENDIF.
 
-* Megjelenítésnél és éles feldolgozásnál nem lehet szöveget
-* módosítani
+* Text cannot be modified during display and production processing
   IF NOT P_LIST IS INITIAL OR NOT P_PROD IS INITIAL.
     APPEND 'TEXTADD' TO LI_FCODE.
     APPEND 'TEXTDEL' TO LI_FCODE.
@@ -827,10 +826,10 @@ MODULE PBO_0100 OUTPUT.
 *   GS_LAYOUT-EXCP_FNAME = 'LIGHT'.
     GS_LAYOUT-NO_ROWINS  = 'X'.
 
-*   Kizárt funkciók:
-*    APPEND: '&INFO'  TO LT_EXCL_FUNC,   "Felhasználói help
-*            '&GRAPH' TO LT_EXCL_FUNC,   "Grafikus megjelenítés
-*            '&ABC'   TO LT_EXCL_FUNC.   "ABC elemzés
+*   Excluded functions:
+*    APPEND: '&INFO'  TO LT_EXCL_FUNC,   "User help
+*            '&GRAPH' TO LT_EXCL_FUNC,   "Graphical display
+*            '&ABC'   TO LT_EXCL_FUNC.   "ABC analysis
 
     CALL METHOD G_GRID1->SET_TABLE_FOR_FIRST_DISPLAY
       EXPORTING
@@ -917,32 +916,32 @@ MODULE PAI_0100 INPUT.
       IF G_SUBRC IS INITIAL.
         PERFORM EXIT_PROGRAM.
       ENDIF.
-*   Mentés
+*   Save
     WHEN 'SAVE'.
       PERFORM SAVE_DATA.
 
-*   Üzenetek megjelenítése
+*   Display messages
     WHEN 'MESSAGE'.
       PERFORM SHOW_MESSAGES USING G_INDEX
                                   P_TEST.
 
-*   Űrlap megjelenítés
+*   Display form
     WHEN 'SHOW'.
       PERFORM PREVIEW_DATA TABLES I_ONJALV
                            USING  P_FNAME
                                   P_BUKRS
                                   P_TEST.
 
-*   Szövegelem karbantartás
+*   Maintain text element
     WHEN 'TEXTCREATE'.
       CALL TRANSACTION '/ZAK/TEXT'.
-*   Szöveglem hozzárendelés
+*   Assign text element
     WHEN 'TEXTADD'.
       PERFORM ADD_TEXT TABLES I_ONJALV.
-*   Szöveglem törlése
+*   Delete text element
     WHEN 'TEXTDEL'.
       PERFORM DEL_TEXT TABLES I_ONJALV.
-*   Összeg módosítás
+*   Modify amount
     WHEN 'MODONELL'.
       PERFORM MOD_ONELL TABLES I_ONJALV.
 
@@ -1065,24 +1064,24 @@ FORM ADD_TEXT  TABLES   $I_ONJALV LIKE I_ONJALV.
   DATA  LW_ONJALV TYPE /ZAK/ONJALV.
 
 
-* Kijelölt tételek meghatározása
+* Determining selected items
   CALL METHOD G_GRID1->GET_SELECTED_ROWS
     IMPORTING
       ET_ROW_NO = LT_ROWS[].
 
   IF LT_ROWS[] IS INITIAL.
     MESSAGE I018.
-*   Kérem jelöljön ki egy tételt.
+*   Please select an item.
     EXIT.
   ENDIF.
 
-* Szövegelem kiválasztása
+* Selecting a text element
   CALL SCREEN 0101 STARTING AT 1 1
                    ENDING   AT 65 10.
 
   CHECK NOT /ZAK/ONJALV-/ZAK/TEXT IS INITIAL.
 
-* Adatok feldolgozása
+* Processing data
   LOOP AT LT_ROWS INTO LS_ROWS.
     READ TABLE $I_ONJALV INTO LW_ONJALV INDEX LS_ROWS-ROW_ID.
     CHECK SY-SUBRC EQ 0.
@@ -1119,21 +1118,21 @@ FORM DEL_TEXT  TABLES   $I_ONJALV LIKE I_ONJALV.
   DATA  LW_ONJALV TYPE /ZAK/ONJALV.
 
 
-* Kijelölt tételek meghatározása
+* Determining selected items
   CALL METHOD G_GRID1->GET_SELECTED_ROWS
     IMPORTING
       ET_ROW_NO = LT_ROWS[].
 
   IF LT_ROWS[] IS INITIAL.
     MESSAGE I018.
-*   Kérem jelöljön ki egy tételt.
+*   Please select an item.
     EXIT.
   ENDIF.
 
 
   CLEAR /ZAK/ONJALV-/ZAK/TEXT.
 
-* Adatok feldolgozása
+* Processing data
   LOOP AT LT_ROWS INTO LS_ROWS.
     READ TABLE $I_ONJALV INTO LW_ONJALV INDEX LS_ROWS-ROW_ID.
     CHECK SY-SUBRC EQ 0.
@@ -1177,7 +1176,7 @@ MODULE PAI_0101 INPUT.
     WHEN 'ENTER'.
       IF /ZAK/ONJALV-/ZAK/TEXT IS INITIAL.
         MESSAGE I274.
-*   Kérem válasszon ki egy szövegelemet!
+*   Please select a text element!
       ELSE.
         SET SCREEN 0.
         LEAVE SCREEN.
@@ -1199,41 +1198,41 @@ ENDMODULE.                 " PAI_0101  INP
 *----------------------------------------------------------------------*
 FORM SAVE_DATA .
 
-* Ellenőrizzük van e hiba.
+* Checking whether there is an error.
   IF NOT G_ERROR IS INITIAL.
     MESSAGE I277.
-*   Mentés hibák miatt nem lehetséges! Lásd üzenetek!
+*   Saving is not possible due to errors! See the messages!
     EXIT.
   ENDIF.
 
-* Ellenőrizzük ki van e töltve mindenütt a TEXT
+* Checking that TEXT is filled everywhere
   READ TABLE I_ONJALV TRANSPORTING NO FIELDS WITH KEY /ZAK/TEXT = ''.
   IF SY-SUBRC EQ 0.
     MESSAGE I278.
-*   Kérem minden tételhez adjon meg szöveg hozzárendelést!
+*   Please provide a text assignment for each item!
     EXIT.
   ENDIF.
 *++0001 2008.11.26 (BG)
-* Ellenőrizzük ki van e töltve mindenütt a KESZULT
+* Checking that KESZULT is filled everywhere
   READ TABLE I_ONJALV TRANSPORTING NO FIELDS WITH KEY KESZULT = '00000000'.
   IF SY-SUBRC EQ 0.
     MESSAGE I283.
-*   Kérem minden tételhez adjon meg egy dátumot a "Készült" paraméterhez!
+*   Please provide a date for the "Completed" parameter for each item!
     EXIT.
   ENDIF.
 *--0001 2008.11.26 (BG)
 
-* ha minden rendben akkor mentés
+* if everything is fine then save
   LOOP AT I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI.
     CLEAR: W_/ZAK/ONJDATA, W_/ZAK/ONJDANA.
-*   Fejadatok feltöltése
+*   Uploading header data
     MOVE-CORRESPONDING W_/ZAK/BEVALLI TO W_/ZAK/ONJDATA.
 *++0001 2008.11.26 (BG)
 *   MOVE P_KESZD TO W_/ZAK/ONJDATA-KESZULT.
 *--0001 2008.11.26 (BG)
-*   Előfeldolgozás
+*   Pre-processing
     MOVE C_ONJSTAT_E TO W_/ZAK/ONJDATA-ONJSTAT.
-*   Felhasználó
+*   User
     MOVE SY-UNAME TO W_/ZAK/ONJDATA-UNAME.
 
     LOOP AT I_ONJALV INTO W_ONJALV WHERE BUKRS EQ W_/ZAK/BEVALLI-BUKRS
@@ -1248,7 +1247,7 @@ FORM SAVE_DATA .
 *++0001 2008.11.26 (BG)
       MOVE W_ONJALV-KESZULT TO W_/ZAK/ONJDATA-KESZULT.
 *--0001 2008.11.26 (BG)
-*     Normál adónem
+*     Normal tax type
       IF NOT W_ONJALV-ADONEM EQ C_ONELL.
         MOVE-CORRESPONDING W_/ZAK/ONJDATA TO W_/ZAK/ONJDANA.
         MOVE W_ONJALV-ADONEM TO W_/ZAK/ONJDANA-ADONEM.
@@ -1257,7 +1256,7 @@ FORM SAVE_DATA .
         MOVE W_ONJALV-ONDAT  TO W_/ZAK/ONJDANA-ONDAT.
         MOVE W_ONJALV-WAERS  TO W_/ZAK/ONJDANA-WAERS.
         APPEND W_/ZAK/ONJDANA TO I_/ZAK/ONJDANA.
-*     Önrevízió
+*     Self-revision
       ELSE.
         MOVE W_ONJALV-OSSZEG TO W_/ZAK/ONJDATA-ONEPOT.
         MOVE W_ONJALV-WAERS  TO W_/ZAK/ONJDATA-WAERS.
@@ -1266,13 +1265,13 @@ FORM SAVE_DATA .
     APPEND W_/ZAK/ONJDATA TO I_/ZAK/ONJDATA.
   ENDLOOP.
 
-* Adatbázis módosítások
+* Database modifications
   MODIFY /ZAK/ONJDATA FROM TABLE I_/ZAK/ONJDATA.
   MODIFY /ZAK/ONJDANA FROM TABLE I_/ZAK/ONJDANA.
   COMMIT WORK AND WAIT.
 
   MESSAGE I216.
-* Adatmódosítások elmentve!
+* Data modifications saved!
 
   I_ONJALV_SAVE[] = I_ONJALV[].
 
@@ -1310,12 +1309,12 @@ FORM GET_DATA_PROD  TABLES  $I_ONJALV      LIKE      I_ONJALV
   CLEAR: $I_/ZAK/ONJDANA[].
   CLEAR: $I_/ZAK/BEVALLI[].
 *--S4HANA#01.
-* Fejadatok meghatározása
+* Determining header data
   SELECT * INTO TABLE $I_/ZAK/ONJDATA
            FROM /ZAK/ONJDATA
           WHERE BUKRS   EQ $BUKRS
             AND ONJSTAT EQ C_ONJSTAT_E.
-* Tétel adatok meghatározása
+* Determining item data
   SELECT * INTO TABLE $I_/ZAK/ONJDANA
            FROM /ZAK/ONJDANA
            FOR ALL ENTRIES IN $I_/ZAK/ONJDATA
@@ -1324,7 +1323,7 @@ FORM GET_DATA_PROD  TABLES  $I_ONJALV      LIKE      I_ONJALV
              AND GJAHR  EQ $I_/ZAK/ONJDATA-GJAHR
              AND MONAT  EQ $I_/ZAK/ONJDATA-MONAT
              AND ZINDEX EQ $I_/ZAK/ONJDATA-ZINDEX.
-* Adatszolgáltatás adatok
+* Data-supply data
   SELECT * INTO TABLE $I_/ZAK/BEVALLI
            FROM /ZAK/BEVALLI
            FOR ALL ENTRIES IN $I_/ZAK/ONJDATA
@@ -1334,7 +1333,7 @@ FORM GET_DATA_PROD  TABLES  $I_ONJALV      LIKE      I_ONJALV
              AND MONAT  EQ $I_/ZAK/ONJDATA-MONAT
              AND ZINDEX EQ $I_/ZAK/ONJDATA-ZINDEX.
 
-* Adatok mappelése
+* Mapping data
 *
   LOOP AT  $I_/ZAK/ONJDATA INTO W_/ZAK/ONJDATA.
     CLEAR W_ONJALV.
@@ -1397,11 +1396,11 @@ FORM PRODUCTIVE_RUN  TABLES   $I_ONJALV      LIKE I_ONJALV
 
   IF NOT G_ERROR IS INITIAL.
     MESSAGE I262.
-*   Éles futás hibák miatt nem indítható!
+*   Production run cannot be started due to errors!
     EXIT.
   ENDIF.
 
-* Űrlap adatok meghatározása
+* Determining form data
   CALL FUNCTION 'SSF_FUNCTION_MODULE_NAME'
     EXPORTING
       FORMNAME           = $FNAME
@@ -1414,7 +1413,7 @@ FORM PRODUCTIVE_RUN  TABLES   $I_ONJALV      LIKE I_ONJALV
 
   IF SY-SUBRC <> 0.
     MESSAGE E263 WITH $FNAME.
-*   Hiba a & űrlap beolvasásánál!
+*   Error while reading form &!
   ENDIF.
 
   LOOP AT $I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI.
@@ -1430,7 +1429,7 @@ FORM PRODUCTIVE_RUN  TABLES   $I_ONJALV      LIKE I_ONJALV
     CLEAR: I_TEXT[].
     CLEAR: I_ONELL_DATA[].
 *--S4HANA#01.
-*   Adatok feldolgozása
+*   Processing data
     LOOP AT $I_ONJALV INTO W_ONJALV WHERE BUKRS  EQ W_/ZAK/BEVALLI-BUKRS
                                       AND BTYPE  EQ W_/ZAK/BEVALLI-BTYPE
                                       AND GJAHR  EQ W_/ZAK/BEVALLI-GJAHR
@@ -1455,23 +1454,23 @@ FORM PRODUCTIVE_RUN  TABLES   $I_ONJALV      LIKE I_ONJALV
     ENDIF.
     CONDENSE W_ONJSMART_DATA-OSSZESEN.
 
-*   Űrlap meghívása
+*   Calling the form
     PERFORM CALL_SMARTFORMS TABLES I_TEXT
                                    I_ONELL_DATA
                             USING  L_FM_NAME
                                    W_ONJSMART_DATA
-                                   ''. "TEszt mód
+                                   ''. "Test mode
     MOVE C_X TO W_/ZAK/BEVALLI-ONJF.
     MODIFY $I_/ZAK/BEVALLI FROM W_/ZAK/BEVALLI TRANSPORTING ONJF.
   ENDLOOP.
 
-* Tábla módosítások
+* Table modifications
   MODIFY /ZAK/BEVALLI FROM TABLE $I_/ZAK/BEVALLI.
   MODIFY /ZAK/ONJDATA FROM TABLE $I_/ZAK/ONJDATA.
   COMMIT WORK AND WAIT.
 
   MESSAGE I216.
-* Adatmódosítások elmentve!
+* Data modifications saved!
 
 ENDFORM.                    " PRODUCTIVE_RUN
 *&---------------------------------------------------------------------*
@@ -1486,7 +1485,7 @@ FORM VERIFY_SCREEN .
 *++0001 2008.11.26 (BG)
 *  IF P_KESZD IS INITIAL AND P_LIST IS INITIAL.
 *    MESSAGE E279.
-**   Kérem adjon meg egy dátumot a "Készült" paraméterhez!
+**   Please provide a date for the "Completed" parameter!
 *  ENDIF.
 *--0001 2008.11.26 (BG)
 ENDFORM.                    " VERIFY_SCREEN
@@ -1533,7 +1532,7 @@ FORM GET_DATA_LIST  TABLES  $I_ONJALV      LIKE      I_ONJALV
   CLEAR: $I_/ZAK/ONJDANA[].
 *--S4HANA#01.
 
-* Fejadatok meghatározása
+* Determining header data
   SELECT * INTO TABLE $I_/ZAK/ONJDATA
            FROM /ZAK/ONJDATA
           WHERE BUKRS   EQ $BUKRS
@@ -1543,7 +1542,7 @@ FORM GET_DATA_LIST  TABLES  $I_ONJALV      LIKE      I_ONJALV
             AND ZINDEX  IN $S_INDEX
             AND KESZULT IN $S_KESZD.
 
-* Tétel adatok meghatározása
+* Determining item data
   SELECT * INTO TABLE $I_/ZAK/ONJDANA
            FROM /ZAK/ONJDANA
            FOR ALL ENTRIES IN $I_/ZAK/ONJDATA
@@ -1554,7 +1553,7 @@ FORM GET_DATA_LIST  TABLES  $I_ONJALV      LIKE      I_ONJALV
              AND ZINDEX EQ $I_/ZAK/ONJDATA-ZINDEX.
 
 
-* Adatok mappelése
+* Mapping data
   LOOP AT  $I_/ZAK/ONJDATA INTO W_/ZAK/ONJDATA.
     CLEAR W_ONJALV.
     MOVE W_/ZAK/ONJDATA-BUKRS TO W_ONJALV-BUKRS.
@@ -1604,7 +1603,7 @@ FORM CHECK_EXIT USING $SUBRC  TYPE SY-SUBRC..
 
   CLEAR $SUBRC.
 
-* Ha előfeldolgozásban volt, akkor kilépés ellenőrzése
+* If pre-processing was used, then check on exit
   CHECK NOT P_PROC IS INITIAL.
 
   IF I_ONJALV_SAVE[] NE I_ONJALV[].
@@ -1613,8 +1612,8 @@ FORM CHECK_EXIT USING $SUBRC  TYPE SY-SUBRC..
 **    CALL FUNCTION 'POPUP_TO_CONFIRM_LOSS_OF_DATA'
 **      EXPORTING
 **        TEXTLINE1     = 'Adatok nem lettek elmentve!'
-**        TEXTLINE2     = 'Kilép mentés nélkül?'
-**        TITEL         = 'Adatok változtak'
+**        TEXTLINE2     = 'Exit without saving?'
+**        TITEL         = 'Data changed'
 **        START_COLUMN  = 25
 **        START_ROW     = 6
 **        DEFAULTOPTION = 'N'
@@ -1622,11 +1621,11 @@ FORM CHECK_EXIT USING $SUBRC  TYPE SY-SUBRC..
 **        ANSWER        = L_ANSWER.
 *    DATA L_QUESTION TYPE STRING.
 *
-*    CONCATENATE 'Adatok nem lettek elmentve!' 'Kilép mentés nélkül?' INTO L_QUESTION SEPARATED BY SPACE.
+*    CONCATENATE 'Data was not saved!' 'Exit without saving?' INTO L_QUESTION SEPARATED BY SPACE.
 **
 *    CALL FUNCTION 'POPUP_TO_CONFIRM'
 *      EXPORTING
-*        TITLEBAR              = 'Adatok változtak'
+*        TITLEBAR              = 'Data changed'
 **       DIAGNOSE_OBJECT       = ' '
 *        TEXT_QUESTION         = L_QUESTION
 **       TEXT_BUTTON_1         = 'Ja'(001)
@@ -1723,18 +1722,18 @@ FORM MOD_ONELL  TABLES   $I_ONJALV LIKE I_ONJALV.
   DATA  L_LINE TYPE SY-TABIX.
 
 
-* Kijelölt tételek meghatározása
+* Determining selected items
   CALL METHOD G_GRID1->GET_SELECTED_ROWS
     IMPORTING
       ET_ROW_NO = LT_ROWS[].
 
   IF LT_ROWS[] IS INITIAL.
     MESSAGE I018.
-*   Kérem jelöljön ki egy tételt.
+*   Please select an item.
     EXIT.
   ENDIF.
 
-* Ha több tételt jelöl ki!
+* If more than one item is selected!
 *++S4HANA#01.
 *  DESCRIBE TABLE LT_ROWS LINES L_LINE.
   L_LINE = LINES( LT_ROWS ).
@@ -1742,25 +1741,25 @@ FORM MOD_ONELL  TABLES   $I_ONJALV LIKE I_ONJALV.
 
   IF L_LINE > 1.
     MESSAGE I187.
-*   Kérem csak egy sort jelöljön ki!
+*   Please select only one row!
     EXIT.
   ENDIF.
 
 
-* Adatok feldolgozása
+* Processing data
   READ TABLE LT_ROWS INTO LS_ROWS INDEX 1.
   READ TABLE $I_ONJALV INTO W_ONJALV INDEX LS_ROWS-ROW_ID.
   CHECK SY-SUBRC EQ 0.
-* Adónem ellenőrzése
+* Checking the tax type
   IF W_ONJALV-ADONEM NE C_ONELL.
     MESSAGE I280.
-*   Kérem önellenőrzéses adónemmel rendelkező sort válasszon ki!
+*   Please select a row with a self-revision tax type!
     EXIT.
   ENDIF.
 
   MOVE-CORRESPONDING W_ONJALV TO /ZAK/ONJALV.
 
-* Összeg módosítása
+* Modifying the amount
   CALL SCREEN 0102 STARTING AT 1 1
                    ENDING   AT 65 10.
 

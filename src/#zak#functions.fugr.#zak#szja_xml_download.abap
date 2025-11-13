@@ -1,6 +1,6 @@
 FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_FILE) TYPE  STRING
 *"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
@@ -37,7 +37,7 @@ FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
 
   READ TABLE T_/ZAK/BEVALLALV INTO LW_BEVALLO_ALV INDEX 1.
 
-* Bevallások beállításának beolvasása
+* Read declaration configuration
   REFRESH I_/ZAK/BEVALLB.
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
@@ -46,12 +46,12 @@ FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
   SORT I_/ZAK/BEVALLB.
 
 
-* Vállalat név meghatározása
+* Determine company name
   IF LW_BEVALLO_ALV-BTYPE EQ C_2508.
-    ABEV = '0A0001C013'. "Vállalat ABEV 2508-ban
+    ABEV = '0A0001C013'. "Company ABEV in 2508
   ELSE.
 *--2508 #03.
-    ABEV = '0A0001C014'. "Vállalat ABEV 1408-ban
+    ABEV = '0A0001C014'. "Company ABEV in 1408
 *++2508 #03.
   ENDIF.
 *--2508 #03.
@@ -61,15 +61,15 @@ FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
                             CHANGING VALUE.
   BUKRSTEXT = VALUE.
 
-* Adószám meghatározása
-  ABEV = '0A0001C002'. "Adószám ABEV 1408-ban
+* Determine tax number
+  ABEV = '0A0001C002'. "Tax number ABEV in 1408
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   ADOSZAM = VALUE.
 
-* IDŐSZAK -tól
+* Period from
 *++2208 #03.
   IF LW_BEVALLO_ALV-BTYPE EQ C_2208
 *++2308 #02.
@@ -78,14 +78,14 @@ FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
 *++2408 #01.
      OR LW_BEVALLO_ALV-BTYPE EQ C_2408.
 *--2408 #01.
-    ABEV = '0A0001C028'. "IDŐSZAK -tól
+    ABEV = '0A0001C028'. "Period from
 *++2508 #03.
   ELSEIF LW_BEVALLO_ALV-BTYPE EQ C_2508.
 *--2508 #03.
-    ABEV = '0A0001C027'. "IDŐSZAK -tól
+    ABEV = '0A0001C027'. "Period from
   ELSE.
 *--2208 #03.
-    ABEV = '0A0001C039'. "IDŐSZAK-tól ABEV 1408-ban
+    ABEV = '0A0001C039'. "Period from ABEV in 1408
 *++2208 #03.
   ENDIF.
 *--2208 #03.
@@ -102,15 +102,15 @@ FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
 *++2408 #01.
      OR LW_BEVALLO_ALV-BTYPE EQ C_2408.
 *--2408 #01.
-    ABEV = '0A0001C029'. "IDŐSZAK -ig
+    ABEV = '0A0001C029'. "Period to
 *++2508 #03.
   ELSEIF LW_BEVALLO_ALV-BTYPE EQ C_2508.
-    ABEV = '0A0001C028'. "IDŐSZAK -ig
+    ABEV = '0A0001C028'. "Period to
 *--2508 #03.
   ELSE.
 *--2208 #03.
-* IDŐSZAK -ig
-    ABEV = '0A0001C040'. "IDŐSZAK-ig ABEV 1408-ban
+* Period to
+    ABEV = '0A0001C040'. "Period to ABEV in 1408
 *++2208 #03.
   ENDIF.
 *--2208 #03.
@@ -121,12 +121,12 @@ FUNCTION /ZAK/SZJA_XML_DOWNLOAD.
   IDIG = VALUE.
 
 
-* Nyomtatvány azonosítók:
+* Form identifiers:
   CONCATENATE LW_BEVALLO_ALV-BTYPE 'A' INTO NYOMTA.
   CONCATENATE LW_BEVALLO_ALV-BTYPE 'M' INTO NYOMTM.
 
 
-* Adatok összeállítása BEVALLO_ALV-ből
+* Assemble data from BEVALLO_ALV
   PERFORM FIELDS_FROM_IT_BEVALLO_TO_XX08 TABLES T_/ZAK/BEVALLALV
                                                 I_/ZAK/BEVALLB
                                                 LI_A_XX08

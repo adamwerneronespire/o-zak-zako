@@ -52,25 +52,25 @@ FUNCTION /ZAK/ROTATE_IDSZ.
     ENDIF.
   END-OF-DEFINITION.
 
-* EU-s műveletkulcsok feltöltése
+* Populate EU transaction keys
   M_DEF LR_EU_KTOSL 'I' 'EQ' 'ESE' SPACE.
   M_DEF LR_EU_KTOSL 'I' 'EQ' 'ESA' SPACE.
 
-* Kötelező mezők kitöltésének ellenőrzése:
+* Check filling of mandatory fields:
   IF I_BUKRS IS INITIAL OR I_GJAHR IS INITIAL OR I_MONAT IS INITIAL
   OR I_GSBER IS INITIAL OR I_KTOSL IS INITIAL.
     RAISE MISSING_INPUT.
   ENDIF.
 
-* ÁFA irány meghatározás
+* Determine VAT direction
   M_GET_AFABK I_KTOSL L_AFABK.
 
-* ellenőrizzük szerepel e már a vállalat.
+* Check whether the company is already included.
   READ TABLE I_IDSZ TRANSPORTING NO FIELDS
                WITH KEY BUKRS = I_BUKRS.
   IF SY-SUBRC NE 0.
     REFRESH I_IDSZ.
-*   Vezérlő tábla beolvasása
+*   Read control table
     SELECT * INTO TABLE I_IDSZ
              FROM /ZAK/GET_IDSZ
             WHERE BUKRS EQ I_BUKRS.
@@ -83,7 +83,7 @@ FUNCTION /ZAK/ROTATE_IDSZ.
 
   CHECK NOT I_IDSZ[] IS INITIAL.
 
-* Ellenőrizzük, hogy létezik-e megfelelő forgatótábla bejegyzés
+* Check that an appropriate rotation table entry exists
   LOOP AT I_IDSZ INTO W_IDSZ WHERE   BUKRS EQ I_BUKRS
                                  AND GSBER EQ I_GSBER
                                  AND PRCTR EQ I_PRCTR

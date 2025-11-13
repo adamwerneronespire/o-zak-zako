@@ -129,16 +129,16 @@
 - [x] src/#zak#functions.fugr.#zak#read_file_exit.abap
 - [x] src/#zak#functions.fugr.#zak#rotate_bukrs_input.abap
 - [x] src/#zak#functions.fugr.#zak#rotate_bukrs_output.abap
-- [ ] src/#zak#functions.fugr.#zak#rotate_idsz.abap
-- [ ] src/#zak#functions.fugr.#zak#saplfunctions.abap
-- [ ] src/#zak#functions.fugr.#zak#stapo_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#szja_new_rows.abap
-- [ ] src/#zak#functions.fugr.#zak#szja_sap_sel_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#szja_xml_download.abap
-- [ ] src/#zak#functions.fugr.#zak#tao_file_download.abap
-- [ ] src/#zak#functions.fugr.#zak#user_default.abap
-- [ ] src/#zak#functions.fugr.#zak#xml_file_download.abap
-- [ ] src/#zak#get_pack.fugr.#zak#del_pack.abap
+- [x] src/#zak#functions.fugr.#zak#rotate_idsz.abap
+- [x] src/#zak#functions.fugr.#zak#saplfunctions.abap
+- [x] src/#zak#functions.fugr.#zak#stapo_exit.abap
+- [x] src/#zak#functions.fugr.#zak#szja_new_rows.abap
+- [x] src/#zak#functions.fugr.#zak#szja_sap_sel_exit.abap
+- [x] src/#zak#functions.fugr.#zak#szja_xml_download.abap
+- [x] src/#zak#functions.fugr.#zak#tao_file_download.abap
+- [x] src/#zak#functions.fugr.#zak#user_default.abap
+- [x] src/#zak#functions.fugr.#zak#xml_file_download.abap
+- [x] src/#zak#get_pack.fugr.#zak#del_pack.abap
 - [ ] src/#zak#get_pack.fugr.#zak#get_anal.abap
 - [ ] src/#zak#get_pack.fugr.#zak#lget_packtop.abap
 - [ ] src/#zak#get_pack.fugr.#zak#open_pack.abap

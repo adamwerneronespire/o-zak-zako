@@ -1,6 +1,6 @@
 FUNCTION /ZAK/TAO_FILE_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_FILE) TYPE  STRING OPTIONAL
 *"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
@@ -30,7 +30,7 @@ FUNCTION /ZAK/TAO_FILE_DOWNLOAD.
 
   READ TABLE T_/ZAK/BEVALLALV INTO LW_BEVALLO_ALV INDEX 1.
 
-* Bevallások beállításának beolvasása
+* Read declaration configuration
   REFRESH I_/ZAK/BEVALLB.
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
@@ -38,39 +38,39 @@ FUNCTION /ZAK/TAO_FILE_DOWNLOAD.
 
   SORT I_/ZAK/BEVALLB.
 
-* Vállalat név meghatározása
-  ABEV = '0A0001E005'. "Vállalat
+* Determine company name
+  ABEV = '0A0001E005'. "Company
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   BUKRSTEXT = VALUE.
 
-* Adószám meghatározása
-  ABEV = '0A0001E001'. "Adószám ABEV
+* Determine tax number
+  ABEV = '0A0001E001'. "Tax number ABEV
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   ADOSZAM = VALUE.
-* Nyomtatvány azonosítók:
+* Form identifiers:
   MOVE LW_BEVALLO_ALV-BTYPE TO NYOMTA.
 
-* IDŐSZAKtól:
-  ABEV = '0A0001F001'. "IDŐSZAKtól
+* Period from:
+  ABEV = '0A0001F001'. "Period from
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   IDTOL = VALUE.
-* IDŐSZAKig:
-  ABEV = '0A0001F002'. "IDŐSZAKig
+* Period to:
+  ABEV = '0A0001F002'. "Period to
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   IDIG = VALUE.
-* Adatok összeállítása BEVALLO_ALV-ből
+* Assemble data from BEVALLO_ALV
   PERFORM FIELDS_FROM_IT_BEVALLO_TO_TAO TABLES T_/ZAK/BEVALLALV
                                                I_/ZAK/BEVALLB
                                                LI_A_XX29.

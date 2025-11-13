@@ -1,48 +1,47 @@
 *&---------------------------------------------------------------------*
-*& Program: Adatállomány készítő, megjelenítő, manuális rögzítő program
+*& Program: Data file creation, display, manual recording program
 *&---------------------------------------------------------------------*
  REPORT /ZAK/MAIN_VIEW MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Adatállomány készítő, megjelenítő, manuális rögzítő
+*& Function description: Data file creator, display, manual recorder
 *& program
 *&---------------------------------------------------------------------*
-*& Szerző            : Cserhegyi Tímea - fmc
-*& Létrehozás dátuma : 2006.01.05
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author : Tímea Cserhegyi - fmc
+*& Creation date: 05.01.2006
+*& Func.spec.maker: ________
+*& SAP module name    : ADO
+*& Program type: Report
+*& SAP version : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (The number of the OSS note must be written at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
-*& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2006/05/27   CserhegyiT    CL_GUI_FRONTEND_SERVICES xxxxxxxxxx
-*&                                   cseréje hagyományosra
-*& 0002   2007.01.03   Balázs G.     CL_GUI_FRONTEND_SERVICES vissza
-*& 0003   2007.01.31   Balázs G.     Esedékességi dátum töltése
-*& 0004   2007.04.04   Balázs G.     Összesítő jelentés kiegészítés ONYB
-*& 0005   2007.05.30   Balázs G.     ÁFA 04, 06 lap kezelése
-*& 0006   2007.07.02   Balázs G.     ÁFA alap ellenőrzés
-*& 0007   2007.07.23   Balázs G.     Esedékességi dátum meghatározása
-*&                                   termelési naptár alapján
-*& 0008   2007.08.06   Balázs G.     ÁFA összegek ellenőrzése
-*& 0009   2007.12.17   Balázs G.     ÁFA arányosítás kezelése
-*& 0010   2008.02.14   Balázs G.     Figyelmeztetés ha van az időszakban
-*&                                   más bevallás típus is
-*& 0011   2008.03.28   Balázs G.     Részletező sorok arányosított
-*&                                   értékeinek meghatározása
-*& 0012   2008.04.02   Balázs G.     Összesítő jelentés kiterjesztése
-*&                                   ONYB (szállítók, vevők)
-*& 0013   2008.09.01   Balázs G.     N.éves arányosításnál előző időszak
-*&                                   gyűjtés javítása
-*& 0014   2008.09.08   Balázs G.     Arányosítás előző időszak ABEV-ek
-*&                                   módosítása, könyvelési feladás
-*&                                   módosítása
-*& 0015   2009.02.02   Balázs G.     ÁFA 0965 változások beépítése
-*& 0016   2011.09.14   Balázs G.     Csoport vállalat kezelése
-*& 0017   2012.02.07   Balázs G.     Manuális rögzítés más időszakra is
+*& LOG#     DATE        MODIFIER      DESCRIPTION                 TRANSPORT
+*& ----   ----------   ----------    -----------------------     -----------
+*& 0001   2006/05/27   CserhegyiT    CL_GUI_FRONTEND_SERVICES    xxxxxxxxxx
+*&                                   replaced with the classic version
+*& 0002   2007.01.03   Balázs G.     CL_GUI_FRONTEND_SERVICES restored
+*& 0003   2007.01.31   Balázs G.     Due date population
+*& 0004   2007.04.04   Balázs G.     Summary report update for ONYB
+*& 0005   2007.05.30   Balázs G.     Handling VAT 04 and 06 sheets
+*& 0006   2007.07.02   Balázs G.     VAT base validation
+*& 0007   2007.07.23   Balázs G.     Due date calculation based on the
+*&                                   production calendar
+*& 0008   2007.08.06   Balázs G.     VAT amount verification
+*& 0009   2007.12.17   Balázs G.     VAT proportionality handling
+*& 0010   2008.02.14   Balázs G.     Warning if another return type
+*&                                   exists in the period
+*& 0011   2008.03.28   Balázs G.     Determining proportional values for
+*&                                   detail rows
+*& 0012   2008.04.02   Balázs G.     Extending the summary report for
+*&                                   ONYB (vendors, customers)
+*& 0013   2008.09.01   Balázs G.     Fix previous-period collection for
+*&                                   annual proportionality
+*& 0014   2008.09.08   Balázs G.     Adjust previous-period ABEV
+*&                                   proportionality and posting logic
+*& 0015   2009.02.02   Balázs G.     Incorporate VAT 0965 changes
+*& 0016   2011.09.14   Balázs G.     Group company handling
+*& 0017   2012.02.07   Balázs G.     Manual entry allowed for other periods
 *&---------------------------------------------------------------------*
  INCLUDE /ZAK/COMMON_STRUCT.
  INCLUDE /ZAK/MAIN_TOP.
@@ -50,7 +49,7 @@
  INCLUDE <ICON>.
  CLASS LCL_EVENT_RECEIVER DEFINITION DEFERRED.
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES *
 *&---------------------------------------------------------------------*
  TABLES: /ZAK/ANALITIKA_S,
          CSKS,
@@ -59,7 +58,7 @@
  TABLES: /ZAK/ANAL_MS.
 *--0017 BG 2012.02.07
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
  CONSTANTS: C_CLOSED_Z(1) TYPE C VALUE 'Z',
             C_CLOSED_X(1) TYPE C VALUE 'X',
@@ -70,37 +69,37 @@
  CONSTANTS: C_0965  TYPE /ZAK/BTYPE VALUE '0965'.
 *--0015 0965 2009.02.02 BG
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES *
+*      Internal table - (I_xxx...) *
+*      FORM parameter - ($xxxx...) *
+*      Constant            -   (C_xxx...)                              *
+*      Parameter variable - (P_xxx...) *
+*      Selection option - (S_xxx...) *
+*      Series (Range) - (R_xxx...) *
+*      Global variables - (V_xxx...) *
+*      Local variables - (L_xxx...) *
+*      Work area - (W_xxx...) *
+*      Type - (T_xxx...) *
+*      Macros - (M_xxx...) *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Method              -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class - (CL_xxx...) *
+*      Event - (E_xxx...) *
 *&---------------------------------------------------------------------*
-* Normál
+* Normal
  DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
        W_OUTTAB TYPE /ZAK/BEVALLALV.
-* Dolgozói adatok
+* Employee data
  DATA: I_OUTTAB_D TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
        W_OUTTAB_D TYPE /ZAK/BEVALLALV.
  DATA: I_OUTTAB_L TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
        W_OUTTAB_L TYPE /ZAK/BEVALLALV.
-* Adóazonosítók
+* Tax identifiers
  DATA: BEGIN OF I_ADOAZON OCCURS 0,
          ADOAZON TYPE /ZAK/ADOAZON,
        END OF I_ADOAZON.
-* Konvertált
+* Converted
  DATA: I_OUTTAB_C TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
        W_OUTTAB_C TYPE /ZAK/BEVALLALV.
  DATA: BEGIN OF I_OUTTAB2 OCCURS 0.
@@ -124,7 +123,7 @@
 *++0005 BG 2007.05.30
  DATA  V_NYLAPAZON TYPE /ZAK/NYLAPAZON.
 *--0005 BG 2007.05.30
-* ALV kezelési változók
+* ALV treatment variables
  DATA: V_OK_CODE           LIKE SY-UCOMM,
        V_SAVE_OK           LIKE SY-UCOMM,
        V_REPID             LIKE SY-REPID,
@@ -159,7 +158,7 @@
  DATA: V_I     TYPE I,
        V_DYNNR LIKE SY-DYNNR.
 *++0004 BG 2007.04.26
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for range upload
  DEFINE M_DEF.
    MOVE: &2      TO &1-sign,
          &3      TO &1-option,
@@ -183,12 +182,12 @@
  DATA W_NYLAPAZON TYPE T_NYLAPAZON.
 *--0012 BG 2008.04.02
 *++0016 BG 2011.09.14
- DATA V_BUKCS TYPE XFELD. "Csoport vállalat releváns flag
+ DATA V_BUKCS TYPE XFELD. "Group company relevant flag
  DATA: I_BUKRS TYPE STANDARD TABLE OF /ZAK/AFACS_BUKRS INITIAL SIZE 0
                                                       WITH HEADER LINE.
  RANGES R_BUKRS FOR /ZAK/AFACS_BUKRS-BUKRS.
 *--0016 BG 2011.09.14
-*++1365 2013.01.22 Balázs Gábor (Ness)
+*++1365 22.01.2013 Balázs Gábor (Ness)
 *++1365 #21.
 * DATA i_afa_szla_sum TYPE STANDARD TABLE OF /zak/afa_szlasum .
  DATA I_AFA_SZLA_SUM TYPE SORTED TABLE OF /ZAK/AFA_SZLASUM
@@ -196,7 +195,7 @@
                                          SZAMLASZ SZAMLASZE NYLAPAZON.
 *--1365 #21.
  DATA W_AFA_SZLA_SUM TYPE /ZAK/AFA_SZLASUM.
-*--1365 2013.01.22 Balázs Gábor (Ness)
+*--1365 22.01.2013 Balázs Gábor (Ness)
 *++2065 #06.
  DATA V_VIEW TYPE XFELD.
 *--2065 #06.
@@ -301,7 +300,7 @@
 
 *++2365 #03.
  DATA: V_OK_9901           LIKE SY-UCOMM.
-*Speciális időszak kezeleése
+*Special period management
  SELECTION-SCREEN BEGIN OF SCREEN 0101 AS SUBSCREEN.
    SELECTION-SCREEN BEGIN OF BLOCK BL101 WITH FRAME.
      SELECT-OPTIONS S_SPECM FOR R_MONAT-LOW OBLIGATORY NO-EXTENSION
@@ -330,11 +329,11 @@
    V_REPID = SY-REPID.
    PERFORM READ_ADDITIONALS.
 *++2012.01.06 BG
-*  Feltöltjük a beadás dátumát
+*  We will upload the date of administration
    P_ESDAT = SY-DATUM.
 *--2012.01.06 BG
 *++1765 #19.
-* Jogosultság vizsgálat
+* Eligibility check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2165 #03.
 *                  ID 'TCD'  FIELD SY-TCODE.
@@ -345,7 +344,7 @@
    IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
      MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
    ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -472,18 +471,18 @@
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
  START-OF-SELECTION.
-* Normál, önrevízió, megjelenítés: S_ szelekciók feltöltése
+* Normal, self-revision, display: Upload S_ selections
    PERFORM FILL_S_RANGES.
    CHECK NOT S_GJAHR IS INITIAL AND
          NOT S_MONAT IS INITIAL AND
          NOT S_INDEX IS INITIAL.
-* Bevallás típus meghatározása
+* Definition of declaration type
    PERFORM GET_BTYPE USING P_BUKRS
                            P_BTART
                            S_GJAHR-LOW
                            S_MONAT-LOW
                      CHANGING P_BTYPE.
-* Bevallás utolsó napjának meghatározása
+* Determination of the last day of declaration
    PERFORM GET_LAST_DAY_OF_PERIOD USING S_GJAHR-LOW
                                         S_MONAT-LOW
 *++PTGSZLAA #01. 2014.03.03
@@ -494,7 +493,7 @@
 *--PTGSZLAA #01. 2014.03.03
                                    CHANGING V_LAST_DATE.
 *++0016 BG 2011.09.14
-*  Csoportos vállalat meghatározás
+*  Group company definition
    PERFORM GET_CS_BUKRS TABLES I_BUKRS
                                R_BUKRS
                          USING P_BUKRS
@@ -502,35 +501,35 @@
                                P_BTYPE
                                V_LAST_DATE.
 *--0016 BG 2011.09.14
-*  Jogosultság vizsgálat
+*  Eligibility check
    PERFORM AUTHORITY_CHECK USING P_BUKRS
                                  P_BTART
                                  C_ACTVT_01.
-* Zárolás beállítás
+* Lock setting
    PERFORM ENQUEUE_PERIOD.
-* Bevallás általános adatai
+* General declaration data
    PERFORM READ_BEVALL  USING P_BUKRS
                               P_BTART
                               P_BTYPE
                               V_LAST_DATE.
-*  Bevallás adatszerkezetének kiolvasása
+*  Reading the data structure of the declaration
    PERFORM READ_BEVALLB USING P_BUKRS
                               P_BTYPE.
-* Process indikátor
+* Process indicator
    DO.
      PERFORM PROCESS_IND USING TEXT-P01.
      IF V_I = 1.
        EXIT.
      ENDIF.
-*  Analitika
+*  Analytics
      PERFORM READ_ANALITIKA.
      V_I = V_I + 1.
    ENDDO.
 *++0015 0965 2009.02.02 BG
-* ÁFA 0965-től nem szükséges mivel a 0865-ig konvertálva lett,
-* utána pedig mindig a saját típusa lesz a display-es.
+* VAT is not required from 0965 as it has been converted to 0865,
+* and then the display will always be its own type.
    V_DISP_BTYPE = P_BTYPE.
-** Popup: ha van újabb BYTPE
+** Popup: if there is another BYTPE
 *   PERFORM POPUP_BTYPE_SEL CHANGING V_DISP_BTYPE.
 *   IF V_DISP_BTYPE <> P_BTYPE.
 *     PERFORM BTYPE_CONVERSION TABLES I_OUTTAB
@@ -544,18 +543,18 @@
      PERFORM AFA_ARANY.
    ENDIF.
 *--0009 BG 2007.12.17
-*  Összeg sorok számítása
+*  Calculation of sum rows
    IF P_M <> C_X.
      PERFORM CALL_EXIT.
    ENDIF.
 *++0008 BG 2007.08.06
    IF P_BTART EQ C_BTYPART_AFA.
-*    Ellenőrzés hívása
-     PERFORM CHECK_AFA USING    SPACE    "AUTO generálás
+*    Call for verification
+     PERFORM CHECK_AFA USING    SPACE    "AUTO generation
                        CHANGING V_ERROR.
      IF V_ERROR IS INITIAL.
        MESSAGE I229.
-*    ÁFA összegek konzisztensek!
+*    VAT amounts are consistent!
      ENDIF.
    ENDIF.
 *--0008 BG 2007.08.06
@@ -563,20 +562,20 @@
 * END-OF-SELECTION
 *&---------------------------------------------------------------------*
  END-OF-SELECTION.
-* Process indikátor
+* Process indicator
    PERFORM PROCESS_IND USING TEXT-P03.
 *++1365 #21.
    IF SY-BATCH IS INITIAL.
 *--1365 #21.
      PERFORM LIST_DISPLAY.
 *++1365 #21.
-*  BEVALLO aktualizálás batch futás
+*  BEVALLO update batch run
    ELSE.
      PERFORM BATCH_BEVALLO_UPDATE.
    ENDIF.
 *--1365 #21.
 ************************************************************************
-* ALPROGRAMOK
+* SUBROUTINES
 ************************************************************************
 *&---------------------------------------------------------------------*
 *&      Form  set_screen_attributes
@@ -605,23 +604,23 @@
 *  <--  p2        text
 *----------------------------------------------------------------------*
  FORM READ_ADDITIONALS.
-* Vállalat megnevezése
+* Company name
    IF NOT P_BUKRS IS INITIAL.
      SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
         WHERE BUKRS = P_BUKRS.
-* Bevallásfajta megnevezése
+* Name of declaration type
      IF NOT P_BTART IS INITIAL.
        SELECT DDTEXT UP TO 1 ROWS INTO P_BTTEXT FROM DD07T
           WHERE DOMNAME = '/ZAK/BTYPART'
             AND DDLANGUAGE = SY-LANGU
             AND DOMVALUE_L = P_BTART.
        ENDSELECT.
-** Bevallástípus megnevezése
+** Name of declaration type
 *     IF NOT P_BTYPE IS INITIAL.
 *       SELECT SINGLE BTEXT INTO P_BTEXT FROM /ZAK/BEVALLT
 *          WHERE LANGU = SY-LANGU
 *            AND BTYPE = P_BTYPE.
-* ÁFA jellegű bevallások önrevíziója kummulált
+* Self-revision of VAT-type returns has been accumulated
        IF P_O = C_X.
          SELECT * UP TO 1 ROWS FROM /ZAK/BEVALL INTO W_/ZAK/BEVALL
            WHERE    BUKRS = P_BUKRS
@@ -710,7 +709,7 @@
 *--2065 #06.
    IF SY-DYNNR = '9000'.
      REFRESH TAB.
-* Normál
+* Normal
      IF P_N = C_X.
        CLEAR TAB.
        IF P_BTART NE C_BTYPART_SZJA.
@@ -718,7 +717,7 @@
          APPEND WA_TAB TO TAB.
        ENDIF.
 *++0008 BG 2007.08.06
-*      Ha nem ÁFA nem kell az ellenőrző gomb
+*      If it is not VAT, you do not need the check button
        IF P_BTART NE C_BTYPART_AFA.
          MOVE 'CHK_AFA' TO WA_TAB-FCODE.
          APPEND WA_TAB TO TAB.
@@ -726,7 +725,7 @@
 *--0008 BG 2007.08.06
        SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
        SET TITLEBAR 'MAIN9000'.
-* Önrevízió
+* Self-revision
      ELSEIF P_O = C_X.
        CLEAR TAB.
        IF P_BTART NE C_BTYPART_SZJA.
@@ -734,7 +733,7 @@
          APPEND WA_TAB TO TAB.
        ENDIF.
 *++0008 BG 2007.08.06
-*      Ha nem ÁFA nem kell az ellenőrző gomb
+*      If it is not VAT, you do not need the check button
        IF P_BTART NE C_BTYPART_AFA.
          MOVE 'CHK_AFA' TO WA_TAB-FCODE.
          APPEND WA_TAB TO TAB.
@@ -742,7 +741,7 @@
 *--0008 BG 2007.08.06
        SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
        SET TITLEBAR 'MAIN9000'.
-* Megjelenítés
+* Display
      ELSE.
        CLEAR TAB.
 *++2065 #06.
@@ -751,7 +750,7 @@
        MOVE 'X' TO V_VIEW.
 *--2065 #06.
 *++0008 BG 2007.08.06
-*      Megjelenítésnél nem kell az ellenőrzés gomb
+*      You don't need the check button for display
        MOVE 'CHK_AFA' TO WA_TAB-FCODE.
        APPEND WA_TAB TO TAB.
 *--0008 BG 2007.08.06
@@ -797,10 +796,10 @@
    CREATE OBJECT V_GRID
      EXPORTING
        I_PARENT = V_CUSTOM_CONTAINER.
-* Mezőkatalógus összeállítása
+* Compilation of a field catalog
    PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                           CHANGING PT_FIELDCAT.
-* Funkciók kizárása
+* Exclusion of functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
    PS_LAYOUT-CWIDTH_OPT = C_X.
 * allow to select multiple lines
@@ -873,8 +872,8 @@
           S_FCAT-FIELDNAME = 'PRCTR'.
          S_FCAT-HOTSPOT = C_X.
        ENDIF.
-* Karakteres sor? Más a mezőkatalógus!
-* Editálható mező: XDEFT - radio-button
+* Character line? The field catalog is different!
+* Editable field: XDEFT - radio-button
        IF W_/ZAK/BEVALLB-FIELDTYPE = C_CHAR.
          IF S_FCAT-FIELDNAME = 'XDEFT' .
            S_FCAT-CHECKBOX = C_X.
@@ -897,24 +896,24 @@
    V_SAVE_OK = V_OK_CODE.
    CLEAR V_OK_CODE.
    CASE V_SAVE_OK.
-* Dolgozó bekérése
+* Request a worker
      WHEN '/ZAK/ZAK_DOL'.
        CALL SCREEN 9900 STARTING AT 40 8.
-* Bevallás készítő
+* Declaration maker
      WHEN '/ZAK/ZAK_TXT'.
-* Státuszellenőrzés
-* Normál bevallás
-* Ha nincs meg az összes adatszolgáltatás nem lehet indítani
+* Status check
+* Normal declaration
+* If you do not have all the data services, you cannot start them
        PERFORM CHECK_DATA USING 'D'.
-* Adatszerkezet szerinti konverzió
-* Dolgozói rekordok hozzáfűzése
+* Conversion according to data structure
+* Add employee records
        PERFORM COPY_OUTTAB.
        PERFORM FILL_NORMAL_LINES CHANGING V_COUNTER.
        PERFORM FILL_STANDARD_LINES.
        IF NOT I_FILE[] IS INITIAL.
          PERFORM DOWNLOAD_FILE CHANGING L_SUBRC.
        ENDIF.
-* /ZAK/BEVALLO írása
+* Writing /ZAK/BEVALLO
 *++2065 #06.
 *       IF L_SUBRC = 0.
        IF L_SUBRC = 0 AND V_VIEW IS INITIAL.
@@ -924,13 +923,13 @@
          PERFORM UPDATE_BEVALLO  TABLES   I_OUTTAB
                                  CHANGING L_SUBRC.
 *--1365 #21.
-* Státusz aktualizálása /ZAK/BEVALLSZ
+* Update status /ZAK/BEVALLSZ
          IF L_SUBRC = 0.
            PERFORM STATUS_UPDATE.
          ENDIF.
        ENDIF.
 *++BG 2007.05.08
-*Nem lépünk ki maradunk a listán
+*We don't leave, we stay on the list
 *       IF SY-TCODE+0(1) = 'Z'.
 *         LEAVE TO TRANSACTION SY-TCODE.
 *       ELSE.
@@ -938,16 +937,16 @@
 *       ENDIF.
 *--BG 2007.05.08
 *++0008 BG 2007.08.06
-* ÁFA összegek ellenőrzése
+* Verification of VAT amounts
      WHEN 'CHK_AFA'.
        PERFORM CHECK_AFA  USING   'X'     "AUTO-GEN
                          CHANGING L_ERROR.
        IF L_ERROR IS INITIAL.
          MESSAGE I229.
-*        ÁFA összegek konzisztensek!
+*        VAT amounts are consistent!
        ENDIF.
 *--0008 BG 2007.08.06
-* Vissza
+* Back
      WHEN 'BACK'.
        P_N = C_X.
        CLEAR: P_O, P_M.
@@ -957,7 +956,7 @@
        ELSE.
          LEAVE PROGRAM.
        ENDIF.
-* Kilépés
+* Exit
      WHEN 'EXIT'.
        PERFORM EXIT_PROGRAM.
      WHEN OTHERS.
@@ -986,12 +985,12 @@
  FORM CHECK_SEL_SCREEN.
    CLEAR:   S_GJAHR, S_MONAT, S_INDEX.
    REFRESH: S_GJAHR, S_MONAT, S_INDEX.
-* Normál, önrevízió, megjelenítés: S_ szelekciók feltöltése
+* Normal, self-revision, display: Upload S_ selections
    PERFORM FILL_S_RANGES.
    READ TABLE S_GJAHR INDEX 1.
    READ TABLE S_MONAT INDEX 1.
    READ TABLE S_INDEX INDEX 1.
-* Bevallás típus meghatározása
+* Definition of declaration type
    CHECK NOT S_GJAHR IS INITIAL AND
          NOT S_MONAT IS INITIAL.
    PERFORM GET_BTYPE USING P_BUKRS
@@ -999,7 +998,7 @@
                            S_GJAHR-LOW
                            S_MONAT-LOW
                      CHANGING P_BTYPE.
-* Bevallás utolsó napjának meghatározás
+* Determination of the last day of declaration
    PERFORM GET_LAST_DAY_OF_PERIOD USING S_GJAHR-LOW
                                         S_MONAT-LOW
 *++PTGSZLAA #01. 2014.03.03
@@ -1014,7 +1013,7 @@
                              P_BTART
                              P_BTYPE
                              V_LAST_DATE.
-* ...negyedéves
+* ...four years old
    IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      CASE S_MONAT-LOW.
        WHEN '01' OR '02' OR '03'.
@@ -1034,7 +1033,7 @@
            MESSAGE W063 WITH P_BUKRS P_BTYPE '12'.
          ENDIF.
      ENDCASE.
-* ...éves
+* ...years old
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      IF S_MONAT-LOW NE '12'.
        MESSAGE W064 WITH P_BUKRS P_BTYPE '12'.
@@ -1068,7 +1067,7 @@
      S_INDEX-LOW = W_/ZAK/BEVALLI-ZINDEX.
 *    PERFORM DYNP_UPDATE.
    ENDIF.
-* Van-e a megadott periódusra adat?
+* Is there data for the specified period?
    IF P_M = SPACE.
      IF NOT S_GJAHR-LOW IS INITIAL AND
         NOT S_MONAT-LOW IS INITIAL AND
@@ -1108,7 +1107,7 @@
        ENDIF.
      ENDIF.
    ENDIF.
-* Önrevíziónál: előfeltétel, hogy a 000 le legyen zárva
+* For self-revision: the prerequisite is that 000 is closed
    IF P_O = C_X.
      CLEAR W_/ZAK/BEVALLI.
      SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
@@ -1126,8 +1125,8 @@
                                 W_/ZAK/BEVALLI-MONAT.
        ENDIF.
      ENDIF.
-* csak az éppen nyitott sorszám írható, vagy - ha  nincs nyitott - csak
-* az utolsó lezártnál eggyel nagyobb sorszám
+* only the currently open serial number can be written, or - if there is no open one - only
+* serial number one higher than the last closed one
      IF W_/ZAK/BEVALLI-FLAG = C_CLOSED_X.
        MESSAGE E189(/ZAK/ZAK).
      ENDIF.
@@ -1178,15 +1177,15 @@
      ENDIF.
 *++0003 BG 2007.01.31
 *++0004 BG 2007.05.22
-*  Esedékességi dátum kitöltés ellenőrzése
+*  Check due date completion
 *    IF P_ESDAT IS INITIAL.
      IF P_ESDAT IS INITIAL AND ( P_BTART NE C_BTYPART_ONYB AND
                                  P_BTART NE C_BTYPART_ATV ).
 *--0004 BG 2007.05.22
        MESSAGE E191(/ZAK/ZAK).
-*     Kérem adja meg az esedékesség dátum értékét a szelekción!
+*     Please enter the value of the due date in the selection!
 *++0007 BG 2007.07.23
-*    Esedékességi dátum konvertálás
+*    Due date conversion
      ELSE.
        PERFORM GET_WORK_DAY USING P_ESDAT.
 *--0007 BG 2007.07.23
@@ -1203,13 +1202,13 @@
       &2+6(2) = &3.
      ENDIF.
    END-OF-DEFINITION.
-*  Csak ha ki van töltve az érték
+*  Only if the value is filled
    IF NOT  S_SPECM-LOW IS INITIAL.
 
      IF  ( NOT S_SPECM-LOW  IS INITIAL AND S_SPECM-LOW NOT BETWEEN '01' AND '12' ) OR
          ( NOT S_SPECM-HIGH IS INITIAL AND S_SPECM-HIGH NOT BETWEEN '01' AND '12' ).
        MESSAGE E213(/ZAK/ZAK).
-*   Kérem a hónapot 01 és 12 között adja meg!
+*   Please enter the month between 01 and 12!
      ENDIF.
 
      IF NOT S_SPECM-LOW  IS INITIAL AND S_SPECM-HIGH IS INITIAL.
@@ -1241,7 +1240,7 @@
                       AND BIDOSZ NE 'S'.
      IF SY-SUBRC EQ 0.
        MESSAGE E374(/ZAK/ZAK).
-* A beállítások alapján erre az időszakra nem választható spec.időszak!
+* Based on the settings, a special period cannot be selected for this period!
      ENDIF.
    ENDIF.
 *--2365 #03.
@@ -1331,7 +1330,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_01 SPOTS /ZAK/MAIN_ES STATIC .
    DATA LI_ANALITIKA_INDEX LIKE /ZAK/ANALITIKA OCCURS 0.
 *--0016 BG 2011.12.08
 *++1765 #16.
-*  ÁFA 07,08 lapok feldolgozása
+*  Processing of VAT 07.08 sheets
    TYPES: BEGIN OF LT_NYLAPAZON,
             NYLAPAZON TYPE /ZAK/NYLAPAZON,
           END OF LT_NYLAPAZON.
@@ -1434,7 +1433,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
 *--0010 BG 2008.02.14
    REFRESH: I_/ZAK/ANALITIKA,
             I_OUTTAB.
-* E - Éves
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      REFRESH R_MONAT.
      CLEAR R_MONAT.
@@ -1454,7 +1453,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
      R_MONAT-HIGH   = S_MONAT-LOW.
      APPEND R_MONAT.
    ENDIF.
-* N - Negyedéves
+* N - Quarterly
    IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      REFRESH R_MONAT.
      CLEAR R_MONAT.
@@ -1498,13 +1497,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
    ENDIF.
 *--PTGSZLAA #01. 2014.03.03
 *++2365 #03.
-*  Speciális időszak megadása
+*  Specifying a special period
    IF W_/ZAK/BEVALL-BIDOSZ = 'S'.
      CALL SCREEN 9901 STARTING AT 5 5 ENDING AT 75 10.
      R_MONAT[] = S_SPECM[].
      IF R_MONAT[] IS INITIAL.
        MESSAGE I373 DISPLAY LIKE 'E'.
-*      Speciális időszak nem megfelelő!
+*      Special period is not suitable!
        PERFORM EXIT_PROGRAM.
      ELSE.
        READ TABLE R_MONAT INDEX 1.
@@ -1527,7 +1526,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
 *     ENDIF.
 *--0004 BG 2007.04.04
 *++0010 BG 2008.02.14
-*    Meghatározzuk a Bevallás fajtahoz tartozó bevallás típusokat
+*    We define the declaration types belonging to the Declaration type
      CALL FUNCTION '/ZAK/GET_BTYPES_FROM_BTYPART'
        EXPORTING
          I_BUKRS   = P_BUKRS
@@ -1556,7 +1555,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
 *++1665 #03.
        IF SY-SUBRC EQ 0.
          MESSAGE I254 WITH P_BTYPE.
-*       Az analitikia tartalmaz & bevallás típustól eltérő tételt!
+*       The analytics contains an item different from the declaration type!
        ENDIF.
      ENDIF.
 *--0010 BG 2008.02.14
@@ -1574,8 +1573,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
           AND NONEED EQ ''.
 *--1765 #08.
 *++0016 BG 2011.09.14
-* Csoport vállalatnál vállalat kód csere és sorszám frissítés az
-* aktuális időszakra.
+* In the case of a group company, it is a company code exchange and serial number update
+* for the current period.
      IF NOT V_BUKCS IS INITIAL.
        REFRESH LI_ANALITIKA_INDEX.
        READ TABLE S_INDEX INDEX 1.
@@ -1585,17 +1584,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
          MOVE SY-TABIX TO W_/ZAK/ANALITIKA-ITEM.
          MODIFY I_/ZAK/ANALITIKA FROM W_/ZAK/ANALITIKA.
        ENDLOOP.
-* Analitika törlése
+* Delete analytics
        DELETE FROM /ZAK/ANALITIKA
              WHERE BUKRS  EQ P_BUKRS
                AND BTYPE  = P_BTYPE
                AND GJAHR  = S_GJAHR-LOW
                AND MONAT  IN R_MONAT
                AND ZINDEX IN S_INDEX.
-*      Analitika létrehozás
+*      Creating analytics
        MODIFY /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA.
        GET TIME.
-*      Státuszok beállítása feltöltöttre
+*      Set statuses to uploaded
        UPDATE /ZAK/BEVALLI SET FLAG = 'F'
                               DATUM = SY-DATUM
                               UZEIT = SY-UZEIT
@@ -1627,7 +1626,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
        LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
 *++0005 BG 2007.05.30
 *++1365 #21.
-*                            WHERE abevaz NE c_abevaz_dummy.
+*                            WHERE abevaz NOT c_abevaz_dummy.
                             WHERE ABEVAZ(5) NE C_ABEVAZ_DUMMY.
 *--1365 #21.
 *--0005 BG 2007.05.30
@@ -1658,9 +1657,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
                   ZINDEX = W_/ZAK/ANALITIKA-ZINDEX
                   ABEVAZ = W_/ZAK/ANALITIKA-ABEVAZ
                   ADOAZON = W_/ZAK/ANALITIKA-ADOAZON.
-*            Ha még nincs ezzel a kulccsal - lementem
+*            If you don't have this key yet - I went down
              IF SY-SUBRC NE 0.
-*              Önrevízió - esdékességi dátum
+*              Self-revision - due date
                IF P_O = 'X' AND
                   P_CUM = 'X' AND
                   W_/ZAK/BEVALLB-ESDAT_FLAG = 'X'.
@@ -1682,9 +1681,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
                       AND    ABEVAZ  = W_OUTTAB-ABEVAZ.
                W_OUTTAB-ABEVTEXT_DISP = W_OUTTAB-ABEVTEXT.
                COLLECT W_OUTTAB INTO I_OUTTAB.
-*            Van már ilyen kulccsal
+*            I already have such a key
              ELSE.
-*              Ez a default szöveg - módosítom a lementettet
+*              This is the default text - I will modify the saved one
                IF NOT W_/ZAK/ANALITIKA-XDEFT IS INITIAL.
                  READ TABLE I_OUTTAB INTO W_OUTTAB WITH KEY
                       BUKRS = W_/ZAK/ANALITIKA-BUKRS
@@ -1770,13 +1769,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
              ENDIF.
            ELSE.
 *++0005 BG 2007.05.30
-*           ÁFA esetén ha ki van töltve a sor/oszlop akkor nem kell
+*           In the case of VAT, if the row/column is filled in, it is not necessary
              IF P_BTART EQ C_BTYPART_AFA
                 AND ( ( NOT W_/ZAK/BEVALLB-SORINDEX IS INITIAL
                         AND W_/ZAK/BEVALLB-SORINDEX NE '0') OR
-*++1365 2013.01.22 Balázs Gábor (Ness)
+*++1365 22.01.2013 Balázs Gábor (Ness)
                     (  NOT W_/ZAK/BEVALLB-ASZKOT IS INITIAL ) ).
-*--1365 2013.01.22 Balázs Gábor (Ness)
+*--1365 22.01.2013 Balázs Gábor (Ness)
                CONTINUE.
              ENDIF.
 *--0005 BG 2007.05.30
@@ -1800,7 +1799,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
          ENDIF.
        ENDLOOP.
 *++0005 BG 2007.05.30
-*      ÁFA típus 04, 06-os lap feldolgozása
+*      Processing of VAT type 04, 06
        IF P_BTART EQ C_BTYPART_AFA.
          REFRESH LI_ANALITIKA_0406.
          LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA
@@ -1811,7 +1810,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_02 SPOTS /ZAK/MAIN_ES STATIC .
            MOVE-CORRESPONDING W_/ZAK/ANALITIKA TO LW_ANALITIKA_0406.
 *--0005 BG 2007.09.25
 ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
-*          IDŐSZAKok
+*          PERIODS
            READ TABLE S_INDEX INDEX 1.
            LW_ANALITIKA_0406-ZINDEX = S_INDEX-HIGH.
            READ TABLE R_MONAT INDEX 1.
@@ -1824,7 +1823,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                                     AND LWBAS IS INITIAL
                                     AND FWBAS IS INITIAL.
 *--0005 BG 2007.09.25
-*        Meghatározzuk az utolsó naphoz milyen beállítás tartozik
+*        We determine which setting belongs to the last day
          IF NOT LI_ANALITIKA_0406[] IS INITIAL.
            SELECT  * INTO W_/ZAK/BNYLAP
                      UP TO 1 ROWS
@@ -1836,14 +1835,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
            ENDSELECT.
            IF SY-SUBRC NE 0.
              MESSAGE E220 WITH P_BUKRS P_BTART V_LAST_DATE.
-*Nincs beállítás a /ZAK/BNYLAP táblában! (Vállalat: &, típus: &, dátum:
+*There is no setting in the /ZAK/BNYLAP table! (Company: &, type: &, date:
 *&).
            ELSE.
              MOVE W_/ZAK/BNYLAP-NYLAPAZON TO V_NYLAPAZON.
            ENDIF.
 *++1565 #01.
-*          Ha nem kivetéses, akkor nem kell az XBLNR-t figyelembe venni
-*          az összesítésnél
+*          If it is not projectable, then XBLNR does not need to be taken into account
+*          when summarizing
            IF W_/ZAK/BNYLAP-VPOPKI IS INITIAL.
              LI_ANALITIKA_0406_TMP[] = LI_ANALITIKA_0406[].
              FREE LI_ANALITIKA_0406.
@@ -1858,7 +1857,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                                         AND FWBAS IS INITIAL.
            ENDIF.
 *--1565 #01.
-*        Megatározzuk a legnagyobb sor-indexet
+*        We define the largest row index
            LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                                 WHERE NOT SORINDEX IS INITIAL
                                   AND NYLAPAZON EQ
@@ -1869,19 +1868,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
            ENDLOOP.
            IF SY-SUBRC NE 0.
              MESSAGE E221 WITH P_BTART.
-*Nincs "Sor / oszlop azonosító" beállítás a & bevallás fajtához!
+*There is no "Row / column identifier" setting for the & declaration type!
            ENDIF.
-*        Adatok feltöltése
+*        Upload data
            CLEAR W_OUTTAB.
            L_LAPSZ = 1.
            L_SORSZ = 1.
-*        Ha van adat, feldolgozás
+*        If there is data, processing
            LOOP AT LI_ANALITIKA_0406 INTO LW_ANALITIKA_0406.
              IF L_SORSZ > L_MAX_SORSZ.
                ADD 1 TO L_LAPSZ.
                L_SORSZ = 1.
              ENDIF.
-*          Vámhatározat szám töltése
+*          Filling in the customs decision number
              M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'A' L_SUBRC
              W_/ZAK/BNYLAP-NYLAPAZON.
              IF L_SUBRC IS INITIAL.
@@ -1891,15 +1890,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          04-es lap töltése
+*          Loading page 04
 *++0965 2009.02.23 BG
-*            0965-től nem lehet a 04 vagy 06 konstansként kezelni, mivel
-*            megváltozott, ezért be lett vezetve egy flag jalölés a VPOP
-*            által kivetett kezelésre.
+*            From 0965, you cannot treat 04 or 06 as a constant because
+*            has changed, therefore a flag marking VPOP has been introduced
+*            for treatment imposed by
 *            IF W_/ZAK/BNYLAP-NYLAPAZON EQ C_NYLAPAZON_04.
              IF NOT W_/ZAK/BNYLAP-VPOPKI IS INITIAL.
 *--0965 2009.02.23 BG
-*            Vámhatározat közlésének napja
+*            Date of notification of customs decision
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'B' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1909,7 +1908,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*            Fizetendő adó összege
+*            Amount of tax payable
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'C' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1919,7 +1918,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*            Befizetési bizonylat száma
+*            Payment receipt number
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'D' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1929,7 +1928,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*            Megfizetés időpontja
+*            Date of payment
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'E' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1939,7 +1938,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*            Fizetett adó összege
+*            Amount of tax paid
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'F' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1949,12 +1948,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*          06-os lap töltése
+*          Loading page 06
 *++0965 2009.02.23 BG
 *            ELSEIF W_/ZAK/BNYLAP-NYLAPAZON EQ C_NYLAPAZON_06.
              ELSE. "W_/ZAK/BNYLAP-VPOPKI is initial
 *--0965 2009.02.23 BG
-*            Vámhatározat közlésének napja
+*            Date of notification of customs decision
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'B' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1964,7 +1963,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*            Vámhatározatban szereplő vám érték
+*            Customs value included in the customs decision
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'C' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1974,7 +1973,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*            Vám értéket növelő összeg
+*            Amount increasing the customs value
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'D' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
@@ -1990,19 +1989,19 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_ZF_02 SPOTS /ZAK/MAIN_ES .
 ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
            MOVE L_LAPSZ TO V_LAPSZ.
          ENDIF.
-*++1365 2013.01.10 Balázs Gábor (Ness)
-*      Összesítő jelentés releváns
+*++1365 10.01.2013 Balázs Gábor (Ness)
+*      A summary report is relevant
 *++1365 #21.
 *         IF NOT w_/zak/bevall-omrel IS INITIAL.
          IF NOT W_/ZAK/BEVALL-OMREL IS INITIAL AND
             NOT P_OMREL IS INITIAL.
 *--1365 #21.
-*          Számlaszámok összegzése M-es rekordok képzése
+*          Summarization of account numbers Formation of M records
            PERFORM SUM_GEN_OMREL  USING C_ABEVAZ_DUMMY_R
                                         C_ABEVAZ_DUMMY_M
                                         W_/ZAK/BEVALL-BTYPE
                                         W_/ZAK/BEVALL-OLWSTE.
-*          ABEV azonosítók feldolgozása
+*          Processing of ABEV identifiers
            PERFORM GET_OMREL_PROC USING C_ABEVAZ_DUMMY_M
                                         C_NYLAPAZON_M01.
            PERFORM GET_OMREL_PROC USING C_ABEVAZ_DUMMY_M
@@ -2014,18 +2013,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
                                         C_NYLAPAZON_M02_K.
          ENDIF.
 *++1765 #16.
-*        ÁFA 07,08 lapok feldolgozása
-*        Meghatározzuk milyen lapok vannak és sorrendben dolgozzuk fel:
+*        Processing of VAT 07.08 sheets
+*        We determine what cards there are and process them in order:
          LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA WHERE ABEVAZ EQ C_ABEVAZ_DUMMY_0708.
            CLEAR LT_NYLAPAZON.
            LT_NYLAPAZON-NYLAPAZON = W_/ZAK/ANALITIKA-NYLAPAZON.
            COLLECT LT_NYLAPAZON.
          ENDLOOP.
-*        Feldolgozás
+*        Processing
          IF SY-SUBRC EQ 0.
            SORT LT_NYLAPAZON.
            LOOP AT LT_NYLAPAZON.
-*            Megatározzuk a legnagyobb sor-indexet
+*            We define the largest row index
              LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                                   WHERE NOT SORINDEX IS INITIAL
                                     AND NYLAPAZON EQ
@@ -2036,9 +2035,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              ENDLOOP.
              IF SY-SUBRC NE 0.
                MESSAGE E221 WITH P_BTART.
-*              Nincs "Sor / oszlop azonosító" beállítás a & bevallás fajtához!
+*              There is no "Row / column identifier" setting for the & declaration type!
              ENDIF.
-*            Adatok feltöltése
+*            Upload data
              CLEAR W_OUTTAB.
              L_LAPSZ = 1.
              L_SORSZ = 1.
@@ -2048,7 +2047,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
                  ADD 1 TO L_LAPSZ.
                  L_SORSZ = 1.
                ENDIF.
-*              Vevő adószám töltése
+*              Entering the customer's tax number
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'A' L_SUBRC LT_NYLAPAZON-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
                  MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2056,7 +2055,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*              Teljesítés napja
+*              Completion date
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'B' L_SUBRC LT_NYLAPAZON-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
                  MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2064,7 +2063,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*              Termék megnevezése
+*              Product name
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'C' L_SUBRC LT_NYLAPAZON-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
                  MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2077,12 +2076,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
 *--1765 #17.
                  IF SY-SUBRC NE 0.
                    MESSAGE E365 WITH W_/ZAK/ANALITIKA-VMSZA.
-*                    & vámtarifaszámnak nem határozható meg a megnevezése!
+*                    & customs tariff number cannot be named!
                  ENDIF.
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*              Vámtarifaszám
+*              Customs tariff number
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'D' L_SUBRC LT_NYLAPAZON-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
                  MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2093,7 +2092,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*              Mennyiség
+*              Quantity
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'E' L_SUBRC LT_NYLAPAZON-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
                  MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2101,7 +2100,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
                  APPEND W_OUTTAB TO I_OUTTAB.
                  CLEAR W_OUTTAB.
                ENDIF.
-*              Adóalap
+*              Tax base
                M_GET_ABEV_TO_INDEX_0406 L_SORSZ 'F' L_SUBRC LT_NYLAPAZON-NYLAPAZON.
                IF L_SUBRC IS INITIAL.
                  MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2116,13 +2115,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
 *--1765 #16.
        ENDIF.
 *--0005 BG 2007.05.30
-*--1365 2013.01.10 Balázs Gábor (Ness)
+*--1365 10.01.2013 Balázs Gábor (Ness)
 *++0004 BG 2007.04.04
 *++PTGSZLAA #01. 2014.03.03
 *     ELSE. "C_BTYPART_ONYB
      ELSEIF P_BTART EQ C_BTYPART_ONYB.
 *--PTGSZLAA #01. 2014.03.03
-*      Adatok gyűjtése saját struktúrába.
+*      Collection of data into own structure.
        LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA
                          WHERE NOT FIELD_N IS INITIAL.
          CLEAR LI_ONYB.
@@ -2170,10 +2169,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
 *--1365 #24.
 *--0004 BG 2007.10.10
        SORT LI_ONYB.
-*      Önrevíziós kezelése
+*      Self-revision management
        IF NOT P_O IS INITIAL.
          L_INDEX = S_INDEX-LOW.
-*        Range feltöltése
+*        Upload Range
          SUBTRACT 1 FROM L_INDEX.
          CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
            EXPORTING
@@ -2181,15 +2180,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
            IMPORTING
              OUTPUT = L_INDEX.
          REFRESH LR_INDEX.
-*        000-tól az aktuális index-1 ig keresünk értékeket
-*        az analitikában.
+*        We search for values ​​from 000 to the current index-1
+*        in analytics.
          M_DEF LR_INDEX 'I' 'BT' '000' L_INDEX.
-*        Adatok keresése előző index-ekben
+*        Search for data in previous indexes
          LOOP AT LI_ONYB.
            MOVE SY-TABIX TO L_TABIX.
-*          ADOAZON képzése
+*          Training of ADOAZON
            CONCATENATE LI_ONYB-LAND LI_ONYB-ADOSZ INTO L_ADOAZON.
-*          Előző időszakokban értékek kezelése
+*          Management of values ​​in previous periods
            CLEAR: W_/ZAK/ANALITIKA, LW_ONYB_LAST.
            SELECT *   INTO W_/ZAK/ANALITIKA
                            FROM /ZAK/ANALITIKA
@@ -2214,9 +2213,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
 *--0012 BG 2008.04.02
            ENDSELECT.
            IF SY-SUBRC EQ 0.
-*            Talált rekordot, törölni kell
+*            Record found, must be deleted
              MOVE 'T' TO LW_ONYB_LAST-OFLAG.
-*Hozzáadjuk az aktuális index elé, hogy már ne vegye újra figyelembe
+*We add it to the current index so it doesn't take it into account again
              ADD  LW_ONYB_LAST-FIELD_N TO LI_ONYB-FIELD_N.
 *++0004 BG 2007.05.24
 *            SUBTRACT 1 FROM L_TABIX.
@@ -2245,7 +2244,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              ENDIF.
 *--2009.12.07 BG
            ELSE.
-*            Nincs az előző időszakokban adat, módosítjuk a flag-et
+*            There is no data in the previous periods, we are changing the flag
              MOVE 'U' TO LI_ONYB-OFLAG.
              MODIFY LI_ONYB TRANSPORTING OFLAG.
 *++0004 BG 2007.05.24
@@ -2257,8 +2256,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
        ENDIF.
 *--0004 BG 2007.04.19
 *++0012 BG 2008.04.02
-*      Meghatározzuk, hogy mennyi NYLAPAZON létezik a /ZAK/BEVALLB-ben
-*      és ezeket olvassuk végig
+*      We determine how many FLAPS exist in /ZAK/BEVALLB
+*      and read them through
        LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                             WHERE NOT NYLAPAZON IS INITIAL.
          MOVE W_/ZAK/BEVALLB-NYLAPAZON TO W_NYLAPAZON-NYLAPAZON.
@@ -2266,15 +2265,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
        ENDLOOP.
        IF I_NYLAPAZON[] IS INITIAL.
          MESSAGE E267 WITH P_BTART.
-*Nincs nyomtatvány lap azonosító beállítás a & bevallás fajtához!
+*There is no form sheet identification setting for the & declaration type!
        ENDIF.
 *--0012 BG 2008.04.02
 *++0012 BG 2008.04.02
-*      Feldolgozás lap azonosítónként
+*      Processing sheet per ID
        LOOP AT I_NYLAPAZON INTO W_NYLAPAZON.
          CLEAR L_MAX_SORSZ.
 *--0012 BG 2008.04.02
-*      Megatározzuk a legnagyobb sor-indexet
+*      We define the largest row index
          LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
 *++0012 BG 2008.04.02
                               WHERE NYLAPAZON = W_NYLAPAZON-NYLAPAZON
@@ -2286,9 +2285,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
          ENDLOOP.
          IF SY-SUBRC NE 0.
            MESSAGE E221 WITH P_BTART.
-*        Nincs "Sor / oszlop azonosító" beállítás a & bevallás fajtához!
+*        There is no "Row / column identifier" setting for the & declaration type!
          ENDIF.
-*      Adatok feltöltése
+*      Upload data
          CLEAR W_OUTTAB.
          L_LAPSZ = 1.
          L_SORSZ = 1.
@@ -2300,7 +2299,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              ADD 1 TO L_LAPSZ.
              L_SORSZ = 1.
            ENDIF.
-*        Országkód töltése
+*        Loading country code
            M_GET_ABEV_TO_INDEX L_SORSZ 'A' L_SUBRC LI_ONYB.
            IF L_SUBRC IS INITIAL.
              MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2308,7 +2307,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              APPEND W_OUTTAB TO I_OUTTAB.
              CLEAR W_OUTTAB.
            ENDIF.
-*        Adószám töltése
+*        Loading a tax number
            M_GET_ABEV_TO_INDEX L_SORSZ 'B' L_SUBRC LI_ONYB.
            IF L_SUBRC IS INITIAL.
              MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2316,7 +2315,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              APPEND W_OUTTAB TO I_OUTTAB.
              CLEAR W_OUTTAB.
            ENDIF.
-*        Összeg töltése
+*        Charge amount
            M_GET_ABEV_TO_INDEX L_SORSZ 'C' L_SUBRC LI_ONYB.
            IF L_SUBRC IS INITIAL.
              MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2324,7 +2323,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              APPEND W_OUTTAB TO I_OUTTAB.
              CLEAR W_OUTTAB.
            ENDIF.
-*        Háromszögügylet töltése
+*        Loading a triangle deal
            M_GET_ABEV_TO_INDEX L_SORSZ 'D' L_SUBRC LI_ONYB.
            IF L_SUBRC IS INITIAL.
              MOVE L_LAPSZ TO W_OUTTAB-LAPSZ.
@@ -2332,7 +2331,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              APPEND W_OUTTAB TO I_OUTTAB.
              CLEAR W_OUTTAB.
            ENDIF.
-*        Önrevíziós flag töltése
+*        Loading self-revision flag
            IF NOT P_O IS INITIAL.
              M_GET_ABEV_TO_INDEX L_SORSZ 'E' L_SUBRC LI_ONYB.
              IF L_SUBRC IS INITIAL.
@@ -2343,7 +2342,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
              ENDIF.
            ENDIF.
 *++0004 BG 2007.05.24
-*        Helyesbítés oka töltése
+*        Charging reason for correction
            IF NOT P_O IS INITIAL.
              M_GET_ABEV_TO_INDEX L_SORSZ 'G' L_SUBRC LI_ONYB.
              IF L_SUBRC IS INITIAL AND LI_ONYB-OFLAG EQ 'T'.
@@ -2368,7 +2367,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
 *       L_LAPSZ_SAVE = L_LAPSZ.
 *       MOVE L_LAPSZ TO V_LAPSZ.
 *--0012 BG 2008.04.02
-*      Karakteres mezők hozzáfűzése
+*      Adding character fields
        LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                             WHERE FIELDTYPE = 'C'
                               AND SORINDEX IS INITIAL.
@@ -2404,7 +2403,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_RG_03 SPOTS /ZAK/MAIN_ES .
        ENDLOOP.
 *++PTGSZLAA #01. 2014.03.03
      ELSEIF P_BTART EQ C_BTYPART_PTG.
-*      A-s ABEV azonosítókat létre hozzuk!
+*      We create A-s ABEV identifiers!
        LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                             WHERE ABEVAZ(1) EQ 'A'.
          CLEAR W_OUTTAB.
@@ -2436,7 +2435,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_TELEKOM_01 SPOTS /ZAK/MAIN_ES .
 *++PTGSZLAH #02. 2015.01.30
 ENHANCEMENT-POINT YAK_MAIN_PENZT_03 SPOTS /ZAK/MAIN_ES .
 *--PTGSZLAH #02. 2015.01.30
-*        Pénztárátvételi hely meghatározása
+*        Determination of cash collection location
          PERFORM GET_ADDR_DATA USING  LW_ANALITIKA_PTG-XBLNR
                                       LW_ANALITIKA_PTG-LIFKUN
                                       LW_ADDR1_VAL
@@ -2447,10 +2446,10 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_04 SPOTS /ZAK/MAIN_ES .
 *--PTGSZLAH #02. 2015.01.30
          IF L_SUBRC NE 0.
            MESSAGE E401 WITH LW_ANALITIKA_PTG-LIFKUN.
-*            & pénztárvételi hely nem létezik!
+*            & checkout location does not exist!
          ENDIF.
 *--PTGSZLAA #02. 2014.03.05
-*        IDŐSZAKok
+*        PERIODS
          READ TABLE S_INDEX INDEX 1.
          LW_ANALITIKA_PTG-ZINDEX = S_INDEX-HIGH.
          READ TABLE R_MONAT INDEX 1.
@@ -2460,7 +2459,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_04 SPOTS /ZAK/MAIN_ES .
        DELETE LI_ANALITIKA_PTG WHERE FWSTE IS INITIAL
                                  AND FWBTR IS INITIAL.
        SORT LI_ANALITIKA_PTG BY LIFKUN SZAMLAKELT.
-*      Meghatározzuk az utolsó naphoz milyen beállítás tartozik
+*      We determine which setting belongs to the last day
        IF NOT LI_ANALITIKA_PTG[] IS INITIAL.
          SELECT  * INTO W_/ZAK/BNYLAP
                    UP TO 1 ROWS
@@ -2472,12 +2471,12 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_04 SPOTS /ZAK/MAIN_ES .
          ENDSELECT.
          IF SY-SUBRC NE 0.
            MESSAGE E220 WITH P_BUKRS P_BTART V_LAST_DATE.
-*Nincs beállítás a /ZAK/BNYLAP táblában! (Vállalat: &, típus: &, dátum:
+*There is no setting in the /ZAK/BNYLAP table! (Company: &, type: &, date:
 *&).
          ELSE.
            MOVE W_/ZAK/BNYLAP-NYLAPAZON TO V_NYLAPAZON.
          ENDIF.
-*        Megatározzuk a legnagyobb sor-indexet
+*        We define the largest row index
          LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
                               WHERE NOT SORINDEX IS INITIAL
                                 AND NYLAPAZON EQ
@@ -2488,16 +2487,16 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_04 SPOTS /ZAK/MAIN_ES .
          ENDLOOP.
          IF SY-SUBRC NE 0.
            MESSAGE E221 WITH P_BTART.
-*Nincs "Sor / oszlop azonosító" beállítás a & bevallás fajtához!
+*There is no "Row / column identifier" setting for the & declaration type!
          ENDIF.
-*        Adatok feltöltése
+*        Upload data
          CLEAR W_OUTTAB.
          L_LAPSZ = 1.
          L_SORSZ = 1.
          CLEAR L_STRING_SAVE.
-*        Ha van adat, feldolgozás
+*        If there is data, processing
          LOOP AT LI_ANALITIKA_PTG INTO LW_ANALITIKA_PTG.
-*          Pénztárhely vagy számlakelt változás figyelése
+*          Monitoring cash location or account changes
            CONCATENATE LW_ANALITIKA_PTG-LIFKUN
                        LW_ANALITIKA_PTG-SZAMLAKELT
                   INTO L_STRING.
@@ -2515,7 +2514,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MAIN_TELEKOM_02 SPOTS /ZAK/MAIN_ES .
 *++PTGSZLAH #02. 2015.01.30
 ENHANCEMENT-POINT YAK_MAIN_PENZT_01 SPOTS /ZAK/MAIN_ES .
 *--PTGSZLAH #02. 2015.01.30
-*        Pénztárátvételi hely meghatározása
+*        Determination of cash collection location
            PERFORM GET_ADDR_DATA USING  LW_ANALITIKA_PTG-XBLNR
                                         LW_ANALITIKA_PTG-LIFKUN
                                         LW_ADDR1_VAL
@@ -2526,13 +2525,13 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
 *--PTGSZLAH #02. 2015.01.30
            IF L_SUBRC NE 0.
              MESSAGE E401 WITH LW_ANALITIKA_PTG-LIFKUN.
-*            & pénztárvételi hely nem létezik!
+*            & checkout location does not exist!
            ENDIF.
 *--PTGSZLAA #02. 2014.03.05
 *++PTGSZLAH #01. 2015.01.16
            IF P_BTYPE EQ C_BTYPE_PTGSZLAA.
 *--PTGSZLAH #01. 2015.01.16
-*          Pénztárátvételi hely neve M0BB001A
+*          Cash pick-up point name M0BB001A
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB001A'.
              IF SY-SUBRC IS INITIAL.
@@ -2541,7 +2540,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Számlakibocsátás kelte
+*          Invoice issue date
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB002A'.
              IF SY-SUBRC IS INITIAL.
@@ -2550,7 +2549,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely irányítószáma
+*          Postal code of cash collection location
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB005A'.
              IF SY-SUBRC IS INITIAL.
@@ -2559,7 +2558,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely város
+*          City of cash collection
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB006A'.
              IF SY-SUBRC IS INITIAL.
@@ -2568,7 +2567,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely közterület neve
+*          Name of public area of ​​cash collection location
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB008A'.
              IF SY-SUBRC IS INITIAL.
@@ -2577,7 +2576,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely közterület jellege
+*          The nature of the cash collection place as a public area
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB009A'.
              IF SY-SUBRC IS INITIAL.
@@ -2586,7 +2585,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely  házszám
+*          Cash pick-up location house number
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB010A'.
              IF SY-SUBRC IS INITIAL.
@@ -2595,7 +2594,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely épület
+*          Cash desk building
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB011A'.
              IF SY-SUBRC IS INITIAL.
@@ -2604,7 +2603,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely lépcsőház
+*          Cash desk stairwell
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB012A'.
              IF SY-SUBRC IS INITIAL.
@@ -2613,7 +2612,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely emelet
+*          Cash desk floor
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB013A'.
              IF SY-SUBRC IS INITIAL.
@@ -2622,7 +2621,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely ajtó
+*          Cash desk door
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB014A'.
              IF SY-SUBRC IS INITIAL.
@@ -2631,7 +2630,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Számlaszám
+*          Account number
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'A' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2640,7 +2639,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Számla típusa
+*          Account type
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'B' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2649,7 +2648,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Előzmény számla száma
+*          History account number
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'C' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2658,7 +2657,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Vevő adóazonosító száma
+*          Buyer's tax identification number
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'D' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2670,7 +2669,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Vevő neve
+*          Customer name
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'E' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2679,7 +2678,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Vevő címe
+*          Buyer's address
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'F' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2688,7 +2687,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          ÁFA összege
+*          VAT amount
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'G' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2698,7 +2697,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénznem
+*          Currency
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'H' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2708,7 +2707,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Bruttó összeg
+*          Gross amount
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'I' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2724,7 +2723,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
              ADD 1 TO L_SORSZ.
 *++PTGSZLAH #01. 2015.01.16
            ELSEIF P_BTYPE EQ C_BTYPE_PTGSZLAH.
-*          Számlakibocsátás kelte
+*          Invoice issue date
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB001A'.
              IF SY-SUBRC IS INITIAL.
@@ -2733,7 +2732,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely neve
+*          Cash pick-up location name
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB005A'.
              IF SY-SUBRC IS INITIAL.
@@ -2742,7 +2741,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely irányítószáma
+*          Postal code of cash collection location
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB007A'.
              IF SY-SUBRC IS INITIAL.
@@ -2751,7 +2750,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely város
+*          City of cash collection
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB008A'.
              IF SY-SUBRC IS INITIAL.
@@ -2760,7 +2759,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely közterület neve
+*          Name of public area of ​​cash collection location
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB009A'.
              IF SY-SUBRC IS INITIAL.
@@ -2769,7 +2768,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely közterület jellege
+*          The nature of the cash collection place as a public area
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB010A'.
              IF SY-SUBRC IS INITIAL.
@@ -2778,7 +2777,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely  házszám
+*          Cash pick-up location house number
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB011A'.
              IF SY-SUBRC IS INITIAL.
@@ -2787,7 +2786,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely épület
+*          Cash desk building
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB012A'.
              IF SY-SUBRC IS INITIAL.
@@ -2796,7 +2795,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely lépcsőház
+*          Cash desk stairwell
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB013A'.
              IF SY-SUBRC IS INITIAL.
@@ -2805,7 +2804,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely emelet
+*          Cash desk floor
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB014A'.
              IF SY-SUBRC IS INITIAL.
@@ -2814,7 +2813,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénztárátvételi hely ajtó
+*          Cash desk door
              M_GET_PTG_ABEV_TO_OUTTAB SPACE SPACE L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON 'M0BB015A'.
              IF SY-SUBRC IS INITIAL.
@@ -2823,7 +2822,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Számlaszám
+*          Account number
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'A' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2832,7 +2831,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Számla típusa
+*          Account type
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'B' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2841,7 +2840,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Előzmény számla száma
+*          History account number
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'C' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2850,7 +2849,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-**          Vevő adóazonosító száma
+** Buyer's tax identification number
 *             M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'D' L_SUBRC
 *               W_/ZAK/BNYLAP-NYLAPAZON SPACE.
 *             IF L_SUBRC IS INITIAL.
@@ -2860,7 +2859,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
 *               APPEND W_OUTTAB TO I_OUTTAB.
 *               CLEAR W_OUTTAB.
 *             ENDIF.
-*          Vevő neve
+*          Customer name
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'D' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2869,7 +2868,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Vevő címe
+*          Buyer's address
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'E' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2878,7 +2877,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Pénznem
+*          Currency
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'F' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2888,7 +2887,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                APPEND W_OUTTAB TO I_OUTTAB.
                CLEAR W_OUTTAB.
              ENDIF.
-*          Bruttó összeg
+*          Gross amount
              M_GET_PTG_ABEV_TO_OUTTAB L_SORSZ 'G' L_SUBRC
                W_/ZAK/BNYLAP-NYLAPAZON SPACE.
              IF L_SUBRC IS INITIAL.
@@ -2913,7 +2912,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
      DATA: L_ROUND(20) TYPE C.
      PERFORM PROCESS_IND USING TEXT-P03.
      LOOP AT I_OUTTAB INTO W_OUTTAB.
-* Összeg konverziók
+* Amount conversions
        CLEAR L_ROUND.
        READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
           WITH KEY BTYPE  = W_OUTTAB-BTYPE
@@ -2939,7 +2938,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
                                     W_OUTTAB-FIELD_NRK.
 *--1465 #04.
 *++0003 BG 2007.01.31
-*        Az esedékességi dátumot a szelekcióról kell venni önrevíziónál
+*        The due date must be taken from the selection for self-revision
          IF P_O = C_X AND W_/ZAK/BEVALLB-ESDAT_FLAG = C_X.
            MOVE P_ESDAT TO W_OUTTAB-FIELD_C.
          ENDIF.
@@ -2948,7 +2947,7 @@ ENHANCEMENT-POINT YAK_MAIN_PENZT_02 SPOTS /ZAK/MAIN_ES .
        ENDIF.
      ENDLOOP.
    ELSE.
-* Lezárt időszak megjelenítése
+* Show closed period
      DATA: V_INDEX LIKE SY-TABIX.
      SELECT * INTO CORRESPONDING FIELDS OF TABLE I_OUTTAB
         FROM  /ZAK/BEVALLO

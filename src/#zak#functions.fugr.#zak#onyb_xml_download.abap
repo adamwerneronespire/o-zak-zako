@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ONYB_XML_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_FILE) TYPE  STRING
 *"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
@@ -32,7 +32,7 @@ FUNCTION /ZAK/ONYB_XML_DOWNLOAD.
 
   READ TABLE T_/ZAK/BEVALLALV INTO LW_BEVALLO_ALV INDEX 1.
 
-* Bevallások beállításának beolvasása
+* Reading declaration settings
   REFRESH I_/ZAK/BEVALLB.
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
@@ -41,32 +41,32 @@ FUNCTION /ZAK/ONYB_XML_DOWNLOAD.
   SORT I_/ZAK/BEVALLB.
 
 
-* Vállalat név meghatározása
-  ABEV = '0A0001C008'. "Vállalat ABEV xxA60-ban
+* Determining company name
+  ABEV = '0A0001C008'. "Company in ABEV xxA60
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   BUKRSTEXT = VALUE.
 
-* Adószám meghatározása
-  ABEV = '0A0001C003'. "Adószám ABEV xxA60-ban
+* Determining tax number
+  ABEV = '0A0001C003'. "Tax number in ABEV xxA60
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   ADOSZAM = VALUE.
 
-* IDŐSZAK -tól
-  ABEV = '0A0001D001'. "Adószám ABEV xxA60-ban
+* Period - from
+  ABEV = '0A0001D001'. "Tax number in ABEV xxA60
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   IDTOL = VALUE.
 
-* IDŐSZAK -ig
-  ABEV = '0A0001D002'. "Adószám ABEV xxA60-ban
+* Period - to
+  ABEV = '0A0001D002'. "Tax number in ABEV xxA60
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
@@ -74,11 +74,11 @@ FUNCTION /ZAK/ONYB_XML_DOWNLOAD.
   IDIG = VALUE.
 
 
-* Nyomtatvány azonosítók:
+* Form identifiers:
   MOVE LW_BEVALLO_ALV-BTYPE TO NYOMTA.
 
 
-* Adatok összeállítása BEVALLO_ALV-ből
+* Compiling data from BEVALLO_ALV
   PERFORM FIELDS_FROM_BEVALLO_TO_XXA60    TABLES T_/ZAK/BEVALLALV
                                                  I_/ZAK/BEVALLB
                                                  LI_A_XXA60

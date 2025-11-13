@@ -119,16 +119,16 @@
 - [X] src/#zak#functions.fugr.#zak#main_exit_new.abap
 - [X] src/#zak#functions.fugr.#zak#new_belnr.abap
 - [X] src/#zak#functions.fugr.#zak#new_package_number.abap
-- [ ] src/#zak#functions.fugr.#zak#onell_book_excel.abap
-- [ ] src/#zak#functions.fugr.#zak#onyb_xml_download.abap
-- [ ] src/#zak#functions.fugr.#zak#post_adonsza.abap
-- [ ] src/#zak#functions.fugr.#zak#ptg_xml_download.abap
-- [ ] src/#zak#functions.fugr.#zak#read_abev_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#read_actual_version.abap
-- [ ] src/#zak#functions.fugr.#zak#read_adoazon_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#read_file_exit.abap
-- [ ] src/#zak#functions.fugr.#zak#rotate_bukrs_input.abap
-- [ ] src/#zak#functions.fugr.#zak#rotate_bukrs_output.abap
+- [x] src/#zak#functions.fugr.#zak#onell_book_excel.abap
+- [x] src/#zak#functions.fugr.#zak#onyb_xml_download.abap
+- [x] src/#zak#functions.fugr.#zak#post_adonsza.abap
+- [x] src/#zak#functions.fugr.#zak#ptg_xml_download.abap
+- [x] src/#zak#functions.fugr.#zak#read_abev_exit.abap
+- [x] src/#zak#functions.fugr.#zak#read_actual_version.abap
+- [x] src/#zak#functions.fugr.#zak#read_adoazon_exit.abap
+- [x] src/#zak#functions.fugr.#zak#read_file_exit.abap
+- [x] src/#zak#functions.fugr.#zak#rotate_bukrs_input.abap
+- [x] src/#zak#functions.fugr.#zak#rotate_bukrs_output.abap
 - [ ] src/#zak#functions.fugr.#zak#rotate_idsz.abap
 - [ ] src/#zak#functions.fugr.#zak#saplfunctions.abap
 - [ ] src/#zak#functions.fugr.#zak#stapo_exit.abap

@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ROTATE_BUKRS_INPUT.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_FI_BUKRS) TYPE  BUKRS
 *"     VALUE(I_AD_BUKRS) TYPE  BUKRS OPTIONAL
@@ -10,15 +10,14 @@ FUNCTION /ZAK/ROTATE_BUKRS_INPUT.
 *"  EXCEPTIONS
 *"      MISSING_INPUT
 *"----------------------------------------------------------------------
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (the OSS note number must be written at the end of the modified lines)
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                 DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2008.01.21   Balázs Gábor  Vállalat forgatás tábla átalakítás
-*&                                   átvezetése
+*& 0001   2008.01.21   Balázs Gábor  Migration of the company rotation table transformation
 *&---------------------------------------------------------------------*
 
-* Ellenőrzések
+* Checks
 
 *++0001 BG 2007.01.21
   IF I_FI_BUKRS IS INITIAL OR I_DATE IS INITIAL.
@@ -26,7 +25,7 @@ FUNCTION /ZAK/ROTATE_BUKRS_INPUT.
   ENDIF.
 *--0001 BG 2007.01.21
 
-* ellenőrizzük szerepel e már a vállalat.
+* Check whether the company already appears.
   READ TABLE I_BUKRS TRANSPORTING NO FIELDS
              WITH KEY FI_BUKRS = I_FI_BUKRS.
   IF SY-SUBRC NE 0.
@@ -35,7 +34,7 @@ FUNCTION /ZAK/ROTATE_BUKRS_INPUT.
     CLEAR I_BUKRS[].
 *--S4HANA#01.
 *++0001 BG 2007.01.21
-*   Vezérlő tábla beolvasása
+*   Reading control table
     SELECT * INTO TABLE I_BUKRS                         "#EC CI_NOFIELD
 *++0001 BG 2007.01.21
 *            FROM /ZAK/BUKRS
@@ -51,7 +50,7 @@ FUNCTION /ZAK/ROTATE_BUKRS_INPUT.
 * E_AD_BUKRS = I_FI_BUKRS.
 * CHECK NOT I_BUKRS[] IS INITIAL.
 
-* Ellenőrizzük, hogy létezik-e megfelelő forgatótábla bejegyzés
+* Check whether an appropriate rotation-table entry exists
   LOOP AT I_BUKRS INTO W_BUKRS WHERE FI_BUKRS EQ I_FI_BUKRS
 *++0001 BG 2007.01.21
 *                                AND GSBER    EQ I_GSBER

@@ -18,7 +18,7 @@ TYPES: BEGIN OF ty_map,
        END OF ty_map.
 TYPES tt_map TYPE STANDARD TABLE OF ty_map WITH DEFAULT KEY.
 
-" F4 segítséghez: egymezős struktúra az OBJ_NAME-hez
+" For F4 help: single-field structure for OBJ_NAME
 TYPES: BEGIN OF ty_shlp_map,
          obj_name TYPE /zak/map-obj_name,
        END OF ty_shlp_map.
@@ -146,7 +146,7 @@ CLASS lcl_table_transformer IMPLEMENTATION.
     FIELD-SYMBOLS:
       <lt_src> TYPE ANY TABLE.
     FIELD-SYMBOLS <ls_src> TYPE ANY.
-    " Dinamikus belső tábla létrehozása a forrástábla sorstruktúrájából
+    " Create a dynamic internal table from the row structure of the source table
     CREATE DATA lr_src_data TYPE STANDARD TABLE OF (iv_source).
     ASSIGN lr_src_data->* TO <lt_src>.
 

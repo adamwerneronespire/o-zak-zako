@@ -234,37 +234,37 @@
 - [x] src/#zak#set_status.prog.abap
 - [x] src/#zak#szamlakelt_corr.prog.abap
 - [ ] src/#zak#szja_book.prog.abap
-- [ ] src/#zak#szja_book.prog.screen_9001.abap
+- [x] src/#zak#szja_book.prog.screen_9001.abap
 - [ ] src/#zak#szja_egyeztet.prog.abap
-- [ ] src/#zak#szja_egyeztet.prog.screen_9001.abap
+- [x] src/#zak#szja_egyeztet.prog.screen_9001.abap
 - [ ] src/#zak#szja_sap_sel.prog.abap
-- [ ] src/#zak#szja_sap_sel.prog.screen_9000.abap
-- [ ] src/#zak#szja_sap_sel.prog.screen_9001.abap
+- [x] src/#zak#szja_sap_sel.prog.screen_9000.abap
+- [x] src/#zak#szja_sap_sel.prog.screen_9001.abap
 - [x] src/#zak#szja_sap_sel_check.prog.abap
-- [ ] src/#zak#szja_sap_sel_check.prog.screen_9000.abap
+- [x] src/#zak#szja_sap_sel_check.prog.screen_9000.abap
 - [x] src/#zak#szja_stapalv.prog.abap
 - [x] src/#zak#szja_stat_hiba.prog.abap
-- [ ] src/#zak#szja_stat_hiba.prog.screen_9000.abap
-- [ ] src/#zak#szja_xml_download.prog.abap
+- [x] src/#zak#szja_stat_hiba.prog.screen_9000.abap
+- [x] src/#zak#szja_xml_download.prog.abap
 - [ ] src/#zak#tabl_upd.fugr.#zak#ltabl_updf01.abap
-- [ ] src/#zak#tabl_upd.fugr.#zak#ltabl_updtop.abap
-- [ ] src/#zak#tabl_upd.fugr.#zak#sapltabl_upd.abap
-- [ ] src/#zak#tabl_upd.fugr.#zak#update.abap
-- [ ] src/#zak#table_upload.prog.abap
+- [x] src/#zak#tabl_upd.fugr.#zak#ltabl_updtop.abap
+- [x] src/#zak#tabl_upd.fugr.#zak#sapltabl_upd.abap
+- [x] src/#zak#tabl_upd.fugr.#zak#update.abap
+- [x] src/#zak#table_upload.prog.abap
 - [ ] src/#zak#tech.prog.abap
-- [ ] src/#zak#tech.prog.screen_9000.abap
-- [ ] src/#zak#tech.prog.screen_9001.abap
-- [ ] src/#zak#tech.prog.screen_9002.abap
-- [ ] src/#zak#tech.prog.screen_9003.abap
-- [ ] src/#zak#tech.prog.screen_9004.abap
-- [ ] src/#zak#tech.prog.screen_9010.abap
+- [x] src/#zak#tech.prog.screen_9000.abap
+- [x] src/#zak#tech.prog.screen_9001.abap
+- [x] src/#zak#tech.prog.screen_9002.abap
+- [x] src/#zak#tech.prog.screen_9003.abap
+- [x] src/#zak#tech.prog.screen_9004.abap
+- [x] src/#zak#tech.prog.screen_9010.abap
 - [ ] src/#zak#urep_sap_sel.prog.abap
-- [ ] src/#zak#urep_sap_sel.prog.screen_9000.abap
-- [ ] src/#zak#urep_sap_sel.prog.screen_9001.abap
-- [ ] src/#zak#zako_table_clear.prog.abap
-- [ ] src/#zak#zako_table_migr.prog.abap
-- [ ] src/#zak#zole.fugr.#zak#lzolef01.abap
-- [ ] src/#zak#zole.fugr.#zak#lzoletop.abap
-- [ ] src/#zak#zole.fugr.#zak#saplzole.abap
-- [ ] src/#zak#zole.fugr.#zak#zolesingle_table_to_excel.abap
-- [ ] src/#zak#zxm08u27.prog.abap
+- [x] src/#zak#urep_sap_sel.prog.screen_9000.abap
+- [x] src/#zak#urep_sap_sel.prog.screen_9001.abap
+- [x] src/#zak#zako_table_clear.prog.abap
+- [x] src/#zak#zako_table_migr.prog.abap
+- [x] src/#zak#zole.fugr.#zak#lzolef01.abap
+- [x] src/#zak#zole.fugr.#zak#lzoletop.abap
+- [x] src/#zak#zole.fugr.#zak#saplzole.abap
+- [x] src/#zak#zole.fugr.#zak#zolesingle_table_to_excel.abap
+- [x] src/#zak#zxm08u27.prog.abap

@@ -17,10 +17,10 @@ line(4096) TYPE c,
 END OF ty_line.
 
 CONSTANTS:
-*++2010.12.08 Upgrade unicode hiba javítás Balázs Gábor (Ness)
+*++2010.12.08 Upgrade Unicode bug fix Balázs Gábor (Ness)
 *c_tab TYPE x VALUE 09,
 c_tab(4) TYPE x VALUE '0009',
-*--2010.12.08 Upgrade unicode hiba javítás Balázs Gábor (Ness)
+*--2010.12.08 Upgrade Unicode bug fix Balázs Gábor (Ness)
 c_bgrw TYPE i VALUE 1,
 c_bgcl TYPE i VALUE 1.
 *For EXCEL operations through ABAP

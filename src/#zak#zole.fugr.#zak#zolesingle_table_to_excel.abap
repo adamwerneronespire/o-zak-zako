@@ -1,6 +1,6 @@
 FUNCTION /zak/zolesingle_table_to_excel.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(FILENAME) TYPE  RLGRAP-FILENAME
 *"     VALUE(TABNAME) TYPE  CHAR30 OPTIONAL

@@ -112,11 +112,11 @@ DEFINE R_INSERT_TABLE.
 END-OF-DEFINITION.
 
 *&---------------------------------------------------------------------*
-*& PARAMĂTEREK  (P_XXXXXXX..)
+*& PARAMETERS  (P_XXXXXXX..)
 *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIĂK (S_XXXXXXX..)
+*& SELECTION OPTIONS (S_XXXXXXX..)
 *
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
@@ -140,7 +140,7 @@ SELECTION-SCREEN END OF BLOCK B01.
 *-----------------------------------------------------------------------
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -148,7 +148,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -163,7 +163,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FILE.
 
 START-OF-SELECTION.
 
-* Adatok feltöltése
+* Load data
   CASE P_TABLE.
     WHEN 'ABEVK'.
       R_GUI_UPLOAD P_FILE /ZAK/ ABEVK 'B'.
@@ -228,7 +228,7 @@ START-OF-SELECTION.
     WHEN 'T5HVX'.
       PERFORM INS_T5HVX.
     WHEN OTHERS.
-      MESSAGE I000 WITH TEXT-003. "Ezt a táblát nem lehet feldolgozni..
+      MESSAGE I000 WITH TEXT-003. "This table cannot be processed.
 *   & & & &
       EXIT.
   ENDCASE.
@@ -238,14 +238,14 @@ END-OF-SELECTION.
 
   COMMIT WORK AND WAIT.
   MESSAGE I007.
-*   Tábla módosítások elvégezve!
+*   Table modifications completed!
 
 
 
 *&---------------------------------------------------------------------*
 *&      Form  filename_get
 *&---------------------------------------------------------------------*
-*       ElĂŠrĂŠsi Ăştvonal bevitele
+*       Enter the file path
 *----------------------------------------------------------------------*
 FORM FILENAME_GET.
   DATA:
@@ -439,8 +439,8 @@ FORM READ_EXCEL_FILE USING $FILE
   CLEAR I_XLS[].
 *--S4HANA#01.
 
-* Adatszerkezethez tartozĂł mezĹ ellenĂśrzĂŠsek, ĂŠs
-* az oszlopok szĂˇmĂˇnak meghatĂˇrozĂˇsa.
+* Field checks belonging to the data structure, and
+* determining the number of columns.
 *++S4HANA#01.
 *  PERFORM CHECK_FIELDTYP(/ZAK/READ_FILE) USING    $TABLE
   PERFORM CHECK_FIELDTYP IN PROGRAM /ZAK/READ_FILE USING    $TABLE

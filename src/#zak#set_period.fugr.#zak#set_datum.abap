@@ -1,6 +1,6 @@
 FUNCTION /ZAK/SET_DATUM.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_DATUM) TYPE  DATUM
 *"     VALUE(I_BIDOSZ) TYPE  /ZAK/IDOSZ OPTIONAL
@@ -10,7 +10,7 @@ FUNCTION /ZAK/SET_DATUM.
 
   DATA L_MONAT TYPE MONAT.
 
-* ...negyedéves
+* ...quarterly
   IF I_BIDOSZ = 'N'.
     CASE I_DATUM+4(2).
       WHEN '01' OR '02' OR '03'.
@@ -22,16 +22,16 @@ FUNCTION /ZAK/SET_DATUM.
       WHEN '10' OR '11' OR '12'.
         L_MONAT = '12'.
     ENDCASE.
-* ...éves
+* ...annual
   ELSEIF I_BIDOSZ = 'E'.
     L_MONAT = '12'.
-* ...havi vagy egyéb
+* ...monthly or other
   ELSE.
     E_DATUM = I_DATUM.
   ENDIF.
 
   CHECK NOT L_MONAT IS INITIAL.
-* Bevallás utolsó napjának meghatározás
+* Determining the last day of the return period
   PERFORM GET_LAST_DAY_OF_PERIOD USING I_DATUM(4)
                                        L_MONAT
                                   CHANGING E_DATUM.

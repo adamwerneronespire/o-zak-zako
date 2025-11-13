@@ -5,8 +5,8 @@
 *---------------------------------------------------------------------*
 *       FORM GET_FIELDS_OF_VALUE_TAB                                  *
 *---------------------------------------------------------------------*
-*       Beschreibung einer intern definierten Tabelle in Form
-*       einer DFIES-Tabelle gewinnen.
+*       Obtain the description of an internally defined table as a
+*       DFIES table.
 *---------------------------------------------------------------------*
 *  -->  VALUE_TAB                                                     *
 *  -->  FIELD_TAB                                                     *
@@ -53,8 +53,8 @@ FORM GET_FIELDS_OF_VALUE_TAB
     CLEAR DFIES_ZWI-TABNAME.
     N = I.
     CONCATENATE 'F' N INTO DFIES_ZWI-FIELDNAME.
-    dfies_zwi-mask+2(1) = 'X'.         "Rollname für F1-Hilfe verantw.
-*   Das Flag F4-Available muß jetzt aber aus dem DTEL kommen.
+    dfies_zwi-mask+2(1) = 'X'.         "Roll name responsible for the F1 help
+*   The F4-Available flag now has to come from the data element.
     CLEAR: DFIES_ZWI-F4AVAILABL, DTELINFO_WA.
     CALL FUNCTION 'DDIF_NAMETAB_GET'
          EXPORTING
@@ -77,9 +77,9 @@ ENDFORM.                               " GET_FIELDS_OF_VALUE_TAB
 *---------------------------------------------------------------------*
 *       FORM SET_HELP_INFO_FROM_FOCUS                                 *
 *---------------------------------------------------------------------*
-*       Die Info, zu dem Feld, das bei F4 den Focus hatte, in die
-*       HELP_INFO übertragen. Mit dieser Info ist das ActiveX in
-*       der Lage, das Feld eindeutig zu identifizieren.
+*       Transfer the information about the field that had the focus
+*       during F4 into HELP_INFO. This lets the ActiveX uniquely
+*       identify the field.
 *---------------------------------------------------------------------*
 *  -->  HELP_INFO                                                     *
 *---------------------------------------------------------------------*
@@ -90,11 +90,10 @@ FORM SET_HELP_INFO_FROM_FOCUS CHANGING HELP_INFO STRUCTURE HELP_INFO.
             MAINPROG LIKE HELP_INFO-DYNPPROG,
             MAINNUM LIKE HELP_INFO-DYNPRO,
             FIELDNAME LIKE HELP_INFO-DYNPROFLD,
-            OFFS TYPE I,               "Cursor innerhalb des Feldes
-            LINE TYPE I,               "Steploop
+            OFFS TYPE I,               "Cursor position within the field
+            LINE TYPE I,               "Step loop
         END OF FOCUS.
-* Der Call funktioniert nicht bei der Standard-Hilfe,
-* sondern nur zu PAI und POV.
+* The call does not work during the standard help but only at PAI and POV.
   CALL 'DY_GET_FOCUS'
         ID 'SSCREENNAM' FIELD FOCUS-SUBPROG
         ID 'SSCREENNBR' FIELD FOCUS-SUBNUM
@@ -103,16 +102,15 @@ FORM SET_HELP_INFO_FROM_FOCUS CHANGING HELP_INFO STRUCTURE HELP_INFO.
         ID 'FIELDNAME' FIELD FOCUS-FIELDNAME
         ID 'FIELDOFFS' FIELD FOCUS-OFFS
         ID 'LINE' FIELD FOCUS-LINE.
-*   Die mitgegebene Info ist leider bei Subscreens nicht ausreichend.
-*   Deshalb wird hier noch mal die Information zu dem Feld gelesen,
-*   das zur Zeit den Focus hat. Wenn erkannt wird, daß das Feld auf
-*   einem Subscreen liegt, wird die Information zu dem Subscreen-Feld
-*   genommen.
+*   The provided information is unfortunately insufficient for
+*   subscreens. Therefore, the data of the field that currently has
+*   the focus is read again. When the field is identified as a
+*   subscreen field, the subscreen field information is used.
   IF ( FOCUS-SUBPROG <> FOCUS-MAINPROG OR
        FOCUS-SUBNUM <> FOCUS-MAINNUM ).
-*     Das Dynprofeld, liegt in einem Subscreen.
+*     The dynpro field is located in a subscreen.
     HELP_INFO-SY_DYN = 'U'.
-    HELP_INFO-MSGV1 = FOCUS-MAINPROG.  "So ist es nun mal vereinbart
+    HELP_INFO-MSGV1 = FOCUS-MAINPROG.  "That is the agreed convention
     HELP_INFO-MSGV2 = FOCUS-MAINNUM.
     HELP_INFO-DYNPPROG = FOCUS-SUBPROG.
     HELP_INFO-DYNPRO = FOCUS-SUBNUM.
@@ -126,9 +124,8 @@ ENDFORM.
 *---------------------------------------------------------------------*
 *       FORM check_custtab_available                                  *
 *---------------------------------------------------------------------*
-*       In CALLCONTROL-CUSTTAB die Prüftabelle zum Feld
-*       HELP_INFO-TABNAME/FIELDNAME eintragen, falls es
-*       dazu eine Customizing-Transaktion gibt.
+*       Enter the check table for HELP_INFO-TABNAME/FIELDNAME in
+*       CALLCONTROL-CUSTTAB if a customizing transaction exists for it.
 *---------------------------------------------------------------------*
 *  -->  help_info                                                     *
 *  -->  callcontrol                                                   *
@@ -138,7 +135,7 @@ form check_custtab_available
               callcontrol type ddshf4ctrl.
   data dfies_wa type dfies.
   data lfieldname type dfies-lfieldname.
-  data irc(1) type c.                  "Achtung: nicht like SY-SUBRC
+  data irc(1) type c.                  "Attention: not LIKE SY-SUBRC
 
   check help_info-fieldname <> space and
         help_info-tabname <> space.

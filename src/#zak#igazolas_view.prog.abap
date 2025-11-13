@@ -1,5 +1,5 @@
 *&---------------------------------------------------------------------*
-*& Program: Magánszemélyek igazolás megjelenítése
+*& Program: Displaying certificates for private individuals
 *&---------------------------------------------------------------------*
 *&
 *&
@@ -10,52 +10,52 @@ REPORT  /ZAK/IGAZOLAS_VIEW  MESSAGE-ID /ZAK/ZAK
                              LINE-COUNT 65.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a már kiállított igazolásokat tudja
-*& megjeleníteni és kinyomtatni
+*& Function description: The program can handle already issued certificates
+*& by displaying and printing them
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2008.03.12
-*& Funkc.spec.készítő: Róth Nándor
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2008.03.12
+*& Functional spec   : Róth Nándor
+*& SAP module name   : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&--------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (write the OSS note number at the end of the changed lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                 DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
 *&
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 
-*Adatdeklaráció
+*Data declaration
 INCLUDE /ZAK/IGTOP.
-*Közös rutinok
+*Common routines
 INCLUDE /ZAK/IGF01.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant             -   (C_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
+*      Ranges               -   (R_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
+*      Field-symbol         -   (FS_xxx...)                             *
+*      Method               -   (METH_xxx...)                           *
+*      Object               -   (O_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA V_SUBRC LIKE SY-SUBRC.
 
@@ -64,14 +64,14 @@ DATA V_SUBRC LIKE SY-SUBRC.
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-*Űrlap neve:
+*Form name:
 PARAMETERS P_FNAME LIKE SSFSCREEN-FNAME DEFAULT '/ZAK/MG_IGAZOLAS'
                                         MODIF ID DIS.
-*Vállalat
+*Company
 PARAMETERS P_BUKRS LIKE T001-BUKRS OBLIGATORY MEMORY ID BUK.
-*Év
+*Year
 SELECT-OPTIONS S_GJAHR FOR /ZAK/IGDATA-GJAHR.
-*Adóazonosító:
+*Tax identifier:
 SELECT-OPTIONS S_ADOAZ FOR /ZAK/IGDATA-ADOAZON.
 
 SELECTION-SCREEN: END OF BLOCK BL01.
@@ -83,7 +83,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 INITIALIZATION.
   G_REPID = SY-REPID.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2165 #03.
 *                  ID 'TCD'  FIELD SY-TCODE.
@@ -94,7 +94,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
@@ -108,20 +108,20 @@ AT SELECTION-SCREEN OUTPUT.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Jogosultság vizsgálat
+* Authorization check
   PERFORM AUTHORITY_CHECK USING
                                 P_BUKRS
                                 C_BTYPART_SZJA
                                 C_ACTVT_01.
 
 
-* Háttérfutás vizsgálat:
+* Background run check:
   IF NOT SY-BATCH IS INITIAL.
     MESSAGE A259.
-*   A program háttérben nem futtatható!
+*   The program cannot be executed in the background!
   ENDIF.
 
-* Adatok szelektálása
+* Data selection
   PERFORM SEL_DATA_FORM_IGDATA TABLES I_/ZAK/IGDATA
                                       I_/ZAK/IGDATA_ALV
                                       I_/ZAK/IGSORT
@@ -135,7 +135,7 @@ START-OF-SELECTION.
                                       V_SUBRC.
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain any records to process!
     EXIT.
   ENDIF.
 
@@ -145,7 +145,7 @@ START-OF-SELECTION.
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
 
-* Lista kivitel
+* List output
   PERFORM LIST_DISPLAY.
 
 
@@ -190,7 +190,7 @@ FORM SEL_DATA_FORM_IGDATA TABLES $I_/ZAK/IGDATA STRUCTURE /ZAK/IGDATA
 
   SORT $I_/ZAK/IGDATA BY ADOAZON GJAHR BSZNUM SORSZ SORREND.
 
-* ALV-hez feltöltés mező nevekkel:
+* Upload to ALV with field names:
   LOOP AT $I_/ZAK/IGDATA INTO W_/ZAK/IGDATA.
     CLEAR W_/ZAK/IGDATA_ALV.
     MOVE-CORRESPONDING W_/ZAK/IGDATA TO W_/ZAK/IGDATA_ALV.
@@ -209,7 +209,7 @@ FORM SEL_DATA_FORM_IGDATA TABLES $I_/ZAK/IGDATA STRUCTURE /ZAK/IGDATA
     COLLECT W_WAERST INTO $I_WAERST.
   ENDLOOP.
 
-* Pénznem szövegek meghatározása
+* Determine currency texts
   LOOP AT $I_WAERST INTO W_WAERST.
     SELECT SINGLE KTEXT INTO W_WAERST-KTEXT
                         FROM TCURT
@@ -220,18 +220,18 @@ FORM SEL_DATA_FORM_IGDATA TABLES $I_/ZAK/IGDATA STRUCTURE /ZAK/IGDATA
     ENDIF.
   ENDLOOP.
 
-* Címadatok beolvasása
+* Reading address data
   SELECT * INTO TABLE $I_/ZAK/MGCIM
            FROM /ZAK/MGCIM.                              "#EC CI_NOWHERE
 *++0001 2008.11.14 BG
-* MTP rendszeren nem nem megfelelő a rendezettség, hiába
-* kulcs az adóazonosító
+* In the MTP system the sorting is not correct despite
+* the tax identifier being the key
   SORT $I_/ZAK/MGCIM BY ADOAZON.
 *--0001 2008.11.14 BG
 
 
 
-* Adatszolgáltatás azonosítók beolvasása
+* Reading data reporting identifiers
   SELECT  /ZAK/BEVALLD~BSZNUM
           /ZAK/BEVALLDT~SZTEXT
           INTO (L_BSZNUM, L_SZTEXT)
@@ -248,7 +248,7 @@ FORM SEL_DATA_FORM_IGDATA TABLES $I_/ZAK/IGDATA STRUCTURE /ZAK/IGDATA
     APPEND W_BSZNUMT TO $I_BSZNUMT.
   ENDSELECT.
 
-* Beállítások beolvasása
+* Reading settings
   SELECT * INTO TABLE $I_/ZAK/IGABEV
            FROM /ZAK/IGABEV
           WHERE BUKRS EQ $BUKRS.
@@ -360,16 +360,16 @@ MODULE PAI_0100 INPUT.
       LEAVE SCREEN.
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
-*   Űrlap megjelenítés
+*   Form display
     WHEN 'SHOW'.
       PERFORM PREVIEW_DATA TABLES I_/ZAK/IGDATA_ALV
                                   I_/ZAK/MGCIM
                                   I_SMART_DATA
                            USING  P_FNAME
                                   P_BUKRS
-                                  ''        "TESZT futás flag
+                                  ''        "Test run flag
 *++2008 #12.
-                                  ''.       "ÉVES futás flag
+                                  ''.       "Annual run flag
 *--2008 #12.
     WHEN OTHERS.
 *     do nothing

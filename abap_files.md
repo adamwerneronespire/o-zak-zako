@@ -149,12 +149,12 @@
 - [x] src/#zak#igazolas.prog.screen_0100.abap
 - [x] src/#zak#igazolas_view.prog.abap
 - [x] src/#zak#igazolas_view.prog.screen_0100.abap
-- [ ] src/#zak#igf01.prog.abap
-- [ ] src/#zak#igtop.prog.abap
-- [ ] src/#zak#kata_sap_sel.prog.abap
-- [ ] src/#zak#kata_sap_sel.prog.screen_9000.abap
-- [ ] src/#zak#main_batch.prog.abap
-- [ ] src/#zak#main_top.prog.abap
+- [x] src/#zak#igf01.prog.abap
+- [x] src/#zak#igtop.prog.abap
+- [x] src/#zak#kata_sap_sel.prog.abap
+- [x] src/#zak#kata_sap_sel.prog.screen_9000.abap
+- [x] src/#zak#main_batch.prog.abap
+- [x] src/#zak#main_top.prog.abap
 - [ ] src/#zak#main_view.prog.abap
 - [ ] src/#zak#main_view.prog.screen_9000.abap
 - [ ] src/#zak#main_view.prog.screen_9001.abap

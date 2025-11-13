@@ -2,73 +2,73 @@
 *& Report  /ZAK/ONYB_SAP_SEL
 *&
 *&---------------------------------------------------------------------*
-*&Program: SAP adatok meghatározása összesítő jelentéshez
+*&Program: Determining SAP data for the summary report
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/ONYB_SAP_SEL  MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& leválogatja a SAP-ZMT_ADO24_OJ_ANA táblából a szelekcióban
-*& meghatározott adatokat és a /ZAK/ANALITIKA-ba tárolja.
+*& Function description: The program, based on the conditions specified on the selection screen
+*& selects the records from table SAP-ZMT_ADO24_OJ_ANA defined in the selection
+*& and stores them in /ZAK/ANALITIKA.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2007.04.04
-*& Funkc.spec.készítő: ________
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2007.04.04
+*& Functional spec author: ________
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (The OSS note number must be written at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2007.05.22   Balázs G.     MA01 váll. fordítása MMOB-ra
-*& 0002   2007.10.08   Balázs G.     Vállalat forgatás
-*& 0003   2008.01.21   Balázs G.     Vállalat forgatás átalakítás
-*& 0004   2008.04.04   Balázs G.     Szelekció átalakítás ANALITIKA
-*&                                   alapján
-*& 0005   2008/09/12   Balázs G.     Adatszolgáltatás azonosítóra
-*&                                   ellenőrzés visszaállítása
-*& 0006   2010/01/27   Balázs G.     10A60 miatt NYLAPAZON meghatározás
+*& 0001   2007.05.22   Balázs G.     Converting company MA01 to MMOB
+*& 0002   2007.10.08   Balázs G.     Company rotation
+*& 0003   2008.01.21   Balázs G.     Company rotation adjustment
+*& 0004   2008.04.04   Balázs G.     Selection redesign based on ANALITIKA
+*&                                   based on it
+*& 0005   2008/09/12   Balázs G.     Data supply identifier
+*&                                   restoring the verification
+*& 0006   2010/01/27   Balázs G.     Determining NYLAPAZON due to 10A60
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 INCLUDE /ZAK/SAP_SEL_F01.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 *DATA I_ZMT_AD024 TYPE STANDARD TABLE OF ZMT_AD024_OJ_ANA INITIAL SIZE 0.
 *DATA W_ZMT_AD024 TYPE ZMT_AD024_OJ_ANA.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter        -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable    -   (P_xxx...)                              *
+*      Selection option      -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables      -   (V_xxx...)                              *
+*      Local variables       -   (L_xxx...)                              *
+*      Work area             -   (W_xxx...)                              *
+*      Type                  -   (T_xxx...)                              *
+*      Macros                -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                 -   (CL_xxx...)                             *
+*      Event                 -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*Könyvelési dátum range:
+*Posting date range:
 *RANGES R_ADODAT FOR ZMT_AD024_OJ_ANA-BUDAT.
 
 DATA V_SUBRC LIKE SY-SUBRC.
 
 DATA V_REPID LIKE SY-REPID.
 
-* ALV kezelési változók
+* ALV handling variables
 DATA: V_OK_CODE LIKE SY-UCOMM,
       V_SAVE_OK LIKE SY-UCOMM,
       V_CONTAINER   TYPE SCRFNAME VALUE '/ZAK/ZAK_9000',
@@ -78,7 +78,7 @@ DATA: V_OK_CODE LIKE SY-UCOMM,
       V_VARIANT    TYPE DISVARIANT,
       V_GRID   TYPE REF TO CL_GUI_ALV_GRID.
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -99,7 +99,7 @@ DATA W_/ZAK/ANALITIKA_SEL TYPE /ZAK/ANALITIKA.
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-*Vállalat.
+*Company.
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(31) TEXT-101.
 PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALL-BUKRS VALUE CHECK
@@ -107,7 +107,7 @@ PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALL-BUKRS VALUE CHECK
 SELECTION-SCREEN POSITION 50.
 PARAMETERS: P_BUTXT LIKE T001-BUTXT MODIF ID DIS.
 SELECTION-SCREEN END OF LINE.
-*Bevallás típus.
+*Declaration type.
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(31) TEXT-102.
 PARAMETERS:  P_BTYPAR LIKE /ZAK/BEVALL-BTYPART
@@ -115,21 +115,21 @@ PARAMETERS:  P_BTYPAR LIKE /ZAK/BEVALL-BTYPART
                                               OBLIGATORY
                                       MODIF ID DIS.
 SELECTION-SCREEN END OF LINE.
-* Adatszolgáltatás azonosító
+* Data supply identifier
 PARAMETERS: P_BSZNUM LIKE /ZAK/BEVALLD-BSZNUM
 *                          MATCHCODE OBJECT /ZAK/BSZNUM_SH
                           OBLIGATORY.
 ENHANCEMENT-POINT /ZAK/ONYB_TELENOR_SEL SPOTS /ZAK/ONYB_TELENOR STATIC .
 
-*Teszt futás
+*Test run
 PARAMETERS P_TESZT AS CHECKBOX DEFAULT 'X' .
 SELECTION-SCREEN: END OF BLOCK BL01.
 
-*++BG 2007.09.10 Törölve mert már nem kell
+*++BG 2007.09.10 Removed because it is no longer needed
 *SELECTION-SCREEN: BEGIN OF BLOCK BL02 WITH FRAME TITLE TEXT-T02.
-**Év
+**Year
 *PARAMETERS P_GJAHR TYPE GJAHR DEFAULT SY-DATUM(4) OBLIGATORY.
-**Hónap
+**Month
 *PARAMETERS P_MONAT TYPE MONAT OBLIGATORY.
 *SELECTION-SCREEN: END OF BLOCK BL02.
 *--BG 2007.09.10
@@ -142,10 +142,10 @@ INITIALIZATION.
 *  MOVE '03' TO P_MONAT.
 
   GET PARAMETER ID 'BUK' FIELD P_BUKRS.
-*  Megnevezések meghatározása
+*  Determining descriptions
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2365 #02.
 *                  ID 'TCD'  FIELD SY-TCODE.
@@ -156,7 +156,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -164,7 +164,7 @@ INITIALIZATION.
 * AT SELECTION-SCREEN OUTPUT
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
-* Képernyő attribútomok beállítása
+* Setting screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 
@@ -176,12 +176,12 @@ AT SELECTION-SCREEN OUTPUT.
 * AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN.
-* Megnevezések meghatározása
+* Determining descriptions
   PERFORM READ_ADDITIONALS.
 *++BG 2007.09.10
-** Hónap ellenőrzése
+** Month check
 *  PERFORM GET_MONAT_VERIFY.
-** BSZNUM ellenőrzése
+** BSZNUM check
 *  PERFORM VERIFY_BSZNUM USING P_BUKRS
 *                              P_BTYPAR
 *                              P_GJAHR
@@ -193,7 +193,7 @@ AT SELECTION-SCREEN.
 *++0005 BG 2008/09/12
 *  IF NOT V_SUBRC IS INITIAL.
 *    MESSAGE E029 WITH P_BSZNUM.
-**   Ez a program a  & adatszolgáltatáshoz nem használható!
+**   This program cannot be used for the & data supply!
 *  ENDIF.
   MOVE SY-REPID TO V_REPID.
   PERFORM VER_BSZNUM   USING P_BUKRS
@@ -210,16 +210,16 @@ START-OF-SELECTION.
    PERFORM LOCK_PROGRAM USING P_TESZT.
 *--2265 #09.
 *++0004 2008.04.04  BG (FMC)
-* Nem kell forgatás mivel már a forgatott adatokból dolgozunk
+* No rotation needed because we already work from rotated data
   MOVE P_BUKRS TO V_BUKRS.
 **++0002 2007.10.08  BG (FMC)
-**  Vállalat forgatás
+**  Company rotation
 *  PERFORM ROTATE_BUKRS_OUTPUT USING P_BUKRS
 *                                    V_BUKRS.
 **--0002 2007.10.08  BG (FMC)
 *--0004 2008.04.04  BG (FMC)
 
-* Jogosultság vizsgálat
+* Authorization check
   PERFORM AUTHORITY_CHECK USING
 *++0002 2007.10.08  BG (FMC)
 *                               P_BUKRS
@@ -228,7 +228,7 @@ START-OF-SELECTION.
                                 P_BTYPAR
                                 C_ACTVT_01.
 
-*  Vállalati adatok beolvasása
+*  Reading company data
   PERFORM GET_T001 USING
 *++0002 2007.10.08  BG (FMC)
 *                        P_BUKRS
@@ -241,21 +241,21 @@ START-OF-SELECTION.
 *   MESSAGE A036 WITH P_BUKRS.
     MESSAGE A036 WITH V_BUKRS.
 *--0002 2007.10.08  BG (FMC)
-*   Hiba a & vállalati adatok meghatározásánál! (T001 tábla)
+*   Error while determining the & company data! (table T001)
   ENDIF.
 
 *++0004 2008.04.04  BG (FMC)
-** Adatszelekció ZMT_AD024_OJ_ANA táblából
+** Data selection from table ZMT_AD024_OJ_ANA
 *  PERFORM GET_DATA_SEL USING V_SUBRC.
 
-* Meghatározzuk az ABEV azonosítókat
+* Determining the ABEV identifiers
   PERFORM GET_ONYB_ABEV TABLES I_ONYB_ABEV.
   IF I_ONYB_ABEV[] IS INITIAL.
     MESSAGE E268.
-*   Nincsenek beállítva a BEVALLB táblában az összesítő jelentés ABEV-ei!
+*   The summary report ABEV entries are not configured in table BEVALLB!
   ENDIF.
 
-* Adatszelekció ANALITIKA alapján
+* Data selection based on ANALITIKA
   PERFORM GET_DATA_SEL_ANALITIKA TABLES I_/ZAK/ANALITIKA_SEL
                                         I_/ZAK/ANALITIKA
                                         I_ONYB_ABEV
@@ -268,13 +268,13 @@ START-OF-SELECTION.
 
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain any records to process!
     EXIT.
   ENDIF.
 
 
 
-* Teszt vagy éles futás, adatbázis módosítás, stb.
+* Test or production run, database modification, etc.
   PERFORM INS_DATA USING P_TESZT.
 *++2265 #09.
   PERFORM UNLOCK_PROGRAM USING P_TESZT.
@@ -283,7 +283,7 @@ START-OF-SELECTION.
 * END-OF-SELECTION
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
-*  Háttérben nem készítünk listát.
+*  No list is generated in the background.
   IF SY-BATCH IS INITIAL.
     PERFORM LIST_DISPLAY.
   ENDIF.
@@ -321,7 +321,7 @@ ENDFORM.                    " SET_SCREEN_ATTRIBUTES
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS .
 
-* Vállalat megnevezése
+* Company name
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -349,7 +349,7 @@ ENDFORM.                    " READ_ADDITIONALS
 *
 *  REFRESH R_ADODAT.
 *
-**Ellenőrizzük létezik-e bevallás
+**Checking whether a declaration exists
 *  CONCATENATE P_GJAHR P_MONAT '01' INTO L_DATUM.
 *
 *  SELECT * INTO W_/ZAK/BEVALL
@@ -362,25 +362,25 @@ ENDFORM.                    " READ_ADDITIONALS
 *  ENDSELECT.
 *  IF SY-SUBRC NE 0.
 *    MESSAGE E126 WITH P_BUKRS P_BTYPAR L_DATUM.
-**   & vállalatban & fajtához & napon érvényes bevallástípus nem létezik
+**   No valid declaration type exists in company & for type & on day &
 *  ELSE.
 *    CASE W_/ZAK/BEVALL-BIDOSZ.
-**     Éves
+**     Annual
 *      WHEN 'E'.
 *        IF P_MONAT NE '12'.
 *          MESSAGE I064 WITH W_/ZAK/BEVALL-BTYPE P_BUKRS '12'.
-**         & bevallás & vállalatban éves, helyes periódus &.
+**         The declaration & in company & is annual, the correct period is &.
 *          P_MONAT = '12'.
 *        ENDIF.
 *        CONCATENATE P_GJAHR '0101' INTO L_DATUM.
 *        CONCATENATE P_GJAHR P_MONAT '31' INTO L_DATUM_TO.
 *        M_DEF R_ADODAT 'I' 'BT' L_DATUM L_DATUM_TO.
-**     Negyedéves
+**     Quarterly
 *      WHEN 'N'.
 *        IF P_MONAT NE '03' AND P_MONAT NE '06' AND P_MONAT NE '09' AND
 *           P_MONAT NE '12'.
 *          MESSAGE E063 WITH W_/ZAK/BEVALL-BTYPE P_BUKRS TEXT-000.
-**          & bevallás & vállalatban negyedéves, helyes periódus &.
+**          The declaration & in company & is quarterly, the correct period is &.
 *        ENDIF.
 *        L_MONAT = P_MONAT - 2.
 *        CONCATENATE P_GJAHR L_MONAT '01' INTO L_DATUM.
@@ -403,7 +403,7 @@ ENDFORM.                    " READ_ADDITIONALS
 *      WHEN 'H'.
 *        IF NOT P_MONAT BETWEEN '01' AND '12'.
 *          MESSAGE E213.
-**       Kérem a hónapot 01 és 12 között adja meg'
+**       Please provide the month between 01 and 12'
 *        ENDIF.
 *        CONCATENATE P_GJAHR P_MONAT '01' INTO L_DATUM.
 *        CALL FUNCTION 'LAST_DAY_OF_MONTHS'
@@ -477,72 +477,72 @@ FORM GET_DATA_SEL USING $SUBRC.
     EXIT.
   ENDIF.
 
-* Adatok feldolgozása
+* Processing data
 *  LOOP AT I_ZMT_AD024 INTO W_ZMT_AD024.
 *    CLEAR: W_/ZAK/ANALITIKA, LW_BKPF, LW_BSEG.
 *    FREE LI_BSEG[].
 *
-**   BKPF beolvasása
+**   Reading BKPF
 *    SELECT SINGLE * INTO LW_BKPF
 *                    FROM BKPF
 *                   WHERE BUKRS EQ W_ZMT_AD024-BUKRS
 *                     AND BELNR EQ W_ZMT_AD024-BELNR
 *                     AND GJAHR EQ W_ZMT_AD024-GJAHR.
-**   BSEG beolvasása
+**   Reading BSEG
 *    SELECT * INTO TABLE LI_BSEG
 *             FROM BSEG
 *            WHERE BUKRS EQ W_ZMT_AD024-BUKRS
 *              AND BELNR EQ W_ZMT_AD024-BELNR
 *              AND GJAHR EQ W_ZMT_AD024-GJAHR.
 *
-**   Most már talán minden megvan lehet mappelni.
-**   Vállalat
+**   Everything should now be available so we can map.
+**   Company
 *    MOVE W_ZMT_AD024-BUKRS TO W_/ZAK/ANALITIKA-BUKRS.
-**   FI Vállalat
+**   FI company
 *    MOVE W_ZMT_AD024-BUKRS TO W_/ZAK/ANALITIKA-FI_BUKRS.
-**   Gazdasági év
+**   Fiscal year
 *    MOVE W_ZMT_AD024-ADODAT(4) TO W_/ZAK/ANALITIKA-GJAHR.
-**   Hónap
+**   Month
 *    MOVE W_ZMT_AD024-ADODAT+4(2) TO W_/ZAK/ANALITIKA-MONAT.
-**   ABEV azonosító
+**   ABEV identifier
 *    MOVE C_ABEVAZ_DUMMY TO W_/ZAK/ANALITIKA-ABEVAZ.
-**   Adóazonosító
+**   Tax number
 *    MOVE W_ZMT_AD024-STCEG TO W_/ZAK/ANALITIKA-ADOAZON.
 *    MOVE W_ZMT_AD024-STCEG TO W_/ZAK/ANALITIKA-STCEG.
-**   Adatszolgáltatás azonosító
+**   Data supply identifier
 *    MOVE P_BSZNUM TO W_/ZAK/ANALITIKA-BSZNUM.
-**   Tétel
+**   Item
 *    MOVE SY-TABIX TO W_/ZAK/ANALITIKA-ITEM.
-**   Dinamikus lapszám
+**   Dynamic page number
 *    MOVE 1 TO W_/ZAK/ANALITIKA-LAPSZ.
-**   Összeg saját pénznemben előjellel
+**   Amount in local currency with sign
 *    MOVE W_ZMT_AD024-DMSHB TO W_/ZAK/ANALITIKA-DMBTR.
 *    MOVE W_ZMT_AD024-DMSHB TO W_/ZAK/ANALITIKA-FIELD_N.
-**   Pénznemkulcs
+**   Currency key
 *    MOVE W_ZMT_AD024-WAERS TO W_/ZAK/ANALITIKA-WAERS.
 *    MOVE LW_BKPF-WAERS TO W_/ZAK/ANALITIKA-FWAERS.
-**   Forgalmi adó kódja
+**   VAT code
 *    MOVE W_ZMT_AD024-MWSKZ TO W_/ZAK/ANALITIKA-MWSKZ.
-**   Adódátum
+**   Tax date
 *    MOVE W_ZMT_AD024-ADODAT TO W_/ZAK/ANALITIKA-ADODAT.
-**   Gazdasági év (bizonylat)
+**   Fiscal year (document)
 *    MOVE W_ZMT_AD024-GJAHR TO W_/ZAK/ANALITIKA-BSEG_GJAHR.
-**   Könyvelési bizonylat bizonylatszáma
+**   Accounting document number
 *    MOVE W_ZMT_AD024-BELNR TO W_/ZAK/ANALITIKA-BSEG_BELNR.
-**   Könyvelési sor száma könyvelési bizonylaton belül
+**   Line item number within the accounting document
 *    MOVE W_ZMT_AD024-BUZEI TO W_/ZAK/ANALITIKA-BSEG_BUZEI.
-**   Számlatípus
+**   Document type
 *    MOVE W_ZMT_AD024-KOART TO W_/ZAK/ANALITIKA-KOART.
-**   Bizonylatdátum a bizonylaton
+**   Document date on the document
 *    MOVE W_ZMT_AD024-BLDAT TO W_/ZAK/ANALITIKA-BLDAT.
-**   Könyvelési dátum a bizonylaton
+**   Posting date on the document
 *    MOVE W_ZMT_AD024-BUDAT TO W_/ZAK/ANALITIKA-BUDAT.
 **   Bizonylatfajta
 *    MOVE LW_BKPF-BLART TO W_/ZAK/ANALITIKA-BLART.
-**   Referenciabizonylat száma
+**   Reference document number
 *    MOVE LW_BKPF-XBLNR TO W_/ZAK/ANALITIKA-XBLNR.
 **++0001 BG 2007.05.22
-**   Meghatározzuk a tételhez tartozó üzletágat
+**   Determining the business area belonging to the item
 *    READ TABLE LI_BSEG INTO LW_BSEG
 *                   WITH KEY BUKRS = W_ZMT_AD024-BUKRS
 *                            BELNR = W_ZMT_AD024-BELNR
@@ -555,7 +555,7 @@ FORM GET_DATA_SEL USING $SUBRC.
 **--0002 2007.10.08  BG (FMC)
 *    ENDIF.
 **--0001 BG 2007.05.22
-**   Szállító feltöltés az első BSEG tétel ahol a KOART = K.
+**   Filling the vendor from the first BSEG item where KOART = K.
 *    LOOP AT LI_BSEG INTO LW_BSEG WHERE KOART EQ 'K'.
 *      MOVE LW_BSEG-LIFNR TO W_/ZAK/ANALITIKA-LIFKUN.
 **++0001 BG 2007.05.22
@@ -594,7 +594,7 @@ FORM GET_DATA_SEL USING $SUBRC.
 *
 *    IF SY-SUBRC <> 0.
 *      MESSAGE E232 WITH W_/ZAK/ANALITIKA-BUKRS.
-**      Hiba a & vállalat forgatás meghatározásnál! ..
+**      Error while determining the company rotation for &! ..
 *    ENDIF.
 *
 *    IF W_/ZAK/ANALITIKA-BUKRS NE P_BUKRS.
@@ -603,7 +603,7 @@ FORM GET_DATA_SEL USING $SUBRC.
 *    ENDIF.
 *
 ***++0001 BG 2007.05.22
-***   Ha MA01 a vállalat kód és az üzletág 2, akkor MMOB-ra tesszük
+***   If the company code is MA01 and the business area is 2, then we set it to MMOB
 **    IF W_ZMT_AD024-BUKRS EQ 'MA01' AND
 **       P_BUKRS EQ 'MA01' AND
 **       W_/ZAK/ANALITIKA-GSBER = '2' AND
@@ -625,7 +625,7 @@ FORM GET_DATA_SEL USING $SUBRC.
 **--0002 2007.10.08  BG (FMC)
 *
 *
-**   Háromszögügylet feltöltés
+**   Filling the triangular transaction
 *    SELECT SINGLE HSZU INTO W_/ZAK/ANALITIKA-HSZU
 *                       FROM /ZAK/HRSZU
 *                      WHERE BUKRS EQ W_/ZAK/ANALITIKA-BUKRS
@@ -662,11 +662,11 @@ FORM INS_DATA  USING $TESZT.
 
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain any records to process!
     EXIT.
   ENDIF.
 
-*  Először mindig tesztben futtatjuk
+*  We always run in test mode first
   CALL FUNCTION '/ZAK/UPDATE'
     EXPORTING
       I_BUKRS     = P_BUKRS
@@ -681,28 +681,28 @@ FORM INS_DATA  USING $TESZT.
       I_ANALITIKA = I_/ZAK/ANALITIKA
       E_RETURN    = LI_RETURN.
 
-*   Üzenetek kezelése
+*   Handling messages
   IF NOT LI_RETURN[] IS INITIAL.
     CALL FUNCTION '/ZAK/MESSAGE_SHOW'
       TABLES
         T_RETURN = LI_RETURN.
   ENDIF.
 
-*  Ha nem teszt futás, akkor ellenőrizzük van ERROR
+*  If it is not a test run, check whether there is an ERROR
   IF NOT $TESZT IS INITIAL.
     LOOP AT LI_RETURN INTO LW_RETURN WHERE TYPE CA 'EA'.
     ENDLOOP.
     IF SY-SUBRC EQ 0.
       MESSAGE E062.
-*     Adatfeltöltés nem lehetséges!
+*     Data upload is not possible!
     ENDIF.
   ENDIF.
 
-*  Éles futás de van hibaüzent és nem ERROR, kérdés a folytatásról,
+*  In a production run with warning messages (but no ERROR), ask about continuing
   IF $TESZT IS INITIAL.
-*    Ha nem háttérben fut
+*    If it is not running in the background
     IF NOT LI_RETURN[] IS INITIAL AND SY-BATCH IS INITIAL.
-*    Szövegek betöltése
+*    Loading texts
       MOVE 'Adatfeltöltés folytatása'(001) TO L_TITLE.
       MOVE 'Adatfeltöltésnél előfordultak figyelmeztető üzenetek'(002)
                                            TO L_DIAGNOSETEXT1.
@@ -750,14 +750,14 @@ FORM INS_DATA  USING $TESZT.
         MOVE 'J' TO L_ANSWER.
       ENDIF.
 *--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
-*    Egyébként mehet
+*    Otherwise go ahead
     ELSE.
       MOVE 'J' TO L_ANSWER.
     ENDIF.
 
-*   Mehet az adatbázis módosítása
+*   Database modification can proceed
     IF L_ANSWER EQ 'J'.
-*      Adatok módosítása
+*      Modifying the data
       CALL FUNCTION '/ZAK/UPDATE'
         EXPORTING
           I_BUKRS     = P_BUKRS
@@ -778,20 +778,20 @@ FORM INS_DATA  USING $TESZT.
 *        MOVE 'X' TO W_ZMT_AD024-FELDO.
 *        MODIFY I_ZMT_AD024 FROM W_ZMT_AD024 TRANSPORTING FELDO.
 *      ENDLOOP.
-**     ZMT_AD024_OJ_ANA tábla update
+**     Updating table ZMT_AD024_OJ_ANA
 *      UPDATE ZMT_AD024_OJ_ANA FROM TABLE I_ZMT_AD024.
       MOVE W_/ZAK/ANALITIKA-PACK TO W_/ZAK/ANALITIKA_SEL-ONYB_PACK.
       MODIFY I_/ZAK/ANALITIKA_SEL FROM W_/ZAK/ANALITIKA_SEL
                                  TRANSPORTING ONYB_PACK
                                  WHERE BUKRS EQ P_BUKRS.
-*     Visszaírjuk a FLAG értékét:
+*     Writing back the FLAG value:
       UPDATE /ZAK/ANALITIKA FROM TABLE I_/ZAK/ANALITIKA_SEL.
 *--0004 2008.04.04  BG (FMC)
 
       COMMIT WORK AND WAIT.
 
       MESSAGE I033 WITH W_/ZAK/ANALITIKA-PACK.
-*     Feltöltés & package számmal megtörtént!
+*     Upload completed with package number &!
     ENDIF.
   ENDIF.
 
@@ -879,11 +879,11 @@ FORM CREATE_AND_INIT_ALV CHANGING $I_/ZAK/ANALITIKA LIKE
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Building the field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -982,7 +982,7 @@ MODULE USER_COMMAND_9000 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Kilépés
+* Exit
     WHEN 'EXIT' OR 'BACK' OR 'CANCEL'.
       PERFORM EXIT_PROGRAM USING P_TESZT.
 
@@ -1030,7 +1030,7 @@ FORM ROTATE_BUKRS_OUTPUT  USING    $BUKRS
       OTHERS        = 2.
   IF SY-SUBRC <> 0.
     MESSAGE E231 WITH $BUKRS.
-*    Hiba a & vállalat forgatás meghatározásnál!
+*    Error while determining the company rotation for &!
   ENDIF.
 ENDFORM.                    " ROTATE_BUKRS_OUTPUT
 *&---------------------------------------------------------------------*
@@ -1074,7 +1074,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_01 SPOTS /ZAK/ONYB_SEL STATIC .
            TRANSPORTING ONYBF.
   END-OF-DEFINITION.
 
-* Adatok leválogatása
+* Filtering the data
   SELECT * INTO TABLE $I_/ZAK/ANALITIKA_SEL
            FROM /ZAK/ANALITIKA
            FOR ALL ENTRIES IN $I_ONYB_ABEV
@@ -1087,10 +1087,10 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_01 SPOTS /ZAK/ONYB_SEL STATIC .
     EXIT.
   ENDIF.
 
-* Meghatározzuk azokat a feltöltés azonosítókat amiket nem kell
-* figyelembe venni, de be kell jelölni, hogy feldolgoztuk.
-*++1365 #17. 2013.05.16 Be kell olvasni az összes feltöltés
-*azonosítót mert BTYPE-al kell vizsgálni!
+* Determining the upload identifiers that do not need to be processed
+* but must be marked as processed.
+*++1365 #17. 2013.05.16 Read all upload identifiers
+*Identifiers because the check must be done by BTYPE!
 *  SELECT BSZNUM INTO LR_BSZNUM-LOW
 *                FROM /ZAK/BEVALLD
 *               WHERE BUKRS = $BUKRS
@@ -1125,9 +1125,9 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_02 SPOTS /ZAK/ONYB_SEL .
 *--15A60 #01. 2015.01.27
 
 
-* Analitika feldolgozása
+* Processing the analytics
   LOOP AT $I_/ZAK/ANALITIKA_SEL INTO W_/ZAK/ANALITIKA_SEL.
-*   Ha  feltöltés azonosító nem kell feldolgozni:
+*   If the upload identifier does not need to be processed:
 *++1365 #17. 2013.05.16
 *    IF NOT LR_BSZNUM[] IS INITIAL AND
 *       W_/ZAK/ANALITIKA_SEL-BSZNUM IN LR_BSZNUM.
@@ -1159,7 +1159,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_02 SPOTS /ZAK/ONYB_SEL .
 ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_03 SPOTS /ZAK/ONYB_SEL .
 
 *++0006 2010.01.22 BG
-*   NYLAP meghatározás
+*   Determining NYLAP
 *    IF W_/ZAK/ANALITIKA-KOART EQ 'D'.
 *      W_/ZAK/ANALITIKA-NYLAPAZON = '01'.
 *    ELSEIF W_/ZAK/ANALITIKA-KOART EQ 'K'.
@@ -1178,7 +1178,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_03 SPOTS /ZAK/ONYB_SEL .
 *                        W_/ZAK/ANALITIKA-KOART
 *                        W_/ZAK/ANALITIKA-MWSKZ
 *                        W_/ZAK/ANALITIKA-KTOSL.
-**   Nem sikerült lap azonosítót meghatározni! (&/&/&/&)
+**   Failed to determine the sheet identifier! (&/&/&/&)
 *    ENDIF.
     CLEAR LW_ONYB_ABEV.
     READ TABLE $I_ONYB_ABEV INTO LW_ONYB_ABEV
@@ -1189,18 +1189,18 @@ ENHANCEMENT-POINT /ZAK/ZAK_RG_ONYB_03 SPOTS /ZAK/ONYB_SEL .
       W_/ZAK/ANALITIKA-NYLAPAZON = LW_ONYB_ABEV-ONYLAPAZON.
     ELSE.
       MESSAGE E290 WITH W_/ZAK/ANALITIKA-BTYPE  W_/ZAK/ANALITIKA-ABEVAZ.
-*   Nem sikerült lap azonosítót meghatározni! (&/&/&/&)
+*   Failed to determine the sheet identifier! (&/&/&/&)
     ENDIF.
 *--15A60 #01. 2015.01.27
 
 *--0006 2010.01.27 BG
 
-*   Adóazonosító
+*   Tax number
     MOVE W_/ZAK/ANALITIKA-STCEG TO W_/ZAK/ANALITIKA-ADOAZON.
-*   ABEV azonosító
+*   ABEV identifier
     MOVE C_ABEVAZ_DUMMY TO W_/ZAK/ANALITIKA-ABEVAZ.
 
-*   Háromszögügylet feltöltés
+*   Filling the triangular transaction
     SELECT SINGLE HSZU INTO W_/ZAK/ANALITIKA-HSZU
                        FROM /ZAK/HRSZU
                       WHERE BUKRS EQ W_/ZAK/ANALITIKA-BUKRS

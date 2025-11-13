@@ -451,7 +451,7 @@ FORM calc_abev_szja_2108   TABLES  t_bevallo STRUCTURE /zak/bevallo
           l_kam_kezd = $date.
           l_kam_kezd+6(2) = '01'.
           w_/zak/bevallo-field_c = l_kam_kezd.
-* Annual
+* A year old
         ELSEIF w_/zak/bevall-bidosz = 'E'.
           l_kam_kezd = $date.
           l_kam_kezd+4(4) = '0101'.
@@ -1589,7 +1589,7 @@ FORM calc_abev_afa_2165  TABLES t_bevallo STRUCTURE /zak/bevallo
           l_kam_kezd = $date.
           l_kam_kezd+6(2) = '01'.
           w_/zak/bevallo-field_c = l_kam_kezd.
-* Annual
+* A year old
         ELSEIF w_/zak/bevall-bidosz = 'E'.
           l_kam_kezd = $date.
           l_kam_kezd+4(4) = '0101'.
@@ -2285,7 +2285,7 @@ FORM calc_abev_onyb_21a60  TABLES t_bevallo STRUCTURE /zak/bevallo
 
   l_gjahr = $last_date(4).
   l_monat = $last_date+4(2).
-* E - Annual
+* E - Year old
   IF w_/zak/bevall-bidosz = 'E'.
     l_monat = '01'.
 * N - Quarterly

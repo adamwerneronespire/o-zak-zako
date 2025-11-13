@@ -6,13 +6,13 @@ DATA: I_/ZAK/BEVALLALV TYPE STANDARD TABLE OF /ZAK/BEVALLALV
                                                        INITIAL SIZE 0,
       I_SUM             TYPE STANDARD TABLE OF /ZAK/BEVALLO         INITIAL SIZE 0.
 *&---------------------------------------------------------------------*
-*& Work area  (W_XXX..)                                             *
+*& Munkaterület  (W_XXX..)                                             *
 *&---------------------------------------------------------------------*
 DATA:
   W_SUM TYPE /ZAK/BEVALLO,
   W_X   TYPE /ZAK/BEVALLB.
 *&---------------------------------------------------------------------*
-*& PROGRAM VARIABLES                                                   *
+*& PROGRAM VÁLTOZÓK                                                    *
 *&---------------------------------------------------------------------*
 DATA: V_TABIX    LIKE SY-TABIX,
       V_SUBRC    LIKE SY-SUBRC,
@@ -22,21 +22,21 @@ RANGES: R_MONAT FOR /ZAK/ANALITIKA-MONAT.
 *++2065 #04.
 DATA V_INF_COUNT TYPE SYTABIX.
 *--2065 #04.
-*Variables for XML download
-*Constant values
-* HR.... XML 0 form
+*XML letöltéshez változók
+*Konstans értékek
+* HR.... XML 0 űrlap
 CONSTANTS C_XFORM0 LIKE T512P-FORML VALUE 'HAX0'.
-* HR.... XML 1 form
+* HR.... XML 1 űrlap
 CONSTANTS C_XFORM1 LIKE T512P-FORML VALUE 'HAX1'.
-* HR.... XML 2 form
+* HR.... XML 2 űrlap
 CONSTANTS C_XFORM2 LIKE T512P-FORML VALUE 'HAX2'.
-* HR.... XML 3 form
+* HR.... XML 3 űrlap
 CONSTANTS C_XFORM3 LIKE T512P-FORML VALUE 'HAX3'.
-* HR.... XML 4 form
+* HR.... XML 4 űrlap
 CONSTANTS C_XFORM4 LIKE T512P-FORML VALUE 'HAX4'.
 
 *++BG 2006/09/29
-*Due to APEH's new forms
+*APEH új formulárok miatt
 *++0908/2 2009.08.04 BG
 *CONSTANTS C_XHEAD LIKE T5HVX-BLOKK_ID VALUE 'XHEAD'.
 *CONSTANTS C_XTAIL LIKE T5HVX-BLOKK_ID VALUE 'XTAIL'.
@@ -52,43 +52,43 @@ CONSTANTS C_NYEND LIKE /ZAK/T5HVX-BLOKK_ID VALUE 'NYEND'.
 CONSTANTS C_EHEAD LIKE /ZAK/T5HVX-BLOKK_ID VALUE 'EHEAD'.
 *--0908/2 2009.08.04 BG
 *--BG 2006/09/29
-* XML form, XML header
+* XML formulár, XML header
 DATA: BEGIN OF GT_XFORM0 OCCURS 50,
         LINDA LIKE T512P-LINDA,
       END OF GT_XFORM0.
 
-* XML form, XML footer
+* XML formulár, XML footer
 DATA: BEGIN OF GT_XFORM1 OCCURS 50,
         LINDA LIKE T512P-LINDA,
       END OF GT_XFORM1.
 
-* XML form, 0608A printout header
+* XML formulár, 0608A nyomtatvány header
 DATA: BEGIN OF GT_XFORM2 OCCURS 50,
         LINDA LIKE T512P-LINDA,
       END OF GT_XFORM2.
 
-* XML form, printout footer
+* XML formulár, nyomtatvány footer
 DATA: BEGIN OF GT_XFORM3 OCCURS 50,
         LINDA LIKE T512P-LINDA,
       END OF GT_XFORM3.
 
-* XML form, 0608M printout header
+* XML formulár, 0608M nyomtatvány header
 DATA: BEGIN OF GT_XFORM4 OCCURS 50,
         LINDA LIKE T512P-LINDA,
       END OF GT_XFORM4.
 
-* XML data file type
+* XML adatfájl típusa
 TYPES: TY_XML_LINE   LIKE T512P-LINDA,
        TTY_XML_TABLE TYPE TABLE OF TY_XML_LINE.
 
-* Indicator for variable start and end markers on the forms
+* változó kezdetének és végének jelzése az űrlapokon
 *++BG 2006/09/29
 *CONSTANTS: C_VAR_MARKER(1) TYPE C VALUE '&'.
 CONSTANTS: C_VAR_MARKER(1) TYPE C VALUE '$'.
 *--BG 2006/09/29
 
 *++BG 2006/05/29
-* For determining the SZJA return tax ID page number
+* SZJA bevallás adóazonosító lapszám meghatározáshoz
 TYPES: BEGIN OF T_MLAP,
          ADOAZON  LIKE /ZAK/BEVALLALV-ADOAZON,
          ABEVAZ   LIKE /ZAK/BEVALLALV-ABEVAZ,
@@ -115,7 +115,7 @@ DATA W_NYLAP TYPE T_NYLAP.
 *--0908 2009.01.27 BG
 
 
-*MACRO definition for range populating
+*MAKRO definiálás range feltöltéshez
 DEFINE M_DEF.
   MOVE: &2      TO &1-sign,
         &3      TO &1-option,
@@ -125,7 +125,7 @@ DEFINE M_DEF.
 END-OF-DEFINITION.
 *--BG 2006/05/29
 *++1365 2013.01.22 Balázs Gábor (Ness)
-*Conversion
+*Konverzió
 DEFINE M_RUN_CONV.
   CALL METHOD cl_reca_ddic_services=>do_struct_conv_exit
 *      EXPORTING
@@ -140,7 +140,7 @@ DEFINE M_RUN_CONV.
           .
 END-OF-DEFINITION.
 
-* Building the group structure
+* Csoportok felépítése
 TYPES: BEGIN OF T_SZLA_GROUP,
          SZAMLASZA TYPE /ZAK/SZAMLASZA,
          SZAMLASZ  TYPE /ZAK/SZAMLASZ,
@@ -155,7 +155,7 @@ DEFINE M_SET_COMWA.
   MOVE sy-mandt TO ls_comwa-mandt.
   MOVE &1 TO ls_comwa-vbeln.
   MOVE &2 TO ls_comwa-posnr.
-*   Executing the conversion
+*   Konverzió végrehajtása
   m_run_conv ls_comwa.
 END-OF-DEFINITION.
 
@@ -193,7 +193,7 @@ DATA V_SZAMLASZA TYPE /ZAK/SZAMLASZA.
 *--1365 2013.01.22 Balázs Gábor (Ness)
 
 *++BG 2006.09.15
-* Due to the new SZJA filing, the 0608 must be distinguished
+* ÚJ SZJA bevallás miatt a 0608-at meg kell különböztetni
 CONSTANTS: C_0608 TYPE /ZAK/BTYPE VALUE '0608'.
 *--BG 2006.09.15
 
@@ -267,7 +267,7 @@ CONSTANTS: C_1008  TYPE /ZAK/BTYPE VALUE '1008'.
 CONSTANTS: C_1108  TYPE /ZAK/BTYPE VALUE '1108'.
 *--1108 2010.01.24 BG
 *++BG 2008.04.02
-*ONYB returns
+*ONYB bevallások
 CONSTANTS: C_0761   TYPE /ZAK/BTYPE VALUE '0761'.
 CONSTANTS: C_08A60  TYPE /ZAK/BTYPE VALUE '08A60'.
 *--BG 2008.04.02
@@ -390,7 +390,7 @@ RANGES R_DISP_BTYPE FOR /ZAK/BEVALLB-BTYPE.
 *-- BG 2007.05.17
 
 *++ BG 2007.06.22
-* Need all tax numbers because they are required to handle zero-value fields
+* Kell az összes adószám mert a 0-ás mezők kezeléséhez szükséges
 DATA: I_ADOAZON_ALL LIKE /ZAK/ADOAZONLPSZ OCCURS 0 WITH HEADER LINE.
 *-- BG 2007.06.22
 
@@ -405,7 +405,7 @@ DATA W_IDSZ TYPE /ZAK/GET_IDSZ.
 *-- BG 2007.10.04
 
 **++BG 2008/01/14
-*           Moved to /ZAK/MAIN_EXIT_NEW because of transport
+*           Transzport miatt áthelyezve a /ZAK/MAIN_EXIT_NEW-ba
 CONSTANTS:
   C_ABEVAZ_A0IC50072A TYPE /ZAK/ABEVAZ VALUE 'A0IC50072A',
   C_ABEVAZ_A0IC50073A TYPE /ZAK/ABEVAZ VALUE 'A0IC50073A',
@@ -416,7 +416,7 @@ CONSTANTS:
 **--BG 2008/01/14
 
 *++0908 2009.02.27 BG
-*For managing self-revision processes
+*Önrevízió kezeléséhez
 DATA V_ONREV.
 *--0908 2009.02.27 BG
 ENHANCEMENT-POINT /ZAK/ZAK_DATA_TELENOR SPOTS /ZAK/FUNCTIONS_ES STATIC .

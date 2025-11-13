@@ -1,6 +1,6 @@
 FUNCTION /zak/main_exit .
 *"----------------------------------------------------------------------
-"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -16,8 +16,8 @@ FUNCTION /zak/main_exit .
 
 
 ************************************************************************
-* Return data
-* Determining the tax return's final day
+* Bevallás adatok
+* Bevallás utolsó napjának meghatározás
   PERFORM get_last_day_of_period USING i_gjahr
                                        i_monat
 *++PTGSZLAA #01. 2014.03.03
@@ -26,20 +26,20 @@ FUNCTION /zak/main_exit .
                                   CHANGING v_last_date.
 
 
-* General return data
+* Bevallás általános adatai
   PERFORM read_bevall  USING i_bukrs
                              i_btype
                              v_last_date.
 
 
-*  Reading the return data structure
+*  Bevallás adatszerkezetének kiolvasása
   PERFORM read_bevallb USING t_bevallo[]
                              i_btype.
 
 *++ BG 2007.05.17
-* The form default values should be read from display BTYPE
-* based on it:
-**  return form default values
+* A nyomtatvány default értékeket a display BTYPE
+* alapján kell beolvasni:
+**  bevallás Nyomtatvány default értékek
 *  PERFORM READ_BEVALLDEF USING I_BUKRS
 *                               I_BTYPE.
 *-- BG 2007.05.17
@@ -59,7 +59,7 @@ FUNCTION /zak/main_exit .
     MOVE-CORRESPONDING l_alv TO w_/zak/bevallo.
     APPEND w_/zak/bevallo TO i_/zak/bevallo.
 *++ BG 2007.05.17
-*   Collecting display BTYPE
+*   Display BTYPE gyűjtése
     READ TABLE r_disp_btype WITH KEY low = l_alv-btype_disp.
     IF sy-subrc NE 0.
       m_def r_disp_btype 'I' 'EQ' l_alv-btype_disp space.
@@ -68,13 +68,13 @@ FUNCTION /zak/main_exit .
   ENDLOOP.
 
 *++ BG 2007.05.17
-*  return form default values
+*  bevallás Nyomtatvány default értékek
   PERFORM read_bevalldef TABLES r_disp_btype
                           USING i_bukrs.
 *-- BG 2007.05.17
 
 *++1365 2013.01.22 Balázs Gábor (Ness)
-* Setting form default values!
+* Nyomtatvány default értékek beállítása !
   PERFORM set_default_abev TABLES i_/zak/bevallo
                                   i_/zak/bevalldef
                            USING  i_gjahr
@@ -87,7 +87,7 @@ FUNCTION /zak/main_exit .
                                   .
 *--1365 2013.01.22 Balázs Gábor (Ness)
 
-* Return - calculated ABEV entries
+* Bevallás - számított ABEV-ek
 *++1365 2013.01.22 Balázs Gábor (Ness)
 *  PERFORM CALC_ABEV TABLES I_/ZAK/BEVALLO
   PERFORM calc_abev_afa TABLES i_/zak/bevallo
@@ -99,7 +99,7 @@ FUNCTION /zak/main_exit .
 *--1365 2013.01.22 Balázs Gábor (Ness)
 
 *++1365 2013.01.22 Balázs Gábor (Ness)
-** Setting form default values!
+** Nyomtatvány default értékek beállítása !
 *  PERFORM SET_DEFAULT_ABEV TABLES I_/ZAK/BEVALLO
 *                                  I_/ZAK/BEVALLDEF
 *                           USING  I_GJAHR
@@ -112,12 +112,12 @@ FUNCTION /zak/main_exit .
 *                                  .
 *--1365 2013.01.22 Balázs Gábor (Ness)
 
-* Return - imported ABEV entries
+* Bevallás - átvett ABEV-ek
   PERFORM get_abev TABLES i_/zak/bevallo
                           i_/zak/bevallb.
 
 
-* Return - counting rows
+* Bevallás - sorok számlálása
   PERFORM count_abev TABLES i_/zak/bevallo
                             i_/zak/bevallb.
 
@@ -149,12 +149,12 @@ FUNCTION /zak/main_exit .
     ENDIF.
   ENDLOOP.
 
-*++PTGSZLAA #03. 2014.03.13 Optimized reading
+*++PTGSZLAA #03. 2014.03.13 Optimalizált olvasás
 *++S4HANA#01.
 *  SORT T_BEVALLO.
   SORT t_bevallo BY bukrs btype gjahr monat zindex abevaz adoazon lapsz.
 *--S4HANA#01.
-*--PTGSZLAA #03. 2014.03.13 Optimized reading
+*--PTGSZLAA #03. 2014.03.13 Optimalizált olvasás
 
   LOOP AT i_/zak/bevallo INTO w_/zak/bevallo.
     l_tabix = sy-tabix.
@@ -169,9 +169,9 @@ FUNCTION /zak/main_exit .
 *++1365 #6.
                   lapsz   = w_/zak/bevallo-lapsz
 *--1365 #6.
-*++PTGSZLAA #03. 2014.03.13 Optimized reading
+*++PTGSZLAA #03. 2014.03.13 Optimalizált olvasás
                   BINARY SEARCH.
-*--PTGSZLAA #03. 2014.03.13 Optimized reading
+*--PTGSZLAA #03. 2014.03.13 Optimalizált olvasás
     IF sy-subrc EQ 0.
       MOVE-CORRESPONDING w_/zak/bevallo TO l_alv.
       MODIFY t_bevallo FROM l_alv INDEX sy-tabix.
@@ -187,9 +187,9 @@ FUNCTION /zak/main_exit .
              AND    abevaz  = w_/zak/bevallo-abevaz.
       l_alv-abevtext_disp = l_alv-abevtext.
       APPEND l_alv TO t_bevallo.
-*++PTGSZLAA #03. 2014.03.13 Optimized reading
+*++PTGSZLAA #03. 2014.03.13 Optimalizált olvasás
       SORT t_bevallo.
-*--PTGSZLAA #03. 2014.03.13 Optimized reading
+*--PTGSZLAA #03. 2014.03.13 Optimalizált olvasás
     ENDIF.
   ENDLOOP.
 

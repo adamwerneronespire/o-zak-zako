@@ -1,6 +1,6 @@
 FUNCTION /ZAK/NEW_BELNR.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"  EXPORTING
@@ -16,7 +16,7 @@ FUNCTION /ZAK/NEW_BELNR.
 
   MOVE SY-DATUM(4) TO L_TOYEAR.
 
-* Defining the number range
+*Számkör meghatározása
   CALL FUNCTION 'NUMBER_GET_NEXT'
     EXPORTING
       NR_RANGE_NR                   = '01'
@@ -43,7 +43,7 @@ FUNCTION /ZAK/NEW_BELNR.
 * MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
     MESSAGE E085(/ZAK/ZAK) RAISING ERROR_GET_NUMBER.
-* Number range error for upload identifier!
+* Feltöltés azonosító számkör hiba!
   ELSE.
     MOVE L_NUMBER TO E_BELNR.
   ENDIF.

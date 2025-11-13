@@ -2006,7 +2006,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -2170,7 +2170,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -2384,7 +2384,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -2772,7 +2772,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
 
        WHEN C_ABEVAZ_6505.
 * 6505
-* E - Annual
+* E - Year old
          IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            IF W_/ZAK/BEVALLO-ZINDEX EQ '000'.
              W_/ZAK/BEVALLO-FIELD_C = 'X'.
@@ -2830,7 +2830,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_CORP_LAST_DATE_18A60 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -4347,7 +4347,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
      CLEAR W_/ZAK/BEVALLO-FIELD_N.
 *--BG 2008.04.16
 * PERIOD conversion!
-* E - Annual
+* E - Year old
      L_GJAHR = W_/ZAK/BEVALLO-GJAHR.
      L_MONAT = W_/ZAK/BEVALLO-MONAT.
 
@@ -9360,7 +9360,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 *     ENDIF.
 *   ENDIF.
 
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -9441,7 +9441,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -9514,7 +9514,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -9585,7 +9585,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -9665,7 +9665,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -11575,7 +11575,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -14543,7 +14543,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0865_RG_02 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -15553,7 +15553,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -18397,7 +18397,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_0965_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -19690,7 +19690,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_01 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -20190,7 +20190,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1065_RG_04 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -21148,7 +21148,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -23283,7 +23283,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -23905,7 +23905,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1165_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -24409,7 +24409,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -24576,7 +24576,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1265_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.
@@ -25261,7 +25261,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
 
    L_GJAHR = $LAST_DATE(4).
    L_MONAT = $LAST_DATE+4(2).
-* E - Annual
+* E - Year old
    IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      L_MONAT = '01'.
 * N - Quarterly
@@ -26112,7 +26112,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_1365_RG_03 SPOTS /ZAK/FUNCTIONS_ES .
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+6(2) = '01'.
            W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* Annual
+* A year old
          ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
            L_KAM_KEZD = $DATE.
            L_KAM_KEZD+4(4) = '0101'.

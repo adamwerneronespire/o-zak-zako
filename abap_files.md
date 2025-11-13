@@ -113,12 +113,12 @@
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf22.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf23.abap
 - [x] src/#zak#functions.fugr.#zak#lfunctionsf24.abap
-- [x] src/#zak#functions.fugr.#zak#lfunctionsf25.abap
-- [X] src/#zak#functions.fugr.#zak#lfunctionstop.abap
-- [X] src/#zak#functions.fugr.#zak#main_exit.abap
-- [X] src/#zak#functions.fugr.#zak#main_exit_new.abap
-- [X] src/#zak#functions.fugr.#zak#new_belnr.abap
-- [X] src/#zak#functions.fugr.#zak#new_package_number.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionsf25.abap
+- [ ] src/#zak#functions.fugr.#zak#lfunctionstop.abap
+- [ ] src/#zak#functions.fugr.#zak#main_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#main_exit_new.abap
+- [ ] src/#zak#functions.fugr.#zak#new_belnr.abap
+- [ ] src/#zak#functions.fugr.#zak#new_package_number.abap
 - [ ] src/#zak#functions.fugr.#zak#onell_book_excel.abap
 - [ ] src/#zak#functions.fugr.#zak#onyb_xml_download.abap
 - [ ] src/#zak#functions.fugr.#zak#post_adonsza.abap

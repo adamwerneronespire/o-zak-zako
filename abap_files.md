@@ -155,7 +155,7 @@
 - [x] src/#zak#kata_sap_sel.prog.screen_9000.abap
 - [x] src/#zak#main_batch.prog.abap
 - [x] src/#zak#main_top.prog.abap
-- [ ] src/#zak#main_view.prog.abap
+- [X] src/#zak#main_view.prog.abap
 - [ ] src/#zak#main_view.prog.screen_9000.abap
 - [ ] src/#zak#main_view.prog.screen_9001.abap
 - [ ] src/#zak#main_view.prog.screen_9002.abap

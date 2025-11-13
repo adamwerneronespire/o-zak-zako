@@ -211,16 +211,16 @@
 - [x] src/#zak#read_xls.fugr.#zak#saplread_xls.abap
 - [x] src/#zak#read_xls.fugr.#zak#xls.abap
 - [x] src/#zak#read_xml.fugr.#zak#lread_xmlf01.abap
-- [ ] src/#zak#read_xml.fugr.#zak#lread_xmltop.abap
-- [ ] src/#zak#read_xml.fugr.#zak#saplread_xml.abap
-- [ ] src/#zak#read_xml.fugr.#zak#xml.abap
-- [ ] src/#zak#read_xml.fugr.#zak#xml_afa_upload.abap
-- [ ] src/#zak#read_xml.fugr.#zak#xml_onyb_upload.abap
-- [ ] src/#zak#read_xml.fugr.#zak#xml_ptg_upload.abap
-- [ ] src/#zak#sap_sel_f01.prog.abap
-- [ ] src/#zak#sap_sel_f01_old.prog.abap
-- [ ] src/#zak#sdhi.fugr.#zak#f4if_field_value_request.abap
-- [ ] src/#zak#sdhi.fugr.#zak#lsdhif01.abap
+- [x] src/#zak#read_xml.fugr.#zak#lread_xmltop.abap
+- [x] src/#zak#read_xml.fugr.#zak#saplread_xml.abap
+- [x] src/#zak#read_xml.fugr.#zak#xml.abap
+- [x] src/#zak#read_xml.fugr.#zak#xml_afa_upload.abap
+- [x] src/#zak#read_xml.fugr.#zak#xml_onyb_upload.abap
+- [x] src/#zak#read_xml.fugr.#zak#xml_ptg_upload.abap
+- [x] src/#zak#sap_sel_f01.prog.abap
+- [x] src/#zak#sap_sel_f01_old.prog.abap
+- [x] src/#zak#sdhi.fugr.#zak#f4if_field_value_request.abap
+- [x] src/#zak#sdhi.fugr.#zak#lsdhif01.abap
 - [ ] src/#zak#sdhi.fugr.#zak#lsdhif02.abap
 - [ ] src/#zak#sdhi.fugr.#zak#lsdhif03.abap
 - [ ] src/#zak#sdhi.fugr.#zak#lsdhif04.abap

@@ -1,6 +1,6 @@
 FUNCTION /ZAK/XML_PTG_UPLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(FILENAME) LIKE  RLGRAP-FILENAME
 *"     REFERENCE(I_BUKRS) TYPE  T001-BUKRS
@@ -40,35 +40,35 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
         OTHERS          = 2.
     IF SY-SUBRC <> 0.
       MESSAGE E173(/ZAK/ZAK) WITH &1.
-*            Összeg konvertálás hiba & !
+*            Amount conversion error & !
     ENDIF.
-*         Ha ez előjel '-' volt.
+*         If the sign was '-'.
     IF L_ELOJEL EQ '-'.
       MULTIPLY &1 BY -1.
     ENDIF.
   END-OF-DEFINITION.
 
 
-* XML fájl beolvasása
+* Reading XML file
   PERFORM UPLOAD_XML_TO_TABLE TABLES I_DATA_TABLE
                               USING  FILENAME
                                      L_SUBRC.
-* Fájl megnyitás hiba
+* File open error
   IF L_SUBRC EQ 1.
     MESSAGE E082(/ZAK/ZAK) WITH FILENAME RAISING ERROR_OPEN_FILE.
-*   Hiba & fájl megnyitásánál!
-* XML fájl hiba
+*   Error & when opening the file!
+* XML file error
   ELSEIF L_SUBRC EQ 2.
     MESSAGE E172(/ZAK/ZAK) WITH FILENAME RAISING ERROR_XML.
-*   Hibás az XML fájl (&)!
+*   The XML file (&) is incorrect!
   ENDIF.
 
-* Nincs adat
+* No data
   IF I_DATA_TABLE[] IS INITIAL.
     MESSAGE E100(/ZAK/ZAK) RAISING EMPTY_FILE.
   ENDIF.
 
-* Vállalat törzsadat
+* Company master data
   SELECT SINGLE * FROM T001
                  WHERE BUKRS EQ I_BUKRS.
 
@@ -79,17 +79,17 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
   SORT I_DATA_TABLE BY ATTRIB.
 *--PTGSZLAH #01. 2015.01.16
 
-* Adatok feldolgozása
+* Data processing
   LOOP AT I_DATA_TABLE INTO W_DATA_LINE WHERE ATTRIB(2) EQ '0B'.
     ADD 1 TO L_TABIX.
-*   DIALÓGUS FUTÁS BIZTOSÍTÁSHOZ
+*   To ensure dialog runtime
     PERFORM PROCESS_IND_ITEM USING '10000'
                                    L_INDEX
                                    TEXT-P01.
 *++PTGSZLAH #01. 2015.01.16
     IF I_BTYPE EQ C_BTYPE_PTGSZLAA.
 *--PTGSZLAH #01. 2015.01.16
-*   Pénztárátvételi hely meghatározása
+*   Determining the cash receipt location
       IF W_DATA_LINE-ATTRIB+6(5)  EQ 'B001A'.
         SELECT SINGLE ZAZON INTO L_LIFKUN
                             FROM /ZAK/PENZATV
@@ -102,7 +102,7 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
         ENDIF.
       ENDIF.
 
-*   Dátum:
+*   Date:
       IF W_DATA_LINE-ATTRIB+6(5) EQ 'B002A'.
         L_SZAMLAKELT = W_DATA_LINE-VALUE.
         CALL FUNCTION 'DATE_GET_WEEK'
@@ -119,7 +119,7 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
         ENDIF.
       ENDIF.
 
-*   Sorok
+*   Rows
       CASE W_DATA_LINE-ATTRIB+11(2).
         WHEN 'AA'.
           W_ANALITIKA-SZAMLASZ = W_DATA_LINE-VALUE.
@@ -140,12 +140,12 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
           W_ANALITIKA-FWAERS    = W_DATA_LINE-VALUE.
         WHEN 'IA'.
           W_ANALITIKA-FWBTR     = W_DATA_LINE-VALUE.
-*       Itt van vége egy sornak
-*       Összeg konverzió:
+*       This is the end of a row
+*       Amount conversion:
           LM_CONVERT_CURR: W_ANALITIKA-FWSTE W_ANALITIKA-FWAERS,
                            W_ANALITIKA-FWBTR W_ANALITIKA-FWAERS.
           W_ANALITIKA-FIELD_N = W_ANALITIKA-FWSTE.
-*   Analitika általános adatok:
+*   General analytics data:
           W_ANALITIKA-BUKRS  = I_BUKRS.
           W_ANALITIKA-BTYPE  = I_BTYPE.
 **++1465 #19.
@@ -164,7 +164,7 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
       ENDCASE.
 *++PTGSZLAH #01. 2015.01.16
     ELSEIF I_BTYPE EQ C_BTYPE_PTGSZLAH.
-*   Pénztárátvételi hely meghatározása
+*   Determining the cash receipt location
       IF W_DATA_LINE-ATTRIB+6(5)  EQ 'B005A'.
         SELECT SINGLE ZAZON INTO L_LIFKUN
                             FROM /ZAK/PENZATV
@@ -176,7 +176,7 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
           APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
         ENDIF.
       ENDIF.
-**   Dátum:
+**   Date:
     IF W_DATA_LINE-ATTRIB+6(5) EQ 'B001A'.
       L_SZAMLAKELT = W_DATA_LINE-VALUE.
 *      CALL FUNCTION 'DATE_GET_WEEK'
@@ -193,7 +193,7 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
 *      ENDIF.
     ENDIF.
 
-*   Sorok
+*   Rows
       CASE W_DATA_LINE-ATTRIB+11(2).
         WHEN 'AA'.
           W_ANALITIKA-SZAMLASZ = W_DATA_LINE-VALUE.
@@ -214,12 +214,12 @@ FUNCTION /ZAK/XML_PTG_UPLOAD.
           W_ANALITIKA-FWAERS    = W_DATA_LINE-VALUE.
         WHEN 'GA'.
           W_ANALITIKA-FWBTR     = W_DATA_LINE-VALUE.
-*       Itt van vége egy sornak
-*       Összeg konverzió:
+*       This is the end of a row
+*       Amount conversion:
           LM_CONVERT_CURR: W_ANALITIKA-FWSTE W_ANALITIKA-FWAERS,
                            W_ANALITIKA-FWBTR W_ANALITIKA-FWAERS.
           W_ANALITIKA-FIELD_N = W_ANALITIKA-FWSTE.
-*   Analitika általános adatok:
+*   General analytics data:
           W_ANALITIKA-BUKRS  = I_BUKRS.
           W_ANALITIKA-BTYPE  = I_BTYPE.
           W_ANALITIKA-GJAHR  = L_SZAMLAKELT(4).

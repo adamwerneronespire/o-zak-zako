@@ -1,6 +1,6 @@
 FUNCTION /ZAK/F4IF_FIELD_VALUE_REQUEST.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"       IMPORTING
 *"             VALUE(TABNAME) TYPE  DFIES-TABNAME
 *"             VALUE(FIELDNAME) TYPE  DFIES-FIELDNAME

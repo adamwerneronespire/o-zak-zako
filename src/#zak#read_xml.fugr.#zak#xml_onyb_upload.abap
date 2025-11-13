@@ -1,6 +1,6 @@
 FUNCTION /ZAK/XML_ONYB_UPLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(FILENAME) LIKE  RLGRAP-FILENAME
 *"     REFERENCE(I_BUKRS) TYPE  T001-BUKRS
@@ -16,7 +16,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
 *"----------------------------------------------------------------------
   DATA L_SUBRC LIKE SY-SUBRC.
 
-* /zak/zak_analitikához
+* For /zak/zak_analitika
   DATA: L_ADOAZON LIKE /ZAK/ANALITIKA-ADOAZON,
         L_GJAHR   LIKE /ZAK/ANALITIKA-GJAHR,
         L_MONAT   LIKE /ZAK/ANALITIKA-MONAT,
@@ -35,7 +35,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
 
   DATA: L_BEGIN TYPE I.
 
-* Fejléc mezők:
+* Header fields:
   RANGES LR_NO_ABEV FOR /ZAK/ANALITIKA-ABEVAZ.
   RANGES LR_NO_SORVEG_01 FOR RANGE_C2-LOW.
   RANGES LR_NO_SORVEG_02 FOR RANGE_C2-LOW.
@@ -44,7 +44,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
 
 
 
-* ABEVAZ konvertálás
+* ABEVAZ conversion
   DEFINE LM_CONV_/ZAK/ABEVAZ.
     IF &1(2) EQ '0A'.
       &2(1) = 'A'.
@@ -74,7 +74,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
     ENDIF.
   END-OF-DEFINITION.
 
-* Fejléc ABEV mezők kihagyása
+* Skipping header ABEV fields
 * 01
   M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB001A' SPACE.
   M_DEF LR_NO_ABEV 'I' 'EQ ' 'M0BB002A' SPACE.
@@ -136,30 +136,30 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
   M_DEF LR_NO_SORVEG_04 'I' 'EQ' 'GA' SPACE.
 
 
-* XML fájl beolvasása
+* Reading XML file
   PERFORM UPLOAD_XML_TO_TABLE TABLES I_DATA_TABLE
                               USING  FILENAME
                                      L_SUBRC.
-* Fájl megnyitás hiba
+* File open error
   IF L_SUBRC EQ 1.
     MESSAGE E082(/ZAK/ZAK) WITH FILENAME RAISING ERROR_OPEN_FILE.
-*   Hiba & fájl megnyitásánál!
-* XML fájl hiba
+*   Error & when opening the file!
+* XML file error
   ELSEIF L_SUBRC EQ 2.
     MESSAGE E172(/ZAK/ZAK) WITH FILENAME RAISING ERROR_XML.
-*   Hibás az XML fájl (&)!
+*   The XML file (&) is incorrect!
   ENDIF.
 
-* Nincs adat
+* No data
   IF I_DATA_TABLE[] IS INITIAL.
     MESSAGE E100(/ZAK/ZAK) RAISING EMPTY_FILE.
   ENDIF.
 
-* Vállalat törzsadat
+* Company master data
   SELECT SINGLE * FROM T001
                  WHERE BUKRS EQ I_BUKRS.
 
-* A nyomtatvány adatokban ellenőrizük az ABEV azonosítót!
+* We check the ABEV identifier in the form data!
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
           WHERE BTYPE EQ  I_BTYPE.
@@ -174,26 +174,26 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
 
   CLEAR L_INDEX.
 
-* Adatok feldolgozása
+* Data processing
   LOOP AT I_DATA_TABLE INTO W_DATA_LINE.
-* DIALÓGUS FUTÁS BIZTOSÍTÁSHOZ
+* To ensure dialog runtime
     PERFORM PROCESS_IND_ITEM USING '10000'
                                    L_INDEX
                                    TEXT-P01.
 
     CLEAR: W_HIBA.
-*   Adószám
+*   Tax number
     IF W_DATA_LINE-ELEMENT = 'adoszam'(004).
       CLEAR L_ADOAZON.
       L_ADOAZON = W_DATA_LINE-VALUE.
     ENDIF.
-*   Nyomtatvanyazonosito
+*   Form identifier
     IF W_DATA_LINE-ELEMENT = 'nyomtatvanyazonosito'(005).
       CLEAR L_NYOMT.
       L_NYOMT = W_DATA_LINE-VALUE.
     ENDIF.
 
-*   Tol
+*   From
     IF W_DATA_LINE-ELEMENT = 'ig'(006).
       CLEAR: L_GJAHR,L_MONAT.
       L_GJAHR = W_DATA_LINE-VALUE(4).
@@ -205,7 +205,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
     IF W_DATA_LINE-ELEMENT = 'eazon'(003).
 
       CLEAR L_ABEVAZ.
-*     ABEVAZ konvertálás
+*     ABEVAZ conversion
       LM_CONV_/ZAK/ABEVAZ  W_DATA_LINE-ATTRIB L_ABEVAZ L_SOR.
       IF L_ABEVAZ IN LR_NO_ABEV.
         LM_SAVE_ANALITIKA.
@@ -231,7 +231,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
 
       MOVE L_ABEVAZ TO W_ANALITIKA-ABEVAZ.
       MOVE  W_DATA_LINE-VALUE TO W_ANALITIKA-FIELD_C.
-*     A nyomtatvány adatokban ellenőrizük az ABEV azonosítót!
+*     We check the ABEV identifier in the form data!
       READ TABLE I_/ZAK/BEVALLB INTO W_BEVALLB
                            WITH KEY BTYPE  = I_BTYPE
                                     ABEVAZ = W_ANALITIKA-ABEVAZ
@@ -245,13 +245,13 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
                                 ABEVAZ = W_ANALITIKA-ABEVAZ.
             W_HIBA-ZA_HIBA = 'Csak numerikus lehet!'(008).
             W_HIBA-SOR          = L_TABIX.
-*           W_HIBA-OSZLOP       = 'Nem tudjuk'.
+*           W_HIBA-OSZLOP       = 'We do not know'.
             W_HIBA-/ZAK/F_VALUE  = W_ANALITIKA-FIELD_C.
             CONCATENATE W_ANALITIKA-ABEVAZ W_BEVALLBT-ABEVTEXT
                         INTO W_HIBA-FIELDNAME SEPARATED BY '-'.
             APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
           ELSE.
-*         Negatív érték kezelése
+*         Handling negative values
             CLEAR L_ELOJEL.
             MOVE W_ANALITIKA-FIELD_C TO W_ANALITIKA-FIELD_N.
 *++BG 2006/11/29
@@ -276,16 +276,16 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
               OTHERS          = 2.
           IF SY-SUBRC <> 0.
             MESSAGE E173(/ZAK/ZAK) WITH W_ANALITIKA-FIELD_C.
-*            Összeg konvertálás hiba & !
+*            Amount conversion error & !
           ENDIF.
-*         Ha ez előjel '-' volt.
+*         If the sign was '-'.
           IF L_ELOJEL EQ '-'.
             MULTIPLY W_ANALITIKA-FIELD_N BY -1.
           ENDIF.
           MOVE T001-WAERS TO W_ANALITIKA-WAERS.
           CLEAR W_ANALITIKA-FIELD_C.
         ENDIF.
-*     Nem létezik az abev azonosító
+*     The ABEV identifier does not exist
       ELSE.
         W_HIBA-ZA_HIBA = 'Abev azonosító nem létezik'(007).
         W_HIBA-SOR          = L_TABIX.
@@ -321,7 +321,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
             ENDIF.
         ENDCASE.
       ENDIF.
-*     Adóazonosító
+*     Tax identification number
       IF L_SORVEG EQ 'AA' OR L_SORVEG EQ 'BA'.
         IF  W_ANALITIKA-ADOAZON IS INITIAL.
           W_ANALITIKA-ADOAZON = W_DATA_LINE-VALUE.
@@ -336,9 +336,9 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
         CLEAR  W_ANALITIKA-FIELD_C.
       ENDIF.
 
-*     Önrevízió kezelése:
+*     Handling self-revision:
       IF NOT L_ONELL IS INITIAL.
-*       01,02 lapon EA végű
+*       EA ending on sheets 01 and 02
         IF W_ANALITIKA-NYLAPAZON EQ '01' OR W_ANALITIKA-NYLAPAZON EQ '02'.
           IF L_SORVEG EQ 'EA'.
             IF W_ANALITIKA-FIELD_C EQ 'T'.
@@ -347,7 +347,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
             CLEAR W_ANALITIKA-FIELD_C.
           ENDIF.
         ENDIF.
-*       01,02 lapon DA végű
+*       DA ending on sheets 03 and 04
         IF W_ANALITIKA-NYLAPAZON EQ '03' OR W_ANALITIKA-NYLAPAZON EQ '04'.
           IF L_SORVEG EQ 'DA'.
             IF W_ANALITIKA-FIELD_C EQ 'T'.
@@ -361,7 +361,7 @@ FUNCTION /ZAK/XML_ONYB_UPLOAD.
     ENDIF.
     DELETE I_DATA_TABLE.
   ENDLOOP.
-* Utolsó rekord mentése:
+* Saving last record:
   LM_SAVE_ANALITIKA.
 
   FREE I_DATA_TABLE.

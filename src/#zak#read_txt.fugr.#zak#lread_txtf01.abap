@@ -34,10 +34,10 @@ FORM set_itab USING    $i_sor   LIKE i_sor[]
 *++BG 2006.04.10
 *      APPEND W_INTERN TO $INTERN.
 *--BG 2006.04.10
-* mező tipus, hossz, tartalom alapján ellenörzés, az eredmény
-* a check_tab-reptext mezőbe írom.
+* Validation based on field type, length, and content, the result
+* is written into the check_tab-reptext field.
       CLEAR w_dd03p-reptext.
-* automatikus ellenörzés a konvertálási rutin alapján periódus!
+* Automatic check based on the conversion routine for period!
       IF w_dd03p-convexit EQ 'PERI'
          AND NOT w_intern-value IS INITIAL.
         CLEAR w_return.
@@ -50,7 +50,7 @@ FORM set_itab USING    $i_sor   LIKE i_sor[]
 
         w_dd03p-reptext = w_return-message.
       ENDIF.
-* főkönyvi szám ellenörzése
+* Check general ledger account number
       IF w_dd03p-rollname EQ 'SAKNR'
          AND NOT w_intern-value IS INITIAL  .
         CLEAR l_saknr.
@@ -78,7 +78,7 @@ FORM set_itab USING    $i_sor   LIKE i_sor[]
       ENDIF.
 
       CASE w_dd03p-rollname.
-** adószám ellenörzése
+** Checking tax number
 *        WHEN '/ZAK/ADOAZON'.
 *          IF NOT $I_CDV IS INITIAL.
 *            CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
@@ -87,7 +87,7 @@ FORM set_itab USING    $i_sor   LIKE i_sor[]
 *                 IMPORTING
 *                      RETURN = W_DD03P-REPTEXT.
 *          ENDIF.
-** adószám ellenörzése
+** Checking tax number
 *        WHEN '/ZAK/ADOSZAM'.
 *          IF NOT $I_CDV IS INITIAL.
 *            CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
@@ -97,14 +97,14 @@ FORM set_itab USING    $i_sor   LIKE i_sor[]
 *                      RETURN = W_DD03P-REPTEXT.
 *          ENDIF.
 *++BG 2006.04.10
-*       Adószám '-' nélkül kell
+*       Tax number is required without '-'
         WHEN '/ZAK/ADOAZON' OR '/ZAK/ADOSZAM'.
           CALL FUNCTION '/ZAK/CONV_ADOAZON'
             EXPORTING
               input  = w_intern-value
             IMPORTING
               output = w_intern-value.
-*         adószám ellenörzése
+*         Checking tax number
           IF NOT $i_cdv IS INITIAL.
             CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
               EXPORTING
@@ -116,18 +116,18 @@ FORM set_itab USING    $i_sor   LIKE i_sor[]
       ENDCASE.
 
       CASE w_dd03p-inttype.
-* csak numerikus lehet
+* Only numeric characters are allowed
         WHEN 'N' .
           IF NOT w_intern-value CO '-0123456789., '.
             w_dd03p-reptext = 'Csak numerikus lehet!'.
           ENDIF.
-* csak érték lehet
+* Only numeric values are allowed
         WHEN 'P'.
           IF NOT w_intern-value CO '-0123456789., '.
             w_dd03p-reptext = 'Csak numerikus lehet!'.
           ENDIF.
       ENDCASE.
-* Hiba tábla töltése
+* Populate error table
       IF NOT w_dd03p-reptext IS INITIAL.
         CLEAR: w_hiba.
         w_hiba-sor          = w_intern-row.
@@ -187,10 +187,10 @@ FORM set_itab_csv USING    $i_sor   LIKE i_sor[]
       IF sy-subrc EQ 0.
         w_intern-value = li_tab.
       ENDIF.
-* mező tipus, hossz, tartalom alapján ellenörzés, az eredmény
-* a check_tab-reptext mezőbe írom.
+* Validation based on field type, length, and content, the result
+* is written into the check_tab-reptext field.
       CLEAR w_dd03p-reptext.
-* automatikus ellenörzés a konvertálási rutin alapján periódus!
+* Automatic check based on the conversion routine for period!
       IF w_dd03p-convexit EQ 'PERI'
          AND NOT w_intern-value IS INITIAL.
         CLEAR w_return.
@@ -203,7 +203,7 @@ FORM set_itab_csv USING    $i_sor   LIKE i_sor[]
 
         w_dd03p-reptext = w_return-message.
       ENDIF.
-* főkönyvi szám ellenörzése
+* Check general ledger account number
       IF w_dd03p-rollname EQ 'SAKNR'
          AND NOT w_intern-value IS INITIAL  .
         CLEAR l_saknr.
@@ -227,7 +227,7 @@ FORM set_itab_csv USING    $i_sor   LIKE i_sor[]
       ENDIF.
 
       CASE w_dd03p-rollname.
-** adószám ellenörzése
+** Checking tax number
 *        WHEN '/ZAK/ADOAZON'.
 *          IF NOT $I_CDV IS INITIAL.
 *            CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
@@ -236,7 +236,7 @@ FORM set_itab_csv USING    $i_sor   LIKE i_sor[]
 *                 IMPORTING
 *                      RETURN = W_DD03P-REPTEXT.
 *          ENDIF.
-** adószám ellenörzése
+** Checking tax number
 *        WHEN '/ZAK/ADOSZAM'.
 *          IF NOT $I_CDV IS INITIAL.
 *            CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
@@ -246,14 +246,14 @@ FORM set_itab_csv USING    $i_sor   LIKE i_sor[]
 *                      RETURN = W_DD03P-REPTEXT.
 *          ENDIF.
 *++BG 2006.04.10
-*       Adószám '-' nélkül kell
+*       Tax number is required without '-'
         WHEN '/ZAK/ADOAZON' OR '/ZAK/ADOSZAM'.
           CALL FUNCTION '/ZAK/CONV_ADOAZON'
             EXPORTING
               input  = w_intern-value
             IMPORTING
               output = w_intern-value.
-*         adószám ellenörzése
+*         Checking tax number
           IF NOT $i_cdv IS INITIAL.
             CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
               EXPORTING
@@ -270,13 +270,13 @@ FORM set_itab_csv USING    $i_sor   LIKE i_sor[]
           IF NOT w_intern-value CO '-0123456789., '.
             w_dd03p-reptext = 'Csak numerikus lehet!'.
           ENDIF.
-* csak érték lehet
+* Only numeric values are allowed
         WHEN 'P'.
           IF NOT w_intern-value CO '-0123456789., '.
             w_dd03p-reptext = 'Csak numerikus lehet!'.
           ENDIF.
       ENDCASE.
-* Hiba tábla töltése
+* Populate error table
       IF NOT w_dd03p-reptext IS INITIAL.
         CLEAR: w_hiba.
         w_hiba-sor          = w_intern-row.

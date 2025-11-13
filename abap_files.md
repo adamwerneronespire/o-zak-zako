@@ -221,16 +221,16 @@
 - [x] src/#zak#sap_sel_f01_old.prog.abap
 - [x] src/#zak#sdhi.fugr.#zak#f4if_field_value_request.abap
 - [x] src/#zak#sdhi.fugr.#zak#lsdhif01.abap
-- [ ] src/#zak#sdhi.fugr.#zak#lsdhif02.abap
-- [ ] src/#zak#sdhi.fugr.#zak#lsdhif03.abap
-- [ ] src/#zak#sdhi.fugr.#zak#lsdhif04.abap
-- [ ] src/#zak#sdhi.fugr.#zak#lsdhitop.abap
-- [ ] src/#zak#sdhi.fugr.#zak#saplsdhi.abap
-- [ ] src/#zak#set_period.fugr.#zak#lset_periodf01.abap
-- [ ] src/#zak#set_period.fugr.#zak#lset_periodtop.abap
-- [ ] src/#zak#set_period.fugr.#zak#saplset_period.abap
-- [ ] src/#zak#set_period.fugr.#zak#set_datum.abap
-- [ ] src/#zak#set_period.fugr.#zak#set_period.abap
+- [x] src/#zak#sdhi.fugr.#zak#lsdhif02.abap
+- [x] src/#zak#sdhi.fugr.#zak#lsdhif03.abap
+- [x] src/#zak#sdhi.fugr.#zak#lsdhif04.abap
+- [x] src/#zak#sdhi.fugr.#zak#lsdhitop.abap
+- [x] src/#zak#sdhi.fugr.#zak#saplsdhi.abap
+- [x] src/#zak#set_period.fugr.#zak#lset_periodf01.abap
+- [x] src/#zak#set_period.fugr.#zak#lset_periodtop.abap
+- [x] src/#zak#set_period.fugr.#zak#saplset_period.abap
+- [x] src/#zak#set_period.fugr.#zak#set_datum.abap
+- [x] src/#zak#set_period.fugr.#zak#set_period.abap
 - [ ] src/#zak#set_status.prog.abap
 - [ ] src/#zak#szamlakelt_corr.prog.abap
 - [ ] src/#zak#szja_book.prog.abap

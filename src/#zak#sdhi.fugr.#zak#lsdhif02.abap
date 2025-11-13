@@ -65,7 +65,7 @@ FORM Run_entitytab TABLES SHLP_TAB TYPE SHLP_DESCR_TAB_T
   IF ( TABNAME CO '+&' AND DD01V_wa-ENTITYTAB IS INITIAL ) OR
      ( TABNAME NA '+&' AND DD01V_wa-ENTITYTAB <> TABNAME ).
     MESSAGE S804(DH) RAISING NO_F4_HLP.
-*   Keine Eingabehilfe verfügbar
+*   No input help available
   ENDIF.
   SHLP_INT-INTDESCR-SELMETHOD = SHLP_INT-SHLPNAME
                               = DD01V_wa-ENTITYTAB.
@@ -82,7 +82,7 @@ FORM Run_entitytab TABLES SHLP_TAB TYPE SHLP_DESCR_TAB_T
 *--S4HANA#01.
   IF SY-SUBRC <> 0.
     MESSAGE S804(DH) RAISING NO_F4_HLP.
-*   Keine Eingabehilfe verfügbar
+*   No input help available
   ENDIF.
   PERFORM GET_INTERFACE_CH(SAPLSDSD)
           USING DD01V_wa-ENTITYTAB FIELDNAME
@@ -345,7 +345,7 @@ FORM Set_parameter_dofv TABLES SHLP_TAB TYPE SHLP_DESCR_TAB_T
     DELETE RECORD_TAB FROM MAXROWS.
     IF SY-SUBRC = 0 AND PARAMETER = PAR%VALUE.
       MESSAGE S803(DH) WITH CALLCONTROL-MAXRECORDS.
-*   Es gibt mehr als & Eingabemöglichkeiten
+*   There are more than & input options
     ENDIF.
   ENDIF.
 ENDFORM.                    " Set_parameter_dofv

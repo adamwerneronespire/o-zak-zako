@@ -1,6 +1,6 @@
 FUNCTION /ZAK/SET_PERIOD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) LIKE  T001-BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -27,7 +27,7 @@ FUNCTION /ZAK/SET_PERIOD.
 *    L_GJAHR = I_GJAHR.
 *  ENDIF.
 
-* Bevallás utolsó napjának meghatározás
+* Determining the last day of the return period
   PERFORM GET_LAST_DAY_OF_PERIOD USING I_GJAHR
                                        I_MONAT
                                   CHANGING V_LAST_DATE.
@@ -41,10 +41,10 @@ FUNCTION /ZAK/SET_PERIOD.
     ORDER BY PRIMARY KEY.
 *--S4HANA#01.
   ENDSELECT.
-* időszak
+* period
   E_BIDOSZ = W_/ZAK/BEVALL-BIDOSZ.
 
-* ...negyedéves
+* ...quarterly
   IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
     CASE I_MONAT.
       WHEN '01' OR '02' OR '03'.
@@ -60,11 +60,11 @@ FUNCTION /ZAK/SET_PERIOD.
         E_MONAT_TOL = '10'.
         E_MONAT_IG = '12'.
     ENDCASE.
-* ...éves
+* ...annual
   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
     E_MONAT_TOL = '01'.
     E_MONAT_IG = '12'.
-* ...havi
+* ...monthly
   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'H'.
     E_MONAT_TOL = I_MONAT.
     E_MONAT_IG = I_MONAT.
@@ -84,11 +84,11 @@ FUNCTION /ZAK/SET_PERIOD.
 *
 *    IF W_/ZAK/BEVALLI-GJAHR = I_GJAHR AND
 *       W_/ZAK/BEVALLI-MONAT = I_MONAT.
-** időszak nyitott
+** period open
 *      E_GJAHR = I_GJAHR.
 *      E_MONAT = I_MONAT.
 *    ELSE.
-** következő időszak
+** next period
 *      IF W_/ZAK/BEVALLI-GJAHR NE L_GJAHR AND
 *         W_/ZAK/BEVALLI-MONAT NW L_MONAT.
 *

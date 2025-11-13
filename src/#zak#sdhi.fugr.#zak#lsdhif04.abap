@@ -30,7 +30,7 @@ FIELD-SYMBOLS <dynpread> TYPE DYNPREAD.
 CLEAR help_infos.
 REFRESH dynpfields.
 
-*- OLR: Comboboxen funktionieren vielleicht doch
+*- OLR: Combo boxes might still work after all
   data event(3).
   call 'DY_GET_DYNPRO_EVENT' id 'EVENT' field event.
   if ( sy-subrc = 0 and event = 'OUT' ) or

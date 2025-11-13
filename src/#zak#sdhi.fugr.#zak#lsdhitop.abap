@@ -1,11 +1,11 @@
 FUNCTION-POOL /ZAK/SDHI.                         "MESSAGE-ID ..
 TYPE-POOLS SHLP.
-TYPE-POOLS F4TYP.  "Brücke zu alten F4-Bausteinen
-TABLES: DDSHDEFSH.  "Tabelle der Default-Suchhilfen
+TYPE-POOLS F4TYP.  "Bridge to the legacy F4 function modules
+TABLES: DDSHDEFSH.  "Table of the default search helps
 
 
-DATA %SHLPNAME LIKE DD30V-SHLPNAME.    " für Übergabe an Callback-Form
-                                       " von F4TOOL_SUBSHLP_BY_HOTKEY
+DATA %SHLPNAME LIKE DD30V-SHLPNAME.    " For passing to the callback form
+                                       " from F4TOOL_SUBSHLP_BY_HOTKEY
 CONSTANTS: par%domname LIKE DDSHFPROP-FIELDNAME VALUE 'DOMNAME',
            par%value LIKE DDSHFPROP-FIELDNAME VALUE 'VALUE',
            par%text LIKE DDSHFPROP-FIELDNAME VALUE 'TEXT',

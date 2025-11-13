@@ -3,12 +3,12 @@
 *&---------------------------------------------------------------------*
 TABLES: T001, /ZAK/ONJALV, /ZAK/ONJDATA.
 
-*Előfeldogozás
+*Preprocessing
 CONSTANTS C_ONJSTAT_E TYPE /ZAK/ONJSTAT VALUE 'E'.
-*Önellenőrzés adóneme
+*Tax type for self-revision
 CONSTANTS C_ONELL TYPE /ZAK/ADONEM VALUE '#ONELL#'.
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for populating the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -19,7 +19,7 @@ END-OF-DEFINITION.
 
 DATA G_BTYPART TYPE /ZAK/BTYPART.
 
-*Önellenőrzéshez adatok:
+*Data for self-revision:
 DATA  I_ONJALV TYPE STANDARD TABLE OF /ZAK/ONJALV INITIAL SIZE 0.
 DATA  W_ONJALV TYPE /ZAK/ONJALV.
 DATA  I_ONJALV_SAVE TYPE STANDARD TABLE OF /ZAK/ONJALV INITIAL SIZE 0.
@@ -39,7 +39,7 @@ DATA  I_/ZAK/ONJDANA TYPE STANDARD TABLE OF /ZAK/ONJDANA INITIAL SIZE 0.
 DATA  W_/ZAK/ONJDANA TYPE /ZAK/ONJDANA.
 
 
-*Önellenőrzéshez SMARTFORMS adatok:
+*SMARTFORMS data for self-revision:
 DATA  W_ONJSMART_DATA LIKE /ZAK/ONJSMARTDAT.
 
 

@@ -51,7 +51,7 @@ FORM GET_BTYPART  USING    $BUKRS
 
   IF $BTYPART IS INITIAL.
     MESSAGE E269.
-*   Nem határozható meg a bevallás fajta!
+*   The declaration type cannot be determined!
   ENDIF.
 
 ENDFORM.                    " GET_BTYPART
@@ -102,18 +102,18 @@ FORM PREVIEW_DATA  TABLES   $I_ONJALV LIKE I_ONJALV
   DATA  L_MESSAGE.
   DATA  L_OSSZESEN TYPE /ZAK/DMBTR.
 
-* Kijelölt tételek meghatározása
+* Determining selected items
   CALL METHOD G_GRID1->GET_SELECTED_ROWS
     IMPORTING
       ET_ROW_NO = LT_ROWS[].
 
   IF LT_ROWS[] IS INITIAL.
     MESSAGE I018.
-*   Kérem jelöljön ki egy tételt.
+*   Please select an item.
     EXIT.
   ENDIF.
 
-* Űrlap adatok meghatározása
+* Determining form data
   CALL FUNCTION 'SSF_FUNCTION_MODULE_NAME'
     EXPORTING
       FORMNAME           = $FNAME
@@ -126,10 +126,10 @@ FORM PREVIEW_DATA  TABLES   $I_ONJALV LIKE I_ONJALV
 
   IF SY-SUBRC <> 0.
     MESSAGE E263 WITH $FNAME.
-*   Hiba a & űrlap beolvasásánál!
+*   Error while reading the & form!
   ENDIF.
 
-* Adatok feldolgozása
+* Data processing
   LOOP AT LT_ROWS INTO LS_ROWS.
     READ TABLE $I_ONJALV    INTO LW_ONJALV
                                  INDEX LS_ROWS-ROW_ID.
@@ -138,11 +138,11 @@ FORM PREVIEW_DATA  TABLES   $I_ONJALV LIKE I_ONJALV
         MESSAGE I275.
         MOVE 'X' TO L_MESSAGE.
       ENDIF.
-*     Kérem adjon meg a tételekhez szöveg hozzárendelést!
+*     Please provide text assignments for the items!
       CONTINUE.
     ENDIF.
 
-*   Adatok feldolgozása
+*   Data processing
     LOOP AT $I_ONJALV INTO W_ONJALV WHERE BUKRS  EQ LW_ONJALV-BUKRS
                                       AND BTYPE  EQ LW_ONJALV-BTYPE
                                       AND GJAHR  EQ LW_ONJALV-GJAHR
@@ -152,9 +152,9 @@ FORM PREVIEW_DATA  TABLES   $I_ONJALV LIKE I_ONJALV
         CLEAR:   W_ONJSMART_DATA, L_OSSZESEN.
         REFRESH: I_TEXT, I_ONELL_DATA.
       ENDAT.
-*     Kitöröljük a kijelölésből
+*     Remove from the selection
       DELETE LT_ROWS WHERE ROW_ID = SY-TABIX.
-*     SMARTFORMS adatok meghetározása
+*     Determining SMARTFORMS data
       PERFORM GET_SMART_DATA TABLES I_TEXT
                                     I_ONELL_DATA
                              USING  W_ONJALV
@@ -172,7 +172,7 @@ FORM PREVIEW_DATA  TABLES   $I_ONJALV LIKE I_ONJALV
     ENDIF.
     CONDENSE W_ONJSMART_DATA-OSSZESEN.
 
-*   Űrlap meghívása
+*   Calling the form
     PERFORM CALL_SMARTFORMS TABLES I_TEXT
                                    I_ONELL_DATA
                             USING  L_FM_NAME
@@ -208,7 +208,7 @@ FORM GET_SMART_DATA  TABLES   $I_TEXT LIKE I_TEXT
   DATA LI_USER_NAME LIKE V_USERNAME OCCURS 0 WITH HEADER LINE.
 
 
-* Szöveg meghetározása
+* Determining the text
   IF $I_TEXT[] IS INITIAL.
     CALL FUNCTION 'READ_TEXT'
       EXPORTING
@@ -239,36 +239,36 @@ FORM GET_SMART_DATA  TABLES   $I_TEXT LIKE I_TEXT
     ENDIF.
   ENDIF.
 
-* Adatok feltöltése
+* Loading the data
   IF $W_ONJALV-ADONEM NE C_ONELL.
     CLEAR W_ONELL_DATA.
 
     MOVE $W_ONJALV-ADONEM TO W_ONELL_DATA-ADONEM.
-* Adónem szöveg
+* Tax type text
     SELECT SINGLE ADONEM_TXT INTO W_ONELL_DATA-ADONEM_TXT
                              FROM /ZAK/ADONEMT
                             WHERE LANGU  EQ SY-LANGU
                               AND BUKRS  EQ $W_ONJALV-BUKRS
                               AND ADONEM EQ $W_ONJALV-ADONEM.
 
-* Összeg
+* Amount
     WRITE $W_ONJALV-OSSZEG TO W_ONELL_DATA-OSSZEG
                            CURRENCY $W_ONJALV-WAERS.
     CONDENSE W_ONELL_DATA-OSSZEG.
 
-* Pénznem
+* Currency
     SELECT SINGLE KTEXT INTO W_ONELL_DATA-WAERS
                         FROM TCURT
                        WHERE SPRAS EQ SY-LANGU
                          AND WAERS EQ $W_ONJALV-WAERS.
 
-* Esedékesség
+* Due date
     WRITE $W_ONJALV-ESDAT TO W_ONELL_DATA-ESDAT.
-* Önrevízió
+* Self-revision
     WRITE $W_ONJALV-ONDAT TO W_ONELL_DATA-ONDAT.
     APPEND W_ONELL_DATA TO $I_ONELL_DATA.
     ADD $W_ONJALV-OSSZEG TO $OSSZESEN.
-* Pótlék töltése
+* Filling surcharge
   ELSE.
     IF NOT $W_ONJALV-OSSZEG IS INITIAL.
       WRITE $W_ONJALV-OSSZEG TO $W_ONJSMART_DATA-POTLEK
@@ -279,14 +279,14 @@ FORM GET_SMART_DATA  TABLES   $I_TEXT LIKE I_TEXT
     CONDENSE $W_ONJSMART_DATA-POTLEK.
   ENDIF.
 
-* Egyéb mezők töltése
+* Filling other fields
   MOVE $TEST TO $W_ONJSMART_DATA-TESZT.
 *++BG 2009.07.16
-* Vállalat
+* Company
   MOVE $W_ONJALV-BUKRS TO $W_ONJSMART_DATA-BUKRS.
 *--BG 2009.07.16
 
-* Azonosító
+* Identifier
   IF $W_ONJSMART_DATA-AZONOSITO IS INITIAL.
     CONCATENATE $W_ONJALV-BUKRS
                 $W_ONJALV-BTYPE
@@ -296,24 +296,24 @@ FORM GET_SMART_DATA  TABLES   $I_TEXT LIKE I_TEXT
                                  SEPARATED BY '/'.
   ENDIF.
 
-* Készült
+* Prepared
   IF $W_ONJSMART_DATA-KESZULT IS INITIAL.
     MOVE $W_ONJALV-KESZULT TO $W_ONJSMART_DATA-KESZULT.
   ENDIF.
 
-* IDŐSZAK
+* PERIOD
   IF $W_ONJSMART_DATA-IDOSZAK IS INITIAL.
     CONCATENATE $W_ONJALV-GJAHR
                 $W_ONJALV-MONAT INTO $W_ONJSMART_DATA-IDOSZAK
                                 SEPARATED BY '.'.
   ENDIF.
 
-* Vállalat megnevezése
+* Company name
   IF $W_ONJSMART_DATA-BUTXT IS INITIAL.
     MOVE $T001-BUTXT TO $W_ONJSMART_DATA-BUTXT.
   ENDIF.
 
-* Felhasználó neve
+* User name
   IF $W_ONJSMART_DATA-FELHASZN IS INITIAL.
     MOVE SY-MANDT TO LI_USER_TAB-MANDT.
     MOVE $UNAME   TO LI_USER_TAB-BNAME.
@@ -398,10 +398,10 @@ FORM CALL_SMARTFORMS  TABLES   $I_TEXT LIKE I_TEXT
             .
   IF SY-SUBRC <> 0.
     IF $TEST IS INITIAL.
-*   Hiba a & űrlap & azonosító kivitelénél!
+*   Error during the export of form & with identifier &!
       MESSAGE A276 WITH $FNAME $W_ONJSMART_DATA-AZONOSITO.
     ELSE.
-*   Hiba a & űrlap & azonosító kivitelénél!
+*   Error during the export of form & with identifier &!
       MESSAGE E276 WITH $FNAME $W_ONJSMART_DATA-AZONOSITO.
     ENDIF.
   ENDIF.

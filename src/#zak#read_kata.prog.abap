@@ -1,30 +1,30 @@
 *&---------------------------------------------------------------------*
 *& Report /ZAK/READ_KATA
 *&---------------------------------------------------------------------*
-*& KATA adatok feltöltése excel fájlból
+*& Loading KATA data from an Excel file
 *&---------------------------------------------------------------------*
 REPORT /ZAK/READ_KATA MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: __________________
+*& Function description: __________________
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gáébor
-*& Létrehozás dátuma : 2021.02.21
-*& Funkc.spec.készítő: Balázs Gábor
+*& Author            : Balázs Gábor
+*& Creation date     : 2021.02.21
+*& Functional spec author: Balázs Gábor
 *& SAP modul neve    : ADO
-*& Program  típus    : ________
-*& SAP verzió        : ________
+*& Program type      : ________
+*& SAP version       : ________
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (The OSS note number must be written at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                   LEÍRÁS
+*& LOG#     DATE        MODIFIER                  DESCRIPTION
 *& ----   ----------   ----------     ---------------------- -----------
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
@@ -60,7 +60,7 @@ DATA: G_BEGIN_COL TYPE I,
 DATA: G_BEGIN_ROW TYPE I,
       G_END_ROW   TYPE I.
 
-* excel betöltéshez
+* for Excel upload
 DATA  G_STRNAME   TYPE STRUKNAME.
 DATA: G_XLS_LINE TYPE SY-TABIX VALUE 5000.
 DATA: I_DD03P TYPE STANDARD TABLE OF DD03P         INITIAL SIZE 0,
@@ -100,32 +100,32 @@ END-OF-DEFINITION.
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
+*& PROGRAM VARIABLES                                                    *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables      -   (V_xxx...)                              *
+*      Work area             -   (W_xxx...)                              *
+*      Type                  -   (T_xxx...)                              *
+*      Macros                -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                 -   (CL_xxx...)                             *
+*      Event                 -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& PARAMÉTEREK  (P_XXXXXXX..)                                          *
+*& PARAMETERS  (P_XXXXXXX..)                                          *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIÓK (S_XXXXXXX..)                                        *
+*& SELECT-OPTIONS (S_XXXXXXX..)                                        *
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK SEL WITH FRAME TITLE TEXT-S01.
-*Vállalat
+*Company
 PARAMETERS: P_BUKRS TYPE BUKRS OBLIGATORY VALUE CHECK MEMORY ID BUK.
-*Fájl
+*File
 PARAMETERS: P_FILE TYPE RLGRAP-FILENAME OBLIGATORY.
-*Tesztfutás
+*Test run
 PARAMETERS: P_TEST AS CHECKBOX DEFAULT 'X'.
 SELECTION-SCREEN END OF BLOCK SEL.
 *===============================================================
@@ -187,7 +187,7 @@ ENDCLASS.                    "lcl_handle_events IMPLEMENTATION
 *-----------------------------------------------------------------------
 INITIALIZATION.
 *++2265 #02.
-* Jogosultság vizsgálat
+* Authorization check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
                    ID 'TCD'  FIELD '/ZAK/READ_KATA'.
 *--2265 #02.
@@ -196,46 +196,46 @@ INITIALIZATION.
 * AT SELECTION-SCREEN
 ************************************************************************
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FILE.
-* Fájlnév keresési segítség
+* File name search help
   PERFORM GET_FILENAME CHANGING P_FILE.
 
 AT SELECTION-SCREEN.
-* Szelekció ellenőrzés
+* Selection check
   PERFORM CHECK_SELECTION.
-* Fájlnév vállalat összerendelés ellenőrzés
+* File name and company assignment check
   PERFORM CHECK_BUKRS_FILENAME.
 
 ************************************************************************
 * START-OF-SELECTION
 ************************************************************************
 START-OF-SELECTION.
-* Fájl beolvasása
+* Reading the file
   PERFORM GET_EXCEL_DATA USING P_FILE
                       CHANGING GT_DATA.
   IF GT_DATA[] IS INITIAL.
     MESSAGE I260 WITH P_FILE.
-*   A & állomány nem tartalmaz feldolgozható rekordot!
+*   The & file does not contain any records to process!
   ENDIF.
-* Fájl ellenőrzése
+* Checking the file
   PERFORM CHECK_UPLOAD TABLES GT_DATA.
 
-* Hibakezelés
+* Error handling
   IF P_TEST IS INITIAL AND NOT G_ERROR IS INITIAL.
     MESSAGE I711 DISPLAY LIKE 'E'.
-*  Éles feldolgozás hibák miatt nem lehetséges! Lásd üzenetek!
+*  Production processing is not possible due to errors! See the messages!
   ELSEIF NOT G_ERROR IS INITIAL.
     MESSAGE I317 DISPLAY LIKE 'W'.
-*  Feldolgozás során előfordultak üzenetek!
+*  Messages occurred during processing!
   ENDIF.
 
-* Adatbázis menetés
+* Saving to the database
   PERFORM SAVE_DATA.
 
 ************************************************************************
 * END-OF-SELECTION
 ***********************************************************************
 END-OF-SELECTION.
-* Online módban
+* In online mode
   IF SY-BATCH IS INITIAL.
     PERFORM DISPLAY_ALV CHANGING GT_DATA.
   ENDIF.
@@ -313,7 +313,7 @@ FORM CHECK_SELECTION .
         OTHERS          = 4.
     IF L_RESULT EQ SPACE.
       MESSAGE E082 WITH L_FILE.
-*     Hiba & fájl megnyitásánál!
+*     Error while opening file &!
     ENDIF.
   ENDIF.
 ENDFORM.
@@ -332,17 +332,17 @@ FORM CHECK_BUKRS_FILENAME.
   DATA  L_LINES TYPE I.
   DATA  L_LENGTH TYPE I.
 
-*  Feldaraboljuk a fájl elérést.
+*  Splitting the file path.
   SPLIT P_FILE AT '\' INTO TABLE L_SPLIT.
-*  Az utolsó lesz a fájl név.
+*  The last part will be the file name.
   DESCRIBE TABLE L_SPLIT LINES L_LINES.
   READ TABLE L_SPLIT INDEX L_LINES.
-*  Meghatározzuk a vállalat hosszát
+*  Determining the company code length
   L_LENGTH = STRLEN( P_BUKRS ).
-*  Ha a fáhjl név nem a vállalat kóddal kezdődik:
+*  If the file name does not start with the company code:
   IF L_SPLIT-LINE(L_LENGTH) NE P_BUKRS.
     MESSAGE E194 WITH P_BUKRS.
-*   Helytelen fájl! A fájl név nem a vállalat kóddal kezdődik! (&1)
+*   Invalid file! The file name does not start with the company code! (&1)
   ENDIF.
 
 ENDFORM.                    " CHECK_BUKRS_FILENAME
@@ -395,7 +395,7 @@ FORM GET_EXCEL_DATA      USING UV_FILE
 
   DEFINE LM_CURRENCY_INTERNAL.
     l_external_amount = &1.
-*   Összeg konverzió belső HUF formátumra
+*   Converting the amount to internal HUF format
     CALL FUNCTION 'BAPI_CURRENCY_CONV_TO_INTERNAL'
       EXPORTING
         currency             = &2
@@ -516,7 +516,7 @@ FORM GET_EXCEL_DATA      USING UV_FILE
               CATCH CX_SY_CONVERSION_NO_NUMBER.
                 <LV_ANY> = '0.0'.
                 M_ADD_MSG 'E' '/ZAK/ZAK' '743'  LS_INTERN-VALUE LS_INTERN-ROW '' ''.
-*                 A cellában lévő & érték nem megfelelő az XLS fájlban (&. sor)!
+*                 The value & in the cell is invalid in the XLS file (row &.)!
             ENDTRY.
           ELSE.
             TRY.
@@ -527,16 +527,16 @@ FORM GET_EXCEL_DATA      USING UV_FILE
             ENDTRY.
             IF NOT LV_MESSAGE IS INITIAL.
               MESSAGE E318 WITH LS_HEADER-FIELDNAME LV_MESSAGE.
-*            Mező konverzió hiba! (&: &)
+*            Field conversion error! (&: &)
             ENDIF.
           ENDIF.
         ELSE.
           MESSAGE E319 WITH LS_HEADER-FIELDNAME.
-*         Kritikus hiba: &1 mező hiányzik az adatbázis struktúrából!
+*         Critical error: field &1 is missing from the database structure!
         ENDIF.
       ELSE.
         MESSAGE E320.
-*       Kritikus hiba: a fej nem tartalmaz elégendő mezőt!
+*       Critical error: the header does not contain enough fields!
       ENDIF.
     ENDIF.
   ENDLOOP.
@@ -579,7 +579,7 @@ FORM CHECK_FIELDTYP USING    $STRNAME
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
   ENDIF.
   $V_END_COL = SY-TFILL.
-* COMPTYPE = 'S' includ sor ezért nem vesszük figyelembe
+* COMPTYPE = 'S' include row, therefore we ignore it
   DELETE I_DD03P WHERE COMPTYPE = 'S'.
   LOOP AT I_DD03P INTO W_DD03P.
     W_DD03P-POSITION = SY-TABIX.
@@ -619,7 +619,7 @@ FORM CHECK_UPLOAD  TABLES   $T_DATA TYPE TY_DATA_T.
   LOOP AT $T_DATA INTO DATA(LS_DATA).
     IF LS_DATA-BUKRS NE P_BUKRS.
       M_ADD_MSG 'E' '/ZAK/ZAK' '321' P_BUKRS LS_DATA-BUKRS '' ''.
-*     Fájlban & vállalat nem egyezik meg a szelekcióban megadott & vállalattal!
+*     Company & in the file does not match the company & provided in the selection!
     ENDIF.
 
     IF LS_DATA-BUKRS IS INITIAL OR
@@ -630,16 +630,16 @@ FORM CHECK_UPLOAD  TABLES   $T_DATA TYPE TY_DATA_T.
        LS_DATA-SZAMLASZ  IS INITIAL OR
        LS_DATA-WAERS  IS INITIAL.
       M_ADD_MSG 'E' '/ZAK/ZAK' '322' '' '' '' ''.
-*      Fájlban kötelező mező nincs megadva!
+*      A mandatory field is missing in the file!
     ENDIF.
-*   Pénznem ellenőrzése
+*   Currency check
     IF NOT LS_DATA-WAERS IS INITIAL .
       SELECT SINGLE WAERS INTO @DATA(L_WAERS)
                           FROM T001
                          WHERE BUKRS EQ @LS_DATA-BUKRS.
       IF LS_DATA-WAERS NE  L_WAERS.
         M_ADD_MSG 'E' '/ZAK/ZAK' '243' LS_DATA-WAERS L_WAERS '' ''.
-*      A feldolgozásban & pénznem, nem egyezik meg a vállalat & pénznemével!
+*      The currency & in processing does not match the company's currency &!
       ENDIF.
     ENDIF.
     CLEAR LS_KATA_SUM.
@@ -651,7 +651,7 @@ FORM CHECK_UPLOAD  TABLES   $T_DATA TYPE TY_DATA_T.
   LOOP AT LI_KATA_SUM INTO LS_KATA_SUM WHERE COUNT NE 1.
     LV_DUMMY = LS_DATA-ADOAZON && |/| &&  LS_DATA-BSEG_GJAHR && |/| && LS_DATA-BSEG_BELNR && |/| && LS_DATA-BSEG_BUZEI.
     M_ADD_MSG 'E' '/ZAK/ZAK' '779' LV_DUMMY '' '' ''.
-*   Az XLS fájlban duplikált érték található! (&)
+*   A duplicated value is found in the XLS file! (&)
   ENDLOOP.
 
 ENDFORM.
@@ -776,7 +776,7 @@ FORM SAVE_DATA .
   DATA: LS_DATA TYPE /ZAK/KATA_SEL.
 
   CHECK G_ERROR IS INITIAL AND P_TEST IS INITIAL.
-* Feltöltés azonosító generálás
+* Generating the upload identifier
   CALL FUNCTION '/ZAK/NEW_PACKAGE_NUMBER'
     IMPORTING
       E_PACK           = L_PACK
@@ -785,7 +785,7 @@ FORM SAVE_DATA .
       OTHERS           = 2.
   IF SY-SUBRC <> 0.
     MESSAGE A001(/ZAK/ZAK).
-*   Feltöltés azonosító számkör hiba!
+*   Upload identifier number range error!
   ENDIF.
   LS_DATA-PACK = L_PACK.
   MODIFY GT_DATA FROM LS_DATA TRANSPORTING PACK
@@ -793,6 +793,6 @@ FORM SAVE_DATA .
   INSERT /ZAK/KATA_SEL FROM TABLE GT_DATA.
   COMMIT WORK AND WAIT.
   MESSAGE S033 WITH L_PACK.
-*  Feltöltés & package számmal megtörtént!
+*  Upload completed with package number &!
 
 ENDFORM.

@@ -189,18 +189,18 @@
 - [x] src/#zak#onell.prog.screen_0101.abap
 - [x] src/#zak#onell.prog.screen_0102.abap
 - [x] src/#zak#onj_jegyzokonyv.ssfo.gcoding.abap
-- [ ] src/#zak#onjf01.prog.abap
-- [ ] src/#zak#onjtop.prog.abap
-- [ ] src/#zak#onyb_conv_08a60.prog.abap
-- [ ] src/#zak#onyb_del_data.prog.abap
-- [ ] src/#zak#onyb_sap_sel.prog.abap
-- [ ] src/#zak#onyb_sap_sel.prog.screen_9000.abap
-- [ ] src/#zak#onyb_set_nylapazon.prog.abap
+- [x] src/#zak#onjf01.prog.abap
+- [x] src/#zak#onjtop.prog.abap
+- [x] src/#zak#onyb_conv_08a60.prog.abap
+- [x] src/#zak#onyb_del_data.prog.abap
+- [x] src/#zak#onyb_sap_sel.prog.abap
+- [x] src/#zak#onyb_sap_sel.prog.screen_9000.abap
+- [x] src/#zak#onyb_set_nylapazon.prog.abap
 - [ ] src/#zak#read_file.prog.abap
-- [ ] src/#zak#read_kata.prog.abap
+- [x] src/#zak#read_kata.prog.abap
 - [ ] src/#zak#read_migr_xml.prog.abap
-- [ ] src/#zak#read_migr_xml_0203.prog.abap
-- [ ] src/#zak#read_top.prog.abap
+- [x] src/#zak#read_migr_xml_0203.prog.abap
+- [x] src/#zak#read_top.prog.abap
 - [ ] src/#zak#read_txt.fugr.#zak#csv.abap
 - [ ] src/#zak#read_txt.fugr.#zak#lread_txtf01.abap
 - [ ] src/#zak#read_txt.fugr.#zak#lread_txttop.abap

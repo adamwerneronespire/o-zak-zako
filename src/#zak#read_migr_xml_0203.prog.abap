@@ -15,7 +15,7 @@ INCLUDE EXCEL__C.
 INCLUDE <ICON>.
 *CLASS LCL_EVENT_RECEIVER DEFINITION DEFERRED.
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: T001.
 
@@ -30,13 +30,13 @@ CONSTANTS: C_CLASS TYPE DD02L-TABCLASS VALUE 'INTTAB',
            C_A TYPE C VALUE 'A'.
 CONSTANTS: C_MAX_XLS_LINE TYPE SY-TABIX VALUE 9000.
 *&---------------------------------------------------------------------*
-*& Munkaterület  (W_XXX..)                                           *
+*& WORK AREAS  (W_XXX..)                                           *
 *&---------------------------------------------------------------------*
-* struktúra ellenőrzése
+* Structure check
 DATA: W_DD02L TYPE DD02L.
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                         *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
@@ -50,17 +50,17 @@ DATA: W_MESSAGE TYPE BAPIRET2.
 DATA: W_HIBA    TYPE /ZAK/ADAT_HIBA.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
+*& PROGRAM VARIABLES                                                    *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables      -   (V_xxx...)                              *
+*      Work area             -   (W_xxx...)                              *
+*      Type                  -   (T_xxx...)                              *
+*      Macros                -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                 -   (CL_xxx...)                             *
+*      Event                 -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA: V_BTYPE   LIKE /ZAK/BEVALL-BTYPE.
 DATA: V_BTYPART TYPE /ZAK/BTYPART.
@@ -71,9 +71,9 @@ DATA: V_TYPE    LIKE /ZAK/BEVALLD-FILETYPE,
 DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/ANALITIKA INITIAL SIZE 0.
 DATA: W_OUTTAB  TYPE /ZAK/ANALITIKA.
 
-* Hiba adaszerkezet tábla
+* Error data structure table
 DATA: I_HIBA TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA   INITIAL SIZE 0.
-* ALV kezelési változók
+* ALV handling variables
 DATA: V_OK_CODE LIKE SY-UCOMM,
       V_SAVE_OK LIKE SY-UCOMM,
       V_REPID LIKE SY-REPID,
@@ -100,12 +100,12 @@ DATA: V_OK_CODE LIKE SY-UCOMM,
 *V_EVENT_RECEIVER  TYPE REF TO LCL_EVENT_RECEIVER,
 *V_EVENT_RECEIVER2 TYPE REF TO LCL_EVENT_RECEIVER,
 V_STRUC     TYPE DD02L-TABNAME.
-* popup üzenethez
+* For popup message
 DATA: V_TEXT1(40) TYPE C,
       V_TEXT2(40) TYPE C,
       V_TITEL     TYPE C,
       V_ANSWER.
-* file ellenörzése
+* File validation
 DATA: LV_ACTIVE TYPE ABAP_BOOL.
 DATA: V_WNUM(30) TYPE N,
       V_WAERS LIKE T001-WAERS.
@@ -118,7 +118,7 @@ DATA: V_XLS_LINE TYPE SY-TABIX VALUE 5000.
 FIELD-SYMBOLS <FS> TYPE ANY.
 
 *++0002 BG 2007.07.02
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -131,7 +131,7 @@ END-OF-DEFINITION.
 DATA V_ONREV TYPE XFELD.
 *--1765 #04.
 
-*XML beolvasáshiz
+*Reading XML
 TYPES: BEGIN OF T_DATA_LINE,
           ELEMENT(50) TYPE C,
           ATTRIB(50) TYPE C,
@@ -143,10 +143,10 @@ DATA: I_DATA_TABLE      TYPE TABLE OF T_DATA_LINE,
 DATA L_SUBRC LIKE SY-SUBRC.
 
 *&---------------------------------------------------------------------*
-*& PARAMÉTEREK  (P_XXXXXXX..)                                          *
+*& PARAMETERS  (P_XXXXXXX..)                                          *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIÓK (S_XXXXXXX..)                                        *
+*& SELECT-OPTIONS (S_XXXXXXX..)                                        *
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
 
@@ -161,7 +161,7 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
   PERFORM FILENAME_SAVE USING P_CDIR.
 
 START-OF-SELECTION.
-* XML fájl beolvasása
+* Reading the XML file
   PERFORM UPLOAD_XML_TO_TABLE TABLES I_DATA_TABLE
                                USING P_FDIR
                                      L_SUBRC.

@@ -2,31 +2,31 @@
 *& Report  /ZAK/ONYB_SET_NYLAPAZON
 *&
 *&---------------------------------------------------------------------*
-*&Program: A program a szelekción megadott bevallás típus adatainak
-*&         lap azonosítóját feltölti 02-vel.
+*&Program: The program fills the sheet identifier for the declaration type specified on the selection screen
+*&         by setting its sheet identifier to 02.
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/ONYB_SET_NYLAPAZON MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter        -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable    -   (P_xxx...)                              *
+*      Selection option      -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables      -   (V_xxx...)                              *
+*      Local variables       -   (L_xxx...)                              *
+*      Work area             -   (W_xxx...)                              *
+*      Type                  -   (T_xxx...)                              *
+*      Macros                -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                 -   (CL_xxx...)                             *
+*      Event                 -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 PARAMETERS:  P_BTYPE LIKE /ZAK/BEVALLB-BTYPE
                                       DEFAULT '0761' OBLIGATORY
@@ -34,7 +34,7 @@ PARAMETERS:  P_BTYPE LIKE /ZAK/BEVALLB-BTYPE
 
 *++1765 #19.
 INITIALIZATION.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -42,14 +42,14 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 *&---------------------------------------------------------------------*
 * AT SELECTION-SCREEN OUTPUT
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN OUTPUT.
-* Képernyő attribútomok beállítása
+* Setting screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 
@@ -65,7 +65,7 @@ START-OF-SELECTION.
   COMMIT WORK AND WAIT.
 
 MESSAGE I007.
-*   Tábla módosítások elvégezve!
+*   Table modifications completed!
 
 
 

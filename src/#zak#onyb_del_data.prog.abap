@@ -2,23 +2,23 @@
 *& Report  /ZAK/ONYB_DEL_DATA
 *&
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Adatok törlése
+*& Function description: Deleting data
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2009.03.30
-*& Funkc.spec.készítő: Róth Nándor
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 50
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2009.03.30
+*& Functional spec author: Róth Nándor
+*& SAP module name    : ADO
+*& Program type      : Report
+*& SAP version       : 50
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/ONYB_DEL_DATA MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (The OSS note number must be written at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                      LEÍRÁS
+*& LOG#     DATE        MODIFIER                     DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
 *&
 *&---------------------------------------------------------------------*
@@ -27,34 +27,34 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter        -   ($xxxx...)                              *
+*      Constant              -   (C_xxx...)                              *
+*      Parameter variable    -   (P_xxx...)                              *
+*      Selection option      -   (S_xxx...)                              *
+*      Ranges                -   (R_xxx...)                              *
+*      Global variables      -   (V_xxx...)                              *
+*      Local variables       -   (L_xxx...)                              *
+*      Work area             -   (W_xxx...)                              *
+*      Type                  -   (T_xxx...)                              *
+*      Macros                -   (M_xxx...)                              *
+*      Field symbol          -   (FS_xxx...)                             *
+*      Method                -   (METH_xxx...)                           *
+*      Object                -   (O_xxx...)                              *
+*      Class                 -   (CL_xxx...)                             *
+*      Event                 -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -75,13 +75,13 @@ SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
     SELECTION-SCREEN COMMENT 01(75) TEXT-101.
 
   SELECTION-SCREEN END OF LINE.
-*Vállalat
+*Company
   SELECT-OPTIONS S_BUKRS FOR /ZAK/ANALITIKA-BUKRS.
-*Bevallás típus
+*Declaration type
   SELECT-OPTIONS S_BTYPE FOR /ZAK/ANALITIKA-BTYPE.
-*Év
+*Year
   SELECT-OPTIONS S_GJAHR FOR /ZAK/ANALITIKA-GJAHR.
-*Hónap
+*Month
   SELECT-OPTIONS S_MONAT FOR /ZAK/ANALITIKA-MONAT.
 
 SELECTION-SCREEN END OF BLOCK BL01.
@@ -91,7 +91,7 @@ SELECTION-SCREEN END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -99,7 +99,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -107,26 +107,26 @@ INITIALIZATION.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Meghatározzuk a BTYPE-okat:
+* Determining the BTYPE values:
   PERFORM GET_BTYPE.
   IF R_BTYPE[] IS INITIAL.
     MESSAGE E000 WITH 'Nem lehet releváns bevallás típust meghatározni'.
 *   & & & &
   ENDIF.
 
-* /ZAK/ZAK_BEVASZ és /ZAK/BEVALLI törlés:
+* /ZAK/ZAK_BEVASZ and /ZAK/BEVALLI deletion:
   PERFORM PROGRESS_INDICATOR USING TEXT-P02
                                    0
                                    0.
   PERFORM DEK_/ZAK/BEVALLSZ.
 
-* /ZAK/ANALITIKA törlés
+* /ZAK/ANALITIKA deletion
   PERFORM PROGRESS_INDICATOR USING TEXT-P03
                                    0
                                    0.
   PERFORM DEL_/ZAK/ANALITIKA.
 
-* /ZAK/BEVALLO törlés
+* /ZAK/BEVALLO deletion
   PERFORM PROGRESS_INDICATOR USING TEXT-P04
                                    0
                                    0.
@@ -152,7 +152,7 @@ END-OF-SELECTION.
 *----------------------------------------------------------------------*
 FORM GET_BTYPE .
 
-*Csak ÁFA BTYPE-ok kellenek 0865 előttiek:
+*Only VAT BTYPE values are needed for those before 0865:
 *++S4HANA#01.
 *  SELECT * INTO W_/ZAK/BEVALL
   SELECT BTYPE INTO CORRESPONDING FIELDS OF W_/ZAK/BEVALL

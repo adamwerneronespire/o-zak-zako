@@ -1,7 +1,7 @@
 ***INCLUDE /ZAK/READ_TOP .
 
 *&---------------------------------------------------------------------*
-*& MUNKATERÜLETEK                                                      *
+*& WORK AREAS                                                      *
 *&---------------------------------------------------------------------*
 * SZJA
  DATA: W_/ZAK/SZJA_001 TYPE /ZAK/SZJA_001,
@@ -39,7 +39,7 @@
        W_/ZAK/UCS_008  TYPE /ZAK/UCS_008,
        W_/ZAK/UCS_009  TYPE /ZAK/UCS_009,
        W_/ZAK/UCS_010  TYPE /ZAK/UCS_010,
-* Áfa
+* VAT
        W_/ZAK/AFA_002  TYPE /ZAK/AFA_002,
        W_/ZAK/AFA_003  TYPE /ZAK/AFA_003,
        W_/ZAK/AFA_004  TYPE /ZAK/AFA_004,
@@ -84,11 +84,11 @@
        W_/ZAK/KATA_002 TYPE /ZAK/KATA_002.
 *--2108 #09.
 *++2009.03.17 BG
-*Bérleti lízing:
+*Leasing:
  DATA W_/ZAK/DOWN_ALV TYPE /ZAK/DOWN_ALV.
 *--2009.03.17 BG
 *BEGIN ++2015.01.16 BGP
-*Gépjármű adó ZATO-hoz:
+*Motor vehicle tax for ZATO:
 * DATA W_/ZAK/ZAKT_GEPJ_001 TYPE /ZAK/ZAKT_GEPJ_001.
 *END ++2015.01.16
 *++2308 #09
@@ -97,7 +97,7 @@
 *--2308 #09.
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK                                                        *
+*& INTERNAL TABLES                                                        *
 *&---------------------------------------------------------------------*
 * SZJA
  DATA: I_/ZAK/SZJA_001 TYPE STANDARD TABLE OF /ZAK/SZJA_001 INITIAL SIZE 0,
@@ -135,7 +135,7 @@
        I_/ZAK/UCS_008 TYPE STANDARD TABLE OF /ZAK/UCS_008 INITIAL SIZE 0,
        I_/ZAK/UCS_009 TYPE STANDARD TABLE OF /ZAK/UCS_009 INITIAL SIZE 0,
        I_/ZAK/UCS_010 TYPE STANDARD TABLE OF /ZAK/UCS_010 INITIAL SIZE 0.
-* Áfa
+* VAT
  DATA: I_/ZAK/AFA_002 TYPE STANDARD TABLE OF /ZAK/AFA_002 INITIAL SIZE 0,
        I_/ZAK/AFA_003 TYPE STANDARD TABLE OF /ZAK/AFA_003 INITIAL SIZE 0,
        I_/ZAK/AFA_004 TYPE STANDARD TABLE OF /ZAK/AFA_004 INITIAL SIZE 0,
@@ -156,13 +156,13 @@
        I_/ZAK/KATA_002 TYPE STANDARD TABLE OF /ZAK/KATA_002 INITIAL SIZE 0.
 *--2108 #09.
 *++2009.03.17 BG
-*Bérleti lízing:
+*Leasing:
  DATA I_/ZAK/DOWN_ALV TYPE STANDARD TABLE OF  /ZAK/DOWN_ALV
                                                          INITIAL SIZE 0.
 *--2009.03.17 BG
 
 *&---------------------------------------------------------------------*
-*& GLOBÁLIS VÁLTOZÓK                                                   *
+*& GLOBAL VARIABLES                                                   *
 *&---------------------------------------------------------------------*
 
  DATA: V_TAB(50)       TYPE C,

@@ -2,22 +2,22 @@
 *& Report  /ZAK/ONYB_CONV_08A60
 *&
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Adatok konvertálása 08A60-ra. (0761).
+*& Function description: Converting data to 08A60 (0761).
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2009.03.30
-*& Funkc.spec.készítő: Róth Nándor
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2009.03.30
+*& Functional spec author: Róth Nándor
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 50
+*& Program type      : Report
+*& SAP version       : 50
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/ONYB_CONV_08A60 MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (The OSS note number must be written at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                      LEÍRÁS
+*& LOG#     DATE        MODIFIER                     DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
 *&
 *&---------------------------------------------------------------------*
@@ -25,34 +25,34 @@ INCLUDE /ZAK/COMMON_STRUCT.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 CONSTANTS: C_08A60 TYPE /ZAK/BTYPE VALUE '08A60'.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter        -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Parameter variable    -   (P_xxx...)                              *
+*      Selection option      -   (S_xxx...)                              *
+*      Ranges                -   (R_xxx...)                              *
+*      Global variables      -   (V_xxx...)                              *
+*      Local variables       -   (L_xxx...)                              *
+*      Work area             -   (W_xxx...)                              *
+*      Type                  -   (T_xxx...)                              *
+*      Macros                -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                 -   (CL_xxx...)                             *
+*      Event                 -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling the range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -87,13 +87,13 @@ SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(75) TEXT-101.
 
 SELECTION-SCREEN END OF LINE.
-*Vállalat
+*Company
 SELECT-OPTIONS S_BUKRS FOR /ZAK/ANALITIKA-BUKRS.
-*Bevallás típus
+*Declaration type
 SELECT-OPTIONS S_BTYPE FOR /ZAK/ANALITIKA-BTYPE.
-*Év
+*Year
 SELECT-OPTIONS S_GJAHR FOR /ZAK/ANALITIKA-GJAHR.
-*Hónap
+*Month
 SELECT-OPTIONS S_MONAT FOR /ZAK/ANALITIKA-MONAT.
 
 SELECTION-SCREEN END OF BLOCK BL01.
@@ -103,7 +103,7 @@ SELECTION-SCREEN END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -111,7 +111,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -125,41 +125,41 @@ INITIALIZATION.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-* Meghatározzuk a BTYPE-okat:
+* Determining the BTYPE values:
   PERFORM GET_BTYPE.
   IF R_BTYPE[] IS INITIAL.
     MESSAGE E000 WITH 'Nem lehet releváns bevallás típust meghatározni'.
 *   & & & &
   ENDIF.
 
-* /ZAK/BEVALL és /ZAK/BEVALLT konverzió:
+* /ZAK/BEVALL and /ZAK/BEVALLT conversion:
   PERFORM PROGRESS_INDICATOR USING TEXT-P01
                                    0
                                    0.
   PERFORM CONV_/ZAK/BEVALL.
 
 
-* /ZAK/ZAK_BEVASZ és /ZAK/BEVALLI konverzió:
+* /ZAK/ZAK_BEVASZ and /ZAK/BEVALLI conversion:
   PERFORM PROGRESS_INDICATOR USING TEXT-P02
                                    0
                                    0.
   PERFORM CONV_/ZAK/BEVALLSZ.
 
 
-* /ZAK/ANALITIKA konverzió
+* /ZAK/ANALITIKA conversion
   PERFORM PROGRESS_INDICATOR USING TEXT-P03
                                    0
                                    0.
   PERFORM CONV_/ZAK/ANALITIKA.
 
-* /ZAK/BEVALLO konverzió
+* /ZAK/BEVALLO conversion
   PERFORM PROGRESS_INDICATOR USING TEXT-P05
                                    0
                                    0.
   PERFORM CONV_/ZAK/BEVALLO.
 
 
-* Adatbázis módosítások:
+* Database modifications:
   PERFORM PROGRESS_INDICATOR USING TEXT-P07
                                    0
                                    0.
@@ -183,7 +183,7 @@ END-OF-SELECTION.
 *----------------------------------------------------------------------*
 FORM GET_BTYPE .
 
-*Csak Összesítő jelentés BTYPE-ok kellenek 08A60 előttiek:
+*Only summary report BTYPE values are needed for the ones before 08A60:
   SELECT * INTO W_/ZAK/BEVALL
            FROM /ZAK/BEVALL
           WHERE BUKRS IN S_BUKRS
@@ -251,7 +251,7 @@ FORM CONV_/ZAK/BEVALL .
              AND BTYPE EQ I_/ZAK/BEVALL-BTYPE
              AND DATBI EQ I_/ZAK/BEVALL-DATBI.
 
-* Új rekordok képzése:
+* Creating new records:
   LOOP AT I_/ZAK/BEVALL INTO W_/ZAK/BEVALL.
     W_/ZAK/BEVALL-BTYPE  = C_08A60.
     W_/ZAK/BEVALL-BTYPEE = C_08A60.
@@ -297,7 +297,7 @@ FORM CONV_/ZAK/BEVALLSZ .
              AND GJAHR EQ I_/ZAK/BEVALLI-GJAHR
              AND MONAT EQ I_/ZAK/BEVALLI-MONAT.
 
-* Új rekordok képzése:
+* Creating new records:
   LOOP AT I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI.
     W_/ZAK/BEVALLI-BTYPE = C_08A60.
     APPEND W_/ZAK/BEVALLI TO I_/ZAK/BEVALLI_NEW.
@@ -325,7 +325,7 @@ FORM CONV_/ZAK/ANALITIKA .
   DATA L_LINES LIKE SY-TABIX.
 
 
-*Adatok leválogatása
+*Filtering the data
   REFRESH: I_/ZAK/ANALITIKA, LI_BEVALLO_ALV.
 
   SELECT * INTO TABLE I_/ZAK/ANALITIKA
@@ -342,7 +342,7 @@ FORM CONV_/ZAK/ANALITIKA .
   DESCRIBE TABLE I_/ZAK/ANALITIKA LINES L_LINES.
 
   LOOP AT I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA.
-*   Adatok konverzió
+*   Data conversion
     PERFORM PROGRESS_INDICATOR USING TEXT-P04
                                      L_LINES
                                      SY-TABIX.
@@ -393,7 +393,7 @@ FORM CONV_/ZAK/BEVALLO .
   DATA L_LINES LIKE SY-TABIX.
 
 
-*Adatok leválogatása
+*Filtering the data
   REFRESH: I_/ZAK/BEVALLO, LI_BEVALLO_ALV.
 
   SELECT * INTO TABLE I_/ZAK/BEVALLO
@@ -410,7 +410,7 @@ FORM CONV_/ZAK/BEVALLO .
   DESCRIBE TABLE I_/ZAK/BEVALLO LINES L_LINES.
 
   LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
-*   Adatok konverzió
+*   Data conversion
     PERFORM PROGRESS_INDICATOR USING TEXT-P06
                                      L_LINES
                                      SY-TABIX.

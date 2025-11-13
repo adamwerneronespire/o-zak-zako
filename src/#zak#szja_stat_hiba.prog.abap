@@ -1,32 +1,32 @@
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& Program: SAP analitika statisztika hiba vizsgálat
+*& Program: SAP analytics statistics error investigation
 *&---------------------------------------------------------------------*
 REPORT /ZAK/SZJA_STAT_HIBA MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& leválogatja a SAP a /ZAK/ANALITIKA táblából azokat a rekordokat
-*& amelyek feltöltéskör nem kerültek statisztikai rekordként megjelölve.
+*& Function description: Based on the conditions entered on the selection
+*& screen, the program filters the records from the SAP /ZAK/ANALITIKA
+*& table that were not marked as statistical records during upload.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2007.02.01
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2007.02.01
+*& Functional spec by: ________
+*& SAP module name   : ADO
+*& Program type      : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION       TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *& 0000   xxxx/xx/xx   xxxxxxxxxx    xxxxxxx xxxxxxx xxxxxxx xxxxxxxxxxx
 *&                                   xxxxxxx xxxxxxx xxxxxxx
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                               *
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 
@@ -45,29 +45,29 @@ DATA: BEGIN OF I_SUM_DATA OCCURS 0,
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constant            -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Type                -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Method              -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 RANGES R_BSZNUM FOR /ZAK/ANALITIKA-BSZNUM.
 
 
-*MAKRO definiálás range feltöltéshez
+*MACRO definition for filling a range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -81,7 +81,7 @@ DATA V_SUBRC LIKE SY-SUBRC.
 DATA V_REPID LIKE SY-REPID.
 
 
-* ALV kezelési változók
+* ALV handling variables
 DATA: V_OK_CODE LIKE SY-UCOMM,
       V_SAVE_OK LIKE SY-UCOMM,
       V_CONTAINER   TYPE SCRFNAME VALUE '/ZAK/ZAK_9000',
@@ -116,12 +116,12 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 
-*ABEVAZ kezdeti feltöltés
+*Initial filling of ABEVAZ
   M_DEF S_ABEVAZ 'E' 'EQ' 'DUMMY' SPACE.
   M_DEF S_ABEVAZ 'E' 'BT' 'A0000000000000000'
                           'AZZZZZZZZZZZZZZZZ'.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -129,7 +129,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -144,10 +144,10 @@ INITIALIZATION.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatszolgáltatás azonosító amik teljes körűek
+* Data provision identifiers that are complete
   PERFORM GET_BSZNUM.
 
-* Analitika szelekció
+* Analytics selection
   PERFORM GET_SEL_ANALITIKA.
 
 
@@ -156,7 +156,7 @@ START-OF-SELECTION.
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
 
-*  Háttérben nem készítünk listát.
+*  No list is created in the background.
   IF SY-BATCH IS INITIAL.
     PERFORM LIST_DISPLAY.
   ENDIF.
@@ -306,11 +306,11 @@ FORM CREATE_AND_INIT_ALV CHANGING $I_/ZAK/ANALITIKA LIKE
   CREATE OBJECT V_GRID
          EXPORTING I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Building the field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -351,7 +351,7 @@ MODULE USER_COMMAND_9000 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Kilépés
+* Exit
     WHEN 'EXIT' OR 'BACK' OR 'CANCEL'.
       PERFORM EXIT_PROGRAM.
 

@@ -231,8 +231,8 @@
 - [x] src/#zak#set_period.fugr.#zak#saplset_period.abap
 - [x] src/#zak#set_period.fugr.#zak#set_datum.abap
 - [x] src/#zak#set_period.fugr.#zak#set_period.abap
-- [ ] src/#zak#set_status.prog.abap
-- [ ] src/#zak#szamlakelt_corr.prog.abap
+- [x] src/#zak#set_status.prog.abap
+- [x] src/#zak#szamlakelt_corr.prog.abap
 - [ ] src/#zak#szja_book.prog.abap
 - [ ] src/#zak#szja_book.prog.screen_9001.abap
 - [ ] src/#zak#szja_egyeztet.prog.abap
@@ -240,10 +240,10 @@
 - [ ] src/#zak#szja_sap_sel.prog.abap
 - [ ] src/#zak#szja_sap_sel.prog.screen_9000.abap
 - [ ] src/#zak#szja_sap_sel.prog.screen_9001.abap
-- [ ] src/#zak#szja_sap_sel_check.prog.abap
+- [x] src/#zak#szja_sap_sel_check.prog.abap
 - [ ] src/#zak#szja_sap_sel_check.prog.screen_9000.abap
-- [ ] src/#zak#szja_stapalv.prog.abap
-- [ ] src/#zak#szja_stat_hiba.prog.abap
+- [x] src/#zak#szja_stapalv.prog.abap
+- [x] src/#zak#szja_stat_hiba.prog.abap
 - [ ] src/#zak#szja_stat_hiba.prog.screen_9000.abap
 - [ ] src/#zak#szja_xml_download.prog.abap
 - [ ] src/#zak#tabl_upd.fugr.#zak#ltabl_updf01.abap

@@ -1,86 +1,86 @@
 *&---------------------------------------------------------------------*
-*& Program: Magánszemélyek igazolás kiállítása
+*& Program: Issuing certificates for private individuals
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/IGAZOLAS  MESSAGE-ID /ZAK/ZAK
                              LINE-SIZE  255
                              LINE-COUNT 65.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a feltöltés azonosító(k) alapján leválogat-
-*& ja a releváns adatokat és SMARTFORMS űrlappal előállítja az igazolást
+*& Function description: Based on the upload identifier(s), the program selects
+*& the relevant data and generates the certificate using a SMARTFORMS form
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2008.02.28
-*& Funkc.spec.készítő: Róth Nándor
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2008.02.28
+*& Functional spec   : Róth Nándor
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Program type      : Report
+*& SAP version       : 46C
 *&--------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (write the OSS note number at the end of the changed lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                 DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2008.11.14   Balázs Gábor  Sorszám kialakítás vállalatonként,
-*&                                   keltezés megadása szelekción
-*& 0002   2009.02.27   Balázs Gábor  BTYPE átadás smartforms-nak
-*& 0003   2009.03.03   Balázs Gábor  Pozíció bevezetés (több ABEVAZ
-*&                                   egy sorban)
-*& 0004   2009.09.09   Balázs Gábor  Összesítés javítás (több BSZNUM
-*&                                   lehívás miatt).
+*& 0001   2008.11.14   Balázs Gábor  Sequence number creation per company,
+*&                                   setting the date on the selection screen
+*& 0002   2009.02.27   Balázs Gábor  Passing BTYPE to smartforms
+*& 0003   2009.03.03   Balázs Gábor  Position introduction (multiple ABEVAZ
+*&                                   in one row)
+*& 0004   2009.09.09   Balázs Gábor  Summary correction (multiple BSZNUM
+*&                                   due to multiple retrieval).
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 
-*Adatdeklaráció
+*Data declaration
 INCLUDE /ZAK/IGTOP.
-*Közös rutinok
+*Common routines
 INCLUDE /ZAK/IGF01.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------
 *&---------------------------------------------------------------------*
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-*Űrlap neve:
+*Form name:
 PARAMETERS P_FNAME LIKE SSFSCREEN-FNAME DEFAULT '/ZAK/MG_IGAZOLAS'
                                         MODIF ID DIS.
-*Vállalat
+*Company
 PARAMETERS P_BUKRS LIKE T001-BUKRS OBLIGATORY MEMORY ID BUK.
-*Bevallás típus:
+*Return type:
 PARAMETERS P_BTYPE LIKE /ZAK/BEVALLB-BTYPE OBLIGATORY.
-*Adatszolgáltatás azonosítók:
+*Data reporting identifiers:
 SELECT-OPTIONS S_BSZNUM FOR /ZAK/BEVALLD-BSZNUM.
 *++0001 2008.11.14 BG
-*Keltezés
+*Date
 PARAMETERS P_DATUM LIKE SY-DATUM DEFAULT SY-DATUM OBLIGATORY.
 *--0001 2008.11.14 BG
-*Teszt futás
+*Test run
 PARAMETERS P_TEST AS CHECKBOX DEFAULT 'X'.
-*Lista kivitel
+*List output
 PARAMETERS P_LIST AS CHECKBOX DEFAULT 'X'.
 *++0001 2008.12.01 (BG)
-*Háttérben spool vezerlés
+*Spool control in the background
 PARAMETERS P_SPOOL AS CHECKBOX DEFAULT 'X'.
 *--0001 2008.12.01 (BG)
 *++2008 #12.
@@ -95,7 +95,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 INITIALIZATION.
   G_REPID = SY-REPID.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2165 #03.
 *                   ID 'TCD'  FIELD SY-TCODE.
@@ -106,7 +106,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -137,7 +137,7 @@ AT SELECTION-SCREEN OUTPUT.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Bevallás fajta meghatározás
+* Determine the type of return
   CALL FUNCTION '/ZAK/GET_BTYPART_FROM_BTYPE'
     EXPORTING
       I_BUKRS       = P_BUKRS
@@ -152,7 +152,7 @@ START-OF-SELECTION.
             WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
   ENDIF.
 
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING
                                 P_BUKRS
                                 G_BTYPART
@@ -161,7 +161,7 @@ START-OF-SELECTION.
 
   PERFORM MESSAGES_INITIALIZE.
 
-* Adatszolgáltatás azonosítók gyűjtése:
+* Collect data reporting identifiers:
   PERFORM GET_BSZNUM TABLES S_BSZNUM
                             R_BSZNUM
                             I_BSZNUMT
@@ -169,10 +169,10 @@ START-OF-SELECTION.
                             P_BTYPE.
   IF R_BSZNUM[] IS INITIAL.
     MESSAGE E255.
-*   Nincs beállítva igazolást igénylő feltöltés azonosító!
+*   No upload identifier requiring a certificate is configured!
   ENDIF.
 
-* Beállítások meghatározása
+* Determine settings
   PERFORM GET_IGABEV TABLES I_/ZAK/IGABEV
                             I_/ZAK/IGSOR
                             I_/ZAK/IGSORT
@@ -181,22 +181,22 @@ START-OF-SELECTION.
                             P_BTYPE.
   IF I_/ZAK/IGABEV[] IS INITIAL.
     MESSAGE E256 WITH P_BUKRS.
-*   Nem található beállítás a & vállalatra az igazolás adataihoz!
+*   No settings found for company & for the certificate data!
   ENDIF.
 
-* Feltöltés azonosítók gyűjtése
+* Collect upload identifiers
   PERFORM GET_PACK TABLES R_BSZNUM
                           R_PACK
                    USING  P_BUKRS
                           P_BTYPE.
   IF R_PACK[] IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain any records to process!
     EXIT.
   ENDIF.
 
 
-* Adatok gyűjtése
+* Collect data
   PERFORM COLLECT_DATA TABLES I_/ZAK/IGABEV
                               I_/ZAK/ANALITIKA
                               I_/ZAK/MGCIM
@@ -207,11 +207,11 @@ START-OF-SELECTION.
                               P_BTYPE.
   IF I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*   Adatbázis nem tartalmaz feldolgozható rekordot!
+*   The database does not contain any records to process!
     EXIT.
   ENDIF.
 
-* Adatok feldolgozása
+* Process data
   PERFORM PROCESS_DATA TABLES I_/ZAK/ANALITIKA
                               I_/ZAK/IGABEV
                               I_/ZAK/IGDATA
@@ -231,11 +231,11 @@ START-OF-SELECTION.
 *--0001 2008.11.14 BG
                               .
 
-* Üzenetek megjelenítése
+* Display messages
   PERFORM SHOW_MESSAGES USING G_INDEX
                               P_TEST.
 
-* Éles futás űrlap nyomtatás, adatok módosítása
+* Productive run form printing, data modification
   PERFORM PRODUCTIVE_RUN TABLES I_/ZAK/MGCIM
                                 I_/ZAK/IGDATA
                                 I_/ZAK/IGABEV
@@ -372,7 +372,7 @@ FORM COLLECT_DATA TABLES $I_/ZAK/IGABEV    STRUCTURE /ZAK/IGABEV
     M_DEF LR_ABEVAZ 'I' 'EQ' W_/ZAK/IGABEV-ABEVAZ SPACE.
   ENDLOOP.
 
-* Összegyűjtjük a releváns ABEV azonosítókat
+* We collect the relevant ABEV identifiers
   SELECT * INTO TABLE $I_/ZAK/ANALITIKA
            FROM /ZAK/ANALITIKA
           WHERE BUKRS EQ $BUKRS
@@ -386,12 +386,12 @@ FORM COLLECT_DATA TABLES $I_/ZAK/IGABEV    STRUCTURE /ZAK/IGABEV
     EXIT.
   ENDIF.
 
-* Adószámok gyűjtése
+* Collect tax numbers
   REFRESH $R_ADOAZON.
 
   LOOP AT $I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA.
     M_DEF $R_ADOAZON 'I' 'EQ' W_/ZAK/ANALITIKA-ADOAZON SPACE.
-*   Feltöltésazonosító gyűjtések időszakonként.
+*   Collect upload identifiers by period.
     CLEAR W_PACK.
     MOVE-CORRESPONDING W_/ZAK/ANALITIKA TO W_PACK.
 *++2008 #12.
@@ -404,21 +404,21 @@ FORM COLLECT_DATA TABLES $I_/ZAK/IGABEV    STRUCTURE /ZAK/IGABEV
     COLLECT W_PACK INTO $I_PACK.
   ENDLOOP.
 
-* Feltöltés azonosítók rendezése
+* Sort upload identifiers
   SORT $I_PACK.
   DELETE ADJACENT DUPLICATES FROM $I_PACK.
 
-* Adóazonosítók rendezése
+* Sort tax identifiers
   SORT $R_ADOAZON.
   DELETE ADJACENT DUPLICATES FROM $R_ADOAZON.
 
   LOOP AT $R_ADOAZON.
-*   Cím adat meghatározása
+*   Determine the address data
     SELECT  * APPENDING TABLE $I_/ZAK/MGCIM
              FROM /ZAK/MGCIM
             WHERE ADOAZON EQ $R_ADOAZON-LOW.
     IF SY-SUBRC NE 0.
-*   & adóazonosító cím adatai nem találhatók!
+*   Address data for tax identifier & not found!
       PERFORM MESSAGE_STORE USING G_INDEX
                                   'E'
                                   '/ZAK/ZAK'
@@ -469,7 +469,7 @@ FORM GET_IGABEV  TABLES  $I_/ZAK/IGABEV STRUCTURE /ZAK/IGABEV
     IF SY-SUBRC EQ 0.
       APPEND W_/ZAK/IGSOR TO $I_/ZAK/IGSOR.
     ELSE.
-*& igazolás sor azonosító adatai nem található!
+*& Certificate line identifier data not found!
       PERFORM MESSAGE_STORE USING G_INDEX
                                   'E'
                                   '/ZAK/ZAK'
@@ -488,7 +488,7 @@ FORM GET_IGABEV  TABLES  $I_/ZAK/IGABEV STRUCTURE /ZAK/IGABEV
     IF SY-SUBRC EQ 0.
       APPEND W_/ZAK/IGSORT TO $I_/ZAK/IGSORT.
     ELSE.
-*& igazolás sor azonosító szöveg adatai nem található!
+*& Certificate line identifier text data not found!
       PERFORM MESSAGE_STORE USING G_INDEX
                                   'E'
                                   '/ZAK/ZAK'
@@ -572,7 +572,7 @@ FORM SHOW_MESSAGES USING $INDEX
         I_USE_GRID = 'X'.
   ELSEIF NOT $TEST IS INITIAL.
     MESSAGE I257.
-*   A feldolgozás nem tartalmaz hibát!
+*   Processing does not contain any errors!
   ENDIF.
 
 ENDFORM.                    " show_messages
@@ -605,7 +605,7 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 
   DATA LW_SUM_LINE TYPE /ZAK/IGDATA.
   DATA L_TABIX LIKE SY-TABIX.
-* Adatok gyűjtése
+* Collect data
   TYPES: BEGIN OF LT_DATA,
            BUKRS   TYPE BUKRS,
            BTYPE   TYPE /ZAK/BTYPE,
@@ -641,7 +641,7 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 
 
 
-* Feldolgozás adóazonosítónként, és packagenként
+* Processing by tax identifier and package
   REFRESH $I_BSZNUM_SORSZ.
   SORT: $R_ADOAZON, $R_PACK.
   SORT $I_/ZAK/IGABEV BY BUKRS BTYPE BSZNUM ABEVAZ.
@@ -696,7 +696,7 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 *            CLEAR L_FIRST.
 *          ENDIF.
 *          W_/ZAK/IGDATA-SORSZ = L_SORSZ.
-**         Ha dátum formátumú a sor
+**         If the row is in date format
 *          LM_FORMAT_FIELD W_/ZAK/IGSOR-FORMATUM W_/ZAK/IGDATA-FIELD_C.
 *          MOVE W_/ZAK/ANALITIKA-FIELD_N TO W_/ZAK/IGDATA-FIELD_N.
 *          MOVE W_/ZAK/ANALITIKA-WAERS TO W_/ZAK/IGDATA-WAERS.
@@ -765,11 +765,11 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
           MOVE W_/ZAK/IGABEV-IGAZON TO W_/ZAK/IGDATA-IGAZON.
           MOVE W_/ZAK/IGABEV-SORREND TO W_/ZAK/IGDATA-SORREND.
           CONDENSE W_/ZAK/ANALITIKA-FIELD_C.
-*         Ha dátum formátumú a sor
+*         If the row is in date format
           IF W_/ZAK/IGSOR-FORMATUM EQ C_FORM_D.
             MOVE W_/ZAK/ANALITIKA-FIELD_C TO W_/ZAK/IGDATA-FIELD_C.
             LM_FORMAT_FIELD W_/ZAK/IGSOR-FORMATUM W_/ZAK/IGDATA-FIELD_C.
-*         ha normál fomátum
+*         if it is in normal format
 *++2108 #21.
 *          ELSE.
           ELSEIF NOT  W_/ZAK/ANALITIKA-FIELD_C IS INITIAL AND
@@ -823,14 +823,14 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 
 *--0003 2009.03.03 BG
 
-* Ellenőrizzük, hogy a kötelező mezők megvannak-e :
+* Check that the mandatory fields are present:
   LOOP AT LI_DATA.
     LOOP AT $I_/ZAK/IGABEV INTO W_/ZAK/IGABEV
                           WHERE BUKRS  EQ  LI_DATA-BUKRS
                             AND BTYPE  EQ  LI_DATA-BTYPE
                             AND BSZNUM EQ  LI_DATA-BSZNUM
                             AND NOT OBLIG IS INITIAL.
-*   Ellenőrizzük megvan e a mező
+*   Check whether the field exists
       READ TABLE $I_/ZAK/IGDATA TRANSPORTING NO FIELDS
                  WITH KEY BUKRS   = LI_DATA-BUKRS
                           ADOAZON = LI_DATA-ADOAZON
@@ -850,8 +850,8 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
     ENDLOOP.
   ENDLOOP.
 
-*Megvannak az adatok lehet számolni:
-*Először meghatározzuk az alap összegeket
+*The data is available, calculation can start:
+*First we determine the base amounts
   LOOP AT $I_/ZAK/IGABEV INTO W_/ZAK/IGABEV
                        WHERE NOT SUM_IGAZON IS INITIAL.
     LOOP AT LR_SORSZ.
@@ -863,18 +863,18 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
                          WITH KEY SORSZ   =  LR_SORSZ-LOW
                                   IGAZON  =  W_/ZAK/IGABEV-IGAZON.
       IF SY-SUBRC EQ 0.
-*     Összesítő sor
+*     Summary line
         READ TABLE $I_/ZAK/IGDATA INTO LW_SUM_LINE
                            WITH KEY SORSZ   =  LR_SORSZ-LOW
                                     IGAZON  =  W_/ZAK/IGABEV-SUM_IGAZON.
-*     Nem létezik létre kell hozni
+*     Does not exist, needs to be created
         IF SY-SUBRC NE 0.
           CLEAR LW_SUM_LINE.
           LM_SIGN W_/ZAK/IGDATA-FIELD_N W_/ZAK/IGABEV-SIGN.
           MOVE-CORRESPONDING W_/ZAK/IGDATA TO LW_SUM_LINE.
           MOVE W_/ZAK/IGABEV-SUM_IGAZON TO LW_SUM_LINE-IGAZON.
           APPEND LW_SUM_LINE TO $I_/ZAK/IGDATA.
-*     Létezik módosítani kell
+*     Exists, needs to be modified
         ELSE.
           MOVE SY-TABIX TO L_TABIX.
           LM_SIGN W_/ZAK/IGDATA-FIELD_N W_/ZAK/IGABEV-SIGN.
@@ -889,7 +889,7 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 
   SORT $I_/ZAK/IGDATA BY ADOAZON GJAHR BSZNUM SORSZ SORREND.
 
-* ALV-hez feltöltés mező nevekkel:
+* Upload to ALV with field names:
   LOOP AT $I_/ZAK/IGDATA INTO W_/ZAK/IGDATA.
     CLEAR W_/ZAK/IGDATA_ALV.
     MOVE-CORRESPONDING W_/ZAK/IGDATA TO W_/ZAK/IGDATA_ALV.
@@ -903,7 +903,7 @@ FORM PROCESS_DATA TABLES $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
     COLLECT W_WAERST INTO $I_WAERST.
   ENDLOOP.
 
-*Pénznem szövegek meghatározása
+*Determine currency texts
   LOOP AT $I_WAERST INTO W_WAERST.
     SELECT SINGLE KTEXT INTO W_WAERST-KTEXT
                         FROM TCURT
@@ -936,14 +936,14 @@ FORM GET_LAST_SORSZ  TABLES  $I_BSZNUM_SORSZ LIKE I_BSZNUM_SORSZ
   DATA L_NUMC5 TYPE NUMC5.
   DATA L_TABIX LIKE SY-TABIX.
 
-**Ha teszt futás
+**If it is a test run
 *  IF NOT $TEST IS INITIAL.
 *    CONCATENATE $/ZAK/IGDATA-BSZNUM
 *                $/ZAK/IGDATA-GJAHR
 *                'TESZT'(001) INTO  $SORSZ
 *                                   SEPARATED BY '/'.
 *  ELSE.
-*   Megkeressük az azonosítót:
+*   We look up the identifier:
   READ TABLE  $I_BSZNUM_SORSZ INTO W_BSZNUM_SORSZ
          WITH KEY BSZNUM =  $/ZAK/IGDATA-BSZNUM.
   IF SY-SUBRC NE 0.
@@ -998,10 +998,10 @@ FORM LIST_DISPLAY .
 
   CHECK NOT P_LIST IS INITIAL.
 
-* Nem háttér futás
+* Not a background run
   IF SY-BATCH IS INITIAL.
     CALL SCREEN 100.
-* Háttér futás
+* Background run
   ELSE.
     PERFORM GRID_DISPLAY.
   ENDIF.
@@ -1126,10 +1126,10 @@ FORM PRODUCTIVE_RUN TABLES $I_/ZAK/MGCIM  STRUCTURE /ZAK/MGCIM
   DATA  LW_/ZAK/IGDATA TYPE /ZAK/IGDATA.
 
 
-* Csak élesben
+* Only in productive mode
   CHECK $TEST IS INITIAL.
 
-*ellenőrizzük van e ERROR üzenet
+*Check whether there is an ERROR message
   CALL FUNCTION 'MESSAGES_STOP'
 *   EXPORTING
 *     I_RESET_IDENTIFICATION       =
@@ -1146,11 +1146,11 @@ FORM PRODUCTIVE_RUN TABLES $I_/ZAK/MGCIM  STRUCTURE /ZAK/MGCIM
 * Abort vagy ERRROR
   IF SY-SUBRC EQ 1 OR SY-SUBRC EQ 2.
     MESSAGE I262.
-*   Éles futás hibák miatt nem indítható!
+*   Productive run cannot be started due to errors!
     EXIT.
   ENDIF.
 
-* Űrlap adatok meghatározása
+* Determine form data
   CALL FUNCTION 'SSF_FUNCTION_MODULE_NAME'
     EXPORTING
       FORMNAME           = $FNAME
@@ -1163,15 +1163,15 @@ FORM PRODUCTIVE_RUN TABLES $I_/ZAK/MGCIM  STRUCTURE /ZAK/MGCIM
 
   IF SY-SUBRC <> 0.
     MESSAGE E263 WITH $FNAME.
-*   Hiba a & űrlap beolvasásánál!
+*   Error while reading form &!
   ENDIF.
 
 
-* Feldolgozás adóazonosítónként
+* Processing by tax identifier
   LOOP AT $R_ADOAZON.
     CLEAR: W_/ZAK/MGCIM.
     REFRESH $I_SMART_DATA.
-*   Címadatok meghatározása
+*   Determine address data
     READ TABLE $I_/ZAK/MGCIM INTO W_/ZAK/MGCIM
                WITH KEY ADOAZON = $R_ADOAZON-LOW
                         BINARY SEARCH.
@@ -1185,7 +1185,7 @@ FORM PRODUCTIVE_RUN TABLES $I_/ZAK/MGCIM  STRUCTURE /ZAK/MGCIM
                                    $I_SMART_DATA
                             USING  W_/ZAK/IGDATA.
 
-*     Ha vége egy sorszámnak
+*     When one serial number ends
       AT END OF SORSZ.
         PERFORM CALL_SMARTFORMS TABLES $I_SMART_DATA
                                 USING  L_FM_NAME
@@ -1217,7 +1217,7 @@ FORM PRODUCTIVE_RUN TABLES $I_/ZAK/MGCIM  STRUCTURE /ZAK/MGCIM
     ENDLOOP.
   ENDLOOP.
 
-* Adatbázis módosítása
+* Modify database
   MODIFY /ZAK/IGDATA FROM TABLE $I_/ZAK/IGDATA.
 
   UPDATE /ZAK/BEVALLP SET MGIF = C_X
@@ -1326,11 +1326,11 @@ MODULE PAI_0100 INPUT.
       LEAVE SCREEN.
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
-*   Üzenetek megjelenítése
+*   Display messages
     WHEN 'MESSAGE'.
       PERFORM SHOW_MESSAGES USING G_INDEX
                                   P_TEST.
-*   Űrlap megjelenítés
+*   Form display
     WHEN 'SHOW'.
       PERFORM PREVIEW_DATA TABLES I_/ZAK/IGDATA_ALV
                                   I_/ZAK/MGCIM

@@ -1,6 +1,6 @@
 FUNCTION /ZAK/MAIN_EXIT_NEW.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -12,31 +12,31 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *"      T_ADOAZON STRUCTURE  /ZAK/ONR_ADOAZON OPTIONAL
 *"----------------------------------------------------------------------
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE       MODIFIER             DESCRIPTION           TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*&        2006.11.29   Balázs G.     Önrevízió kezelés változtatás
+*&        2006.11.29   Bal�zs G.     Self-review handling change
 *&---------------------------------------------------------------------*
-*&        2007.06.22   Balázs G.     0-ás mezők kezelése
+*&        2007.06.22   Bal�zs G.     Handling zero fields
 *&---------------------------------------------------------------------*
-*& 0808   2007.01.28.-2007.02.10.    0808 nyomtatvány beállítások
+*& 0808   2007.01.28.-2007.02.10.    0808 form settings
 *&---------------------------------------------------------------------*
-*& 0908   2009.01.20.-2009.03.31.    0908 nyomtatvány beállítások
+*& 0908   2009.01.20.-2009.03.31.    0908 form settings
 *&---------------------------------------------------------------------*
-*& 0908/2 2009.08.01.-2009.08.31.    0908 új nyomtatvány beállítások
+*& 0908/2 2009.08.01.-2009.08.31.    0908 new form settings
 *&---------------------------------------------------------------------*
-*& 1008   2010.01.20.-2010.03.31.    1008 nyomtatvány beállítások
+*& 1008   2010.01.20.-2010.03.31.    1008 form settings
 *&---------------------------------------------------------------------*
-*& 1108   2011.01.20.-2011.03.31.    1108 nyomtatvány beállítások
+*& 1108   2011.01.20.-2011.03.31.    1108 form settings
 *&---------------------------------------------------------------------*
-*& 1208   2012.02.01.-2012.03.31.    1208 nyomtatvány beállítások
+*& 1208   2012.02.01.-2012.03.31.    1208 form settings
 *&---------------------------------------------------------------------*
-*& 1308   2013.01.01.-2013.03.31.    1308 nyomtatvány beállítások
+*& 1308   2013.01.01.-2013.03.31.    1308 form settings
 *&---------------------------------------------------------------------*
-*& 12K79  2013.01.01.-2013.03.31.    12K79 nyomtatvány beállítások
+*& 12K79  2013.01.01.-2013.03.31.    12K79 form settings
 *&---------------------------------------------------------------------*
-*& 13K79  2014.01.01.-2014.03.31.    13K79 nyomtatvány beállítások
+*& 13K79  2014.01.01.-2014.03.31.    13K79 form settings
 *&---------------------------------------------------------------------*
 
 
@@ -45,14 +45,14 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
   DATA: L_INDEX LIKE SY-TABIX.
 
 ************************************************************************
-* Bevallás adatok
-* Dialógus futás biztosításhoz
+* Declaration data
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P01.
 
 
-* Bevallás utolsó napjának meghatározás
+* Determining the declaration's last day
   PERFORM GET_LAST_DAY_OF_PERIOD USING I_GJAHR
                                        I_MONAT
 *++PTGSZLAA #01. 2014.03.03
@@ -60,34 +60,34 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *--PTGSZLAA #01. 2014.03.03
                                   CHANGING V_LAST_DATE.
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P02.
 
-* Bevallás általános adatai
+* Declaration general data
   PERFORM READ_BEVALL  USING I_BUKRS
                              I_BTYPE
                              V_LAST_DATE.
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P03.
 
-*  Bevallás adatszerkezetének kiolvasása
+*  Reading the declaration data structure
   PERFORM READ_BEVALLB USING T_BEVALLO[]
                              I_BTYPE.
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P04.
 
 *++ BG 2007.05.17
-* A nyomtatvány default értékeket a display BTYPE
-* alapján kell beolvasni:
-**  bevallás Nyomtatvány default értékek
+* The form default values should be read from display BTYPE
+* based on it:
+**  Declaration form default values
 *  PERFORM READ_BEVALLDEF USING I_BUKRS
 *                               I_BTYPE.
 *-- BG 2007.05.17
@@ -105,25 +105,25 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
   REFRESH R_DISP_BTYPE.
 *-- BG 2007.05.17
 
-* Itt vannak azok az adószámok amikre jött feladás
+* Here are the tax numbers for which submissions arrived
   SORT T_ADOAZON.
 
   LOOP AT T_BEVALLO INTO L_ALV.
-*   Dialógus futás biztosításhoz
+*   Ensuring dialog execution
     PERFORM PROCESS_IND_ITEM USING '500000'
                                    L_INDEX
                                    TEXT-P05.
     MOVE-CORRESPONDING L_ALV TO W_/ZAK/BEVALLO.
     APPEND W_/ZAK/BEVALLO TO I_/ZAK/BEVALLO.
 *++ BG 2007.05.17
-*   Display BTYPE gyűjtése
+*   Collecting display BTYPE
     READ TABLE R_DISP_BTYPE WITH KEY LOW = L_ALV-BTYPE_DISP.
     IF SY-SUBRC NE 0.
       M_DEF R_DISP_BTYPE 'I' 'EQ' L_ALV-BTYPE_DISP SPACE.
     ENDIF.
 *-- BG 2007.05.17
 *++ BG 2007.06.22
-*   Összegyűjtjük az adószámokat
+*   Gathering the tax numbers
     IF NOT L_ALV-ADOAZON IS INITIAL.
       CLEAR I_ADOAZON_ALL.
       MOVE L_ALV-ADOAZON TO I_ADOAZON_ALL-ADOAZON.
@@ -132,8 +132,8 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
     ENDIF.
 *-- BG 2007.06.22
 
-*   Ha önrevíziós az időszak és nem jött rá adatszolgáltatás
-*   akkor töröljük. (SZJA)
+*   If the period is self-review and no data submission arrived
+*   then we delete it. (SZJA)
     IF W_/ZAK/BEVALL-BTYPART = C_BTYPART_SZJA AND
        I_INDEX NE '000' AND
        NOT L_ALV-ADOAZON IS INITIAL.
@@ -144,8 +144,8 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
       ENDIF.
     ENDIF.
 *++BG 2006.12.11
-*   Ha önrevízió, akkor nekünk kell meghatározni a magánszemélyek
-*   számát
+*   If it is self-review, we have to determine the individuals'
+*   count
 *++BG 2007.06.08
     IF W_/ZAK/BEVALL-BTYPART = C_BTYPART_SZJA AND
        I_INDEX NE '000'.
@@ -304,19 +304,19 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
   SORT I_ADOAZON_ALL.
 *-- BG 2007.06.22
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P06.
 
 *++ BG 2007.05.17
-*  bevallás Nyomtatvány default értékek
+*  Declaration form default values
   PERFORM READ_BEVALLDEF TABLES R_DISP_BTYPE
                           USING I_BUKRS.
 *-- BG 2007.05.17
 
 
-* Bevallás - számított ABEV-ek
+* Declaration - calculated ABEV entries
   PERFORM CALC_ABEV TABLES I_/ZAK/BEVALLO
                            I_/ZAK/BEVALLB
                            T_ADOAZON
@@ -327,12 +327,12 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
                            I_INDEX.
 
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P04.
 
-* Nyomtatvány default értékek beállítása !
+* Setting form default values!
   PERFORM SET_DEFAULT_ABEV TABLES I_/ZAK/BEVALLO
                                   I_/ZAK/BEVALLDEF
                            USING  I_GJAHR
@@ -344,27 +344,27 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *--BG 2007.10.10
                                   .
 
-* SZJA önrevíziós pótlék meghatározása
+* Determining the SZJA self-review supplement
   PERFORM CALC_ABEV_ONREV_POTL_SZJA TABLES I_/ZAK/BEVALLO
                                            I_/ZAK/BEVALLB
                                            T_ADOAZON
                                     USING  I_INDEX
                                            V_LAST_DATE.
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P08.
 
-* Bevallás - átvett ABEV-ek
+* Declaration - received ABEV entries
   PERFORM GET_ABEV TABLES I_/ZAK/BEVALLO
                           I_/ZAK/BEVALLB.
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P09.
 *++BG 2006/09/22
-** Bevallás - sorok számlálása
+** Declaration - counting rows
 *  PERFORM COUNT_ABEV TABLES I_/ZAK/BEVALLO
 *                            I_/ZAK/BEVALLB.
 *--BG 2006/09/22
@@ -398,7 +398,7 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *  ENDLOOP.
 
 
-* Dialógus futás biztosításhoz
+* Ensuring dialog execution
   PERFORM PROCESS_IND_ITEM USING '0'
                                  L_INDEX
                                  TEXT-P10.
@@ -424,7 +424,7 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 
 ***--BG 2006/11/29
 
-* Becsatolt lapok számának meghatározása
+* Determining the number of attached pages
 *++BG 2006.09.22
   IF W_/ZAK/BEVALL-BTYPE EQ C_0608.
     PERFORM GET_LAP_SZ_0608 TABLES T_BEVALLO.
@@ -438,17 +438,17 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
     PERFORM GET_ONELL_0808 TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB
                            USING  I_INDEX.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
 *--0808 BG 2008.02.07
 
 *++0808 BG 2008.07.09
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 
-*   Esedékességi dátum törlés helyesbítőnél:
+*   Clearing the due date on the correction note:
     PERFORM DEL_ESDAT_FIELD_0808 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC035A.
@@ -456,31 +456,31 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *++0908 2009.01.20 BG
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_0908.
     PERFORM GET_LAP_SZ_0908 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
 
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 
-*   Esedékességi dátum törlés helyesbítőnél:
+*   Clearing the due date on the correction note:
     PERFORM DEL_ESDAT_FIELD_0908 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC033A.
 *--0908 2009.01.20 BG
 *++1008 2010.01.20 BG
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1008.
-*   Lapszámok
+*   Page counts
     PERFORM GET_LAP_SZ_1008 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 
-*   Esedékességi dátum törlés helyesbítőnél:
+*   Clearing the due date on the correction note:
     PERFORM DEL_ESDAT_FIELD_1008 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC036A.
@@ -488,18 +488,18 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *--1008 2010.01.20 BG
 *++1108 2011.01.27 BG
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1108.
-*   Lapszámok
+*   Page counts
     PERFORM GET_LAP_SZ_1108 TABLES T_BEVALLO.
 
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
 
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1108 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC042A.
@@ -507,15 +507,15 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *--1108 2011.01.27 BG
 *++1208 2012.02.01 BG
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1208.
-*   Lapszámok
+*   Page counts
     PERFORM GET_LAP_SZ_1208 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1208 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
@@ -523,31 +523,31 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *--1208 2012.02.01 BG
 *++1308 2013.02.05 BG
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1308.
-*   Lapszámok
+*   Page counts
     PERFORM GET_LAP_SZ_1308 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1308 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
 *--1308 2013.02.05 BG
 *++1408 2014.01.29 BG
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1408.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_1408 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 *++1408 #02. 2014.03.05 BG
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1408 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
@@ -555,108 +555,108 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *--1408 2014.01.29 BG
 *++1508 #01. 2015.02.02
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1508.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_1508 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1508 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
 *--1508 #01. 2015.02.02
 *++1608 #01. 2015.02.01
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1608.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_1608 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1608 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
 *--1608 #01. 2015.02.01
 *++1708 #01. 2017.01.31
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1708.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_1708 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1708 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
 *--1708 #01. 2017.01.31
 *++1808 #01. 2018.01.30
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1808.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_1808 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1808 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
 *--1808 #01. 2018.01.30
 *++1908 #01. 2019.01.29
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_1908.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_1908 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_1908 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
                                  USING  C_ABEVAZ_A0AC041A.
 *--1908 #01. 2019.01.29
 *++2008 #01. 2020.01.27
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2008.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
     PERFORM GET_LAP_SZ_2008 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
       I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
     PERFORM DEL_ESDAT_FIELD_2008 TABLES T_BEVALLO
                                         I_/ZAK/BEVALLB
     USING  C_ABEVAZ_A0AC041A.
 *--2008 #01. 2020.01.27
 *++2108 #01.
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2108.
-*   Lapszámok, Nyugdíjas
+*   Page counts, pensioners
 *++2108 #08.
 *    PERFORM GET_LAP_SZ_2008 TABLES T_BEVALLO.
     PERFORM GET_LAP_SZ_2108 TABLES T_BEVALLO.
 *--2108 #08.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
-*   Esedékességi dátum, önell. pótlék nulla flag törlés helyesbítőnél,
+*   Due date, self-supplement zero flag cleanup on the correction note,
 *++2108 #08.
 *    PERFORM DEL_ESDAT_FIELD_2008 TABLES T_BEVALLO
     PERFORM DEL_ESDAT_FIELD_2108 TABLES T_BEVALLO
@@ -667,10 +667,10 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *++2208 #01.
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2208.
     PERFORM GET_LAP_SZ_2208 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 
@@ -682,10 +682,10 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *++2308 #01.
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2308.
     PERFORM GET_LAP_SZ_2308 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 *
@@ -696,10 +696,10 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *++2408 #01.
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2408.
     PERFORM GET_LAP_SZ_2408 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 *
@@ -710,10 +710,10 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *++2508 #01.
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_2508.
     PERFORM GET_LAP_SZ_2508 TABLES T_BEVALLO.
-*   Bevallás - átvett ABEV-ek
+*   Declaration - received ABEV entries
     PERFORM GET_ONREV_ABEV TABLES T_BEVALLO
                                   I_/ZAK/BEVALLB.
-*   Előjel visszafordítás,
+*   Sign reversal,
     PERFORM CHANGE_ELOJEL TABLES T_BEVALLO
                                  I_/ZAK/BEVALLB.
 *
@@ -722,7 +722,7 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
                                  USING  'A0AC030A'.
 *--2508 #01.
 *++BG 2012.01.17
-* Adószámok meghatározása
+* Determining tax numbers
   ELSEIF W_/ZAK/BEVALL-BTYPE EQ C_11K79.
     PERFORM GET_ADOSZ_XXK79 TABLES T_BEVALLO
                                    I_ADOAZON_ALL
@@ -749,13 +749,13 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 
   FREE I_/ZAK/BEVALLO.
 
-** Kitöröljük a duplikált mezőket
+** Removing duplicate fields
 *  DELETE ADJACENT DUPLICATES FROM T_BEVALLO.
 
-* Adóazonosítónként lapszám meghatározása
+* Determining page counts per tax identifier
   PERFORM CALC_ABEV_LAPSZ TABLES T_BEVALLO.
 
-* Kitöröljük az üres mezőket.
+* Removing empty fields.
   DELETE T_BEVALLO WHERE FIELD_C IS INITIAL
 *++0808 BG 2008.02.07
                      AND ( ( OFLAG IS INITIAL AND

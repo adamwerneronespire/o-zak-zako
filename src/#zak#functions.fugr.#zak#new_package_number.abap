@@ -1,6 +1,6 @@
 FUNCTION /ZAK/NEW_PACKAGE_NUMBER .
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  EXPORTING
 *"     VALUE(E_PACK) TYPE  /ZAK/PACK
 *"  EXCEPTIONS
@@ -14,7 +14,7 @@ FUNCTION /ZAK/NEW_PACKAGE_NUMBER .
 
   MOVE SY-DATUM(4) TO L_TOYEAR.
 
-*Számkör meghatározása
+* Defining the number range
   CALL FUNCTION 'NUMBER_GET_NEXT'
     EXPORTING
       NR_RANGE_NR                   = '01'
@@ -41,7 +41,7 @@ FUNCTION /ZAK/NEW_PACKAGE_NUMBER .
 * MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
     MESSAGE E001(/ZAK/ZAK) RAISING ERROR_GET_NUMBER.
-* Feltöltés azonosító számkör hiba!
+* Number range error for upload identifier!
   ELSE.
     CONCATENATE SY-DATUM '_' L_NUMBER INTO E_PACK.
   ENDIF.

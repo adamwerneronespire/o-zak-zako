@@ -233,7 +233,7 @@
 - [x] src/#zak#set_period.fugr.#zak#set_period.abap
 - [x] src/#zak#set_status.prog.abap
 - [x] src/#zak#szamlakelt_corr.prog.abap
-- [ ] src/#zak#szja_book.prog.abap
+- [x] src/#zak#szja_book.prog.abap
 - [x] src/#zak#szja_book.prog.screen_9001.abap
 - [ ] src/#zak#szja_egyeztet.prog.abap
 - [x] src/#zak#szja_egyeztet.prog.screen_9001.abap

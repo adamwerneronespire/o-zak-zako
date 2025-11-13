@@ -40,13 +40,13 @@ CONSTANTS:
 CLASS lcl_confirm_popup DEFINITION.
   PUBLIC SECTION.
     METHODS:
-      "Felhasználói megerősítés kérése
+      "Requesting user confirmation
       confirm
         IMPORTING
-          iv_title     TYPE string  "Címsor
-          iv_text      TYPE string  "Kérdés szövege
+          iv_title     TYPE string  "Title
+          iv_text      TYPE string  "Question text
         RETURNING
-          VALUE(rv_ok) TYPE abap_bool. "TRUE = Igen
+          VALUE(rv_ok) TYPE abap_bool. "TRUE = Yes
 ENDCLASS.
 
 CLASS lcl_confirm_popup IMPLEMENTATION.
@@ -66,7 +66,7 @@ CLASS lcl_confirm_popup IMPLEMENTATION.
       IMPORTING
         answer                = lv_answer.
 
-    " ‘1’ = első gomb (Igen) – xsdbool szépen konvertál boolean-ra
+    " '1' = first button (Yes) – xsdbool converts nicely to boolean
     rv_ok = xsdbool( lv_answer = '1' ).
   ENDMETHOD.
 ENDCLASS.
@@ -229,10 +229,10 @@ CLASS lcl_table_purger IMPLEMENTATION.
         IF NEW lcl_confirm_popup( )->confirm(
                iv_title = 'Lehetséges adatvesztés! Megerősítés szükséges!'
                iv_text  = 'Az új tábla kevesebb sort tartalmaz, mint a régi. Biztosan folytatod?').
-          " -- Felhasználó az „Igen” gombra kattintott
+          " -- User clicked the "Yes" button
           lv_status = sc_status-warning.
         ELSE.
-          " -- Felhasználó a „Nem” gombra kattintott
+          " -- User clicked the "No" button
           lv_status = sc_status-error.
           mo_log->add(
             iv_old_tab  = ls_tabname-old_tab

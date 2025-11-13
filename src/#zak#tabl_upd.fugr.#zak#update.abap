@@ -1,6 +1,6 @@
 FUNCTION /ZAK/UPDATE.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE OPTIONAL
@@ -23,7 +23,7 @@ FUNCTION /ZAK/UPDATE.
 *--S4HANA#01.
 
 * ++BG
-* BTYPART megadva, konvertálunk
+* BTYPART provided, perform conversion
   IF NOT I_BTYPART IS INITIAL.
 *    PERFORM ERROR_HANDLING USING '/ZAK/ZAK' 'E' '115'
 *                                 SPACE
@@ -31,7 +31,7 @@ FUNCTION /ZAK/UPDATE.
 *                                 SPACE
 *                                 SPACE.
 *    E_RETURN[] = IG_RETURN[].
-* Analitika tábla BTYPE meghatározása időszakonként
+* Determine the Analitika table BTYPE per period
     PERFORM GET_BTYPE TABLES I_ANALITIKA
                       USING  I_BUKRS
                              I_BTYPART.
@@ -40,7 +40,7 @@ FUNCTION /ZAK/UPDATE.
 
 *++1465 #10.
   IF NOT I_GEN IS INITIAL AND NOT I_PACK IS INITIAL.
-*   Úgy kezelem mintha ő generálná a package-t
+*   Treat it as if it generated the package
     PERFORM CHECK_BEVALL USING I_ANALITIKA[]
                                I_UPD_BEVALLI[]
                                I_UPD_BEVALLSZ[]
@@ -49,7 +49,7 @@ FUNCTION /ZAK/UPDATE.
                                I_GEN.
   ELSE.
 *--1465 #10.
-*   normál bevallás
+*   normal return
     PERFORM CHECK_BEVALL USING I_ANALITIKA[]
                                I_UPD_BEVALLI[]
                                I_UPD_BEVALLSZ[]
@@ -60,27 +60,27 @@ FUNCTION /ZAK/UPDATE.
   ENDIF.
 *--1465 #10.
 *++BG 2008.11.17
-* BEVALLI rendezés: negyedéves és éves adatoknál, ha
-* nem volt az analitikába valamelyik időszakra adat akkor nem
-* jött létre a BEVALLI rekord. Viszont mivel a BEVALLO
-* mindig időszak utolsó hónapjára íródik, ezért bizonyos
-* esetekben gondot okoz, hogy nincs hozzá BEVALLI. Ezért
-* ez a rutin ellenőrzi, hogy megfelelő e a BEVALLI konzisztencia
+* BEVALLI ordering: for quarterly and yearly data, if
+* there was no data in the analytics for a given period then no
+* BEVALLI record was created. However, because the BEVALLO
+* always writes to the last month of the period, in some
+* cases it causes issues that there is no matching BEVALLI. Therefore
+* this routine checks whether the BEVALLI consistency is correct
   PERFORM CHECK_BEVALLI TABLES I_UPD_BEVALLI.
 *--BG 2008.11.17
 
   READ TABLE I_RETURN WITH KEY ID = 'E' INTO W_RETURN.
-* Error hiba , nincs adatbázis tábla update!
+* Error, there is no database table update!
   IF SY-SUBRC NE 0.
     IF I_TEST IS INITIAL.
-* packade azonosító generálása
+* generate package identifier
       IF I_GEN  EQ 'X'.
 *++1465 #10.
         IF NOT I_PACK IS INITIAL.
           V_/ZAK/PACK = I_PACK.
         ELSE.
 *--1465 #10.
-* package számkör
+* package number range
           CALL FUNCTION '/ZAK/NEW_PACKAGE_NUMBER'
             IMPORTING
               E_PACK           = V_/ZAK/PACK
@@ -92,7 +92,7 @@ FUNCTION /ZAK/UPDATE.
 *                                       SY-MSGV1 SY-MSGV2 SY-MSGV3
 *                                       SY-MSGV4.
             MESSAGE A001(/ZAK/ZAK).
-*         Feltöltés azonosító számkör hiba!
+*         Upload identifier number range error!
           ENDIF.
 *++1465 #10.
         ENDIF.
@@ -102,7 +102,7 @@ FUNCTION /ZAK/UPDATE.
 *        IF NOT I_PACK IS INITIAL.
         IF NOT I_PACK IS INITIAL AND I_GEN IS INITIAL.
 *--1465 #10.
-* Ismételt feltöltés!
+* Repeated upload!
           W_/ZAK/BEVALLP-SPACK  = I_PACK.
         ENDIF.
         W_/ZAK/BEVALLP-DATUM = SY-DATUM.
@@ -133,7 +133,7 @@ FUNCTION /ZAK/UPDATE.
                  WHERE BUKRS EQ W_/ZAK/BEVALLP-BUKRS AND
                        PACK  EQ I_PACK.
           IF SY-SUBRC NE 0.
-*   Nincsen megadott Feltöltés azonosító!
+*   No upload identifier provided!
             PERFORM ERROR_HANDLING USING '/ZAK/ZAK' 'E' '038'
                                          I_PACK
                                          SY-MSGV2
@@ -146,7 +146,7 @@ FUNCTION /ZAK/UPDATE.
         ENDIF.
         IF L_SUBRC NE 0.
           IF SY-SUBRC NE 0.
-* sikertelen a /ZAK/BEVALLP tábla írása!
+* writing the /ZAK/BEVALLP table failed!
             PERFORM ERROR_HANDLING USING SY-MSGID SY-MSGTY SY-MSGNO
                                          SY-MSGV1 SY-MSGV2 SY-MSGV3
                                          SY-MSGV4 .
@@ -156,8 +156,8 @@ FUNCTION /ZAK/UPDATE.
         ENDIF.
       ENDIF.
       IF L_SUBRC EQ 0.
-* a statisztikai flag módosítás, csak teljes adatszolgáltatás
-* ismétlésnél lehettséges.
+* modifying the statistical flag is only possible for a full data submission
+* repetition.
 *++S4HANA#01.
 *        SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
         SELECT SINGLE BSZNUM
@@ -169,9 +169,9 @@ FUNCTION /ZAK/UPDATE.
               BSZNUM EQ I_BSZNUM AND
               XFULL  EQ 'X'.
         IF SY-SUBRC EQ 0.
-* Szja bevall. Önrev.-ra feltöltésnél előző indexű, azonos
-* adaszolgáltatás és adószámhoz tartozó tételeket statisztikai tételként
-* kell megjelölni.
+* During uploading the SZJA return to the self-revision, items with the previous index and the same
+* data submission and tax number must be marked as statistical items
+* They must be flagged accordingly.
           CALL FUNCTION '/ZAK/STAPO_EXIT'
             EXPORTING
               I_BUKRS     = I_BUKRS
@@ -181,8 +181,8 @@ FUNCTION /ZAK/UPDATE.
               T_ANALITIKA = I_ANALITIKA[].
         ENDIF.
         IF NOT I_PACK IS INITIAL AND I_GEN  EQ 'X'.
-* ismételt bevallás! Törlünk minden korábbi adatot, ahol nem lezárt
-* az időszak
+* repeated return! Delete every previous data where the period is not closed
+* yet closed.
 *++BG 2006/06/08
 *          PERFORM DELETE_ABEV_TABLE  USING I_ANALITIKA[]
 *                                           I_UPD_BEVALLI[]

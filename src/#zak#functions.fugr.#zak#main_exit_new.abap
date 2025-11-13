@@ -16,9 +16,9 @@ FUNCTION /ZAK/MAIN_EXIT_NEW.
 *&
 *& LOG#     DATE       MODIFIER             DESCRIPTION           TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*&        2006.11.29   Bal·zs G.     Self-review handling change
+*&        2006.11.29   Bal√°zs G.     Self-review handling change
 *&---------------------------------------------------------------------*
-*&        2007.06.22   Bal·zs G.     Handling zero fields
+*&        2007.06.22   Bal√°zs G.     Handling zero fields
 *&---------------------------------------------------------------------*
 *& 0808   2007.01.28.-2007.02.10.    0808 form settings
 *&---------------------------------------------------------------------*

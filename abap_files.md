@@ -119,76 +119,76 @@
 - [X] src/#zak#functions.fugr.#zak#main_exit_new.abap
 - [X] src/#zak#functions.fugr.#zak#new_belnr.abap
 - [X] src/#zak#functions.fugr.#zak#new_package_number.abap
-- [x] src/#zak#functions.fugr.#zak#onell_book_excel.abap
-- [x] src/#zak#functions.fugr.#zak#onyb_xml_download.abap
-- [x] src/#zak#functions.fugr.#zak#post_adonsza.abap
-- [x] src/#zak#functions.fugr.#zak#ptg_xml_download.abap
-- [x] src/#zak#functions.fugr.#zak#read_abev_exit.abap
-- [x] src/#zak#functions.fugr.#zak#read_actual_version.abap
-- [x] src/#zak#functions.fugr.#zak#read_adoazon_exit.abap
-- [x] src/#zak#functions.fugr.#zak#read_file_exit.abap
-- [x] src/#zak#functions.fugr.#zak#rotate_bukrs_input.abap
-- [x] src/#zak#functions.fugr.#zak#rotate_bukrs_output.abap
-- [x] src/#zak#functions.fugr.#zak#rotate_idsz.abap
-- [x] src/#zak#functions.fugr.#zak#saplfunctions.abap
-- [x] src/#zak#functions.fugr.#zak#stapo_exit.abap
-- [x] src/#zak#functions.fugr.#zak#szja_new_rows.abap
-- [x] src/#zak#functions.fugr.#zak#szja_sap_sel_exit.abap
-- [x] src/#zak#functions.fugr.#zak#szja_xml_download.abap
-- [x] src/#zak#functions.fugr.#zak#tao_file_download.abap
-- [x] src/#zak#functions.fugr.#zak#user_default.abap
-- [x] src/#zak#functions.fugr.#zak#xml_file_download.abap
-- [x] src/#zak#get_pack.fugr.#zak#del_pack.abap
-- [x] src/#zak#get_pack.fugr.#zak#get_anal.abap
-- [x] src/#zak#get_pack.fugr.#zak#lget_packtop.abap
-- [x] src/#zak#get_pack.fugr.#zak#open_pack.abap
-- [x] src/#zak#get_pack.fugr.#zak#saplget_pack.abap
-- [x] src/#zak#get_t5hv_tables_from_hr.prog.abap
-- [x] src/#zak#get_xx_data.prog.abap
-- [x] src/#zak#igazolas.prog.abap
-- [x] src/#zak#igazolas.prog.screen_0100.abap
-- [x] src/#zak#igazolas_view.prog.abap
-- [x] src/#zak#igazolas_view.prog.screen_0100.abap
-- [x] src/#zak#igf01.prog.abap
-- [x] src/#zak#igtop.prog.abap
-- [x] src/#zak#kata_sap_sel.prog.abap
-- [x] src/#zak#kata_sap_sel.prog.screen_9000.abap
-- [x] src/#zak#main_batch.prog.abap
-- [x] src/#zak#main_top.prog.abap
-- [X] src/#zak#main_view.prog.abap
-- [x] src/#zak#main_view.prog.screen_9000.abap
-- [x] src/#zak#main_view.prog.screen_9001.abap
-- [x] src/#zak#main_view.prog.screen_9002.abap
-- [x] src/#zak#main_view.prog.screen_9100.abap
-- [x] src/#zak#main_view.prog.screen_9200.abap
-- [x] src/#zak#main_view.prog.screen_9900.abap
-- [x] src/#zak#main_view.prog.screen_9901.abap
-- [x] src/#zak#main_view_local_class.prog.abap
-- [x] src/#zak#main_view_new.prog.abap
-- [x] src/#zak#main_view_new.prog.screen_9000.abap
-- [x] src/#zak#main_view_new.prog.screen_9001.abap
-- [x] src/#zak#main_view_new.prog.screen_9002.abap
-- [x] src/#zak#main_view_new.prog.screen_9100.abap
-- [x] src/#zak#main_view_new.prog.screen_9200.abap
-- [x] src/#zak#main_view_new.prog.screen_9900.abap
-- [x] src/#zak#message.fugr.#zak#lmessagef01.abap
-- [x] src/#zak#message.fugr.#zak#lmessagetop.abap
-- [x] src/#zak#message.fugr.#zak#message_show.abap
-- [x] src/#zak#message.fugr.#zak#saplmessage.abap
-- [x] src/#zak#mg_igazolas.ssfo.gcoding.abap
-- [x] src/#zak#mgcim_upload.prog.abap
-- [X] src/#zak#migr_afa.prog.abap
-- [x] src/#zak#migr_afa.prog.screen_9000.abap
-- [X] src/#zak#migr_onrev.prog.abap
-- [x] src/#zak#migr_onrev.prog.screen_9000.abap
-- [x] src/#zak#migr_szja_read.prog.abap
-- [x] src/#zak#migr_szja_sel.prog.abap
-- [x] src/#zak#mt_migr_afa.prog.abap
-- [X] src/#zak#onell.prog.abap
-- [x] src/#zak#onell.prog.screen_0100.abap
-- [x] src/#zak#onell.prog.screen_0101.abap
-- [x] src/#zak#onell.prog.screen_0102.abap
-- [x] src/#zak#onj_jegyzokonyv.ssfo.gcoding.abap
+- [ ] src/#zak#functions.fugr.#zak#onell_book_excel.abap
+- [ ] src/#zak#functions.fugr.#zak#onyb_xml_download.abap
+- [ ] src/#zak#functions.fugr.#zak#post_adonsza.abap
+- [ ] src/#zak#functions.fugr.#zak#ptg_xml_download.abap
+- [ ] src/#zak#functions.fugr.#zak#read_abev_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#read_actual_version.abap
+- [ ] src/#zak#functions.fugr.#zak#read_adoazon_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#read_file_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#rotate_bukrs_input.abap
+- [ ] src/#zak#functions.fugr.#zak#rotate_bukrs_output.abap
+- [ ] src/#zak#functions.fugr.#zak#rotate_idsz.abap
+- [ ] src/#zak#functions.fugr.#zak#saplfunctions.abap
+- [ ] src/#zak#functions.fugr.#zak#stapo_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#szja_new_rows.abap
+- [ ] src/#zak#functions.fugr.#zak#szja_sap_sel_exit.abap
+- [ ] src/#zak#functions.fugr.#zak#szja_xml_download.abap
+- [ ] src/#zak#functions.fugr.#zak#tao_file_download.abap
+- [ ] src/#zak#functions.fugr.#zak#user_default.abap
+- [ ] src/#zak#functions.fugr.#zak#xml_file_download.abap
+- [ ] src/#zak#get_pack.fugr.#zak#del_pack.abap
+- [ ] src/#zak#get_pack.fugr.#zak#get_anal.abap
+- [ ] src/#zak#get_pack.fugr.#zak#lget_packtop.abap
+- [ ] src/#zak#get_pack.fugr.#zak#open_pack.abap
+- [ ] src/#zak#get_pack.fugr.#zak#saplget_pack.abap
+- [ ] src/#zak#get_t5hv_tables_from_hr.prog.abap
+- [ ] src/#zak#get_xx_data.prog.abap
+- [ ] src/#zak#igazolas.prog.abap
+- [ ] src/#zak#igazolas.prog.screen_0100.abap
+- [ ] src/#zak#igazolas_view.prog.abap
+- [ ] src/#zak#igazolas_view.prog.screen_0100.abap
+- [ ] src/#zak#igf01.prog.abap
+- [ ] src/#zak#igtop.prog.abap
+- [ ] src/#zak#kata_sap_sel.prog.abap
+- [ ] src/#zak#kata_sap_sel.prog.screen_9000.abap
+- [ ] src/#zak#main_batch.prog.abap
+- [ ] src/#zak#main_top.prog.abap
+- [ ] src/#zak#main_view.prog.abap
+- [ ] src/#zak#main_view.prog.screen_9000.abap
+- [ ] src/#zak#main_view.prog.screen_9001.abap
+- [ ] src/#zak#main_view.prog.screen_9002.abap
+- [ ] src/#zak#main_view.prog.screen_9100.abap
+- [ ] src/#zak#main_view.prog.screen_9200.abap
+- [ ] src/#zak#main_view.prog.screen_9900.abap
+- [ ] src/#zak#main_view.prog.screen_9901.abap
+- [ ] src/#zak#main_view_local_class.prog.abap
+- [ ] src/#zak#main_view_new.prog.abap
+- [ ] src/#zak#main_view_new.prog.screen_9000.abap
+- [ ] src/#zak#main_view_new.prog.screen_9001.abap
+- [ ] src/#zak#main_view_new.prog.screen_9002.abap
+- [ ] src/#zak#main_view_new.prog.screen_9100.abap
+- [ ] src/#zak#main_view_new.prog.screen_9200.abap
+- [ ] src/#zak#main_view_new.prog.screen_9900.abap
+- [ ] src/#zak#message.fugr.#zak#lmessagef01.abap
+- [ ] src/#zak#message.fugr.#zak#lmessagetop.abap
+- [ ] src/#zak#message.fugr.#zak#message_show.abap
+- [ ] src/#zak#message.fugr.#zak#saplmessage.abap
+- [ ] src/#zak#mg_igazolas.ssfo.gcoding.abap
+- [ ] src/#zak#mgcim_upload.prog.abap
+- [ ] src/#zak#migr_afa.prog.abap
+- [ ] src/#zak#migr_afa.prog.screen_9000.abap
+- [ ] src/#zak#migr_onrev.prog.abap
+- [ ] src/#zak#migr_onrev.prog.screen_9000.abap
+- [ ] src/#zak#migr_szja_read.prog.abap
+- [ ] src/#zak#migr_szja_sel.prog.abap
+- [ ] src/#zak#mt_migr_afa.prog.abap
+- [ ] src/#zak#onell.prog.abap
+- [ ] src/#zak#onell.prog.screen_0100.abap
+- [ ] src/#zak#onell.prog.screen_0101.abap
+- [ ] src/#zak#onell.prog.screen_0102.abap
+- [ ] src/#zak#onj_jegyzokonyv.ssfo.gcoding.abap
 - [ ] src/#zak#onjf01.prog.abap
 - [ ] src/#zak#onjtop.prog.abap
 - [ ] src/#zak#onyb_conv_08a60.prog.abap

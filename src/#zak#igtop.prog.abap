@@ -1,16 +1,16 @@
 *&---------------------------------------------------------------------*
 *&  Include           /ZAK/IGTOP
 *&---------------------------------------------------------------------*
-*& /ZAK/ZAKO certificate data declaration
+*& /ZAK/ZAKO igazolás adatdeklarálás
 *&---------------------------------------------------------------------*
 TABLES: T001, /ZAK/IGDATA.
 
 CONSTANTS C_ON TYPE C VALUE 'X'.
 
-*Formats
+*Formátumok
 CONSTANTS C_FORM_D TYPE /ZAK/FORMAT VALUE 'D'.
 
-*Macro definition for populating a range
+*MAKRO definiálás range feltöltéshez
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -21,7 +21,7 @@ END-OF-DEFINITION.
 
 DATA G_BTYPART TYPE /ZAK/BTYPART.
 
-*Data supply identifiers:
+*Adatszolgáltatás azonosítók:
 RANGES R_BSZNUM FOR /ZAK/BEVALLD-BSZNUM.
 
 TYPES: BEGIN OF T_BSZNUMT,
@@ -35,7 +35,7 @@ DATA W_BSZNUMT TYPE T_BSZNUMT.
 DATA I_/ZAK/IGDATA_ALV TYPE STANDARD TABLE OF /ZAK/IGDATA_ALV INITIAL SIZE 0.
 DATA W_/ZAK/IGDATA_ALV TYPE /ZAK/IGDATA_ALV.
 
-*For currency descriptions:
+*Pénznem megnevezéséhez:
 TYPES: BEGIN OF T_WAERST,
        WAERS TYPE WAERS_CURC,
        KTEXT TYPE KTEXT_CURT,
@@ -53,9 +53,9 @@ TYPES: BEGIN OF T_PACK,
 DATA I_PACK TYPE STANDARD TABLE OF T_PACK INITIAL SIZE 0.
 DATA W_PACK TYPE T_PACK.
 
-*Upload identifiers
+*Feltöltés azonosítók
 RANGES R_PACK FOR /ZAK/BEVALLSZ-PACK.
-*Collecting tax identifiers
+*Adóazonosítók gyűjtése
 RANGES R_ADOAZON FOR /ZAK/ANALITIKA-ADOAZON.
 
 DATA G_INDEX LIKE SY-TABIX.

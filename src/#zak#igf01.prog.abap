@@ -1,7 +1,7 @@
 *&---------------------------------------------------------------------*
 *&  Include           /ZAK/IGF01
 *&---------------------------------------------------------------------*
-*& Common routines
+*& Közös rutinok
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
 *&      Form  modif_screen
@@ -57,18 +57,18 @@ FORM PREVIEW_DATA TABLES $I_/ZAK/IGDATA_ALV STRUCTURE /ZAK/IGDATA_ALV
 
   DATA  LW_/ZAK/IGDATA_ALV LIKE W_/ZAK/IGDATA_ALV.
 
-* Determining selected items
+* Kijelölt tételek meghatározása
   CALL METHOD G_GRID1->GET_SELECTED_ROWS
     IMPORTING
       ET_ROW_NO = LT_ROWS[].
 
   IF LT_ROWS[] IS INITIAL.
     MESSAGE I018.
-*   Please select an item.
+*   Kérem jelöljön ki egy tételt.
     EXIT.
   ENDIF.
 
-* Determining form data
+* Űrlap adatok meghatározása
   CALL FUNCTION 'SSF_FUNCTION_MODULE_NAME'
     EXPORTING
       FORMNAME           = $FNAME
@@ -81,23 +81,23 @@ FORM PREVIEW_DATA TABLES $I_/ZAK/IGDATA_ALV STRUCTURE /ZAK/IGDATA_ALV
 
   IF SY-SUBRC <> 0.
     MESSAGE E263 WITH $FNAME.
-*   Error while reading form &!
+*   Hiba a & űrlap beolvasásánál!
   ENDIF.
 
-* Processing data
+* Adatok feldolgozása
   LOOP AT LT_ROWS INTO LS_ROWS.
     READ TABLE $I_/ZAK/IGDATA_ALV INTO LW_/ZAK/IGDATA_ALV INDEX LS_ROWS-ROW_ID.
     CHECK SY-SUBRC EQ 0.
     CLEAR W_/ZAK/MGCIM.
     REFRESH $I_SMART_DATA.
-*   Determining address data
+*   Címadatok meghatározása
     READ TABLE $I_/ZAK/MGCIM INTO W_/ZAK/MGCIM
                WITH KEY ADOAZON =  LW_/ZAK/IGDATA_ALV-ADOAZON
                         BINARY SEARCH.
     LOOP AT $I_/ZAK/IGDATA_ALV INTO W_/ZAK/IGDATA_ALV
                     WHERE ADOAZON =  LW_/ZAK/IGDATA_ALV-ADOAZON
                      AND  SORSZ   =  LW_/ZAK/IGDATA_ALV-SORSZ.
-*     Remove from selection
+*     Kitöröljük a kijelölésből
       DELETE LT_ROWS WHERE ROW_ID = SY-TABIX.
       MOVE-CORRESPONDING W_/ZAK/IGDATA_ALV TO W_/ZAK/IGDATA.
       PERFORM GET_SMART_DATA TABLES I_/ZAK/IGABEV
@@ -107,7 +107,7 @@ FORM PREVIEW_DATA TABLES $I_/ZAK/IGDATA_ALV STRUCTURE /ZAK/IGDATA_ALV
                                     I_SMART_DATA
                              USING  W_/ZAK/IGDATA.
     ENDLOOP.
-*   Call form
+*   Űrlap meghívása
     PERFORM CALL_SMARTFORMS TABLES $I_SMART_DATA
                             USING  L_FM_NAME
                                    $FNAME
@@ -162,14 +162,14 @@ FORM GET_SMART_DATA  TABLES $I_/ZAK/IGABEV STRUCTURE /ZAK/IGABEV
                       BTYPE  = $W_/ZAK/IGDATA-BTYPE
                       BSZNUM = $W_/ZAK/IGDATA-BSZNUM
                       IGAZON = $W_/ZAK/IGDATA-IGAZON.
-* Name of the certification line
+* Igazolás sor megnevezése
   READ TABLE $I_/ZAK/IGSORT INTO W_/ZAK/IGSORT
         WITH KEY LANGU  = SY-LANGU
                  IGAZON = W_/ZAK/IGABEV-IGAZON.
-* Name of the data supply identifier
+* Adatszolgáltatás azonosító megnevezése
   READ TABLE $I_BSZNUMT INTO W_BSZNUMT
                         WITH KEY BSZNUM = W_/ZAK/IGDATA-BSZNUM.
-*  Filling data
+*  Adatok feltöltése
   CLEAR W_SMART_DATA.
   W_SMART_DATA-TYPE = W_/ZAK/IGABEV-TYPE.
   W_SMART_DATA-NAME = W_/ZAK/IGSORT-NYTEXT.
@@ -239,7 +239,7 @@ FORM CALL_SMARTFORMS  TABLES   $I_SMART_DATA STRUCTURE /ZAK/SMART_TABLE
   CONCATENATE $W_/ZAK/MGCIM-STREET $W_/ZAK/MGCIM-HOUSE
               INTO L_STREET SEPARATED BY SPACE.
 
-* Determining month name
+* Hónap megnevezésének meghatározása
   CLEAR L_KKELT.
 *++2008 #12.
   IF $EVES IS INITIAL.
@@ -259,7 +259,7 @@ FORM CALL_SMARTFORMS  TABLES   $I_SMART_DATA STRUCTURE /ZAK/SMART_TABLE
 *--2008 #12.
 
 *++0001 2008.12.01 (BG)
-* Setting export parameters in the background
+* Háttérben kiviteli paraméterek beállítása
   IF NOT SY-BATCH IS INITIAL.
     L_OUTPUT_OPTIONS-TDDEST  = 'LOCL'.
     L_OUTPUT_OPTIONS-TDNEWID = $SPOOL.
@@ -313,7 +313,7 @@ FORM CALL_SMARTFORMS  TABLES   $I_SMART_DATA STRUCTURE /ZAK/SMART_TABLE
       USER_CANCELED        = 4
       OTHERS               = 5.
   IF SY-SUBRC <> 0.
-*   Error exporting form & tax number & serial number!
+*   Hiba a & űrlap & adószám & sorszám kivitelénél!
     MESSAGE A265 WITH $FNAME $ADOAZON $SORSZ SY-SUBRC.
   ENDIF.
 

@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ROTATE_BUKRS_OUTPUT.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_AD_BUKRS) TYPE  BUKRS
 *"  EXPORTING
@@ -8,20 +8,21 @@ FUNCTION /ZAK/ROTATE_BUKRS_OUTPUT.
 *"  EXCEPTIONS
 *"      MISSING_INPUT
 *"----------------------------------------------------------------------
-*& MODIFICATIONS (the OSS note number must be written at the end of the modified lines)
+*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
 *&
-*& LOG#     DATE        MODIFIER                 DESCRIPTION
+*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2008.01.21   Balázs Gábor  Migration of the company rotation table transformation
+*& 0001   2008.01.21   Balázs Gábor  Vállalat forgatás tábla átalakítás
+*&                                   átvezetése
 *&---------------------------------------------------------------------*
 
-* Checking required field completion:
+* Kötelező mezők kitöltésének ellenőrzése:
   IF I_AD_BUKRS IS INITIAL.
     RAISE MISSING_INPUT.
   ENDIF.
 
   IF I_BUKRS[] IS INITIAL.
-*   Reading control table
+*   Vezérlő tábla beolvasása
     SELECT * INTO TABLE I_BUKRS
 *++0001 BG 2007.01.21
 *            FROM /ZAK/BUKRS.

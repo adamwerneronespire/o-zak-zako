@@ -2,9 +2,9 @@
 *& Program : ZHR_GET_T5HVX_FROM_HR_WITH_RFC                           *
 *& Author  : Balázs Gábor                                             *
 *& Date    : 2009.08.04                                               *
-*& Desc.   : Copy the contents of the T5HVX table from the HR system
-*&              Copy the contents of the T5HS7 table from the HR system
-*&              Copy the contents of the T5HVC table from the HR system
+*& Desc.   : A T5HVX tábla tartalmának másolása a HR rendszerből
+*              T5HS7 tábla tartalmának másolása a HR rendszerből
+*              T5HVC tábla tartalmának másolása a HR rendszerből
 *&--------------------------------------------------------------------*
 *& Program type      : Report                                         *
 *& Dev.class         : ZMT_HR                                         *
@@ -37,7 +37,7 @@ DATA: T_T5HVX    LIKE /ZAK/T5HVX  OCCURS 0 WITH HEADER LINE,
 DATA G_RFCDEST type RFCDEST.
 *++1765 #19.
 INITIALIZATION.
-* Authorization check
+* Jogosultság vizsgálat
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -45,7 +45,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   You do not have authorization to run the program!
+*   Önnek nincs jogosultsága a program futtatásához!
   ENDIF.
 *--1765 #19.
 

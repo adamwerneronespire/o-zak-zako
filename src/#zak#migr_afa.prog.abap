@@ -1,36 +1,36 @@
 *&---------------------------------------------------------------------*
-*& Program: VAT migration program
+*& Program: ÁFA migrációs program
 *&---------------------------------------------------------------------*
 REPORT /ZAK/MIGR_AFA MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Function description: VAT migration program
+*& Funkció leírás: ÁFA migrációs program
 *&---------------------------------------------------------------------*
-*& Author            : Cserhegyi Tímea - fmc
-*& Creation date     : 2006.04.12
-*& Functional spec by: ________
+*& Szerző            : Cserhegyi Tímea - fmc
+*& Létrehozás dátuma : 2006.04.12
+*& Funkc.spec.készítő: ________
 *& SAP modul neve    : ADO
-*& Program  type     : Report
-*& SAP version       : 46C
+*& Program  típus    : Riport
+*& SAP verzió        : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MODIFICATIONS (Write the OSS note number at the end of the modified lines)*
+*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
 *&
-*& LOG#     DATE        MODIFIER             DESCRIPTION      TRANSPORT
+*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2007/05/09   Balázs G.     Generalization so that it can be
-*&                                   used for more than just VAT migration.
+*& 0001   2007/05/09   Balázs G.     Általánosítás, hogy ne csak ÁFA
+*&                                   migrációhoz lehessen használni.
 *&---------------------------------------------------------------------*
 
 INCLUDE /ZAK/COMMON_STRUCT.
 
 *&---------------------------------------------------------------------*
-*& TABLES                                                              *
+*& TÁBLÁK                                                              *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& CONSTANTS  (C_XXXXXXX..)                                           *
+*& KONSTANSOK  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 CONSTANTS: C_CLOSED_Z(1) TYPE C VALUE 'Z',
            C_CLOSED_X(1) TYPE C VALUE 'X',
@@ -38,29 +38,29 @@ CONSTANTS: C_CLOSED_Z(1) TYPE C VALUE 'Z',
            C_CHAR        TYPE C VALUE 'C'.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VARIABLES                                                   *
-*      Internal table       -   (I_xxx...)                              *
-*      FORM parameter       -   ($xxxx...)                              *
-*      Constant             -   (C_xxx...)                              *
-*      Parameter variable   -   (P_xxx...)                              *
-*      Selection option     -   (S_xxx...)                              *
-*      Range                -   (R_xxx...)                              *
-*      Global variables     -   (V_xxx...)                              *
-*      Local variables      -   (L_xxx...)                              *
-*      Work area            -   (W_xxx...)                              *
-*      Type                 -   (T_xxx...)                              *
-*      Macros               -   (M_xxx...)                              *
-*      Field symbol         -   (FS_xxx...)                             *
-*      Method               -   (METH_xxx...)                           *
-*      Object               -   (O_xxx...)                              *
-*      Class                -   (CL_xxx...)                             *
-*      Event                -   (E_xxx...)                              *
+*& PROGRAM VÁLTOZÓK                                                    *
+*      Belső tábla         -   (I_xxx...)                              *
+*      FORM paraméter      -   ($xxxx...)                              *
+*      Konstans            -   (C_xxx...)                              *
+*      Paraméter változó   -   (P_xxx...)                              *
+*      Szelekciós opció    -   (S_xxx...)                              *
+*      Sorozatok (Range)   -   (R_xxx...)                              *
+*      Globális változók   -   (V_xxx...)                              *
+*      Lokális változók    -   (L_xxx...)                              *
+*      Munkaterület        -   (W_xxx...)                              *
+*      Típus               -   (T_xxx...)                              *
+*      Makrók              -   (M_xxx...)                              *
+*      Field-symbol        -   (FS_xxx...)                             *
+*      Methodus            -   (METH_xxx...)                           *
+*      Objektum            -   (O_xxx...)                              *
+*      Osztály             -   (CL_xxx...)                             *
+*      Esemény             -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-* Standard
+* Normál
 DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
       W_OUTTAB TYPE /ZAK/BEVALLALV.
 
-* Converted
+* Konvertált
 DATA: I_OUTTAB_C TYPE STANDARD TABLE OF /ZAK/BEVALLALV INITIAL SIZE 0,
       W_OUTTAB_C TYPE /ZAK/BEVALLALV.
 
@@ -82,10 +82,10 @@ DATA: W_OUT     TYPE /ZAK/ALV_MIGR.
 
 DATA: V_COUNTER TYPE I.
 
-* Control variables
+* Kezelési változók
 DATA: V_SUBRC LIKE SY-SUBRC.
 
-* ALV control variables
+* ALV kezelési változók
 DATA: V_OK_CODE          LIKE SY-UCOMM,
       V_SAVE_OK          LIKE SY-UCOMM,
       V_REPID            LIKE SY-REPID,
@@ -105,7 +105,7 @@ DATA GS_MONAT TYPE LINE OF TT_MONAT.
 *--S4HANA#01.
 *++1465 #11.
 RANGES R_FLAG FOR /ZAK/BEVALLI-FLAG.
-*Macro definition for filling ranges
+*MAKRO definiálás range feltöltéshez
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -175,7 +175,7 @@ INITIALIZATION.
 *--0002 BG 2007.05.09
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Authorization check
+* Jogosultság vizsgálat
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -183,7 +183,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   You do not have authorization to run the program!
+*   Önnek nincs jogosultsága a program futtatásához!
   ENDIF.
 *--1765 #19.
 
@@ -205,13 +205,13 @@ AT SELECTION-SCREEN.
 START-OF-SELECTION.
   DATA: L_SUBRC LIKE SY-SUBRC.
 
-*  Authorization check
+*  Jogosultság vizsgálat
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 P_BTART
                                 C_ACTVT_01.
 
 *++0002 BG 2007.05.09
-** Tax return type determination
+** Bevallás típus meghatározása
 *  P_BTYPE = '0665'.
 *--0002 BG 2007.05.09
 
@@ -220,47 +220,47 @@ START-OF-SELECTION.
                           P_BTYPE.
 *--1465 #11.
 
-* Reading current data
-* Tax return general data
+* Jelenlegi adatok beolvasása
+* Bevallás általános adatai
   PERFORM READ_BEVALL USING P_BUKRS
                             P_BTYPE.
-* Tax return data provision settings
+* Bevallás adatszolgáltatás beállítás
 *   PERFORM READ_BEVALLC USING P_BUKRS
 *                              P_BTYPE.
-* Tax return data provision data
+* Bevallás adatszolgáltatás adatai
   PERFORM READ_BEVALLD USING P_BUKRS
                              P_BTYPE.
-* Tax return form data
+* Bevallás nyomtatvány adatok
   PERFORM READ_BEVALLB USING P_BTYPE.
 
-* Tax return - prepared (if it already exists)
+* Bevallás - elkészített (ha már van)
   PERFORM READ_BEVALLO USING P_BUKRS
                              P_BTYPE.
 
-* Set locking
+* Zárolás beállítás
   PERFORM ENQUEUE_PERIOD.
 
 
 *----------------------------------------------------------------------*
-* Tax return creation
+* Bevallás készítés
 *----------------------------------------------------------------------*
   IF P_CR = 'X'.
 *++S4HANA#01.
 *    REFRESH I_OUT.
     CLEAR I_OUT[].
 *--S4HANA#01.
-*  Analytics
+*  Analitika
     PERFORM READ_ANALITIKA.
 
-*  Saving the tax return
+*  Bevallás mentése
     LOOP AT I_TAB_KEY INTO W_TAB_KEY.
       L_SUBRC = 0.
       PERFORM UPDATE_BEVALLO CHANGING L_SUBRC.
 
-* Filling ranges for periods
+* Range feltöltése - időszakokhoz
       PERFORM FILL_RANGE.
 
-*     Status update /ZAK/BEVALLSZ//ZAK/ZAK_BE
+*     Státusz aktualizálása /ZAK/BEVALLSZ//ZAK/ZAK_BE
       IF L_SUBRC = 0.
         PERFORM STATUS_UPDATE USING 'T'.
 
@@ -283,7 +283,7 @@ START-OF-SELECTION.
 
 
 *----------------------------------------------------------------------*
-* Tax return closing
+* Bevallás zárás
 *----------------------------------------------------------------------*
   IF P_CL = 'X'.
 
@@ -291,7 +291,7 @@ START-OF-SELECTION.
 *    REFRESH I_OUT.
     CLEAR I_OUT[].
 *--S4HANA#01.
-* Is there an item marked for posting? -> cannot be closed
+* Van könyvelésre jelölt tétel? -> nem zárható
     READ TABLE I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA
        WITH KEY BOOK = 'M'.
     IF SY-SUBRC = 0.
@@ -299,7 +299,7 @@ START-OF-SELECTION.
                         W_/ZAK/ANALITIKA-MONAT.
     ENDIF.
 
-* Has a tax return been created already?
+* Volt már bevallás készítés?
 *++S4HANA#01.
 *    DESCRIBE TABLE I_/ZAK/BEVALLO LINES SY-TFILL.
     SY-TFILL = LINES( I_/ZAK/BEVALLO ).
@@ -314,7 +314,7 @@ START-OF-SELECTION.
     LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO.
 
       AT NEW ZINDEX.      "#EC_CI_SORTED
-* Table keys
+* Tábla kulcsok
         READ TABLE I_TAB_KEY INTO W_TAB_KEY
           WITH KEY BUKRS  = W_/ZAK/BEVALLO-BUKRS
                    BTYPE  = W_/ZAK/BEVALLO-BTYPE
@@ -333,10 +333,10 @@ START-OF-SELECTION.
     LOOP AT I_TAB_KEY INTO W_TAB_KEY.
 
 
-* Filling ranges for periods
+* Range feltöltése - időszakokhoz
       PERFORM FILL_RANGE.
 
-*   Locked period -> cannot be closed
+*   Zárolt időszak -> nem zárható
       PERFORM CHECK_ALREADY_CLOSED.
       PERFORM GET_BEVALLI.
       PERFORM GET_BEVALLSZ.
@@ -378,7 +378,7 @@ START-OF-SELECTION.
   ENDIF.
 
 *----------------------------------------------------------------------*
-* Tax return deletion
+* Bevallás törlés
 *----------------------------------------------------------------------*
   IF P_DE = 'X'.
 
@@ -420,13 +420,13 @@ START-OF-SELECTION.
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
 
-* Company name
+* Vállalat megnevezése
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
 
 
-* Tax return type name
+* Bevallásfajta megnevezése
     IF NOT P_BTART IS INITIAL.
       SELECT DDTEXT UP TO 1 ROWS INTO P_BTTEXT FROM DD07T
          WHERE DOMNAME = '/ZAK/BTYPART'
@@ -438,7 +438,7 @@ FORM READ_ADDITIONALS.
       ENDSELECT.
 
 
-* Cumulative self-revision of VAT-type returns
+* ÁFA jellegű bevallások önrevíziója kummulált
 *++S4HANA#01.
 *      SELECT * UP TO 1 ROWS FROM /ZAK/BEVALL INTO W_/ZAK/BEVALL
 *        WHERE    BUKRS = P_BUKRS
@@ -547,7 +547,7 @@ FORM READ_ANALITIKA.
 *--S4HANA#01.
 
 
-* Reading migration items
+* Migrációs tételek beolvasása
 *++S4HANA#01.
 *  SELECT * INTO TABLE I_/ZAK/ANALITIKA FROM /ZAK/ANALITIKA
   SELECT MANDT BUKRS BTYPE GJAHR MONAT ZINDEX ABEVAZ ADOAZON LAPSZ XDEFT STAPO WAERS BOOK FIELD_C FIELD_N
@@ -585,10 +585,10 @@ FORM READ_ANALITIKA.
       ENDLOOP.
       IF SY-SUBRC NE 0.
         MESSAGE E111 WITH W_/ZAK/ANALITIKA-BTYPE W_/ZAK/ANALITIKA-GJAHR.
-*   Missing configuration for tax return type & in year &!
+*   Hiányzó beállítás & bevallás fajtához & évben!
       ENDIF.
 *--1765 #01.
-* PERIOD conversion
+* IDŐSZAK konvertálása
       CASE W_/ZAK/BEVALL-BIDOSZ.
         WHEN 'E'.
           W_/ZAK/ANALITIKA-MONAT = '12'.
@@ -613,7 +613,7 @@ FORM READ_ANALITIKA.
         WHEN OTHERS.
       ENDCASE.
 
-* Character-based
+* Karakteres
       IF W_/ZAK/BEVALLB-FIELDTYPE = C_CHAR.
 
         READ TABLE I_OUTTAB INTO L_OUTTAB WITH KEY
@@ -624,7 +624,7 @@ FORM READ_ANALITIKA.
              ZINDEX = W_/ZAK/ANALITIKA-ZINDEX
              ABEVAZ = W_/ZAK/ANALITIKA-ABEVAZ
              ADOAZON = W_/ZAK/ANALITIKA-ADOAZON.
-* If this key does not yet exist - save it
+* Ha még nincs ezzel a kulccsal - lementem
         IF SY-SUBRC NE 0.
 
           MOVE-CORRESPONDING W_/ZAK/BEVALLB   TO W_OUTTAB.
@@ -642,9 +642,9 @@ FORM READ_ANALITIKA.
 
           COLLECT W_OUTTAB INTO I_OUTTAB.
 
-*  A key with this value already exists
+*  Van már ilyen kulccsal
         ELSE.
-* This is the default text - modify the saved one
+* Ez a default szöveg - módosítom a lementettet
           IF NOT W_/ZAK/ANALITIKA-XDEFT IS INITIAL.
             READ TABLE I_OUTTAB INTO W_OUTTAB WITH KEY
                  BUKRS = W_/ZAK/ANALITIKA-BUKRS
@@ -673,7 +673,7 @@ FORM READ_ANALITIKA.
             ENDIF.
           ENDIF.
         ENDIF.
-* Numeric
+* Numerikus
       ELSE.
         MOVE-CORRESPONDING W_/ZAK/BEVALLB   TO W_OUTTAB.
         MOVE-CORRESPONDING W_/ZAK/ANALITIKA TO W_OUTTAB.
@@ -694,7 +694,7 @@ FORM READ_ANALITIKA.
 
 
 
-* Table keys
+* Tábla kulcsok
       READ TABLE I_TAB_KEY INTO W_TAB_KEY
         WITH KEY BUKRS  = W_/ZAK/ANALITIKA-BUKRS
                  BTYPE  = W_/ZAK/ANALITIKA-BTYPE
@@ -713,7 +713,7 @@ FORM READ_ANALITIKA.
 
   DATA: L_ROUND(20) TYPE C.
   LOOP AT I_OUTTAB INTO W_OUTTAB.
-* Amount conversions
+* Összeg konverziók
 
     CLEAR L_ROUND.
 
@@ -769,7 +769,7 @@ FORM UPDATE_BEVALLO CHANGING L_SUBRC TYPE SY-SUBRC.
   L_COUNT_ERROR = 0.
   L_SUBRC = 4.
 
-* Deleting any previous saves
+* Esetleges előző mentés(ek) törlése
   DELETE FROM /ZAK/BEVALLO
      WHERE BUKRS  = P_BUKRS     AND
            BTYPE  = P_BTYPE     AND
@@ -1036,7 +1036,7 @@ FORM SET_BEVALLI USING $FLAG TYPE CLIKE..
 
   DATA: W_UPD_BEVALLI  LIKE /ZAK/BEVALLI.
 
-* /zak/bevalli status
+* /zak/bevalli státusz
   IF NOT I_/ZAK/BEVALLI[] IS INITIAL.
     LOOP AT I_/ZAK/BEVALLI INTO W_UPD_BEVALLI.
       W_UPD_BEVALLI-FLAG  = $FLAG.
@@ -1147,7 +1147,7 @@ FORM SET_BEVALLSZ USING $FLAG TYPE CLIKE..
 *--S4HANA#01.
   DATA: W_UPD_BEVALLSZ LIKE /ZAK/BEVALLSZ.
 
-* /zak/bevallsz status
+* /zak/bevallsz státusz
   IF NOT I_/ZAK/BEVALLSZ[] IS INITIAL.
     LOOP AT I_/ZAK/BEVALLSZ INTO W_UPD_BEVALLSZ
                           .
@@ -1235,7 +1235,7 @@ FORM FULL_PERIOD USING    $/ZAK/BEVALLD  LIKE I_/ZAK/BEVALLD
                           $/ZAK/BEVALLSZ LIKE I_/ZAK/BEVALLSZ.
 *--S4HANA#01.
   DATA: L_NUM LIKE W_/ZAK/BEVALLSZ-MONAT.
-* Tax return periods
+* bevallási időszakok
   DATA: SET_BEVI  TYPE STANDARD TABLE OF /ZAK/BEVALLI    INITIAL SIZE 0,
         SET_BEVSZ TYPE STANDARD TABLE OF /ZAK/BEVALLSZ  INITIAL SIZE 0.
 
@@ -1262,7 +1262,7 @@ FORM FULL_PERIOD USING    $/ZAK/BEVALLD  LIKE I_/ZAK/BEVALLD
                  GJAHR = $GJAHR
                  MONAT = L_NUM.
       IF SY-SUBRC NE 0.
-* There is no return for the data provision period so I lock it!
+* nincs az adatszolgáltatás-időszakra bevallás tehát zárolom!
         MOVE-CORRESPONDING W_/ZAK/BEVALLD TO W_/ZAK/BEVALLSZ.
         W_/ZAK/BEVALLSZ-ZINDEX = $ZINDEX.
         W_/ZAK/BEVALLSZ-MONAT = L_NUM.
@@ -1425,7 +1425,7 @@ FORM FILL_RANGE.
 
   CHECK SY-SUBRC = 0.
 
-* ...quarterly
+* ...negyedéves
   IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
     CASE W_TAB_KEY-MONAT.
       WHEN '01' OR '02' OR '03'.
@@ -1458,7 +1458,7 @@ FORM FILL_RANGE.
           MESSAGE E063(/ZAK/ZAK) WITH P_BUKRS P_BTYPE '12'.
         ENDIF.
     ENDCASE.
-* ...annual
+* ...éves
   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
     PERFORM SET_RANGES USING '01'
                              '12'
@@ -1487,7 +1487,7 @@ FORM SET_LARUN CHANGING $LARUN TYPE /ZAK/BEVALLSZ-LARUN.
 *--S4HANA#01.
   DATA: L_STAMP LIKE  TZONREF-TSTAMPS.
   CLEAR L_STAMP.
-* Last run time - timestamp /ZAK/BEVALLSZ-LARUN
+* Utolsó futás ideje - timestamp /ZAK/BEVALLSZ-LARUN
   CALL FUNCTION 'IB_CONVERT_INTO_TIMESTAMP'
     EXPORTING
       I_DATLO     = SY-DATLO
@@ -1562,7 +1562,7 @@ FORM CREATE_AND_INIT_ALV CHANGING PT_OUTTAB   LIKE I_OUT[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Building the field catalog
+* Mezőkatalógus összeállítása
   PERFORM BUILD_FIELDCAT CHANGING PT_FIELDCAT.
 
 
@@ -1634,12 +1634,12 @@ MODULE PAI_9000 INPUT.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
 
-* Back
+* Vissza
     WHEN 'BACK'.
       SET SCREEN 0.
       LEAVE SCREEN.
 
-* Exit
+* Kilépés
     WHEN 'EXIT'.
       LEAVE PROGRAM.
 
@@ -1695,7 +1695,7 @@ FORM GET_FLAG  USING    $BUKRS TYPE /ZAK/BEVALL-BUKRS
   M_DEF R_FLAG 'I' 'EQ' 'T' SPACE.
   M_DEF R_FLAG 'I' 'EQ' 'B' SPACE.
 
-* For ONYB you can also close the F.
+* ONYB-nél az F-et is lezárhatja.
   IF L_BTYPART EQ C_BTYPART_ONYB.
     M_DEF R_FLAG 'I' 'EQ' 'F' SPACE.
   ENDIF.

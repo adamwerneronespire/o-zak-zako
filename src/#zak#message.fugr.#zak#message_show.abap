@@ -1,6 +1,6 @@
 FUNCTION /ZAK/MESSAGE_SHOW.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  TABLES
 *"      T_RETURN STRUCTURE  BAPIRET2
 *"----------------------------------------------------------------------

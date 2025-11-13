@@ -140,7 +140,7 @@
            W_ANA TYPE /ZAK/ANALITIKA.
 
      CASE E_UCOMM.
-* Display analytics
+* Analitika megjelenítése
        WHEN '/ZAK/ZAK_ANA'.
 
          IF SY-DYNNR = '9000'.
@@ -192,7 +192,7 @@
                  IF P_BTART NE C_BTYPART_ONYB.
 *--0004 BG 2007.04.04
 *++0005 BG 2007.05.30
-*                  Handling VAT 04,06 sheets
+*                  ÁFA 04,06-os lap kezelése
                    IF P_BTART EQ C_BTYPART_AFA AND
                       NOT S_OUT-ADOAZON IS INITIAL.
                      SELECT * APPENDING TABLE I_ANA FROM /ZAK/ANALITIKA
@@ -344,7 +344,7 @@
 
          DATA:  LT_CELLTAB TYPE LVC_T_STYL.
          DATA:  L_INDEX LIKE SY-TABIX.
-* Field settings
+* Mező beállítások
          LOOP AT I_ANA INTO W_ANA.
 
            L_INDEX = SY-TABIX.
@@ -352,7 +352,7 @@
            MOVE-CORRESPONDING W_ANA TO W_OUTTAB2.
            APPEND W_OUTTAB2 TO I_OUTTAB2.
 
-* Read row settings
+* Sor beállítások beolvasása
            READ TABLE I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
               WITH KEY BTYPE = W_OUTTAB2-BTYPE
                        ABEVAZ = W_OUTTAB2-ABEVAZ.
@@ -364,7 +364,7 @@
              INSERT W_/ZAK/BEVALLB INTO TABLE I_/ZAK/BEVALLB.
            ENDIF.
 
-* Setting CELLTAB
+* CELLTAB beállítása
            CLEAR: LT_CELLTAB,   W_OUTTAB2-CELLTAB.
 *++S4HANA#01.
 *           REFRESH: LT_CELLTAB, W_OUTTAB2-CELLTAB.
@@ -393,23 +393,23 @@
          CALL SCREEN 9001.
 
 
-* Manual posting
+* Manuális rögzítés
        WHEN '/ZAK/ZAK_MAN'.
 
          IF SY-DYNNR = '9000'.
 *++0004 BG 2007.04.04
            IF P_BTART EQ C_BTYPART_ONYB.
              MESSAGE I215 WITH P_BTART.
-*   Manual posting is not allowed for the & return category!
+*   & bevallás fajtánál nem megengedett a manuális rögzítés!
              EXIT.
            ENDIF.
 *--0004 BG 2007.04.04
 
 *++0016 BG 2011.09.14
-*    Manual posting is not allowed at group companies
+*    Csoport vállalatnál nem engedett a manuális rögzítés
            IF NOT V_BUKCS IS INITIAL.
              MESSAGE I295 WITH P_BUKRS.
-*   Manual posting is not allowed for the & group company!
+*   & csoport vállalatnál nem megengedett a manuális rögzítés!
              EXIT.
            ENDIF.
 *--0016 BG 2011.09.14
@@ -443,13 +443,13 @@
                    INSERT W_/ZAK/BEVALLB INTO TABLE I_/ZAK/BEVALLB.
                  ENDIF.
 
-* Row manually changeable?
+* Manuálisan módosítható sor?
                  IF W_/ZAK/BEVALLB-MANUAL <> C_X.
                    MESSAGE I043(/ZAK/ZAK).
                    CONTINUE.
                  ENDIF.
 
-* Tax number is mandatory
+* Adószám kötelező
                  IF W_/ZAK/BEVALLB-ASZKOT = C_X AND
                     S_OUT-ADOAZON = SPACE.
                    MESSAGE I106(/ZAK/ZAK).
@@ -515,13 +515,13 @@
                    INSERT W_/ZAK/BEVALLB INTO TABLE I_/ZAK/BEVALLB.
                  ENDIF.
 
-* Row manually changeable?
+* Manuálisan módosítható sor?
                  IF W_/ZAK/BEVALLB-MANUAL <> C_X.
                    MESSAGE I043(/ZAK/ZAK).
                    CONTINUE.
                  ENDIF.
 
-* Tax number is mandatory
+* Adószám kötelező
                  IF W_/ZAK/BEVALLB-ASZKOT = C_X AND
                     S_OUT-ADOAZON = SPACE.
                    MESSAGE I106(/ZAK/ZAK).

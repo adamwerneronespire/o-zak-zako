@@ -1,6 +1,6 @@
 FUNCTION /ZAK/OPEN_PACK.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPART) TYPE  /ZAK/BTYPART OPTIONAL

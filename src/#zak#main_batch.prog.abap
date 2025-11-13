@@ -1,64 +1,64 @@
 *&---------------------------------------------------------------------*
-*& Program: /ZAK/MAIN_VIEW scheduler program
+*& Program: /ZAK/MAIN_VIEW ütemező program
 *&---------------------------------------------------------------------*
 REPORT /ZAK/MAIN_BATCH MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Function description: /ZAK/MAIN_VIEW scheduler program
+*& Funkció leírás: /ZAK/MAIN_VIEW ütemező program
 *&---------------------------------------------------------------------*
-*& Author            : Balázs Gábor - NESS
-*& Creation date     : 2014.10.14
-*& Functional spec by: ________
-*& SAP module name   : ADO
-*& Program type      : Report
-*& SAP version       : 60
+*& Szerző            : Balázs Gábor - NESS
+*& Létrehozás dátuma : 2014.10.14
+*& Funkc.spec.készítő: ________
+*& SAP modul neve    : ADO
+*& Program  típus    : Riport
+*& SAP verzió        : 60
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& CHANGES (Write the OSS note number at the end of the modified lines)*
+*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
 *&
-*& LOG#     DATE        MODIFIER            DESCRIPTION      TRANSPORT
+*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*&                                   so it can be used for migration.
+*&                                   migrációhoz lehessen használni.
 *&---------------------------------------------------------------------*
 
 INCLUDE /ZAK/COMMON_STRUCT.
 
 *&---------------------------------------------------------------------*
-*& TABLES                                                               *
+*& TÁBLÁK                                                              *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& CONSTANTS  (C_XXXXXXX..)                                           *
+*& KONSTANSOK  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 CONSTANTS: C_STAT_F(1) TYPE C VALUE 'F',
            C_NUM         TYPE C VALUE 'N',
            C_CHAR        TYPE C VALUE 'C'.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VARIABLES                                                    *
-*      Internal table        -   (I_xxx...)                             *
-*      FORM parameter        -   ($xxxx...)                             *
-*      Constant              -   (C_xxx...)                             *
-*      Parameter variable    -   (P_xxx...)                             *
-*      Selection option      -   (S_xxx...)                             *
-*      Ranges                -   (R_xxx...)                             *
-*      Global variables      -   (V_xxx...)                             *
-*      Local variables       -   (L_xxx...)                             *
-*      Work area             -   (W_xxx...)                             *
-*      Type                  -   (T_xxx...)                             *
-*      Macros                -   (M_xxx...)                             *
-*      Field-symbol          -   (FS_xxx...)                            *
-*      Method                -   (METH_xxx...)                          *
-*      Object                -   (O_xxx...)                             *
-*      Class                 -   (CL_xxx...)                            *
-*      Event                 -   (E_xxx...)                             *
+*& PROGRAM VÁLTOZÓK                                                    *
+*      Belső tábla         -   (I_xxx...)                              *
+*      FORM paraméter      -   ($xxxx...)                              *
+*      Konstans            -   (C_xxx...)                              *
+*      Paraméter változó   -   (P_xxx...)                              *
+*      Szelekciós opció    -   (S_xxx...)                              *
+*      Sorozatok (Range)   -   (R_xxx...)                              *
+*      Globális változók   -   (V_xxx...)                              *
+*      Lokális változók    -   (L_xxx...)                              *
+*      Munkaterület        -   (W_xxx...)                              *
+*      Típus               -   (T_xxx...)                              *
+*      Makrók              -   (M_xxx...)                              *
+*      Field-symbol        -   (FS_xxx...)                             *
+*      Methodus            -   (METH_xxx...)                           *
+*      Objektum            -   (O_xxx...)                              *
+*      Osztály             -   (CL_xxx...)                             *
+*      Esemény             -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 DATA V_REPID   LIKE SY-REPID.
 DATA V_BTYPART TYPE /ZAK/BTYPART.
 
-*Macro definition for populating a range
+*MAKRO definiálás range feltöltéshez
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -99,7 +99,7 @@ INITIALIZATION.
 *--0002 BG 2007.05.09
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Authorization check
+* Jogosultság vizsgálat
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -107,7 +107,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   You are not authorized to run the program!
+*   Önnek nincs jogosultsága a program futtatásához!
   ENDIF.
 *--1765 #19.
 
@@ -128,7 +128,7 @@ AT SELECTION-SCREEN.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-**  Authorization check
+**  Jogosultság vizsgálat
 *  PERFORM AUTHORITY_CHECK USING P_BUKRS
 *                                P_BTART
 *                                C_ACTVT_01.
@@ -136,7 +136,7 @@ START-OF-SELECTION.
     PERFORM READ_ADDITIONALS.
   ENDIF.
 
-*Determining the open periods:
+*Meghatározzuk a nyitott időszakokat:
   PERFORM GET_BEVALLI TABLES I_/ZAK/BEVALLI
                       USING  P_BUKRS
                              P_BTYPE
@@ -144,11 +144,11 @@ START-OF-SELECTION.
 
   IF I_/ZAK/BEVALLI[] IS INITIAL.
     MESSAGE I307.
-*   No record matching the criteria found!
+*   Nem a feltételnek megfelelő rekordot meghatározni!
     EXIT.
   ENDIF.
 
-*Scheduling jobs:
+* Jobok ütemezése:
   PERFORM JOB_CREATE TABLES I_/ZAK/BEVALLI
                      USING  V_BTYPART.
 
@@ -170,7 +170,7 @@ END-OF-SELECTION.
 FORM READ_ADDITIONALS.
 
 
-* Cumulative self-audit for VAT-type returns
+* ÁFA jellegű bevallások önrevíziója kummulált
   SELECT * UP TO 1 ROWS FROM /ZAK/BEVALL INTO W_/ZAK/BEVALL
     WHERE    BUKRS = P_BUKRS
       AND    BTYPE = P_BTYPE.
@@ -180,7 +180,7 @@ FORM READ_ADDITIONALS.
   ENDIF.
 
 
-* Determining the type of return
+* Bevallás fajta meghatározás
   IF NOT P_BUKRS IS INITIAL AND NOT P_BTYPE IS INITIAL.
     CALL FUNCTION '/ZAK/GET_BTYPART_FROM_BTYPE'
       EXPORTING
@@ -233,11 +233,11 @@ FORM GET_BEVALLI  TABLES   $I_/ZAK/BEVALLI STRUCTURE /ZAK/BEVALLI
 
   RANGES LR_FLAG FOR /ZAK/BEVALLI-FLAG.
 
-* Populate open and downloaded statuses
+* Nyitott és letöltött státusz feltöltése
   M_DEF LR_FLAG 'I' 'EQ' 'F' SPACE.
   M_DEF LR_FLAG 'I' 'EQ' 'T' SPACE.
 
-* Selecting BEVALLI data
+* BEVALLI adatok szelektálása
   SELECT * INTO TABLE $I_/ZAK/BEVALLI
            FROM /ZAK/BEVALLI
           WHERE BUKRS EQ $BUKRS
@@ -295,7 +295,7 @@ FORM JOB_CREATE  TABLES   $I_/ZAK/BEVALLI STRUCTURE /ZAK/BEVALLI
     M_DEF LR_MONAT  'I' 'EQ' LW_/ZAK/BEVALLI-MONAT SPACE.
     M_DEF LR_ZINDEX 'I' 'EQ' LW_/ZAK/BEVALLI-ZINDEX SPACE.
 
-*   Starting /ZAK/MAIN_VIEW
+*   /ZAK/MAIN_VIEW indítása
     SUBMIT /ZAK/MAIN_VIEW AND RETURN
       WITH P_BUKRS = LW_/ZAK/BEVALLI-BUKRS
       WITH P_BTART = $BTYPART
@@ -329,6 +329,6 @@ FORM JOB_CREATE  TABLES   $I_/ZAK/BEVALLI STRUCTURE /ZAK/BEVALLI
   ENDLOOP.
 
   MESSAGE I308.
-*   Jobs scheduled, please check the JOB log!
+*   Jobok beütemezve, kérem ellenőrizze a JOB naplót!
 
 ENDFORM.                    " JOB_CREATE

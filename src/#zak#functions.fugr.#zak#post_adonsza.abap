@@ -1,6 +1,6 @@
 FUNCTION /ZAK/POST_ADONSZA.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -15,12 +15,12 @@ FUNCTION /ZAK/POST_ADONSZA.
 *"      DATA_MISMATCH
 *"      OTHER_ERROR
 *"----------------------------------------------------------------------
-*& LOG#     DATE        MODIFIER                 DESCRIPTION
+*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2008.05.05   Balázs Gábor  Test mode implementation; in this
-*&                                   case there will be no posting, it
-*&                                   only returns the values for the
-*&                                   self-audit report.
+*& 0001   2008.05.05   Balázs Gábor  Teszt mód beépítése, ebben az
+*&                                   esetben nem lesz könyvelés csak
+*&                                   visszadja az értékeket az önell.
+*&                                   jegyzőkönyv miatt.
 *"----------------------------------------------------------------------
 
 
@@ -28,10 +28,10 @@ FUNCTION /ZAK/POST_ADONSZA.
   DATA V_BTYPE_CONV LIKE /ZAK/BEVALL-BTYPE.
 
 
-* For collecting transfer BTYPEs
+* Átvezetéses BTYPE-ok összegyűjtéséhez
   RANGES R_ATV_BTYPE FOR /ZAK/BEVALL-BTYPE.
 
-* Data consistency check
+* Adatkonzisztencia ellenőrzése
   LOOP AT T_BEVALLO INTO W_/ZAK/BEVALLO.
     CHECK W_/ZAK/BEVALLO-BUKRS  NE I_BUKRS OR
           W_/ZAK/BEVALLO-BTYPE  NE I_BTYPE OR
@@ -45,11 +45,11 @@ FUNCTION /ZAK/POST_ADONSZA.
 
   CHECK V_SUBRC IS INITIAL.
 
-* Reading form data
+* Nyomtatvány adatok beolvasása
   PERFORM READ_BEVALLB_M USING I_BTYPE.
 
-* Interpreting T_BEVALLO, determining tax account data
-* database modification
+* T_BEVALLO értelmezése, adófolyószámla adatok meghatározása
+* adatbázis módosítás
   PERFORM CONVERT_BEVALLO_ADONSZA TABLES T_BEVALLO
 *++0001 BG 2008.05.05 /ZAK/_POST_ADONSZA
                                          T_ADONSZA

@@ -6,11 +6,11 @@ SELECT SINGLE ADRNR INTO L_ADRNR
                     FROM T001
                    WHERE BUKRS EQ BUKRS.
 IF SY-SUBRC EQ 0.
-* Address data
+* Címadatok
   SELECT SINGLE * INTO W_ADRC
                   FROM ADRC
                  WHERE ADDRNUMBER EQ L_ADRNR.
-* Tax number
+* Adószám
 *++2508 #12.
   SELECT SINGLE ADOSZAM INTO V_PAVAL
                         FROM /ZAK/IGLOG
@@ -25,14 +25,14 @@ IF SY-SUBRC EQ 0.
   ENDIF.
 *--2508 #12.
 ENDIF.
-*++ 2021.03.02 Baranyai Balázs Dynamic texts and logos
-* Name text element
+*++ 2021.03.02 Baranyai Balázs Szövegek, logok dinamizálása
+* Megnevezés szövegelem
 SELECT SINGLE  TDNAME INTO V_MEGNEV
          FROM /ZAK/IGCUST
         WHERE BTYPE EQ BTYPE
           AND BSZNUM EQ BSZNUM
           AND TEXTTYPE EQ 'MEGN'.
-* Text content element
+* Szöveg szövegelem
 SELECT SINGLE  TDNAME INTO V_TEXT
          FROM /ZAK/IGCUST
         WHERE BTYPE EQ BTYPE
@@ -42,7 +42,7 @@ SELECT SINGLE  TDNAME INTO V_TEXT
 SELECT SINGLE  TDNAME INTO V_LOGO
          FROM /ZAK/IGLOG
         WHERE BUKRS EQ BUKRS.
-*-- 2021.03.02 Baranyai Balázs Dynamic texts and logos
+*-- 2021.03.02 Baranyai Balázs Szövegek, logok dinamizálása
 
 
 

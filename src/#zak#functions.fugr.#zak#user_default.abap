@@ -1,6 +1,6 @@
 FUNCTION /ZAK/USER_DEFAULT.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(USERS) TYPE  SY-UNAME
 *"  EXCEPTIONS
@@ -27,7 +27,7 @@ FUNCTION /ZAK/USER_DEFAULT.
 
   IF I_USERS-DATFM NE 'YYYY.MM.DD'.
     MESSAGE E204(/ZAK/ZAK) RAISING ERROR_DATF.
-*   The user's date format is not set to 'YYYY.MM.DD'!
+*   Felhasználó dátum formátuma nem 'ÉÉÉÉ.HH.NN'-ra van beállítva!
   ENDIF.
 
 ENDFUNCTION.

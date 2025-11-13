@@ -1,6 +1,4 @@
 # o-zak-zako
 /ZAK/ZAKO
 
-Fordításnál ezeket alkalmazd:
-1. Megjegyzés a fordításhoz: az "éves" szót mindig "Yearly"-re, a "negyedéves" kifejezést pedig "Quarterly"-re fordítsam.
-2. A dátumokon ne változtass.
+Megjegyzés a fordításhoz: az "éves" szót mindig "Yearly"-re, a "negyedéves" kifejezést pedig "Quarterly"-re fordítsam.

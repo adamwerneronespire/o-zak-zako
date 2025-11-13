@@ -1,6 +1,6 @@
 FUNCTION /ZAK/PTG_XML_DOWNLOAD.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(I_FILE) TYPE  STRING
 *"     VALUE(I_GJAHR) TYPE  GJAHR OPTIONAL
@@ -30,7 +30,7 @@ FUNCTION /ZAK/PTG_XML_DOWNLOAD.
 
   READ TABLE T_/ZAK/BEVALLALV INTO LW_BEVALLO_ALV INDEX 1.
 
-* Reading declaration settings
+* Bevallások beállításának beolvasása
   REFRESH I_/ZAK/BEVALLB.
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
@@ -39,13 +39,13 @@ FUNCTION /ZAK/PTG_XML_DOWNLOAD.
   SORT I_/ZAK/BEVALLB.
 
 
-* Determining company name
+* Vállalat név meghatározása
 *++PTGSZLAH #03.
   IF LW_BEVALLO_ALV-BTYPE EQ C_BTYPE_PTGSZLAH.
-    ABEV = '0A0001C004'. "Company in ABEV PTGSZLAA
+    ABEV = '0A0001C004'. "Vállalat ABEV PTGSZLAA-ban
   ELSE.
 *--PTGSZLAH #03.
-    ABEV = '0A0001C003'. "Company in ABEV PTGSZLAA
+    ABEV = '0A0001C003'. "Vállalat ABEV PTGSZLAA-ban
 *++PTGSZLAH #03.
   ENDIF.
 *--PTGSZLAH #03.
@@ -55,8 +55,8 @@ FUNCTION /ZAK/PTG_XML_DOWNLOAD.
                             CHANGING VALUE.
   BUKRSTEXT = VALUE.
 
-* Determining tax number
-  ABEV = '0A0001C001'. "Tax number in ABEV PTGSZLAA
+* Adószám meghatározása
+  ABEV = '0A0001C001'. "Adószám ABEV PTGSZLAA-ban
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
@@ -64,16 +64,16 @@ FUNCTION /ZAK/PTG_XML_DOWNLOAD.
   ADOSZAM = VALUE.
 
 *++PTGSZLAH #03.
-* Determining period-from value
-  ABEV = '0A0001D001'. "Tax number in ABEV PTGSZLAA
+* IDŐSZAK -tól érték meghatározása
+  ABEV = '0A0001D001'. "Adószám ABEV PTGSZLAA-ban
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
                             CHANGING VALUE.
   FROM = VALUE.
 
-* Determining period-to value
-  ABEV = '0A0001D002'. "Tax number in ABEV PTGSZLAA
+* IDŐSZAK -ig érték meghatározása
+  ABEV = '0A0001D002'. "Adószám ABEV PTGSZLAA-ban
   CLEAR VALUE.
   PERFORM GET_VALUE_BEVALLO_A TABLES T_/ZAK/BEVALLALV
                                USING ABEV
@@ -81,11 +81,11 @@ FUNCTION /ZAK/PTG_XML_DOWNLOAD.
   TO = VALUE.
 *--PTGSZLAH #03.
 
-* Form identifiers:
+* Nyomtatvány azonosítók:
   MOVE LW_BEVALLO_ALV-BTYPE TO NYOMTA.
 
 
-* Compiling data from BEVALLO_ALV
+* Adatok összeállítása BEVALLO_ALV-ből
   PERFORM FIELDS_FROM_BEVALLO_TO_PTG    TABLES T_/ZAK/BEVALLALV
                                                I_/ZAK/BEVALLB
                                                LI_A_PTGSZLAA.

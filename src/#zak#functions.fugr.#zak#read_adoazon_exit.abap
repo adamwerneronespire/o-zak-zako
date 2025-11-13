@@ -1,14 +1,14 @@
 FUNCTION /ZAK/READ_ADOAZON_EXIT.
 *"----------------------------------------------------------------------
-*"*"Local interface:
+*"*"Lokális interfész:
 *"  IMPORTING
 *"     VALUE(INPUT) OPTIONAL
 *"     VALUE(SZIDO) TYPE  DATUM OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN) TYPE  CHAR_55
 *"----------------------------------------------------------------------
-* 0003  2008.12.11 Balázs Gábor tax ID verification extended
-*                               with birth year
+* 0003  2008.12.11 Balázs Gábor adóazonosító ellenőrzés kiegészítés
+*                               születési évvel
 *"----------------------------------------------------------------------
 
   DATA: L_LEN TYPE I,
@@ -38,26 +38,29 @@ FUNCTION /ZAK/READ_ADOAZON_EXIT.
   L_LEN = STRLEN( CHAR ).
 
   IF NOT INPUT CO ' 0123456789'.
-* ERROR
+* HIBA
     RETURN = 'Hibás adószám!'.
   ELSE.
     IF L_LEN = 10 .
-* INDIVIDUAL TAX NUMBER
-* Tax numbers are formed based on personal data (10 characters):
-* a) According to the 1996 law, the first digit of the tax number, 8, is
-* a constant indicating that it belongs to an individual.
-* b) Digits 2-6 denote the number of days between the person's birth
-* date and January 1, 1867.
-* c) Digits 7-9 serve to differentiate people born on the same day.
-* d) The 10th digit is a check digit calculated mathematically from the
-* first nine digits.
-* The 10th digit must be created by multiplying each of the nine digits
-* defined in points a)-c) by its position within the identifier.
-* (First digit times one, second digit times two, and so on.)
-* The sum of these products is divided by 11, and the remainder equals
-* the 10th digit.
-* The serial number defined in point c) cannot be issued if the remainder
-* of the division by 11 is equal to ten.
+* MAGÁNSZEMÉLY ADÓSZÁMA
+* Az adószámokat személyes adataink alapján képzik (10 karakter):
+* a, Az 1996-os törvény szerint az adószám első száma, a 8-as, állandó
+* szám, amely azt jelzi, hogy magánszemélyről van szó.
+* b, A 2-6. számjegyek a személy születési időpontja és az 1867. január
+* között eltelt napok számát jelöli.
+* c, A 7-9. számok az azonos napon születettek megkülönböztetésére
+* szolgál.
+* d) a 10. számjegy az 1-9. számjegyek felhasználásával matematikai
+* módszerekkel képzett ellenőrző szám.
+* Az adóazonosító jel 10. számjegyét úgy kell képezni, hogy az a)-c)
+* pontok szerint képzett 9 számjegy mindegyikét szorozni kell azzal a
+* sorszámmal, ahányadik helyet foglalja el az azonosítón belül.
+* (Első számjegy szorozva eggyel, második számjegy szorozva kettővel és
+* így tovább.)
+* Az így kapott szorzatok összegét el kell osztani 11-gyel, és az osztás
+* maradéka a 10. számjeggyel lesz egyenlő.
+* A c) pont szerinti születési sorszám nem adható ki, ha a 11-gyel való
+* osztás maradéka egyenlő tízzel.
       IF INPUT(1) NE 8 .
         RETURN = 'Adóazonosító első számjegye csak 8 lehet!'.
         EXIT.
@@ -79,8 +82,8 @@ FUNCTION /ZAK/READ_ADOAZON_EXIT.
       IF L_SUM > L_NUM.
         L_SUM = L_NUM - ( L_SUM - 11 ) .
 *++BG 2006/05/29
-*Missing case when it is equal; in this situation the last character of
-* the tax number is 0.
+*Hiányzott az az eset amikor egynelő ebben az esetben
+*az adószám utolsó karaktere 0.
 *      ELSEIF L_SUM < L_NUM.
       ELSEIF L_SUM <= L_NUM.
 *--BG 2006/05/29
@@ -97,15 +100,17 @@ FUNCTION /ZAK/READ_ADOAZON_EXIT.
         ENDIF.
       ENDIF.
     ELSEIF L_LEN = 11.
-* TAX NUMBER OF COMPANIES
-* A valid tax number consists of 13 characters and has the form
-* "aaaaaaaa-b-cc", where each section is numeric.
-* a) The number "aaaaaaaa" must satisfy the following (CDV check):
-* multiply its digits sequentially by 9,7,3,1,9,7,3,1.
-* The tax number is "CDV-valid" if the sum of these products is divisible
-* by 10.
-* b) The value of "b" can be 1, 2, or 3.
-* c) "cc" identifies the tax authority and is a number between 1 and 44.
+* GAZDASÁGI TÁRSASÁGOK ADÓSZÁMA
+* A helyes adószám 13 jelből áll, és "aaaaaaaa-b-cc" alakú, ahol
+* "aaaaaaaa", "b" és "cc" mindegyike numerikus.
+* a, Az "aaaaaaaa" számra teljesülni kell a következőnek (CDV
+* ellenőrzés):
+* Az "aaaaaaaa" számjegyeit szorozzuk meg rendre a 9,7,3,1,9,7,3,1
+* számokkal.
+* Akkor "CDV-helyes" az adószám, ha az így kapott szorzatok összege
+* 10-el osztható.
+* b, A "b" értéke 1,2,3 valamelyike lehet.
+* c, A "cc" az adóhatóságot jelöli, és 1-44 közötti szám.
       L_SZOR = 11.
       DO 8 TIMES.
         L_SZOR = L_SZOR - 2.
@@ -141,7 +146,7 @@ FUNCTION /ZAK/READ_ADOAZON_EXIT.
         EXIT.
       ENDIF.
     ELSE.
-* INVALID TAX NUMBER
+* HIBÁS ADÓSZÁM
       RETURN = 'Hibás adóazonosító formátum!'.
     ENDIF.
   ENDIF.

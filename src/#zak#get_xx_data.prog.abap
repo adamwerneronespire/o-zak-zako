@@ -1,23 +1,23 @@
 *&---------------------------------------------------------------------*
-*& Program: Control and execution program for transferring the tax return
+*& Program: a bevallás áttöltéséhez ellenőrző és végrehajtó program
 *&---------------------------------------------------------------------*
 REPORT  /ZAK/ZAK_GET_ZF_DATA MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Function description: Based on the selection criteria provided,
-*& the program displays (or modifies in productive mode) via remote RFC calls
-*& the returns that can be received and lists what has already been taken over.
+*& Funkció leírás: A program a szelekción megadott feltételek alapján
+*& megjeleníti (ill. éles esetén módosítja) távoli RFC hívás segítségével
+*& az átvehető bevallásokat ill. kiírja ami már átvételre került.
 *&---------------------------------------------------------------------*
-*& Author            : Balázs Gábor - Ness
-*& Creation date     : 2017.01.25
-*& Functional spec   : ________
+*& Szerző            : Balázs Gábor - Ness
+*& Létrehozás dátuma : 2017.01.25
+*& Funkc.spec.készítő: ________
 *& SAP modul neve    :
-*& Program type      : Report
-*& SAP version       :
+*& Program  típus    : Riport
+*& SAP verzió        :
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MODIFICATIONS (write the OSS note number at the end of the changed lines)
+*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
 *&
-*& LOG#     DATE        MODIFIER                 DESCRIPTION
+*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
 *& ----   ----------   ----------    ----------------------- -----------
 *&---------------------------------------------------------------------*
 
@@ -26,27 +26,27 @@ INCLUDE /ZAK/MAIN_TOP.
 INCLUDE /ZAK/SAP_SEL_F01.
 
 *&---------------------------------------------------------------------*
-*& TABLES                                                              *
+*& TÁBLÁK                                                              *
 *&---------------------------------------------------------------------*
 
 *&---------------------------------------------------------------------*
-*  PROGRAM VARIABLES                                                   *
-*      Internal table       -   (I_xxx...)                             *
-*      FORM parameter       -   ($xxxx...)                             *
-*      Constant             -   (C_xxx...)                             *
-*      Parameter variable   -   (P_xxx...)                             *
-*      Selection option     -   (S_xxx...)                             *
-*      Ranges               -   (R_xxx...)                             *
-*      Global variables     -   (V_xxx...)                             *
-*      Local variables      -   (L_xxx...)                             *
-*      Work area            -   (W_xxx...)                             *
-*      Type                 -   (T_xxx...)                             *
-*      Macros               -   (M_xxx...)                             *
-*      Field-symbol         -   (FS_xxx...)                            *
-*      Method               -   (METH_xxx...)                          *
-*      Object               -   (O_xxx...)                             *
-*      Class                -   (CL_xxx...)                            *
-*      Event                -   (E_xxx...)                             *
+*  PROGRAM VÁLTOZÓK                                                    *
+*      Belső tábla         -   (I_xxx...)                              *
+*      FORM paraméter      -   ($xxxx...)                              *
+*      Konstans            -   (C_xxx...)                              *
+*      Paraméter változó   -   (P_xxx...)                              *
+*      Szelekciós opció    -   (S_xxx...)                              *
+*      Sorozatok (Range)   -   (R_xxx...)                              *
+*      Globális változók   -   (V_xxx...)                              *
+*      Lokális változók    -   (L_xxx...)                              *
+*      Munkaterület        -   (W_xxx...)                              *
+*      Típus               -   (T_xxx...)                              *
+*      Makrók              -   (M_xxx...)                              *
+*      Field-symbol        -   (FS_xxx...)                             *
+*      Methodus            -   (METH_xxx...)                           *
+*      Objektum            -   (O_xxx...)                              *
+*      Osztály             -   (CL_xxx...)                             *
+*      Esemény             -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 DATA:
@@ -82,22 +82,22 @@ DATA I_CHECK_BSZNUM TYPE STANDARD TABLE OF T_CHECK_BSZNUM INITIAL SIZE 0.
 *& SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-* Company in the other system.
+* Vállalat másik rendszer.
 PARAMETERS: P_BUKRS  TYPE CHAR4  OBLIGATORY DEFAULT '2330'.
-* Company in the current system
+* Vállalat saját rendszer
 PARAMETERS: P_BUKRST LIKE /ZAK/BEVALLP-BUKRS VALUE CHECK OBLIGATORY.
 SELECTION-SCREEN: END OF BLOCK BL01.
 
 SELECTION-SCREEN: BEGIN OF BLOCK BL02 WITH FRAME TITLE TEXT-T02.
-* Upload identifier
+* Feltöltés azonosító
 SELECT-OPTIONS S_PACK FOR /ZAK/BEVALLP-PACK NO-EXTENSION.
-* Data reporting identifier
+* Adatszolgáltatási azonosító
 PARAMETERS: P_BSZNUM LIKE /ZAK/BEVALLD-BSZNUM OBLIGATORY
                                        DEFAULT '050'.
-* Type of return
+* Bevallás fajta
 PARAMETERS: P_BTYPAR LIKE /ZAK/BEVALL-BTYPART OBLIGATORY
                                        DEFAULT C_BTYPART_AFA.
-* Test (or productive)
+* Teszt (v. éles)
 PARAMETERS: P_TESZT AS CHECKBOX DEFAULT 'X'.
 SELECTION-SCREEN: END OF BLOCK BL02.
 
@@ -106,10 +106,10 @@ SELECTION-SCREEN: END OF BLOCK BL02.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
   PERFORM INITIALIZATION.
-* Determine the RFC destination depending on the current system
+* RFC cél meghatározása az aktuális rendszer függvényében
   PERFORM SET_RFC_DESTINATION.
 *++1765 #19.
-* Authorization check
+* Jogosultság vizsgálat
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -117,7 +117,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   You do not have authorization to run the program!
+*   Önnek nincs jogosultsága a program futtatásához!
   ENDIF.
 *--1765 #19.
 
@@ -136,14 +136,14 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR S_PACK-HIGH.
 * AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN.
-*  Service identifier check
+*  Szolgáltatás azonosító ellenőrzése
   PERFORM VER_BSZNUM   USING P_BUKRST
                              P_BTYPAR
                              P_BSZNUM
                              V_REPID
                     CHANGING V_SUBRC.
 
-*  VAT return type check
+*  AFA bevallás típus ellenőrzése
   PERFORM VER_BTYPEART USING P_BUKRST
                              P_BTYPAR
                              C_BTYPART_AFA
@@ -151,7 +151,7 @@ AT SELECTION-SCREEN.
 
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE E030.
-*    Please provide a VAT-type return identifier!
+*    Kérem ÁFA típusú bevallás azonosítót adjon meg!
   ENDIF.
 *&---------------------------------------------------------------------*
 * START-OF-SELECTION
@@ -163,7 +163,7 @@ START-OF-SELECTION.
 * END-OF-SELECTION
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
-* No list is created in the background
+* Háttérben nem készítünk listát
 *  IF SY-BATCH IS INITIAL.
   PERFORM LIST_DISPLAY.
 *  ENDIF.
@@ -219,7 +219,7 @@ FORM SUB_F4_PACK
     LT_DYNPFIELDS  TYPE TABLE OF DYNPREAD.
 
   REFRESH LT_DYNPFIELDS.
-* Read the content from the P_BUKRS parameter field
+* A P_BUKRS paraméter mezőben lévő tartalom beolvasása
   LWA_DYNPFIELDS-FIELDNAME = 'P_BUKRS'.
   APPEND LWA_DYNPFIELDS TO LT_DYNPFIELDS.
 
@@ -248,12 +248,12 @@ FORM SUB_F4_PACK
     V_BUKRS = LWA_DYNPFIELDS-FIELDVALUE.
   ENDIF.
 
-* Retrieve the upload identifiers for all companies
+* Az összes vállalathoz tartozó feltöltési azonosító lekérése
   PERFORM EXECUTE_OPEN_PACK
                  TABLES I_/ZAK/OPACK
                   USING V_BUKRS.
 
-* Display the search help
+* A keresési segítség megjelenítése
   CALL FUNCTION 'F4IF_INT_TABLE_VALUE_REQUEST'
     EXPORTING
       RETFIELD        = 'PACK'
@@ -293,7 +293,7 @@ FORM EXECUTE_ANAL.
 
   DEFINE LM_CURRENCY_INTERNAL.
     L_EXTERNAL_AMOUNT = &1.
-*   Amount conversion to internal HUF format
+*   Összeg konverzió belső HUF formátumra
     CALL FUNCTION 'BAPI_CURRENCY_CONV_TO_INTERNAL'
       EXPORTING
         CURRENCY             = &2
@@ -305,9 +305,9 @@ FORM EXECUTE_ANAL.
   END-OF-DEFINITION.
 
 
-* Determining the company currency
+* Válallat pénznem meghatározása
 
-*  Reading company data
+*  Vállalati adatok beolvasása
   PERFORM GET_T001(/ZAK/AFA_SAP_SELN) USING
                          P_BUKRST
                          L_SUBRC.
@@ -315,13 +315,13 @@ FORM EXECUTE_ANAL.
     MESSAGE A036 WITH V_BUKRS.
   ENDIF.
 
-* Retrieve the upload identifiers for all companies
+* Az összes vállalathoz tartozó feltöltési azonosító lekérése
   PERFORM EXECUTE_OPEN_PACK
                  TABLES I_/ZAK/OPACK
                   USING P_BUKRS.
 
 
-* Collect the analytics for the upload identifier(s) that have not been transferred
+* Az adott nem áttöltött feltöltési azonosító(k)hoz tartozó analitika begyűjtése
   LOOP AT I_/ZAK/OPACK INTO WA_/ZAK/OPACK WHERE PACK IN S_PACK.
     REFRESH: LI_ANALITIKA,
              LI_AFA_SZLA,
@@ -341,11 +341,11 @@ FORM EXECUTE_ANAL.
 *++1665 #01.
 *    LOOP AT LI_ANALITIKA INTO LW_ANALITIKA WHERE BSZNUM NE P_BSZNUM.
     LOOP AT LI_ANALITIKA INTO LW_ANALITIKA.
-*     Company reassignment
+*     Vállalat átforgatás
       LW_ANALITIKA-FI_BUKRS = LW_ANALITIKA-BUKRS.
       LW_ANALITIKA-BUKRS    = P_BUKRST.
       MODIFY LI_ANALITIKA FROM LW_ANALITIKA TRANSPORTING BUKRS FI_BUKRS.
-*     Currency handling
+*     Pénznem kezelés
       LM_CURRENCY_INTERNAL LW_ANALITIKA-DMBTR T001-WAERS.
       LM_CURRENCY_INTERNAL LW_ANALITIKA-LWBAS T001-WAERS.
       LM_CURRENCY_INTERNAL LW_ANALITIKA-LWSTE T001-WAERS.
@@ -364,7 +364,7 @@ FORM EXECUTE_ANAL.
       ENDIF.
 *--1665 #01.
     ENDLOOP.
-*   Company adjustment for AFA_SZLA
+*   Vállalat forgatás AFA_SZLA
     LOOP AT LI_AFA_SZLA INTO LW_AFA_SZLA.
       LW_AFA_SZLA-BUKRS = P_BUKRST.
       MODIFY LI_AFA_SZLA FROM LW_AFA_SZLA TRANSPORTING BUKRS.
@@ -375,7 +375,7 @@ FORM EXECUTE_ANAL.
       ENDIF.
     ENDLOOP.
 *--2014.12.17 BG
-*   /ZAK/UPDATE call for each company and upload identifier
+*   /ZAK/UPDATE hívas egyenként a vállalat és feltöltés azonosítóra
     PERFORM UPDATE_AFA_SZLA TABLES LI_ANALITIKA
                                    LI_AFA_SZLA
                                    LI_E_RETURN
@@ -509,7 +509,7 @@ FORM CHECK_BSZNUM_BTYPE  TABLES   $I_CHECK_BSZNUM LIKE I_CHECK_BSZNUM
 
   DATA LW_CHECK_BSZNUM TYPE T_CHECK_BSZNUM.
 
-* Already checked
+* Ellenőriztük már
   READ TABLE $I_CHECK_BSZNUM TRANSPORTING NO FIELDS
                              WITH KEY BUKRS = $BUKRS
                                       BTYPE = $BTYPE
@@ -528,7 +528,7 @@ FORM CHECK_BSZNUM_BTYPE  TABLES   $I_CHECK_BSZNUM LIKE I_CHECK_BSZNUM
     SORT $I_CHECK_BSZNUM.
   ELSE.
     MESSAGE E360 WITH $BUKRS $BTYPE $BSZNUM.
-*   No data reporting is configured for company & and return type &!
+*   & vállalat & bevallás típushoz & adatszolgáltatás nincs beállítva!
   ENDIF.
 
 ENDFORM.                    " CHECK_BSZNUM_BTYPE

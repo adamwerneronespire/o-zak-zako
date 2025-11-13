@@ -1,6 +1,6 @@
 FUNCTION /ZAK/ONELL_BOOK_EXCEL .
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE OPTIONAL
@@ -30,7 +30,7 @@ FUNCTION /ZAK/ONELL_BOOK_EXCEL .
   DATA: V_SUBRC LIKE SY-SUBRC.
 
   IF NOT T_BEVALLO[] IS INITIAL.
-*   Adatkonzisztencia ellenőrzése
+*   Data consistency check
     IF NOT I_BUKRS IS INITIAL AND
        NOT I_BTYPE IS INITIAL AND
        NOT I_GJAHR IS INITIAL AND
@@ -49,7 +49,7 @@ FUNCTION /ZAK/ONELL_BOOK_EXCEL .
       ENDLOOP.
     ENDIF.
   ELSE.
-*   Ha bármelyik paraméter üres hiba
+*   Error if any parameter is empty
     IF I_BUKRS IS INITIAL OR
        I_BTYPE IS INITIAL OR
        I_GJAHR IS INITIAL OR
@@ -72,10 +72,10 @@ FUNCTION /ZAK/ONELL_BOOK_EXCEL .
 
   CHECK V_SUBRC IS INITIAL.
 
-* BEVALLO első sora
+* BEVALLO first row
   READ TABLE T_BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
 
-* Adatok meghatározása
+* Determining data
 *++FI 20070213
 *   PERFORM GET_DATA_ONELL TABLES T_BEVALLO
 *                                I_EXCEL
@@ -83,7 +83,7 @@ FUNCTION /ZAK/ONELL_BOOK_EXCEL .
 *                                V_SUBRC.
 
 *++BG 2008.04.16
-* Vállalat forgatás
+* Company rotation
   CALL FUNCTION '/ZAK/ROTATE_BUKRS_OUTPUT'
     EXPORTING
       I_AD_BUKRS    = W_/ZAK/BEVALLO-BUKRS
@@ -106,12 +106,12 @@ FUNCTION /ZAK/ONELL_BOOK_EXCEL .
 *--S4HANA#01.
 *--FI 20070213
 
-* Önellenőrzési pótlék beállítás hiba
+* Self-audit surcharge setup error
   IF V_SUBRC EQ 4.
     RAISE ERROR_ONELL_BOOK.
   ENDIF.
 
-* Nincs adat nem töltünk le semmit
+* No data, nothing is downloaded
   IF I_EXCEL[] IS INITIAL.
     RAISE EMPTY_FILE.
   ENDIF.
@@ -120,7 +120,7 @@ FUNCTION /ZAK/ONELL_BOOK_EXCEL .
 ENHANCEMENT-POINT /ZAK/ZAK_TELEKOM_ONELL_BOOK SPOTS /ZAK/FUNCTIONS_ES .
 
 
-* Excel fájl készítése
+* Creating Excel file
   PERFORM DOWNLOAD_FILE_ONELL TABLES I_EXCEL
                               USING  W_/ZAK/BEVALLO
 *++S4HANA#01.

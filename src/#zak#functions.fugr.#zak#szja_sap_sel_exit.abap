@@ -1,6 +1,6 @@
 FUNCTION /ZAK/SZJA_SAP_SEL_EXIT.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS OPTIONAL
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE OPTIONAL

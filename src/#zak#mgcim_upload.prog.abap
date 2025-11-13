@@ -1,18 +1,18 @@
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Magánszemély címadatok feltöltése CSV formátumból   *
-*& /ZAK/MGCIM táblába a /ZAK/ZAKO rendszer adóigazolás funkciójához          *
+*& Function description: Upload individual address data from CSV format   *
+*& Into table /ZAK/MGCIM for the tax certificate function of the /ZAK/ZAKO system          *
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2008.02.28
-*& Funkc.spec.készítő: Róth Nándor  - FMC
-*& SAP modul neve    : /ZAK/ZAKO
-*& Program  típus    : Riport
-*& SAP verzió        : 5.0
+*& Author            : Balázs Gábor - FMC
+*& Creation date     : 2008.02.28
+*& Functional spec by: Róth Nándor  - FMC
+*& SAP module name   : /ZAK/ZAKO
+*& Program  type     : Report
+*& SAP version       : 5.0
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION      TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *&
 *&---------------------------------------------------------------------*
@@ -21,37 +21,37 @@ REPORT  /ZAK/MGCIM_UPLOAD MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                            *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (G_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant             -   (C_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
+*      Range                -   (R_xxx...)                              *
+*      Global variables     -   (G_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
+*      Field symbol         -   (FS_xxx...)                             *
+*      Method               -   (METH_xxx...)                           *
+*      Object               -   (O_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*Adatdeklaráció
+*Data declaration
 
-*Fájl adatok
+*File data
 TYPES: BEGIN OF T_FILE_DATA,
          ADOAZON TYPE /ZAK/ADOAZON,
          NAME    TYPE /ZAK/NAME,
@@ -76,11 +76,11 @@ DATA G_SUBRC LIKE SY-SUBRC.
 *&---------------------------------------------------------------------*
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
-*Általános szelekciók:
+*General selections:
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-*Fájl elérés
+*File access
 PARAMETERS P_PATH TYPE LOCALFILE OBLIGATORY.
-*Fejsor az állományban
+*Header row in the file
 PARAMETERS P_HEAD AS CHECKBOX DEFAULT 'X'.
 SELECTION-SCREEN: END OF BLOCK BL01.
 
@@ -90,7 +90,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2265 #02.
 *                  ID 'TCD'  FIELD SY-TCODE.
@@ -101,7 +101,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -111,14 +111,14 @@ INITIALIZATION.
 AT SELECTION-SCREEN.
   IF NOT SY-BATCH IS INITIAL.
     MESSAGE E259.
-*   A program háttérben nem futtatható!
+*   The program cannot be executed in the background!
   ENDIF.
 
 *&--------------------------------------------------------------------*
 *& AT SELECTION-SCREEN OUTPUT
 *&--------------------------------------------------------------------*
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_PATH.
-* Fájl nyitás keresési segítség
+* File open search help
   PERFORM GET_FILENAME CHANGING P_PATH.
 
 *&--------------------------------------------------------------------*
@@ -128,10 +128,10 @@ START-OF-SELECTION.
 
   IF NOT SY-BATCH IS INITIAL.
     MESSAGE E259.
-*   A program háttérben nem futtatható!
+*   The program cannot be executed in the background!
   ENDIF.
 
-* Adatfájl beolvasása
+* Reading data file
   PERFORM OPEN_DATA_FILE TABLES I_FILE
                          USING  ''     "BATCH mode
                                 P_PATH
@@ -139,10 +139,10 @@ START-OF-SELECTION.
                                 G_SUBRC.
   IF NOT G_SUBRC IS INITIAL.
     MESSAGE E082 WITH P_PATH.
-*   Hiba a & fájl megnyitásánál!
+*   Error opening file &!
   ENDIF.
 
-* Adatok feltöltése
+* Uploading data
   PERFORM UPLOAD_DATA.
 
 END-OF-SELECTION.
@@ -167,18 +167,18 @@ FORM UPLOAD_DATA .
     APPEND W_/ZAK/MGCIM TO I_/ZAK/MGCIM.
   ENDLOOP.
 
-*Adatbázis módosítás
+*Database modification
   MODIFY /ZAK/MGCIM FROM TABLE I_/ZAK/MGCIM.
   COMMIT WORK AND WAIT.
   MESSAGE I261.
-* Adatok feltöltve!
+* Data uploaded!
 
 
 ENDFORM.                    " UPLOAD_DATA
 *&---------------------------------------------------------------------*
 *&      Form  get_filename
 *&---------------------------------------------------------------------*
-*       PC file keresés - F4 nyomógombra szelekciós paraméterhez
+*       PC file search - for the selection parameter on the F4 key
 *----------------------------------------------------------------------*
 *      -->$FNAME     text
 *----------------------------------------------------------------------*
@@ -260,7 +260,7 @@ FORM OPEN_DATA_FILE  TABLES   $I_FILE LIKE I_FILE
     DELETE LI_XLS INDEX 1.
   ENDIF.
 
-* CSV bontás
+* CSV split
   LOOP AT LI_XLS.
     PERFORM SPLIT_DATA USING LI_XLS-LINE
                     CHANGING W_FILE.
@@ -269,7 +269,7 @@ FORM OPEN_DATA_FILE  TABLES   $I_FILE LIKE I_FILE
 
   IF $I_FILE[] IS INITIAL.
     MOVE 4 TO $SUBRC.
-* A & állomány nem tartalmaz feldolgozható rekordot!
+* The & file does not contain records that can be processed!
     MESSAGE E260 WITH $PATH.
 
   ENDIF.

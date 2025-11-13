@@ -1,24 +1,24 @@
 *&---------------------------------------------------------------------*
-*& Program: Migrációs program ÁFA bevállás
+*& Program: Migration program for VAT returns
 *&---------------------------------------------------------------------*
 REPORT /ZAK/MT_MIGR_AFA .
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: Migrációs program önrevízióhoz - státuszok kezelése
+*& Function description: Migration program for self-revision - status handling
 *&---------------------------------------------------------------------*
-*& Szerző            : Kukely Anna
-*& Létrehozás dátuma : 2006.10.30
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author            : Kukely Anna
+*& Creation date     : 2006.10.30
+*& Functional spec by: ________
+*& SAP module name    : ADO
+*& Program  type     : Report
+*& SAP version       : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION      TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2006.10.30   Kukely Anna      létrehozás
+*& 0001   2006.10.30   Kukely Anna      creation
 *&
 *&---------------------------------------------------------------------*
 
@@ -26,13 +26,13 @@ INCLUDE /ZAK/COMMON_STRUCT.
 INCLUDE /ZAK/READ_TOP.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 *TABLES: ZAD_HRHAVI_TH.
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
-* file típusok
+* File types
 CONSTANTS:  C_FILE_XLS(2) TYPE C VALUE   '02',
             C_FILE_TXT(2) TYPE C VALUE   '01',
             C_FILE_XML(2) TYPE C VALUE   '03',
@@ -43,23 +43,23 @@ CONSTANTS:  C_FILE_XLS(2) TYPE C VALUE   '02',
             C_BEGIN_ROW   TYPE I VALUE    '1'.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table       -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
+*      Constant             -   (C_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
+*      Range                -   (R_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
+*      Field symbol         -   (FS_xxx...)                             *
+*      Method               -   (METH_xxx...)                           *
+*      Object               -   (O_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 TYPES: BEGIN OF /ZAK/ZAK_MIGR,
@@ -85,7 +85,7 @@ DATA: I_OUTTAB    TYPE STANDARD TABLE OF /ZAK/MIGRACI01 INITIAL SIZE 0,
 
 DATA: I_HIBA TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA   INITIAL SIZE 0.
 DATA: I_LINE TYPE STANDARD TABLE OF /ZAK/LINE            INITIAL SIZE 0.
-* excel betöltéshez
+* for Excel loading
 DATA: W_XLS      TYPE ALSMEX_TABLINE,
       W_DD03P    TYPE DD03P,
       W_MAIN_STR TYPE DD03P,
@@ -94,7 +94,7 @@ DATA: W_XLS      TYPE ALSMEX_TABLINE,
 DATA: W_OUTTAB  TYPE /ZAK/MIGRACI01,
       W_BEVALLI TYPE /ZAK/BEVALLI,
       W_ELSO    TYPE /ZAK/BEVALLI.
-* adatszerkezet hiba
+* data structure error
 DATA: W_HIBA    TYPE /ZAK/ADAT_HIBA.
 DATA: BEGIN OF T_/ZAK/ZAKAFA3  OCCURS 0.               "
         INCLUDE STRUCTURE /ZAK/AFA_003_KI.
@@ -109,7 +109,7 @@ DATA: BEGIN OF T_HIBA  OCCURS 0,
         FIELD_N(20),
       END OF T_HIBA.
 
-* ALV kezelési változók
+* ALV control variables
 DATA: V_OK_CODE          LIKE SY-UCOMM,
       V_SAVE_OK          LIKE SY-UCOMM,
       V_REPID            LIKE SY-REPID,
@@ -167,7 +167,7 @@ INITIALIZATION.
   P_BTYPE = '0665'.
   PERFORM READ_ADDITIONALS.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -175,7 +175,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -203,18 +203,18 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
 
-*  Bevallás fajta meghatározása
+*  Determine tax return category
   PERFORM READ_BEVALLO USING P_BUKRS
                              P_BTYPE
                              S_EV
                              S_HO.
 
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 W_/ZAK/BEVALL-BTYPART
                                 C_ACTVT_01.
 
-* vezérlő táblák olvasása
+* Read control tables
   PERFORM READ_CUST_TABLE USING P_BUKRS
                                 P_BTYPE
                                 P_BSZNUM.
@@ -241,7 +241,7 @@ END-OF-SELECTION.
 *  <--  p2        text
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
-* Vállalat megnevezése
+* Company name
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -356,7 +356,7 @@ FORM CHECK_PARAMS.
   DATA: LV_ACTIVE TYPE ABAP_BOOL,
         LV_STRING TYPE STRING.
 
-* Vállalat + Bevallás típus
+* Company + tax return type
   IF NOT P_BUKRS IS INITIAL AND
      NOT P_BTYPE IS INITIAL.
 
@@ -368,7 +368,7 @@ FORM CHECK_PARAMS.
     ENDIF.
 
   ENDIF.
-* Adatszolgáltatás
+* Data supply
   IF P_BSZNUM IS INITIAL.
     MESSAGE E161(/ZAK/ZAK) WITH P_BUKRS P_BTYPE .
   ENDIF.
@@ -379,8 +379,8 @@ FORM READ_BEVALLO USING    $BUKRS
                            $EV
                            $HO.
 
-* egy bevallás típus csak egy bevallás fajtához tartozhat, így
-* a bevallás fajta meghatározásánál elég az első bejegyzést vizsgálni!
+* A tax return type can belong to only one tax return category, so
+* it is enough to check the first entry when determining the category!
   SELECT  * INTO W_/ZAK/BEVALLO FROM /ZAK/BEVALLO
                        WHERE BUKRS EQ $BUKRS AND
                             BTYPE EQ $BTYPE
@@ -402,7 +402,7 @@ ENDFORM.                    " READ_BEVALL
 FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
                               $BTYPE  LIKE /ZAK/BEVALL-BTYPE
                               $BSZNUM LIKE /ZAK/BEVALLD-BSZNUM.
-* Bevallás adatszolgáltatás feltöltések  !
+* Tax return data supply uploads!
   SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
                             WHERE BUKRS  EQ $BUKRS AND
                                   BTYPE  EQ $BTYPE AND
@@ -411,7 +411,7 @@ FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
 *   MESSAGE E011 WITH $BUKRS $BTYPE $BSZNUM.
   ENDIF.
 
-* Adatszerkezet-mező összerendelés meghatározása
+* Determine the data structure-field mapping
   SELECT * INTO TABLE I_/ZAK/BEVALLC FROM /ZAK/BEVALLC
                             WHERE BTYPE EQ $BTYPE AND
                                   BSZNUM EQ $BSZNUM.
@@ -517,11 +517,11 @@ FORM MAKE_ALV.
       , L_LAYOUT TYPE SLIS_LAYOUT_ALV
       , L_SORT TYPE SLIS_SORTINFO_ALV
       , L_EVENTS TYPE SLIS_ALV_EVENT
-      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " fejsor T_FCAT-hoz
+      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " Header row for T_FCAT
       .
   FIELD-SYMBOLS: <FCAT> TYPE SLIS_FIELDCAT_ALV.
   L_REPID = SY-REPID.
-* Mező katalógus
+* Field catalog
   DATA: L_FIELDCAT TYPE SLIS_FIELDCAT_ALV.
   FIELD-SYMBOLS: <FC> TYPE SLIS_FIELDCAT_ALV.
   DATA: GT_FIELDCAT5     TYPE SLIS_T_FIELDCAT_ALV.
@@ -544,9 +544,9 @@ FORM MAKE_ALV.
     EXIT.
   ENDIF.
 
-  GS_LAYOUT-ZEBRA               = 'X'."Csíkozott sorok
-  GS_LAYOUT-COLWIDTH_OPTIMIZE   = 'X'."Oszlopok optimalizálása
-  GS_LAYOUT-GET_SELINFOS = ''. " olvassa be a szelekciókat
+  GS_LAYOUT-ZEBRA               = 'X'."Striped rows
+  GS_LAYOUT-COLWIDTH_OPTIMIZE   = 'X'."Optimize column widths
+  GS_LAYOUT-GET_SELINFOS = ''. " Read the selections
   LOOP AT GT_FIELDCAT5 ASSIGNING <FC>.
     <FC>-SELTEXT_S = <FC>-FIELDNAME.
     <FC>-SELTEXT_M = <FC>-FIELDNAME.
@@ -593,8 +593,8 @@ ENDFORM.                    " STATUS_SET
 FORM USER_COMMAND4 USING RF_UCOMM LIKE SY-UCOMM
                         SELFIELD TYPE SLIS_SELFIELD.
   DATA: ANSWER.
-  DATA: L_SZAM LIKE SY-TABIX,   "Könyvelendő rec szamolása
-        L_PC   LIKE SY-TABIX.      " Profit Cent. számolása
+  DATA: L_SZAM LIKE SY-TABIX,   "Counting records to be posted
+        L_PC   LIKE SY-TABIX.      " Profit center calculation
   DATA: RET_CODE LIKE SY-SUBRC.
   IF RF_UCOMM EQ 'CHECK_ELL'.
     PERFORM MAKE_ERR_LIST.
@@ -619,11 +619,11 @@ FORM MAKE_ERR_LIST.
       , L_LAYOUT TYPE SLIS_LAYOUT_ALV
       , L_SORT TYPE SLIS_SORTINFO_ALV
       , L_EVENTS TYPE SLIS_ALV_EVENT
-      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " fejsor T_FCAT-hoz
+      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " Header row for T_FCAT
       .
   FIELD-SYMBOLS: <FCAT> TYPE SLIS_FIELDCAT_ALV.
   L_REPID = SY-REPID.
-* Mező katalógus
+* Field catalog
   DATA: L_FIELDCAT TYPE SLIS_FIELDCAT_ALV.
   FIELD-SYMBOLS: <FC> TYPE SLIS_FIELDCAT_ALV.
   DATA: GT_FIELDCAT9     TYPE SLIS_T_FIELDCAT_ALV.
@@ -647,9 +647,9 @@ FORM MAKE_ERR_LIST.
     EXIT.
   ENDIF.
 
-  GS_LAYOUT-ZEBRA               = 'X'."Csíkozott sorok
-  GS_LAYOUT-COLWIDTH_OPTIMIZE   = 'X'."Oszlopok optimalizálása
-  GS_LAYOUT-GET_SELINFOS = ''. " olvassa be a szelekciókat
+  GS_LAYOUT-ZEBRA               = 'X'."Striped rows
+  GS_LAYOUT-COLWIDTH_OPTIMIZE   = 'X'."Optimize column widths
+  GS_LAYOUT-GET_SELINFOS = ''. " Read the selections
 
   READ TABLE GT_FIELDCAT9 WITH KEY FIELDNAME = 'FIELD_N'
                                  ASSIGNING <FC>.

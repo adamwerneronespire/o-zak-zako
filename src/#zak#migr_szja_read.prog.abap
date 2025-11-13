@@ -1,21 +1,21 @@
 *&---------------------------------------------------------------------*
-*& Program: SZJA XML migráció
+*& Program: SZJA XML migration
 *&---------------------------------------------------------------------*
 REPORT /ZAK/MIGR_SZJA_READ MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: __________________
+*& Function description: __________________
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor
-*& Létrehozás dátuma : 2018.12.06
-*& Funkc.spec.készítő: Balázs Gábor
-*& SAP modul neve    : ADO
-*& Program  típus    : ________
-*& SAP verzió        : ________
+*& Author            : Balázs Gábor
+*& Creation date     : 2018.12.06
+*& Functional spec by: Balázs Gábor
+*& SAP module name    : ADO
+*& Program  type     : ________
+*& SAP version       : ________
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                   LEÍRÁS
+*& LOG#     DATE        MODIFIER                   DESCRIPTION
 *& ----   ----------   ----------     ---------------------- -----------
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
@@ -23,7 +23,7 @@ INCLUDE: /ZAK/READ_TOP.
 INCLUDE EXCEL__C.
 INCLUDE <ICON>.
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: BKPF,
         T001,
@@ -33,11 +33,11 @@ TABLES: BKPF,
 *&---------------------------------------------------------------------*
 TYPE-POOLS: SLIS.
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 CONSTANTS: C_CLASS       TYPE DD02L-TABCLASS VALUE 'INTTAB',
            C_A           TYPE C VALUE 'A',
-* file típusok
+* File types
            C_FILE_XLS(2) TYPE C VALUE   '02',
            C_FILE_TXT(2) TYPE C VALUE   '01',
            C_FILE_XML(2) TYPE C VALUE   '03',
@@ -45,12 +45,12 @@ CONSTANTS: C_CLASS       TYPE DD02L-TABCLASS VALUE 'INTTAB',
 *++PTGSZLAA 2014.03.04 BG (Ness)
            C_FILE_CSV(2) TYPE C VALUE   '05',
 *--PTGSZLAA 2014.03.04 BG (Ness)
-* excel betöltéshez
+* for Excel loading
            C_END_ROW     TYPE I VALUE '65536',
            C_BEGIN_ROW   TYPE I VALUE    '1',
-* file ellenörzése
+* File verification
            C_FILE_X(1)   TYPE C VALUE    'X',
-* analitika adatszerkezet
+* Analytics data structure
            C_ANALITIKA   LIKE /ZAK/BEVALLD-STRNAME VALUE '/ZAK/ANALITIKA'.
 *++BG 2007.02.12
 *++1565 #10.
@@ -66,11 +66,11 @@ CONSTANTS: C_PTGSZLAH  TYPE /ZAK/BTYPE VALUE 'PTGSZLAH'.
 *--1865 #10.
 *type: begin of line
 *&---------------------------------------------------------------------*
-*& Munkaterület  (W_XXX..)                                           *
+*& WORK AREA  (W_XXX..)                                           *
 *&---------------------------------------------------------------------*
-* struktúra ellenőrzése
+* Structure check
 DATA: W_DD02L TYPE DD02L.
-* excel betöltéshez
+* for Excel loading
 DATA: W_XLS      TYPE ALSMEX_TABLINE,
       W_DD03P    TYPE DD03P,
       W_MAIN_STR TYPE DD03P,
@@ -79,7 +79,7 @@ DATA: W_XLS      TYPE ALSMEX_TABLINE,
 DATA: W_OUTTAB  TYPE /ZAK/ANALITIKA,
       W_BEVALLI TYPE /ZAK/BEVALLI,
       W_ELSO    TYPE /ZAK/BEVALLI.
-* adatszerkezet hiba
+* data structure error
 DATA: W_HIBA    TYPE /ZAK/ADAT_HIBA.
 DATA: BEGIN OF GT_OUTTAB OCCURS 0.
     INCLUDE STRUCTURE /ZAK/ANALITIKA.
@@ -89,7 +89,7 @@ DATA: G_LIGHTS_NAME TYPE LVC_CIFNM VALUE 'LIGHT'.
 * message
 DATA: W_MESSAGE TYPE BAPIRET2.
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                      *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
@@ -100,26 +100,26 @@ DATA: I_XLS      TYPE STANDARD TABLE OF ALSMEX_TABLINE
       I_MAIN_STR TYPE STANDARD TABLE OF DD03P       INITIAL SIZE 0.
 DATA: I_OUTTAB    TYPE STANDARD TABLE OF /ZAK/ANALITIKA INITIAL SIZE 0,
       I_OUTTAB_EX TYPE STANDARD TABLE OF /ZAK/ANALITIKA INITIAL SIZE 0.
-* bevallási időszakok
+* Tax return periods
 DATA: I_BEVALLI TYPE STANDARD TABLE OF /ZAK/BEVALLI  INITIAL SIZE 0,
       I_ELSO    TYPE STANDARD TABLE OF /ZAK/BEVALLI  INITIAL SIZE 0.
-* Hiba adaszerkezet tábla
+* Error data-structure table
 DATA: I_HIBA TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA   INITIAL SIZE 0.
 DATA: I_LINE TYPE STANDARD TABLE OF /ZAK/LINE            INITIAL SIZE 0.
 * message
 DATA: E_MESSAGE TYPE STANDARD TABLE OF BAPIRET2     INITIAL SIZE 0.
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (V_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Type                -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
+*      Field symbol        -   (FS_xxx...)                             *
+*      Method              -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA: V_WRBTR       LIKE BSEG-WRBTR,
       V_WRBTR_C(16).
@@ -127,21 +127,21 @@ DATA: V_DATUM      LIKE SY-DATUM,
       V_DATUMC(10) TYPE C.
 DATA: V_TABIX LIKE SY-TABIX,
       V_SUBRC LIKE SY-SUBRC.
-* változók
+* Variables
 DATA: V_BTYPE   LIKE /ZAK/BEVALL-BTYPE.
-* szelekciós képernyő
+* Selection screen
 DATA: V_BUTXT   LIKE T001-BUTXT.
 DATA: V_TYPE    LIKE /ZAK/BEVALLD-FILETYPE,
       V_STRNAME LIKE /ZAK/BEVALLD-STRNAME.
-* excel betöltéshez
+* for Excel loading
 DATA: V_BEGIN_COL TYPE I,
       V_END_COL   TYPE I.
-* képernyőre
+* For the screen
 DATA: V_SCR1(70) TYPE C,
       V_SCR2(70) TYPE C,
       V_SCR3(70) TYPE C,
       V_SCR4(70) TYPE C.
-* ALV kezelési változók
+* ALV control variables
 DATA: V_OK_CODE           LIKE SY-UCOMM,
       V_SAVE_OK           LIKE SY-UCOMM,
       V_REPID             LIKE SY-REPID,
@@ -162,12 +162,12 @@ DATA: V_OK_CODE           LIKE SY-UCOMM,
 *      V_EVENT_RECEIVER    TYPE REF TO LCL_EVENT_RECEIVER,
 *      V_EVENT_RECEIVER2   TYPE REF TO LCL_EVENT_RECEIVER,
       V_STRUC             TYPE DD02L-TABNAME.
-* popup üzenethez
+* For popup message
 DATA: V_TEXT1(40) TYPE C,
       V_TEXT2(40) TYPE C,
       V_TITEL     TYPE C,
       V_ANSWER.
-* file ellenörzése
+* File verification
 DATA: LV_ACTIVE TYPE ABAP_BOOL.
 DATA: V_WNUM(30) TYPE N,
       V_WAERS    LIKE T001-WAERS.
@@ -178,7 +178,7 @@ DATA: V_XLS_LINE TYPE SY-TABIX VALUE 5000.
 FIELD-SYMBOLS <FS> TYPE ANY.
 *++0002 BG 2007.07.02
 RANGES R_ADOAZON FOR /ZAK/ANALITIKA-ADOAZON.
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-sign,
         &3      TO &1-option,
@@ -188,10 +188,10 @@ DEFINE M_DEF.
 END-OF-DEFINITION.
 *--0002 BG 2007.07.02
 *&---------------------------------------------------------------------*
-*& PARAMÉTEREK  (P_XXXXXXX..)                                          *
+*& PARAMETERS  (P_XXXXXXX..)                                          *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIÓK (S_XXXXXXX..)                                        *
+*& SELECT-OPTIONS (S_XXXXXXX..)                                        *
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
 SELECTION-SCREEN BEGIN OF LINE.
@@ -243,10 +243,10 @@ SELECTION-SCREEN END OF BLOCK B01.
 *       INITIALIZATION
 *-----------------------------------------------------------------------
 INITIALIZATION.
-* megnevezések
+* Descriptions
   PERFORM FIELD_DESCRIPT.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -254,18 +254,18 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 ************************************************************************
 * AT SELECTION-SCREEN
 ************************************************************************
 AT SELECTION-SCREEN.
-* megnevezések
+* Descriptions
   PERFORM FIELD_DESCRIPT.
   PERFORM CHECK_PARAMS .
 *++BG 2006/08/31
-*  Fájl névben vállalat kód ellenőrzés
+*  Check the company code in the file name
   PERFORM CHECK_BUKRS_FILENAME.
 *--BG 2006/08/31
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
@@ -279,11 +279,11 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
 *   ENDIF.
 *--PTGSZLAA 2014.03.04 BG (Ness)
 AT SELECTION-SCREEN ON BLOCK B04.
-**  Blokk ellenőrzése
+**  Block validation
 *   PERFORM VER_BLOCK_B04 USING P_NORM
 *                               P_ISMET
 *                               P_PACK.
-* Választó kapcsoló ellenörzése !
+* Check the selector switch!
 *AT SELECTION-SCREEN ON RADIOBUTTON GROUP R01.
 ************************************************************************
 * AT SELECTION-SCREEN output
@@ -297,7 +297,7 @@ AT SELECTION-SCREEN OUTPUT.
 ************************************************************************
 START-OF-SELECTION.
 
-* bevallás fajta meghatározása
+* Determine tax return category
   PERFORM READ_BEVALL USING P_BUKRS
                             P_BTYPE.
 * XML upload
@@ -414,7 +414,7 @@ FORM CHECK_PARAMS.
       ENDIF.
     ENDIF.
   ENDIF.
-* Adatszerkezet meghatározás és meglétének ellenörzése
+* Determine the data structure and verify its existence
   PERFORM CHECK_BEVALLD USING P_BUKRS
                               P_BTYPE
                               P_BSZNUM
@@ -478,7 +478,7 @@ FORM CHECK_PARAMS.
 *--PTGSZLAA 2014.03.04 BG (Ness)
   CONDENSE L_RET NO-GAPS.
   IF L_RET EQ SPACE.
-*   A megadott fájlt (&) nem lehet megnyitni!
+*   The specified file (&) cannot be opened!
     MESSAGE E004(/ZAK/ZAK) WITH P_FDIR.
   ENDIF.
 * -- 0001 CST 2006.05.27
@@ -497,23 +497,23 @@ FORM CHECK_BUKRS_FILENAME.
         END OF L_SPLIT.
   DATA  L_LINES TYPE I.
   DATA  L_LENGTH TYPE I.
-*  Feldaraboljuk a fájl elérést.
+*  Split the file path.
   SPLIT P_FDIR AT '\' INTO TABLE L_SPLIT.
-*  Az utolsó lesz a fájl név.
+*  The last part is the file name.
   DESCRIBE TABLE L_SPLIT LINES L_LINES.
   READ TABLE L_SPLIT INDEX L_LINES.
-*  Meghatározzuk a vállalat hosszát
+*  Determine the length of the company code
   L_LENGTH = STRLEN( P_BUKRS ).
-*  Ha a fáhjl név nem a vállalat kóddal kezdődik:
+*  If the file name does not start with the company code:
   IF L_SPLIT-LINE(L_LENGTH) NE P_BUKRS.
     MESSAGE E194 WITH P_BUKRS.
-*   Helytelen fájl! A fájl név nem a vállalat kóddal kezdődik! (&1)
+*   Incorrect file! The file name does not start with the company code! (&1)
   ENDIF.
 ENDFORM.                    " CHECK_BUKRS_FILENAME
 *&---------------------------------------------------------------------*
 *&      Form  filename_get
 *&---------------------------------------------------------------------*
-*       Elérési útvonal bevitele
+*       Enter the path
 *----------------------------------------------------------------------*
 FORM FILENAME_GET.
   DATA:
@@ -667,7 +667,7 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
                    CHANGING $TYPE LIKE /ZAK/BEVALLD-FILETYPE
                             $STRNAME LIKE /ZAK/BEVALLD-STRNAME.
 *  CLEAR: W_/ZAK/BEVALLD.
-** Adatszerkezet meghatározás
+** Determine the data structure
 *  SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
 *                  WHERE BUKRS  EQ $BUKRS AND
 *                  BTYPE  EQ $BTYPE AND
@@ -676,25 +676,25 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
 *    MESSAGE E011 WITH $BUKRS $BTYPE $BSZNUM.
 *  ELSE.
 *    IF W_/ZAK/BEVALLD-FILETYPE EQ '04'.
-** SAP adatszolgáltatást jelenleg nem engedélyezett !
+** SAP data supply is currently not permitted!
 *      MESSAGE E006.
 *    ENDIF.
 **++2007.01.11 BG (FMC)
 *    IF NOT W_/ZAK/BEVALLD-XSPEC IS INITIAL.
 *      MESSAGE E205 WITH $BSZNUM.
-**   & adatszolgáltatás speciálisra van beállítva! (/ZAK/BEVALLD)
+**   & data supply is configured as special! (/ZAK/BEVALLD)
 *    ENDIF.
 **--2007.01.11 BG (FMC)
 *    $STRNAME = W_/ZAK/BEVALLD-STRNAME.
 *    $TYPE    = W_/ZAK/BEVALLD-FILETYPE.
-** XML formátumnál nem kell struktúra
+** No structure is needed for XML format
 *    IF  W_/ZAK/BEVALLD-FILETYPE NE '03'.
-** Adatszerkezet meglétének ellenörzése!
+** Checking for the existence of the data structure!
 *      SELECT SINGLE * INTO W_DD02L FROM DD02L
 *                      WHERE TABNAME  EQ W_/ZAK/BEVALLD-STRNAME AND
 *                            AS4LOCAL EQ C_A AND
 *                            TABCLASS EQ C_CLASS.
-** aktivált?
+** activated?
 *      IF SY-SUBRC NE 0.
 *        MESSAGE E050 WITH W_/ZAK/BEVALLD-STRNAME .
 *      ENDIF.
@@ -747,8 +747,8 @@ ENDFORM.                    " modif_screen
 *----------------------------------------------------------------------*
 FORM READ_BEVALL USING    $BUKRS
                           $BTYPE.
-* egy bevallás típus csak egy bevallás fajtához tartozhat, így
-* a bevallás fajta meghatározásánál elég az első bejegyzést vizsgálni!
+* A tax return type can belong to only one tax return category, so
+* it is enough to check the first entry when determining the category!
   SELECT SINGLE * INTO W_/ZAK/BEVALL FROM /ZAK/BEVALL
                        WHERE BUKRS EQ $BUKRS AND
                              BTYPE EQ $BTYPE.
@@ -817,7 +817,7 @@ FORM UPD_DATA  USING    $TESZT.
   IF SY-SUBRC EQ 0.
     COMMIT WORK AND WAIT.
     MESSAGE I216.
-*   Adatmódosítások elmentve!
+*   Data modifications saved!
   ELSE.
     ROLLBACK WORK.
     MESSAGE E000 WITH 'Hiba a mentésnél!' SY-SUBRC.

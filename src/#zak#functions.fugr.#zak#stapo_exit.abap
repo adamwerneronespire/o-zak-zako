@@ -1,6 +1,6 @@
 FUNCTION /ZAK/STAPO_EXIT.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(I_BUKRS) TYPE  BUKRS
 *"     VALUE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -13,7 +13,7 @@ FUNCTION /ZAK/STAPO_EXIT.
                                                          INITIAL SIZE 0.
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                             *
 *&---------------------------------------------------------------------*
 
   DATA: L_INDEX(3) TYPE N,
@@ -35,15 +35,15 @@ FUNCTION /ZAK/STAPO_EXIT.
        W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_TARS OR
        W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_UCS OR
 *++2108 #15.
-       W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_KATA.
+      W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_KATA.
 *--2108 #15.
 
       IF NOT I_PACK IS INITIAL.
-* statisztika flag törlése!
-* ismételt feltöltés, vagy feltöltés
-* azonosítóval létrehozott adatokat törlünk technikai funkcióval,
-* így a megelőző
-* indexű lezárt bevallásnál a statisztikai flag-et üresre módosítom
+* Delete statistics flag!
+* Repeated upload, or upload
+* Delete data created with an identifier via technical function,
+* therefore in the previous
+* closed return with that index the statistics flag is set to blank
         SELECT * INTO TABLE I_FREE_STAPO FROM /ZAK/ANALITIKA
                       WHERE BUKRS EQ I_BUKRS AND
                             PACK EQ I_PACK
@@ -53,13 +53,13 @@ FUNCTION /ZAK/STAPO_EXIT.
         IF NOT I_FREE_STAPO[] IS INITIAL.
           CLEAR L_ZINDEX.
 *++BG 2006/06/20
-          MOVE 'X' TO L_ADOAZON_SAVE. "Első esetben mindig lefusson
+          MOVE 'X' TO L_ADOAZON_SAVE. "Ensure it always runs in the first case
 *--BG 2006/06/20
 *++2308 #03.
           SORT I_FREE_STAPO.
 *--2308 #03.
           LOOP AT I_FREE_STAPO INTO W_/ZAK/ANALITIKA.
-*         Dialógus futás biztosításhoz
+*         To ensure dialog execution
             PERFORM PROCESS_IND_ITEM USING '1000'
                                            L_ZINDEX
                                            TEXT-P12.
@@ -67,7 +67,7 @@ FUNCTION /ZAK/STAPO_EXIT.
             L_MONAT_TOL = W_/ZAK/ANALITIKA-MONAT.
             AT NEW MONAT.
 *++1508 #03.
-              MOVE 'X' TO L_ADOAZON_SAVE. "Hónapváltás
+              MOVE 'X' TO L_ADOAZON_SAVE. "Month change
 *--1508 #03.
 
               CALL FUNCTION '/ZAK/SET_PERIOD'
@@ -128,15 +128,15 @@ FUNCTION /ZAK/STAPO_EXIT.
 
 
 
-* statisztika flag jelölése !
-* Új analitika bejegyzések, így a megelőző
-* indexű lezárt bevallásnál a statisztikai flag-et 'X'-re módosítom
+* Mark statistics flag!
+* New analytics entries, so for the previous
+* closed return with that index I set the statistics flag to 'X'
       CLEAR L_ZINDEX.
 *++BG 2006/06/20
-      MOVE 'X' TO L_ADOAZON_SAVE. "Első esetben mindig lefusson
+      MOVE 'X' TO L_ADOAZON_SAVE. "Ensure it always runs in the first case
 *--BG 2006/06/20
       LOOP AT T_ANALITIKA INTO W_/ZAK/ANALITIKA.
-*       Dialógus futás biztosításhoz
+*       To ensure dialog execution
         PERFORM PROCESS_IND_ITEM USING '1000'
                                        L_ZINDEX
                                        TEXT-P12.
@@ -145,7 +145,7 @@ FUNCTION /ZAK/STAPO_EXIT.
         L_MONAT_TOL = W_/ZAK/ANALITIKA-MONAT.
         AT NEW MONAT. "#EC_CI_SORTED
 *++1508 #03.
-          MOVE 'X' TO L_ADOAZON_SAVE. "Hónapváltás
+          MOVE 'X' TO L_ADOAZON_SAVE. "Month change
 *--1508 #03.
 
           CALL FUNCTION '/ZAK/SET_PERIOD'
@@ -229,8 +229,8 @@ FORM SET_STAPO USING    $/ZAK/ANALITIKA STRUCTURE W_/ZAK/ANALITIKA
 *        MONAT IN R_MONAT AND
 *        ZINDEX EQ $INDEX AND
 **++BG 2006/06/12
-**Nem kell ABEV azonosítót vizsgálni mert nem biztos, hogy
-**adott ez előző időszakban
+**No need to check the ABEV identifier because it might not
+**exist in the previous period
 **       ABEVAZ EQ $/ZAK/ANALITIKA-ABEVAZ AND
 **--BG 2006/06/12
 *        ADOAZON EQ $/ZAK/ANALITIKA-ADOAZON AND
@@ -255,9 +255,9 @@ FORM SET_STAPO USING    $/ZAK/ANALITIKA STRUCTURE W_/ZAK/ANALITIKA
                             $STAPO.
 
 *++BG 2007.06.12
-* Bizonyos esetekben előfodult, hogy az UPDATE funkció nem
-* jelölte statisztikai tételre fentiekben meghatározott összes
-* tételt, ami bevallás hibához vezetett, ezért le kell ellenőrizni
+* In some cases the UPDATE function did not
+* mark every item defined above as statistical,
+* which led to declaration errors, therefore we must check
   ELSEIF SY-SUBRC EQ 0.
     SELECT COUNT( * )
                      FROM /ZAK/ANALITIKA
@@ -276,7 +276,7 @@ FORM SET_STAPO USING    $/ZAK/ANALITIKA STRUCTURE W_/ZAK/ANALITIKA
     IF SY-SUBRC EQ 0.
       ROLLBACK WORK.
       MESSAGE A224(/ZAK/ZAK).
-*    Súlyos adatbázis hiba a statisztikai flag jelölésnél!
+*    Severe database error when marking the statistics flag!
     ENDIF.
 *--BG 2007.06.12
   ENDIF.

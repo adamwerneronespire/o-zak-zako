@@ -1,6 +1,6 @@
 FUNCTION /ZAK/READ_ABEV_EXIT.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(I_BUKRS) TYPE  BUKRS
 *"     REFERENCE(I_BTYPE) TYPE  /ZAK/BTYPE
@@ -19,9 +19,9 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
         I_CHECK_BEVALLO  TYPE STANDARD TABLE OF /ZAK/BEVALLO
                                                          INITIAL SIZE 0.
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
-* Bevallás fajta
+* Declaration type
 *++S4HANA#01.
 *  RANGES: R_MONAT FOR /ZAK/ANALITIKA-MONAT.
   TYPES TT_MONAT TYPE RANGE OF /ZAK/ANALITIKA-MONAT.
@@ -61,7 +61,7 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
         BSZNUM  EQ T_ANALITIKA-BSZNUM AND
         GJAHR   EQ T_ANALITIKA-GJAHR  AND
         MONAT   EQ T_ANALITIKA-MONAT.
-* az adószámra volt már feltöltés és lezárt ?
+* Was there already an upload and closure for the tax number?
   SELECT * INTO TABLE I_CHECK_BEVALLO FROM /ZAK/BEVALLO
   FOR ALL ENTRIES IN T_ANALITIKA
   WHERE BUKRS   EQ T_ANALITIKA-BUKRS AND
@@ -80,12 +80,12 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
 
   LOOP AT T_ANALITIKA INTO W_/ZAK/ANALITIKA.
 
-* Dialógus futás biztosításhoz
+* To ensure dialog execution
     PERFORM PROCESS_IND_ITEM USING '10000'
                                    L_INDEX
                                    TEXT-P11.
 
-* ...negyedéves
+* ...quarterly
     IF /ZAK/BEVALL-BIDOSZ = 'N'.
       CASE W_/ZAK/ANALITIKA-MONAT.
         WHEN '01' OR '02' OR '03'.
@@ -149,7 +149,7 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
           APPEND LS_MONAT TO LT_MONAT.
 *--S4HANA#01.
       ENDCASE.
-* ...éves
+* ...annual
     ELSEIF /ZAK/BEVALL-BIDOSZ = 'E'.
 *++S4HANA#01.
 *      REFRESH R_MONAT.
@@ -165,7 +165,7 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
       LS_MONAT-HIGH   = '12'.
       APPEND LS_MONAT TO LT_MONAT.
 *--S4HANA#01.
-* ...havi
+* ...monthly
     ELSEIF /ZAK/BEVALL-BIDOSZ = 'H'.
 *++S4HANA#01.
 *      REFRESH R_MONAT.
@@ -187,7 +187,7 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
                                   GJAHR  = W_/ZAK/ANALITIKA-GJAHR
                                   MONAT  = W_/ZAK/ANALITIKA-MONAT.
     IF SY-SUBRC NE 0.
-* 'E' ha az időszakra a bevallás nincs lezárva
+* 'E' if the declaration is not closed for the period
       W_/ZAK/ANALITIKA-ABEVAZ = C_ABEVAZ_107.
       W_/ZAK/ANALITIKA-FIELD_C = C_107_E.
       CLEAR W_/ZAK/ANALITIKA-FIELD_N.
@@ -195,7 +195,7 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
     ELSE.
       IF  W_/ZAK/BEVALLSZ-FLAG NE 'Z' AND
           W_/ZAK/BEVALLSZ-FLAG NE 'X'.
-* 'E' ha az időszakra a bevallás nincs lezárva
+* 'E' if the declaration is not closed for the period
         W_/ZAK/ANALITIKA-ABEVAZ = C_ABEVAZ_107.
         W_/ZAK/ANALITIKA-FIELD_C = C_107_E.
         CLEAR W_/ZAK/ANALITIKA-FIELD_N.
@@ -212,15 +212,13 @@ FUNCTION /ZAK/READ_ABEV_EXIT.
                                       ADOAZON = W_/ZAK/ANALITIKA-ADOAZON.
         ENDLOOP.
         IF SY-SUBRC EQ  0.
-* 'H' ha az időszak már le van zárva, és erre az időszakra már van
-* feladás
+* 'H' if the period is already closed and there is a posting for this period
           W_/ZAK/ANALITIKA-ABEVAZ = C_ABEVAZ_107.
           W_/ZAK/ANALITIKA-FIELD_C = C_107_H.
           CLEAR W_/ZAK/ANALITIKA-FIELD_N.
           APPEND W_/ZAK/ANALITIKA TO I_STAT_ANALITIKA.
         ELSE.
-* 'P' ha az időszak már le van zárva, és erre az adószámra még nem jött
-* feladás
+* 'P' if the period is already closed and no posting has arrived yet for this tax number
           W_/ZAK/ANALITIKA-ABEVAZ = C_ABEVAZ_107.
           W_/ZAK/ANALITIKA-FIELD_C = C_107_P.
           CLEAR W_/ZAK/ANALITIKA-FIELD_N.

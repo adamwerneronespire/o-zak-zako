@@ -201,16 +201,16 @@
 - [ ] src/#zak#read_migr_xml.prog.abap
 - [x] src/#zak#read_migr_xml_0203.prog.abap
 - [x] src/#zak#read_top.prog.abap
-- [ ] src/#zak#read_txt.fugr.#zak#csv.abap
-- [ ] src/#zak#read_txt.fugr.#zak#lread_txtf01.abap
-- [ ] src/#zak#read_txt.fugr.#zak#lread_txttop.abap
-- [ ] src/#zak#read_txt.fugr.#zak#saplread_txt.abap
-- [ ] src/#zak#read_txt.fugr.#zak#txt.abap
-- [ ] src/#zak#read_xls.fugr.#zak#lread_xlsf01.abap
-- [ ] src/#zak#read_xls.fugr.#zak#lread_xlstop.abap
-- [ ] src/#zak#read_xls.fugr.#zak#saplread_xls.abap
-- [ ] src/#zak#read_xls.fugr.#zak#xls.abap
-- [ ] src/#zak#read_xml.fugr.#zak#lread_xmlf01.abap
+- [x] src/#zak#read_txt.fugr.#zak#csv.abap
+- [x] src/#zak#read_txt.fugr.#zak#lread_txtf01.abap
+- [x] src/#zak#read_txt.fugr.#zak#lread_txttop.abap
+- [x] src/#zak#read_txt.fugr.#zak#saplread_txt.abap
+- [x] src/#zak#read_txt.fugr.#zak#txt.abap
+- [x] src/#zak#read_xls.fugr.#zak#lread_xlsf01.abap
+- [x] src/#zak#read_xls.fugr.#zak#lread_xlstop.abap
+- [x] src/#zak#read_xls.fugr.#zak#saplread_xls.abap
+- [x] src/#zak#read_xls.fugr.#zak#xls.abap
+- [x] src/#zak#read_xml.fugr.#zak#lread_xmlf01.abap
 - [ ] src/#zak#read_xml.fugr.#zak#lread_xmltop.abap
 - [ ] src/#zak#read_xml.fugr.#zak#saplread_xml.abap
 - [ ] src/#zak#read_xml.fugr.#zak#xml.abap

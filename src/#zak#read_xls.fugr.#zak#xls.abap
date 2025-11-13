@@ -1,6 +1,6 @@
 FUNCTION /ZAK/XLS.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(FILENAME) LIKE  RLGRAP-FILENAME
 *"     VALUE(I_BEGIN_COL) TYPE  I
@@ -50,23 +50,23 @@ FUNCTION /ZAK/XLS.
 * MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *         WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
   ELSE.
-* Adtak adatot ?
+* Was data provided?
     IF I_XLS[] IS INITIAL.
       MESSAGE E100(/ZAK/ZAK) .
     ENDIF.
 *++BG 2006/07/07
-* Ha fejléces az adatállomány, akkor első sor törlése
+* If the data file has a header, delete the first line
     IF NOT I_HEAD IS INITIAL.
       DELETE  I_XLS WHERE ROW = 1.
     ENDIF.
 *--BG 2006/07/07
 
-* Adatok betöltése belső táblába
+* Load data into the internal table
     LOOP AT I_XLS INTO W_XLS.
 
       CLEAR W_LINE.
-* mező tipus, hossz, tartalom alapján ellenörzés, az eredmény
-* a check_tab-reptext mezőbe írom.
+* Validation based on field type, length, and content, the result
+* is written into the check_tab-reptext field.
 
       READ TABLE CHECK_TAB WITH KEY POSITION = W_XLS-COL.
 *++2011.12.12 BG
@@ -87,7 +87,7 @@ FUNCTION /ZAK/XLS.
 *      MODIFY CHECK_TAB INDEX SY-TABIX.
       MODIFY CHECK_TAB INDEX L_TABIX.
 *--2011.12.12 BG
-* Hiba tábla töltése
+* Populate error table
       IF NOT CHECK_TAB-REPTEXT IS INITIAL.
         CLEAR: W_HIBA.
         W_HIBA-SOR          = W_XLS-ROW.
@@ -103,7 +103,7 @@ FUNCTION /ZAK/XLS.
       CONCATENATE 'W_' CHECK_TAB-TABNAME '-' CHECK_TAB-FIELDNAME
       INTO V_TAB_FIELD.
       ASSIGN (V_TAB_FIELD) TO <F1>.
-* Összeg mezőnél nem lehet karakteres érték!
+* Amount fields cannot contain character values!
       IF CHECK_TAB-INTTYPE EQ 'P' AND
          NOT W_XLS-VALUE CO '-0123456789., '.
         W_XLS-VALUE = '0000'.
@@ -154,7 +154,7 @@ FUNCTION /ZAK/XLS.
     ENDLOOP. "I_XLS
 
 *++0003 2008.12.11 BG (Fmc)
-*   Ha be van állítva adóazonosító ellenőrzés
+*   If tax identification validation is enabled
     IF NOT I_CDV IS INITIAL.
       CALL FUNCTION '/ZAK/CHECK_ADOAZON'
         IMPORTING
@@ -168,6 +168,6 @@ FUNCTION /ZAK/XLS.
     ENDIF.
 *--0003 2008.12.11 BG (Fmc)
   ENDIF.
-* teszteléshez
+* for testing
   INTERN[] = I_XLS[].
 ENDFUNCTION.

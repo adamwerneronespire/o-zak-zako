@@ -18,7 +18,7 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
 *++BG 2009.03.27
   DATA  L_LENGTH TYPE I.
 *--BG 2009.03.27
-* automatikus ellenörzés a konvertálási rutin alapján periódus!
+* Automatic check based on the conversion routine for period!
   IF $CHECK_TAB-CONVEXIT EQ 'PERI'
      AND NOT $W_XLS-VALUE IS INITIAL.
     CLEAR W_RETURN.
@@ -33,12 +33,12 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
     $CHECK_TAB-REPTEXT = W_RETURN-MESSAGE.
   ENDIF.
 
-* főkönyvi szám ellenörzése
+* Check general ledger account number
   IF $CHECK_TAB-ROLLNAME EQ 'SAKNR'
      AND NOT $W_XLS-VALUE IS INITIAL  .
     CLEAR L_SAKNR.
 *++BG 2009.03.27
-*   Meghatározzuk a mező hosszát
+*   Determine the field length
     L_LENGTH = STRLEN(  $W_XLS-VALUE ).
     IF L_LENGTH < 10.
 *--BG 2009.03.27
@@ -62,7 +62,7 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
       $CHECK_TAB-REPTEXT = 'Ismeretlen főkönyvi szám!'.
     ENDIF.
   ENDIF.
-* kötelező mezők ellenörzése!
+* Check mandatory fields!
   IF $W_XLS-VALUE IS INITIAL.
 *    CASE $CHECK_TAB-ROLLNAME.
 *      WHEN 'SPBUP'       OR
@@ -74,13 +74,13 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
 *           'DMBTR'       OR
 *           'HWBAS'       OR
 *           'DMBTR'.
-*        $CHECK_TAB-REPTEXT = 'Mező megadása kötelező'.
+*        $CHECK_TAB-REPTEXT = 'Providing the field is mandatory'.
 *    ENDCASE.
   ENDIF.
-*  mező típus ellenörzése, tartalmi ellenörzés
+*  Field type validation, content validation
   CASE $CHECK_TAB-ROLLNAME.
 *++BG 2006.04.10
-** adószám ellenörzése
+** Checking tax number
 *    WHEN '/ZAK/ADOAZON'.
 *      IF NOT $I_CDV IS INITIAL.
 *        CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
@@ -89,7 +89,7 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
 *             IMPORTING
 *                  RETURN = $CHECK_TAB-REPTEXT.
 *      ENDIF.
-** adószám ellenörzése
+** Checking tax number
 *    WHEN '/ZAK/ADOSZAM'.
 *      IF NOT $I_CDV IS INITIAL.
 *        CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
@@ -99,15 +99,15 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
 *                  RETURN = $CHECK_TAB-REPTEXT.
 *      ENDIF.
     WHEN '/ZAK/ADOAZON' OR '/ZAK/ADOSZAM'.
-*   Adószám átalakítás '-' nélkülire
+*   Convert the tax number to a version without '-'
       CALL FUNCTION '/ZAK/CONV_ADOAZON'
         EXPORTING
           INPUT  = $W_XLS-VALUE
         IMPORTING
           OUTPUT = $W_XLS-VALUE.
 *++0003 2008.12.11 BG (Fmc)
-*     Az adószám ellenőrzés áthelyezésre került, mert kell hozzá
-*     a születési év is:
+*     The tax number validation was moved because the year of birth
+*     is also needed:
 *      IF NOT $I_CDV IS INITIAL.
 *        CALL FUNCTION '/ZAK/READ_ADOAZON_EXIT'
 *             EXPORTING
@@ -120,12 +120,12 @@ FORM CHECK_XLS USING    $W_XLS TYPE ALSMEX_TABLINE
 *--BG 2006.04.10
 *
   CASE $CHECK_TAB-INTTYPE.
-* csak numerikus lehet
+* Only numeric characters are allowed
     WHEN 'N' .
       IF NOT $W_XLS-VALUE CO '-0123456789., '.
         $CHECK_TAB-REPTEXT = 'Csak numerikus lehet!'.
       ENDIF.
-* csak érték lehet
+* Only numeric values are allowed
     WHEN 'P'.
       IF NOT $W_XLS-VALUE CO '-0123456789., '.
         $CHECK_TAB-REPTEXT = 'Csak numerikus lehet!'.

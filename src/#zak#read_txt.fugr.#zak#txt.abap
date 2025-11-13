@@ -1,6 +1,6 @@
 FUNCTION /ZAK/TXT.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     VALUE(FILENAME) LIKE  RLGRAP-FILENAME
 *"     REFERENCE(I_STRNAME) TYPE  STRUKNAME
@@ -146,15 +146,15 @@ FUNCTION /ZAK/TXT.
 *    MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
 *            WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
     MESSAGE E167(/ZAK/ZAK).
-*   Hiba az fájl megnyitásánál!
+*   Error opening the file!
 *--BG 2006.04.10
   ENDIF.
-* Adtak adatot ?
+* Was data provided?
   IF I_SOR[] IS INITIAL.
     MESSAGE E100(/ZAK/ZAK) .
   ENDIF.
 *++BG 2006/07/07
-* Fejléces adatállomány első sor törlése
+* Delete the first line of a headered data file
   IF NOT I_HEAD IS INITIAL.
     DELETE I_SOR INDEX 1.
   ENDIF.

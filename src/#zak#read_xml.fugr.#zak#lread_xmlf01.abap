@@ -18,7 +18,7 @@ FORM check_xml USING    $w_analitika TYPE /zak/analitika
                CHANGING $check_tab TYPE dd03p.
 *--S4HANA#01.
 
-* automatikus ellenörzés a konvertálási rutin alapján periódus!
+* Automatic check based on the conversion routine for period!
   IF $check_tab-convexit EQ 'PERI'
      AND NOT $w_analitika-field_c IS INITIAL.
     CLEAR w_return.
@@ -32,7 +32,7 @@ FORM check_xml USING    $w_analitika TYPE /zak/analitika
 
     $check_tab-reptext = w_return-message.
   ENDIF.
-* főkönyvi szám ellenörzése
+* Check general ledger account number
   IF $check_tab-rollname EQ 'SAKNR'
      AND NOT $w_analitika-field_c IS INITIAL  .
 
@@ -51,7 +51,7 @@ FORM check_xml USING    $w_analitika TYPE /zak/analitika
       $check_tab-reptext = 'Ismeretlen főkönyvi szám!'.
     ENDIF.
   ENDIF.
-* kötelező mezők ellenörzése!
+* Check mandatory fields!
   IF $w_analitika-field_c IS INITIAL.
     CASE $check_tab-rollname.
       WHEN 'SPBUP'       OR
@@ -65,7 +65,7 @@ FORM check_xml USING    $w_analitika TYPE /zak/analitika
         $check_tab-reptext = 'Mező megadása kötelező'.
     ENDCASE.
   ENDIF.
-*  mező típus ellenörzése, tartalmi ellenörzés
+*  Field type validation, content validation
   CASE $check_tab-rollname.
     WHEN 'NATSL'       OR
          'GESCH'       OR
@@ -75,9 +75,9 @@ FORM check_xml USING    $w_analitika TYPE /zak/analitika
       ELSE.
         $check_tab-reptext = 'Hibás character!Numerikus nem lehet'.
       ENDIF.
-* adószám ellenörzése a HR-böl
+* Tax number validation from HR
     WHEN '/ZAK/ADOAZON'.
-* csak numerikus lehet
+* Only numeric characters are allowed
     WHEN '/ZAK/TERMELO'  OR
          '/ZAK/GAZDA'    OR
          '/ZAK/REG'.
@@ -86,7 +86,7 @@ FORM check_xml USING    $w_analitika TYPE /zak/analitika
       ELSE.
         $check_tab-reptext = 'Hibás character!Csak numerikus lehet'.
       ENDIF.
-* csak érték lehet
+* Only numeric values are allowed
     WHEN 'DMBTR'         OR
          'HWBAS'         OR
          '/ZAK/SZJA_SZAE' OR
@@ -385,7 +385,7 @@ FORM process_ind_item USING   $value TYPE clike
                               $index TYPE sy-tabix
                               $text TYPE clike.
 *--S4HANA#01.
-*  Csak dialógus futtatásnál
+*  Only during dialog execution
   CHECK sy-batch IS INITIAL.
   ADD 1 TO $index.
   IF $index EQ $value.

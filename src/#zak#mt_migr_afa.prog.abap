@@ -9,7 +9,7 @@ REPORT /ZAK/MT_MIGR_AFA .
 *& Author            : Kukely Anna
 *& Creation date     : 2006.10.30
 *& Functional spec by: ________
-*& SAP modul neve    : ADO
+*& SAP module name    : ADO
 *& Program  type     : Report
 *& SAP version       : 46C
 *&---------------------------------------------------------------------*
@@ -517,7 +517,7 @@ FORM MAKE_ALV.
       , L_LAYOUT TYPE SLIS_LAYOUT_ALV
       , L_SORT TYPE SLIS_SORTINFO_ALV
       , L_EVENTS TYPE SLIS_ALV_EVENT
-      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " fejsor T_FCAT-hoz
+      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " Header row for T_FCAT
       .
   FIELD-SYMBOLS: <FCAT> TYPE SLIS_FIELDCAT_ALV.
   L_REPID = SY-REPID.
@@ -619,7 +619,7 @@ FORM MAKE_ERR_LIST.
       , L_LAYOUT TYPE SLIS_LAYOUT_ALV
       , L_SORT TYPE SLIS_SORTINFO_ALV
       , L_EVENTS TYPE SLIS_ALV_EVENT
-      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " fejsor T_FCAT-hoz
+      , L_FCAT TYPE SLIS_FIELDCAT_ALV  " Header row for T_FCAT
       .
   FIELD-SYMBOLS: <FCAT> TYPE SLIS_FIELDCAT_ALV.
   L_REPID = SY-REPID.

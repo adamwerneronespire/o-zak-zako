@@ -1,6 +1,6 @@
 FUNCTION /ZAK/XML_AFA_UPLOAD.
 *"----------------------------------------------------------------------
-*"*"Lokális interfész:
+*"*"Local interface:
 *"  IMPORTING
 *"     REFERENCE(FILENAME) LIKE  RLGRAP-FILENAME
 *"     REFERENCE(I_BUKRS) TYPE  T001-BUKRS
@@ -18,7 +18,7 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
 *"----------------------------------------------------------------------
   DATA L_SUBRC LIKE SY-SUBRC.
 
-* /zak/zak_analitikához
+* For /zak/zak_analitika
   DATA: L_ADOAZON LIKE /ZAK/ANALITIKA-ADOAZON,
         L_GJAHR   LIKE /ZAK/ANALITIKA-GJAHR,
         L_MONAT   LIKE /ZAK/ANALITIKA-MONAT,
@@ -38,7 +38,7 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
 
   DATA: L_BEGIN TYPE I.
 
-* Fejléc mezők:
+* Header fields:
   RANGES LR_VPOP_ABEV FOR /ZAK/ANALITIKA-ABEVAZ.
   RANGES LR_ONREV_ABEV FOR /ZAK/ANALITIKA-ABEVAZ.
   RANGES LR_NO_SORVEG_01 FOR RANGE_C2-LOW.
@@ -48,7 +48,7 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
 
 
 
-* ABEVAZ konvertálás
+* ABEVAZ conversion
   DEFINE LM_CONV_/ZAK/ABEVAZ.
     &2(1) = 'A'.
     CONCATENATE &2 &1(2) &1+6 INTO &2.
@@ -69,35 +69,35 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
     ENDIF.
   END-OF-DEFINITION.
 
-* VPOP ABEV mezők
+* VPOP ABEV fields
   M_DEF LR_VPOP_ABEV 'I' 'BT' 'A0HC0001AA' 'A0HC0025FA'.
-* Önrevíziós ABEV
+* Self-revision ABEV
   M_DEF LR_ONREV_ABEV 'I' 'EQ' 'A0AF004A' SPACE.
 
-* XML fájl beolvasása
+* Reading XML file
   PERFORM UPLOAD_XML_TO_TABLE TABLES I_DATA_TABLE
                               USING  FILENAME
                                      L_SUBRC.
-* Fájl megnyitás hiba
+* File open error
   IF L_SUBRC EQ 1.
     MESSAGE E082(/ZAK/ZAK) WITH FILENAME RAISING ERROR_OPEN_FILE.
-*   Hiba & fájl megnyitásánál!
-* XML fájl hiba
+*   Error & when opening the file!
+* XML file error
   ELSEIF L_SUBRC EQ 2.
     MESSAGE E172(/ZAK/ZAK) WITH FILENAME RAISING ERROR_XML.
-*   Hibás az XML fájl (&)!
+*   The XML file (&) is incorrect!
   ENDIF.
 
-* Nincs adat
+* No data
   IF I_DATA_TABLE[] IS INITIAL.
     MESSAGE E100(/ZAK/ZAK) RAISING EMPTY_FILE.
   ENDIF.
 
-* Vállalat törzsadat
+* Company master data
   SELECT SINGLE * FROM T001
                  WHERE BUKRS EQ I_BUKRS.
 
-* A nyomtatvány adatokban ellenőrizük az ABEV azonosítót!
+* We check the ABEV identifier in the form data!
   SELECT * INTO TABLE I_/ZAK/BEVALLB
            FROM /ZAK/BEVALLB
           WHERE BTYPE EQ  I_BTYPE.
@@ -111,40 +111,40 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
   SORT I_/ZAK/BEVALLBT BY LANGU BTYPE ABEVAZ.
 
   CLEAR L_INDEX.
-* M-es BTYPE összerakása
+* Building the M-type BTYPE
   CONCATENATE I_BTYPE 'M' INTO L_BTYPE_M.
 
-* Adatok feldolgozása
+* Data processing
   LOOP AT I_DATA_TABLE INTO W_DATA_LINE.
-* DIALÓGUS FUTÁS BIZTOSÍTÁSHOZ
+* To ensure dialog runtime
     PERFORM PROCESS_IND_ITEM USING '10000'
                                    L_INDEX
                                    TEXT-P01.
     CLEAR: W_HIBA.
-*   Adószám
+*   Tax number
     IF W_DATA_LINE-ELEMENT = 'adoszam'(004).
       CLEAR L_ADOAZON.
       L_ADOAZON = W_DATA_LINE-VALUE.
     ENDIF.
-*   Nyomtatvanyazonosito
+*   Form identifier
     IF W_DATA_LINE-ELEMENT = 'nyomtatvanyazonosito'(005).
       CLEAR L_NYOMT.
       L_NYOMT = W_DATA_LINE-VALUE.
       IF W_DATA_LINE-VALUE(4) NE I_BTYPE.
         W_HIBA-ZA_HIBA = 'Szelekciótól eltérő BTYPE!'(009).
         W_HIBA-SOR          = L_TABIX.
-*           W_HIBA-OSZLOP       = 'Nem tudjuk'.
+*           W_HIBA-OSZLOP       = 'We do not know'.
         W_HIBA-/ZAK/F_VALUE  = W_DATA_LINE-VALUE.
         W_HIBA-FIELDNAME    = 'BTYPE'.
         APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
       ENDIF.
-*     M-es lapokat már nem kell feldolgozni
+*     M-type sheets no longer need to be processed
       IF W_DATA_LINE-VALUE EQ L_BTYPE_M.
         EXIT.
       ENDIF.
     ENDIF.
 
-*   Ig
+*   To
     IF W_DATA_LINE-ELEMENT = 'ig'(006).
       CLEAR: L_GJAHR,L_MONAT.
       L_GJAHR = W_DATA_LINE-VALUE(4).
@@ -155,7 +155,7 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
 *   eazon
     IF W_DATA_LINE-ELEMENT = 'eazon'(003).
       CLEAR L_ABEVAZ.
-*     ABEVAZ konvertálás
+*     ABEVAZ conversion
       LM_CONV_/ZAK/ABEVAZ  W_DATA_LINE-ATTRIB L_ABEVAZ.
 *      IF L_ABEVAZ IN LR_NO_ABEV AND NOT LR_NO_ABEV[] IS INITIAL.
 *        LM_SAVE_ANALITIKA.
@@ -163,17 +163,17 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
 *        CONTINUE.
 *      ENDIF.
       MOVE L_ABEVAZ TO W_ANALITIKA-ABEVAZ.
-*     Önrevízió figyelése
+*     Monitoring self-revision
       IF  W_ANALITIKA-ABEVAZ IN LR_ONREV_ABEV AND  W_DATA_LINE-VALUE EQ 'O'.
         E_ONREV = 'X'.
       ENDIF.
 
-*     A nyomtatvány adatokban ellenőrizük az ABEV azonosítót!
+*     We check the ABEV identifier in the form data!
       READ TABLE I_/ZAK/BEVALLB INTO W_BEVALLB
                            WITH KEY BTYPE  = I_BTYPE
                                     ABEVAZ = W_ANALITIKA-ABEVAZ
                                     BINARY SEARCH.
-*     Ha van rekord és kell
+*     If there is a record and it is required
       IF SY-SUBRC EQ 0 AND NOT W_BEVALLB-XMLALL IS INITIAL.
         IF W_BEVALLB-FIELDTYPE EQ 'N'.
           IF NOT W_DATA_LINE-VALUE  CO '-0123456789., '.
@@ -183,13 +183,13 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
                                 ABEVAZ = W_ANALITIKA-ABEVAZ.
             W_HIBA-ZA_HIBA = 'Csak numerikus lehet!'(008).
             W_HIBA-SOR          = L_TABIX.
-*           W_HIBA-OSZLOP       = 'Nem tudjuk'.
+*           W_HIBA-OSZLOP       = 'We do not know'.
             W_HIBA-/ZAK/F_VALUE  = W_ANALITIKA-FIELD_C.
             CONCATENATE W_ANALITIKA-ABEVAZ W_BEVALLBT-ABEVTEXT
                         INTO W_HIBA-FIELDNAME SEPARATED BY '-'.
             APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
           ELSE.
-*         Negatív érték kezelése
+*         Handling negative values
             CLEAR L_ELOJEL.
             MOVE W_DATA_LINE-VALUE  TO W_ANALITIKA-FIELD_N.
             W_ANALITIKA-FIELD_N = W_ANALITIKA-FIELD_N *
@@ -210,9 +210,9 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
               OTHERS          = 2.
           IF SY-SUBRC <> 0.
             MESSAGE E173(/ZAK/ZAK) WITH W_ANALITIKA-FIELD_C.
-*            Összeg konvertálás hiba & !
+*            Amount conversion error & !
           ENDIF.
-*         Ha ez előjel '-' volt.
+*         If the sign was '-'.
           IF L_ELOJEL EQ '-'.
             MULTIPLY W_ANALITIKA-FIELD_N BY -1.
           ENDIF.
@@ -222,13 +222,13 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
           MOVE  W_DATA_LINE-VALUE TO W_ANALITIKA-FIELD_C.
         ENDIF.
         LM_SAVE_ANALITIKA.
-**     Nem létezik az abev azonosító
+**     The ABEV identifier does not exist
 *      ELSE.
-*        W_HIBA-ZA_HIBA = 'Abev azonosító nem létezik'(007).
+*        W_HIBA-ZA_HIBA = 'The ABEV identifier does not exist'(007).
 *        W_HIBA-SOR          = L_TABIX.
 *        W_HIBA-/ZAK/F_VALUE  = W_ANALITIKA-ABEVAZ.
 *        APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
-*     VPOP sor
+*     VPOP row
       ELSEIF SY-SUBRC EQ 0 AND   W_ANALITIKA-ABEVAZ IN LR_VPOP_ABEV.
         L_BEGIN = STRLEN( W_ANALITIKA-ABEVAZ ).
         SUBTRACT 2 FROM L_BEGIN.
@@ -242,11 +242,11 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
           IF NOT W_DATA_LINE-VALUE  CO '-0123456789., '.
             W_HIBA-ZA_HIBA = 'Csak numerikus lehet!'(008).
             W_HIBA-SOR          = L_TABIX.
-*           W_HIBA-OSZLOP       = 'Nem tudjuk'.
+*           W_HIBA-OSZLOP       = 'We do not know'.
             W_HIBA-/ZAK/F_VALUE  = W_DATA_LINE-VALUE.
             APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
           ELSE.
-*         Negatív érték kezelése
+*         Handling negative values
             CLEAR L_ELOJEL.
             MOVE W_DATA_LINE-VALUE  TO W_ANALITIKA-LWSTE.
             W_ANALITIKA-LWSTE = W_ANALITIKA-LWSTE *
@@ -267,9 +267,9 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
               OTHERS          = 2.
           IF SY-SUBRC <> 0.
             MESSAGE E173(/ZAK/ZAK) WITH W_ANALITIKA-LWSTE.
-*            Összeg konvertálás hiba & !
+*            Amount conversion error & !
           ENDIF.
-*         Ha ez előjel '-' volt.
+*         If the sign was '-'.
           IF L_ELOJEL EQ '-'.
             MULTIPLY W_ANALITIKA-LWSTE BY -1.
           ENDIF.
@@ -282,11 +282,11 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
           IF NOT W_DATA_LINE-VALUE  CO '-0123456789., '.
             W_HIBA-ZA_HIBA = 'Csak numerikus lehet!'(008).
             W_HIBA-SOR          = L_TABIX.
-*           W_HIBA-OSZLOP       = 'Nem tudjuk'.
+*           W_HIBA-OSZLOP       = 'We do not know'.
             W_HIBA-/ZAK/F_VALUE  = W_DATA_LINE-VALUE.
             APPEND W_HIBA TO T_HIBA. CLEAR W_HIBA.
           ELSE.
-*         Negatív érték kezelése
+*         Handling negative values
             CLEAR L_ELOJEL.
             MOVE W_DATA_LINE-VALUE  TO W_ANALITIKA-FWSTE.
             W_ANALITIKA-FWSTE = W_ANALITIKA-FWSTE *
@@ -307,9 +307,9 @@ FUNCTION /ZAK/XML_AFA_UPLOAD.
               OTHERS          = 2.
           IF SY-SUBRC <> 0.
             MESSAGE E173(/ZAK/ZAK) WITH W_ANALITIKA-FWSTE.
-*            Összeg konvertálás hiba & !
+*            Amount conversion error & !
           ENDIF.
-*         Ha ez előjel '-' volt.
+*         If the sign was '-'.
           IF L_ELOJEL EQ '-'.
             MULTIPLY W_ANALITIKA-FWSTE BY -1.
           ENDIF.

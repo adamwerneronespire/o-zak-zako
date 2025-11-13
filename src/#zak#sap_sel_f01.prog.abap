@@ -86,7 +86,7 @@ FORM VER_BSZNUM USING    $BUKRS
 
   CLEAR $SUBRC.
 
-* Meghatározzuk a BTYPE-okat
+* We determine the BTYPEs
   CALL FUNCTION '/ZAK/GET_BTYPES_FROM_BTYPART'
     EXPORTING
       I_BUKRS     = $BUKRS
@@ -130,11 +130,11 @@ FORM VER_BSZNUM USING    $BUKRS
   IF SY-SUBRC NE 0 OR L_PROGRAMM NE $REPID.
     MOVE 4 TO $SUBRC.
     MESSAGE E029 WITH $BSZNUM.
-*   Ez a program a  & adatszolgáltatáshoz nem használható!
+*   This program cannot be used for the & data service!
   ELSEIF SY-SUBRC EQ 0 AND NOT L_XSPEC IS INITIAL.
     MOVE 4 TO $SUBRC.
     MESSAGE E065 WITH $BSZNUM.
-*   Speciális adatszolgáltatás azonosító itt nem használható! (&)
+*   The special data service identifier cannot be used here! (&)
   ENDIF.
 
 ENDFORM.                    " ver_bsznum
@@ -156,7 +156,7 @@ FORM GET_ANALITIKA_ITEM TABLES  $/ZAK/ANALITIKA   STRUCTURE /ZAK/ANALITIKA
 
   SORT $/ZAK/ANALITIKA BY BUKRS BTYPE GJAHR MONAT ABEVAZ ITEM DESCENDING.
 
-* Tétel azonosító meghatározás
+* Determining the item identifier
   MOVE 1 TO $W_/ZAK/ANALITIKA-ITEM.
 *  DO.
 *    READ TABLE $/ZAK/ANALITIKA INTO LW_/ZAK/ANALITIKA
@@ -211,7 +211,7 @@ FORM VERIFY_BSZNUM  USING    $BUKRS
 
   CLEAR: L_BTYPE, $SUBRC.
 
-* BTYPE meghatározása
+* Determining BTYPE
   CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
     EXPORTING
       I_BUKRS     = $BUKRS
@@ -250,7 +250,7 @@ ENDFORM.                    " VERIFY_BSZNUM
 FORM GET_ONYB_ABEV  TABLES   $I_ONYB_ABEV LIKE I_ONYB_ABEV.
 
 
-* BEVALLB összesítő jelentések ABEV azonosítói:
+* ABEV identifiers of the BEVALLB summary reports:
 *++S4HANA#01.
 *  REFRESH $I_ONYB_ABEV.
   CLEAR $I_ONYB_ABEV[].

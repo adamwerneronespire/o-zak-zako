@@ -1,6 +1,6 @@
 FUNCTION-POOL /ZAK/READ_XML.                "MESSAGE-ID ..
 *&---------------------------------------------------------------------*
-*& Táblák                                                              *
+*& Tables                                                              *
 *&---------------------------------------------------------------------*
 *++S4HANA#01.
 *TABLES: SKB1,
@@ -12,7 +12,7 @@ TABLES: T001.
 TYPE-POOLS: IXML.
 
 *&---------------------------------------------------------------------*
-*& MUNKATERÜLETEK                                                      *
+*& WORK AREAS                                                          *
 *&---------------------------------------------------------------------*
 DATA: W_XLS       TYPE ALSMEX_TABLINE,
       W_ITAB      TYPE /ZAK/SZJA_001,
@@ -56,11 +56,11 @@ TYPES: BEGIN OF T_SOR,
 
 DATA: W_SOR TYPE T_SOR.
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK                                                        *
+*& INTERNAL TABLES                                                     *
 *&---------------------------------------------------------------------*
 DATA: I_ITAB TYPE STANDARD TABLE OF /ZAK/SZJA_001   INITIAL SIZE 0,
       I_XLS  TYPE STANDARD TABLE OF ALSMEX_TABLINE  INITIAL SIZE 0.
-* Hiba leíró tábla
+* Error description table
 DATA: I_HIBA      TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA  INITIAL SIZE 0,
       I_LINE2     TYPE STANDARD TABLE OF /ZAK/LINE      INITIAL SIZE 0,
       I_ANALITIKA TYPE STANDARD TABLE OF /ZAK/ANALITIKA
@@ -74,7 +74,7 @@ DATA I_/ZAK/BEVALLB  TYPE STANDARD TABLE OF /ZAK/BEVALLB   INITIAL SIZE 0.
 DATA I_/ZAK/BEVALLBT TYPE STANDARD TABLE OF /ZAK/BEVALLBT  INITIAL SIZE 0.
 
 
-*XML beolvasáshiz
+* For XML reading
 TYPES: BEGIN OF T_DATA_LINE,
          ELEMENT(50) TYPE C,
          ATTRIB(50)  TYPE C,
@@ -92,7 +92,7 @@ CONSTANTS: C_BTYPE_PTGSZLAA TYPE /ZAK/BTYPE VALUE 'PTGSZLAA',
 *--PTGSZLAH #01. 2015.01.16
 
 *++1665 #04.
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,

@@ -5,27 +5,27 @@
 *&---------------------------------------------------------------------*
 REPORT /ZAK/KATA_SAP_SEL MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& leválogatja a SAP bizonylatokból az adatokat, és a /ZAK/KATA_SEL-be
-*& tárolja.
+*& Function description: Based on the criteria entered on the selection,
+*& the program filters the data from the SAP documents and stores them
+*& in /ZAK/KATA_SEL.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor
-*& Létrehozás dátuma : 2021.02.17
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : /ZAK/ZAKO
-*& Program  típus    : Riport
-*& SAP verzió        :
+*& Author             : Balázs Gábor
+*& Creation date      : 2021.02.17
+*& Functional spec by : ________
+*& SAP module name    : /ZAK/ZAKO
+*& Program type       : Report
+*& SAP version        :
 *&--------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                 LEÍRÁS
+*& LOG#     DATE        MODIFIER                 DESCRIPTION
 *& ----   ----------   ----------    ----------------------- -----------
-*&                                   módosítása
+*&                                   modification
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 
-*MAKRO definiálás range feltöltéshez
+*Macro definition for populating a range
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -34,28 +34,28 @@ DEFINE M_DEF.
   COLLECT &1.
 END-OF-DEFINITION.
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                               *
 *&---------------------------------------------------------------------*
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
-*      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                             *
+*      FORM parameter        -   ($xxxx...)                             *
+*      Constant              -   (C_xxx...)                             *
+*      Parameter variable    -   (P_xxx...)                             *
+*      Selection option      -   (S_xxx...)                             *
+*      Ranges                -   (R_xxx...)                             *
+*      Global variables      -   (V_xxx...)                             *
+*      Local variables       -   (L_xxx...)                             *
+*      Work area             -   (W_xxx...)                             *
+*      Type                  -   (T_xxx...)                             *
+*      Macros                -   (M_xxx...)                             *
+*      Field-symbol          -   (FS_xxx...)                            *
+*      Method                -   (METH_xxx...)                          *
+*      Object                -   (O_xxx...)                             *
+*      Class                 -   (CL_xxx...)                            *
+*      Event                 -   (E_xxx...)                             *
 *&---------------------------------------------------------------------*
 DATA V_BUKRS TYPE BUKRS.
 DATA V_MESSAGE TYPE XFELD.
@@ -70,7 +70,7 @@ DATA V_SUBRC LIKE SY-SUBRC.
 
 DATA V_REPID LIKE SY-REPID.
 
-* ALV kezelési változók
+* Variables for ALV handling
 DATA: V_OK_CODE          LIKE SY-UCOMM,
       V_SAVE_OK          LIKE SY-UCOMM,
       V_CONTAINER        TYPE SCRFNAME VALUE '/ZAK/ZAK_9000',
@@ -84,18 +84,18 @@ DATA: V_OK_CODE          LIKE SY-UCOMM,
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-* Vállalat.
+* Company.
 PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALL-BUKRS VALUE CHECK
                           OBLIGATORY MEMORY ID BUK.
-* Bevallás típus.
+* Return type.
 PARAMETERS:  P_BTYPAR LIKE /ZAK/BEVALL-BTYPART
                                       DEFAULT C_BTYPART_AFA
                                               OBLIGATORY.
-* Év
+* Year
 PARAMETERS P_GJAHR TYPE GJAHR DEFAULT SY-DATUM(4) OBLIGATORY.
-*Hónap
+*Month
 PARAMETERS P_MONAT TYPE MONAT OBLIGATORY.
-*Test futás
+*Test run
 PARAMETERS P_TEST AS CHECKBOX DEFAULT 'X'.
 
 SELECTION-SCREEN: END OF BLOCK BL01.
@@ -106,7 +106,7 @@ SELECTION-SCREEN: END OF BLOCK BL01.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
 *++2265 #02.
-* Jogosultság vizsgálat
+* Authorization check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
                    ID 'TCD'  FIELD '/ZAK/KATA_SAP_SEL'.
 *--2265 #02.
@@ -131,34 +131,34 @@ AT SELECTION-SCREEN.
 * START-OF-SELECTION
 *&---------------------------------------------------------------------*
 START-OF-SELECTION.
-*  Vállalat forgatás
+*  Company rotation
   PERFORM ROTATE_BUKRS_OUTPUT USING  P_BUKRS
                                      V_BUKRS.
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING V_BUKRS
                                 P_BTYPAR
                                 C_ACTVT_01.
-* Hónap utolsó napja:
+* Last day of the month:
   PERFORM GET_LAST_DATE CHANGING V_LAST_DATE.
 
-* Package azonosítók meghatározása
+* Determining package identifiers
   PERFORM GET_PACK TABLES R_PACK.
   IF R_PACK[] IS INITIAL.
     MESSAGE I141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytic record matches the criteria!
     EXIT.
   ENDIF.
-*  KATA beállítások betöltése
+*  Loading KATA settings
   PERFORM GET_KATA_CUST USING V_SUBRC.
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE E315.
-*   Hiba a KATA beállítások meghatározásánál!
+*   Error while determining the KATA settings!
   ENDIF.
 
-* Analitika rekordok leválogatása
+* Filtering analytic records
   PERFORM GET_ANALITIKA.
 
-* Teszt vagy éles futás, adatbázis módosítás, stb.
+* Test or productive run, database modification, etc.
   PERFORM INS_DATA USING P_TEST.
 
 
@@ -167,7 +167,7 @@ START-OF-SELECTION.
 *&---------------------------------------------------------------------*
 END-OF-SELECTION.
 
-*  Háttérben nem készítünk listát.
+*  No list is created in the background.
   IF SY-BATCH IS INITIAL.
     PERFORM LIST_DISPLAY.
   ENDIF.
@@ -196,7 +196,7 @@ FORM ROTATE_BUKRS_OUTPUT  USING   $BUKRS
       OTHERS        = 2.
   IF SY-SUBRC <> 0.
     MESSAGE E231 WITH $BUKRS.
-*      Hiba a & vállalat forgatás meghatározásnál! (/ZAK/ROTATE_BUKRS_OUTPUT)
+*      Error determining company rotation! (/ZAK/ROTATE_BUKRS_OUTPUT)
   ENDIF.
 
 ENDFORM.
@@ -211,7 +211,7 @@ FORM GET_PACK  TABLES   $R_PACK STRUCTURE R_PACK.
 
   DATA L_PACK TYPE /ZAK/PACK.
 
-*Package-k gyűjtése
+*Collecting packages
   SELECT /ZAK/BEVALLP~PACK INTO @L_PACK
                           FROM /ZAK/BEVALL
                           LEFT OUTER JOIN /ZAK/BEVALLSZ
@@ -268,7 +268,7 @@ FORM CHECK_SELECTION .
 
   IF NOT P_MONAT BETWEEN 01 AND 12.
     MESSAGE E213.
-*   Kérem a hónapot 01 és 12 között adja meg!
+*   Please specify the month between 01 and 12!
   ENDIF.
 
 ENDFORM.
@@ -293,7 +293,7 @@ FORM GET_ANALITIKA .
 
   IF SY-SUBRC NE 0.
     MESSAGE I141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytic record matches the criteria!
     EXIT.
   ENDIF.
 
@@ -309,7 +309,7 @@ FORM GET_ANALITIKA .
                                         KTOSL = LW_ANALITIKA-KTOSL
                                         BINARY SEARCH.
 
-*   Műveletsor nélkül is
+*   Even without an operation sequence
     IF SY-SUBRC NE 0.
       READ TABLE I_/ZAK/AFA_CUST INTO LW_KATA_CUST
                                 WITH KEY BTYPE = LW_ANALITIKA-BTYPE
@@ -318,26 +318,26 @@ FORM GET_ANALITIKA .
                                          KTOSL = ''
                                          BINARY SEARCH.
     ENDIF.
-*   Csak alapot szelektálunk
+*   We select only the base amount
     CHECK SY-SUBRC EQ 0 AND LW_KATA_CUST-ATYPE EQ C_ATYPE_A.
     CLEAR LW_KATA_SEL.
     MOVE-CORRESPONDING LW_ANALITIKA TO LW_KATA_SEL.
     IF LW_KATA_SEL-BUDAT IS INITIAL.
       IF P_TEST IS INITIAL.
         MESSAGE E282 WITH LW_KATA_SEL-BUKRS LW_KATA_SEL-BSEG_GJAHR LW_KATA_SEL-BSEG_BELNR.
-*       Nem lehet feldolgozási időszakot meghatározni! & & & &
+*       Unable to determine processing period! & & & &
       ELSE.
         MESSAGE I282 WITH LW_KATA_SEL-BUKRS LW_KATA_SEL-BSEG_GJAHR LW_KATA_SEL-BSEG_BELNR DISPLAY LIKE 'W'.
-*       Nem lehet feldolgozási időszakot meghatározni! & & & &
+*       Unable to determine processing period! & & & &
       ENDIF.
     ENDIF.
-*   IDŐSZAKot a BUDAT alapján képezzük
+*   Build the PERIOD from BUDAT
     LW_KATA_SEL-GJAHR = LW_KATA_SEL-BUDAT(4).
     LW_KATA_SEL-MONAT = LW_KATA_SEL-BUDAT+4(2).
-*   Adószám a STCD1-ből jön
+*   The tax number comes from STCD1
     IF LW_ANALITIKA-STCD1 IS INITIAL.
 *     MESSAGE E316 WITH LW_KATA_SEL-BUKRS LW_KATA_SEL-BSEG_GJAHR LW_KATA_SEL-BSEG_BELNR.
-*     Adószám üres & & & &!
+*     Tax number empty & & & &!
       PERFORM MESSAGE_STORE USING '/ZAK/ZAK'
                                   'E'
                                   '316'
@@ -354,7 +354,7 @@ FORM GET_ANALITIKA .
   ENDLOOP.
 
   LOOP AT LI_KATA_SUM INTO LW_KATA_SUM.
-*   Cím adatok ellenőrzése
+*   Check address data
     SELECT SINGLE COUNT( * ) FROM /ZAK/MGCIM
                             WHERE ADOAZON EQ LW_KATA_SUM-ADOAZON.
     IF SY-SUBRC NE 0.
@@ -370,7 +370,7 @@ FORM GET_ANALITIKA .
 
   IF NOT V_MESSAGE IS INITIAL AND NOT P_TEST IS INITIAL.
     MESSAGE I317 DISPLAY LIKE 'W'.
-*   Feldolgozás során előfordultak üzenetek!
+*   Messages occurred during processing!
     PERFORM MESSAGE_SHOW.
   ENDIF.
 
@@ -405,11 +405,11 @@ FORM INS_DATA  USING   $TEST.
   CHECK $TEST IS INITIAL.
   IF NOT V_MESSAGE_ERR IS INITIAL.
     MESSAGE I262 DISPLAY LIKE 'E'.
-*   Éles futás hibák miatt nem indítható!
+*   Productive run cannot start due to errors!
     PERFORM MESSAGE_SHOW.
     EXIT.
   ENDIF.
-* Adatok
+* Data
   MODIFY /ZAK/KATA_SEL FROM TABLE I_/ZAK/KATA_SEL.
 * Package
   UPDATE /ZAK/BEVALLP SET KATA = 'X'
@@ -417,7 +417,7 @@ FORM INS_DATA  USING   $TEST.
   COMMIT WORK AND WAIT.
   IF SY-SUBRC EQ 0.
     MESSAGE S216.
-*   Adatmódosítások elmentve!
+*   Data changes saved!
   ENDIF.
 
 ENDFORM.
@@ -483,11 +483,11 @@ FORM CREATE_AND_INIT_ALV CHANGING $I_TAB LIKE   I_/ZAK/KATA_SEL[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Building the field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Excluding functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -561,7 +561,7 @@ MODULE USER_COMMAND_9000 INPUT.
   V_SAVE_OK = V_OK_CODE.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
-* Kilépés
+* Exit
     WHEN 'EXIT' OR 'BACK' OR 'CANCEL'.
       PERFORM EXIT_PROGRAM USING P_TEST.
     WHEN 'SHOWMESS'.
@@ -590,7 +590,7 @@ ENDFORM.                    " exit_program
 *&---------------------------------------------------------------------*
 *&      Form  MESSAGE_STORE
 *&---------------------------------------------------------------------*
-*       Üzenet átadása üzenetgyűjtőnek
+*       Passing the message to the message collector
 *----------------------------------------------------------------------*
 *      -->$MSGID     text
 *      -->$MSGTY     text

@@ -9,7 +9,7 @@
 REPORT  /ZAK/SZAMLAKELT_CORR MESSAGE-ID /ZAK/ZAK.
 
 **&---------------------------------------------------------------------*
-**& TÁBLÁK                                                              *
+**& TABLES                                                              *
 **&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA.
 
@@ -24,23 +24,23 @@ DATA:
 
 *
 **&---------------------------------------------------------------------*
-**& PROGRAM VÁLTOZÓK                                                    *
-**      Belső tábla         -   (I_xxx...)                              *
-**      FORM paraméter      -   ($xxxx...)                              *
-**      Konstans            -   (C_xxx...)                              *
-**      Paraméter változó   -   (P_xxx...)                              *
-**      Szelekciós opció    -   (S_xxx...)                              *
-**      Sorozatok (Range)   -   (R_xxx...)                              *
-**      Globális változók   -   (V_xxx...)                              *
-**      Lokális változók    -   (L_xxx...)                              *
-**      Munkaterület        -   (W_xxx...)                              *
-**      Típus               -   (T_xxx...)                              *
-**      Makrók              -   (M_xxx...)                              *
+**& PROGRAM VARIABLES                                                   *
+**      Internal table      -   (I_xxx...)                              *
+**      FORM parameter      -   ($xxxx...)                              *
+**      Constant            -   (C_xxx...)                              *
+**      Parameter variable  -   (P_xxx...)                              *
+**      Selection option    -   (S_xxx...)                              *
+**      Ranges              -   (R_xxx...)                              *
+**      Global variables    -   (V_xxx...)                              *
+**      Local variables     -   (L_xxx...)                              *
+**      Work area           -   (W_xxx...)                              *
+**      Type                -   (T_xxx...)                              *
+**      Macros              -   (M_xxx...)                              *
 **      Field-symbol        -   (FS_xxx...)                             *
-**      Methodus            -   (METH_xxx...)                           *
-**      Objektum            -   (O_xxx...)                              *
-**      Osztály             -   (CL_xxx...)                             *
-**      Esemény             -   (E_xxx...)                              *
+**      Method              -   (METH_xxx...)                           *
+**      Object              -   (O_xxx...)                              *
+**      Class               -   (CL_xxx...)                             *
+**      Event               -   (E_xxx...)                              *
 **&---------------------------------------------------------------------*
 
 **&---------------------------------------------------------------------*
@@ -65,7 +65,7 @@ START-OF-SELECTION.
 
   IF I_/ZAK/AFA_SZLA[] IS INITIAL.
     MESSAGE I141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytic record meets the criteria!
   ENDIF.
 
   PERFORM PROD_RUN.
@@ -102,7 +102,7 @@ FORM SEL_DATA .
 
   IF SY-SUBRC NE 0.
     MESSAGE E141.
-*   Nincs a feltételnek megfelelő analitika rekord!
+*   No analytic record meets the criteria!
   ELSE.
     DELETE I_/ZAK/ANALITIKA WHERE ABEVAZ EQ 'DUMMY_R'.
   ENDIF.
@@ -237,7 +237,7 @@ FORM PROD_RUN .
   IF NOT I_/ZAK/AFA_SZLA[] IS INITIAL.
     COMMIT WORK AND WAIT.
     MESSAGE I216.
-*   Adatmódosítások elmentve!
+*   Data changes saved!
   ENDIF.
 
 ENDFORM.                    " PROD_RUN

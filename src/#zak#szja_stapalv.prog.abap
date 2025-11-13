@@ -5,56 +5,56 @@
 REPORT  /ZAK/SZJA_STAPALV MESSAGE-ID /ZAK/ZAKO.
 
 *&---------------------------------------------------------------------*
-*& /ZAK/ANALITIKA lista Statisztikai flag figyelmbe vételével,
-*& adószámonként csak az utolsó rekord jelenik meg.
+*& /ZAK/ANALITIKA list considering the Statistical flag,
+*& only the last record per tax number is displayed.
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - Ness
-*& Létrehozás dátuma : 2010.04.09
-*& Funkc.spec.készítő:
-*& SAP modul neve    : /ZAK/ZAKO
-*& Program  típus    : Riport
-*& SAP verzió        : 5.0
+*& Author            : Balázs Gábor - Ness
+*& Creation date     : 2010.04.09
+*& Functional spec by:
+*& SAP module name   : /ZAK/ZAKO
+*& Program type      : Report
+*& SAP version       : 5.0
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (Write the OSS note number at the end of modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION       TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
 *&
 *&---------------------------------------------------------------------*
 
 TYPE-POOLS: SLIS.
-*ALV közös rutinok
+*Common ALV routines
 INCLUDE /ZAK/ALV_LIST_FORMS.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                               *
 *&---------------------------------------------------------------------*
 TABLES: /ZAK/ANALITIKA.
 
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                            *
 *&---------------------------------------------------------------------*
 
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
-*      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (G_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                   *
+*      Internal table      -   (I_xxx...)                              *
+*      FORM parameter      -   ($xxxx...)                              *
+*      Constant            -   (C_xxx...)                              *
+*      Parameter variable  -   (P_xxx...)                              *
+*      Selection option    -   (S_xxx...)                              *
+*      Ranges              -   (R_xxx...)                              *
+*      Global variables    -   (G_xxx...)                              *
+*      Local variables     -   (L_xxx...)                              *
+*      Work area           -   (W_xxx...)                              *
+*      Type                -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
-*      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Method              -   (METH_xxx...)                           *
+*      Object              -   (O_xxx...)                              *
+*      Class               -   (CL_xxx...)                             *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 
 
@@ -68,17 +68,17 @@ DATA: GS_VARIANT  TYPE DISVARIANT.
 *&---------------------------------------------------------------------*
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
-*Általános szelekciók:
+*General selections:
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-*Vállalat
+*Company
 PARAMETERS P_BUKRS LIKE /ZAK/ANALITIKA-BUKRS OBLIGATORY.
-*Bevallás típus
+*Return type
 PARAMETERS P_BTYPE LIKE /ZAK/ANALITIKA-BTYPE OBLIGATORY.
-*Év
+*Year
 PARAMETERS P_GJAHR LIKE /ZAK/ANALITIKA-GJAHR OBLIGATORY.
-*Hónap
+*Month
 PARAMETERS P_MONAT LIKE /ZAK/ANALITIKA-MONAT OBLIGATORY.
-*Bevallás sorszáma időszakon belül
+*Return sequence number within the period
 SELECT-OPTIONS S_INDEX FOR /ZAK/ANALITIKA-ZINDEX NO-EXTENSION OBLIGATORY.
 *ABEVAZ
 SELECT-OPTIONS S_ABEVAZ FOR /ZAK/ANALITIKA-ABEVAZ.
@@ -92,7 +92,7 @@ INITIALIZATION.
 
   MOVE SY-REPID TO G_REPID.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -100,7 +100,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -108,7 +108,7 @@ INITIALIZATION.
 * AT SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 AT SELECTION-SCREEN.
-*Felső érték kitöltése
+*Filling the upper value
   IF S_INDEX-HIGH IS INITIAL.
     READ TABLE S_INDEX INDEX 1.
     S_INDEX-HIGH = S_INDEX-LOW.
@@ -126,7 +126,7 @@ AT SELECTION-SCREEN.
 *&--------------------------------------------------------------------*
 START-OF-SELECTION.
 
-* Adatok leválogatása.
+* Filtering data.
   PERFORM SELECT_DATA.
 
 
@@ -160,7 +160,7 @@ FORM SELECT_DATA.
             AND MONAT EQ P_MONAT
             AND ZINDEX IN S_INDEX
             AND ABEVAZ IN S_ABEVAZ.
-* ALV lista összeállítás
+* Building the ALV list
   SORT I_ANALITIKA.
   IF SY-SUBRC EQ 0.
     LOOP AT I_ANALITIKA INTO LW_ANALITIKA.
@@ -196,33 +196,33 @@ FORM ALV_LIST  TABLES   $TAB
 
   DATA LS_SORT TYPE SLIS_SORTINFO_ALV.
 
-*ALV lista init
+*Initialize the ALV list
   PERFORM COMMON_ALV_LIST_INIT USING SY-TITLE
                                      $TAB_NAME
                                      '/ZAK/SZJA_STAPALV'.
 
-*Lista fejléc átalakítása
+*Transform list header
   PERFORM COMMON_OWN_TOP_OF_PAGE USING GT_LIST_TOP_OF_PAGE[].
 
-*Fieldkatalógus átalakítása
+*Transform field catalog
   PERFORM COMMON_OWN_FIELDCAT USING GT_FIELDCAT[].
 
-* Variáns beállítása
+* Setting the variant
 
-*Rendezés
+*Sorting
 *  REFRESH GT_SORT.
 *  CLEAR  LS_SORT.
 *  LS_SORT-FIELDNAME = 'ZZIM_L1'.
 *  LS_SORT-UP = 'X'.
-** Ha részletező akkor kell részösszeg
-*  IF NOT P_RESZL IS INITIAL.
-*    LS_SORT-SUBTOT = 'X'.
-*  ENDIF.
+* If it is detailed, subtotals are needed
+  IF NOT P_RESZL IS INITIAL.
+    LS_SORT-SUBTOT = 'X'.
+  ENDIF.
 *  LS_SORT-COMP = 'X'.
 *
 *  APPEND LS_SORT TO GT_SORT.
 
-*ALV lista
+*ALV list
   PERFORM OWN_COMMON_ALV_GRID_DISPLAY TABLES $TAB
                                   USING  $TAB_NAME
                                          SPACE
@@ -234,7 +234,7 @@ ENDFORM.                    " LIST_SPOOL
 *---------------------------------------------------------------------*
 *       FORM STATUS_SET                                               *
 *---------------------------------------------------------------------*
-*       ALV lista státus beállítása - dinamikus hívás !               *
+*       Setting ALV list status - dynamic call!                       *
 *---------------------------------------------------------------------*
 *  -->  EXTAB                                                         *
 *---------------------------------------------------------------------*
@@ -247,7 +247,7 @@ ENDFORM.   "FORM STATUS_SET
 *---------------------------------------------------------------------*
 *       FORM USER_COMMAND                                             *
 *---------------------------------------------------------------------*
-*       ALV lista hívja - Dinamikus hívással !!
+*       ALV list call - with dynamic call!!
 *---------------------------------------------------------------------*
 *  -->  RF_UCOMM                                                      *
 *  -->  SELFIELD                                                      *
@@ -276,28 +276,27 @@ ENDFORM.                    " END_OF_LIST
 *&---------------------------------------------------------------------*
 *&      Form  common_alv_grid_display
 *&---------------------------------------------------------------------*
-*       ALV lista megjelenítése
-*        Megegyezik a normál ALV listával, de a megjelenítés GRID
-*        formátumú
-*----------------------------------------------------------------------*
-*  --> $i_table    listázandó belso tábla
-*  --> $struc_name belso tábla struktúrája (DDIC)
-*  --> $pf_status  lista státus beállító form neve - lehet space is, ha
-*                   a standard jó. A megadott form-ot a hívó programban
-*                   kell definiálni !!
-*  --> $user_command lista interaktivitását biztosító form neve - lehet
-*                    space is, ha standard jó. A megadott form-ot a hívó
-*                    programban kell definiálni !!
+*       Displaying the ALV list
+*        Same as the normal ALV list, but the display is in GRID format
+*---------------------------------------------------------------------*
+*  --> $i_table    internal table to be listed
+*  --> $struc_name structure of the internal table (DDIC)
+*  --> $pf_status  name of the FORM that sets the list status - can be space
+*                   if the standard is fine. The specified FORM must be
+*                   defined in the calling program!!
+*  --> $user_command name of the FORM that provides list interactivity - can
+*                    be space if the standard is fine. The specified FORM must
+*                    be defined in the calling program!!
 *----------------------------------------------------------------------*
 FORM OWN_COMMON_ALV_GRID_DISPLAY TABLES $I_TABLE
                               USING VALUE($STRUC_NAME)
                                     VALUE($PF_STATUS)
                                     VALUE($USER_COMMAND).
 
-* Lista értékek inicializálása, feltöltése
+* Initialize and fill list values
   L_REPID = SY-REPID.
 
-* ABAP/4 List Viewer hívása
+* Calling the ABAP/4 List Viewer
   CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
        EXPORTING
             I_CALLBACK_PROGRAM       = L_REPID
@@ -313,8 +312,8 @@ FORM OWN_COMMON_ALV_GRID_DISPLAY TABLES $I_TABLE
 *           IT_FILTER               =
 *           IS_SEL_HIDE             =
 *           i_default               = g_default
-            I_SAVE                  =  'X' "variánsok mentése
-                                           "lehetséges
+            I_SAVE                  =  'X' "saving variants
+                                           "possible
             IS_VARIANT              = GS_VARIANT
             IT_EVENTS               = GT_EVENTS[]
 *           IT_EVENT_EXIT           =
@@ -341,7 +340,7 @@ FORM COMMON_OWN_FIELDCAT USING  $GT_FIELDCAT TYPE SLIS_T_FIELDCAT_ALV.
 
   DATA: L_FCAT TYPE SLIS_FIELDCAT_ALV.
 
-*  Katalógus átalakítása
+*  Transform catalog
 *  LOOP AT $GT_FIELDCAT INTO L_FCAT.
 *    MODIFY $GT_FIELDCAT FROM L_FCAT.
 *  ENDLOOP.
@@ -362,7 +361,7 @@ FORM COMMON_OWN_TOP_OF_PAGE USING
   DATA: L_LINE TYPE SLIS_LISTHEADER.
   DATA L_TEXT(80).
 
-* Cím
+* Title
   READ TABLE $GT_LIST_TOP_OF_PAGE INTO L_LINE INDEX 1.
   L_LINE-TYP  = 'H'.
   L_LINE-KEY  = SPACE.

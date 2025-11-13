@@ -406,7 +406,7 @@ FORM CALC_ABEV_SZJA_2208  TABLES  T_BEVALLO STRUCTURE /ZAK/BEVALLO
           L_KAM_KEZD = $DATE.
           L_KAM_KEZD+6(2) = '01'.
           W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Annual
         ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
           L_KAM_KEZD = $DATE.
           L_KAM_KEZD+4(4) = '0101'.
@@ -1474,7 +1474,7 @@ FORM CALC_ABEV_AFA_2265  TABLES T_BEVALLO STRUCTURE /ZAK/BEVALLO
           L_KAM_KEZD = $DATE.
           L_KAM_KEZD+6(2) = '01'.
           W_/ZAK/BEVALLO-FIELD_C = L_KAM_KEZD.
-* A year old
+* Annual
         ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
           L_KAM_KEZD = $DATE.
           L_KAM_KEZD+4(4) = '0101'.
@@ -2127,7 +2127,7 @@ FORM CALC_ABEV_ONYB_22A60  TABLES T_BEVALLO STRUCTURE /ZAK/BEVALLO
 
   L_GJAHR = $LAST_DATE(4).
   L_MONAT = $LAST_DATE+4(2).
-* E - Year old
+* E - Annual
   IF W_/ZAK/BEVALL-BIDOSZ = 'E'.
     L_MONAT = '01'.
 * N - Quarterly

@@ -177,14 +177,14 @@
 - [x] src/#zak#message.fugr.#zak#saplmessage.abap
 - [x] src/#zak#mg_igazolas.ssfo.gcoding.abap
 - [x] src/#zak#mgcim_upload.prog.abap
-- [ ] src/#zak#migr_afa.prog.abap
+- [X] src/#zak#migr_afa.prog.abap
 - [x] src/#zak#migr_afa.prog.screen_9000.abap
-- [ ] src/#zak#migr_onrev.prog.abap
+- [X] src/#zak#migr_onrev.prog.abap
 - [x] src/#zak#migr_onrev.prog.screen_9000.abap
 - [x] src/#zak#migr_szja_read.prog.abap
 - [x] src/#zak#migr_szja_sel.prog.abap
 - [x] src/#zak#mt_migr_afa.prog.abap
-- [ ] src/#zak#onell.prog.abap
+- [X] src/#zak#onell.prog.abap
 - [x] src/#zak#onell.prog.screen_0100.abap
 - [x] src/#zak#onell.prog.screen_0101.abap
 - [x] src/#zak#onell.prog.screen_0102.abap

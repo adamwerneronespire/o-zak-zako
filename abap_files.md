@@ -258,7 +258,7 @@
 - [x] src/#zak#tech.prog.screen_9003.abap
 - [x] src/#zak#tech.prog.screen_9004.abap
 - [x] src/#zak#tech.prog.screen_9010.abap
-- [ ] src/#zak#urep_sap_sel.prog.abap
+- [X] src/#zak#urep_sap_sel.prog.abap
 - [x] src/#zak#urep_sap_sel.prog.screen_9000.abap
 - [x] src/#zak#urep_sap_sel.prog.screen_9001.abap
 - [x] src/#zak#zako_table_clear.prog.abap

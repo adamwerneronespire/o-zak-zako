@@ -2,31 +2,31 @@
 *& Report  /ZAK/UREP_SAP_SEL
 *&
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& leválogatja a SAP bizonylatokból az adatokat, és meghatározza
-*& a /ZAK/ZAKO-ban feldolgozandó adathalmazt
+*& Function description: The program selects data from SAP documents based on the selection criteria
+*& filters the SAP documents for the data and determines
+*& the dataset to be processed in /ZAK/ZAKO
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor - FMC
-*& Létrehozás dátuma : 2008.11.17
-*& Funkc.spec.készítő: Róth Nándor
+*& Author            : Balázs Gábor - FMC
+*& Creation date : 2008.11.17
+*& Functional spec author: Róth Nándor
 *& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 50
+*& Program type     : Report
+*& SAP version       : 50
 *&---------------------------------------------------------------------*
 
 REPORT  /ZAK/UREP_SAP_SEL MESSAGE-ID /ZAK/ZAK.
 
 
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (The OSS note number must be written to the end of modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                      LEÍRÁS
+*& LOG#     DATE        MODIFIER                      DESCRIPTION
 *& ----   ----------   ----------    -----------------------------------
-*& 0001   2009.01.12   Balázs Gábor  WL feladás javítás: főkönyv,periód
-*& 0002   2009.04.20   Balázs Gábor  WL ÁFA kód /ZAK/SZJA_ABEV-ből
-*& 0003   2009.05.22   Balázs Gábor  Kizárt bizonylatok kezelése
-*& 0004   2009.10.29   Balázs Gábor  Vállalat forgatás kezelése
-*& 0005   2010.01.08   Balázs Gábor  PST elem töltése
+*& 0001   2009.01.12   Balázs Gábor  WL posting fix: general ledger, period
+*& 0002   2009.04.20   Balázs Gábor  WL VAT code from /ZAK/SZJA_ABEV
+*& 0003   2009.05.22   Balázs Gábor  Handling excluded documents
+*& 0004   2009.10.29   Balázs Gábor  Company rotation handling
+*& 0005   2010.01.08   Balázs Gábor  PST element filling
 *&---------------------------------------------------------------------*
 INCLUDE /ZAK/COMMON_STRUCT.
 INCLUDE /ZAK/SAP_SEL_F01.
@@ -34,21 +34,21 @@ INCLUDE /ZAK/SAP_SEL_F01.
 
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
-TABLES : BSEG,              "Bizonylatszegmens: könyvelés
-         BKPF,              "Bizonylatfej könyveléshez
-         BSIS, "Könyvelés: másodlagos index főkönyvi számlákhoz
-         /ZAK/SZJA_CUST,     "SZJA lev., könyvelés feladás beállítása
-         /ZAK/SZJA_ABEV,     "SZJA lev., ABEV megh.mezőnév alapján
-         /ZAK/START,         "Adó: Kezdődátum megadása vállalatonként
-         /ZAK/UREPI_LOG.     "Üzleti ajándék, reprezentáció LOG
+TABLES : BSEG,              "Document segment: accounting
+         BKPF,              "Document header for accounting
+         BSIS, "Accounting: secondary index for G/L accounts
+         /ZAK/SZJA_CUST,     "SZJA deduction, posting configuration
+         /ZAK/SZJA_ABEV,     "SZJA deduction, ABEV field-name-based mapping
+         /ZAK/START,         "Tax: define start date per company
+         /ZAK/UREPI_LOG.     "Business gift, representation LOG
 
 
 *&---------------------------------------------------------------------*
 *& KONSTANSOK  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
-CONSTANTS C_UREPF_U TYPE /ZAK/UREPF VALUE 'U'. "Üzleti
+CONSTANTS C_UREPF_U TYPE /ZAK/UREPF VALUE 'U'. "Business
 CONSTANTS C_UREPF_R TYPE /ZAK/UREPF VALUE 'R'. "Repi
 CONSTANTS C_REPI_MONAT TYPE MONAT VALUE '05'.
 
@@ -118,25 +118,25 @@ ENDCLASS.                    "LCL_EVENT_RECEIVER IMPLEMENTATION
 
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Belső tábla         -   (I_xxx...)                              *
-*      FORM paraméter      -   ($xxxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Internal table        -   (I_xxx...)                              *
+*      FORM parameter       -   ($xxxx...)                              *
 *      Konstans            -   (C_xxx...)                              *
-*      Paraméter változó   -   (P_xxx...)                              *
-*      Szelekciós opció    -   (S_xxx...)                              *
+*      Parameter variable   -   (P_xxx...)                              *
+*      Selection option     -   (S_xxx...)                              *
 *      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Lokális változók    -   (L_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*      Global variables     -   (V_xxx...)                              *
+*      Local variables      -   (L_xxx...)                              *
+*      Work area            -   (W_xxx...)                              *
+*      Type                 -   (T_xxx...)                              *
+*      Macros               -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class                -   (CL_xxx...)                             *
+*      Event                -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
-*MAKRO definiálás range feltöltéshez
+*Macro definition for filling ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -156,19 +156,19 @@ DATA V_LAST_DAY TYPE DATUM.
 
 DATA /ZAK/UREPI_LOG_SAVE TYPE /ZAK/UREPI_LOG.
 
-*IDŐSZAKok szelekcióhoz
+*PERIODS for selection
 TYPES: BEGIN OF T_IDSZ,
          GJAHR TYPE GJAHR,
          MONAT TYPE MONAT,
          GJMON TYPE RSCALMONTH,
        END OF T_IDSZ.
-*IDŐSZAKok
+*PERIODS
 DATA I_IDSZ TYPE STANDARD TABLE OF T_IDSZ INITIAL SIZE 0.
 DATA W_IDSZ TYPE T_IDSZ.
 *Feldolgozattlan rekordok
 DATA I_UREPI_FELD TYPE STANDARD TABLE OF /ZAK/UREPI_FELD INITIAL SIZE 0.
 DATA W_UREPI_FELD TYPE /ZAK/UREPI_FELD.
-*Beállítás adatok
+*Configuration data
 DATA W_/ZAK/SZJA_CUST TYPE  /ZAK/SZJA_CUST.
 DATA I_/ZAK/SZJA_CUST TYPE STANDARD TABLE OF /ZAK/SZJA_CUST
                                             INITIAL SIZE 0.
@@ -186,7 +186,7 @@ DATA I_BKPF TYPE STANDARD TABLE OF BKPF INITIAL SIZE 0.
 DATA : V_U_ARANY TYPE P DECIMALS 4,
        V_R_ARANY TYPE P DECIMALS 4.
 
-*Arányszámok bevallás típusonként kell
+*Ratios are needed per declaration type
 DATA: BEGIN OF I_BTYPE_ARANY OCCURS 0,
         GJAHR   TYPE GJAHR,
         U_ALAP  TYPE DMBTR,
@@ -197,17 +197,17 @@ DATA: BEGIN OF I_BTYPE_ARANY OCCURS 0,
 *      R_FLAG   TYPE XFELD,
       END OF I_BTYPE_ARANY.
 *
-DATA W_/ZAK/SZJA_EXCEL1 TYPE  /ZAK/SZJAEXCELV2. " Könyvelés 1. sora
-DATA W_/ZAK/SZJA_EXCEL2 TYPE  /ZAK/SZJAEXCELV2. " Könyvelés 2. sora
+DATA W_/ZAK/SZJA_EXCEL1 TYPE  /ZAK/SZJAEXCELV2. " Accounting line 1
+DATA W_/ZAK/SZJA_EXCEL2 TYPE  /ZAK/SZJAEXCELV2. " Accounting line 2
 DATA I_/ZAK/SZJA_EXCEL TYPE STANDARD TABLE OF /ZAK/SZJAEXCELV2
                                                        INITIAL SIZE 0.
 
-*ABEV meghatározása
+*ABEV determination
 DATA W_/ZAK/SZJA_ABEV TYPE  /ZAK/SZJA_ABEV.
 DATA I_/ZAK/SZJA_ABEV TYPE STANDARD TABLE OF /ZAK/SZJA_ABEV
                                                        INITIAL SIZE 0.
 
-* ALV kezelési változók
+* ALV handling variables
 DATA: V_OK_CODE           LIKE SY-UCOMM,
       V_SAVE_OK           LIKE SY-UCOMM,
       V_CONTAINER         TYPE SCRFNAME VALUE '/ZAK/ZAK_9000',
@@ -237,7 +237,7 @@ DATA I_AD_BUKRS TYPE T_AD_BUKRS OCCURS 0 WITH HEADER LINE.
 * SELECTION-SCREEN
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN: BEGIN OF BLOCK BL01 WITH FRAME TITLE TEXT-T01.
-* Vállalat.
+* Company.
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(31) TEXT-101.
 PARAMETERS: P_BUKRS  LIKE /ZAK/BEVALL-BUKRS
@@ -249,17 +249,17 @@ PARAMETERS: P_BUTXT LIKE T001-BUTXT MODIF ID DIS.
 SELECTION-SCREEN END OF LINE.
 PARAMETERS: P_BTEXT  LIKE /ZAK/BEVALLT-BTEXT
                           NO-DISPLAY.
-* Bevallás fajta meghatározása
+* Determine type of declaration
 PARAMETERS: P_BTYPAR LIKE /ZAK/BEVALL-BTYPART
                           DEFAULT C_BTYPART_SZJA
                           OBLIGATORY.
-* Év
+* Year
 PARAMETERS: P_GJAHR LIKE BKPF-GJAHR DEFAULT SY-DATUM(4)
                                     OBLIGATORY.
-* Hónap
+* Month
 PARAMETERS: P_MONAT LIKE BKPF-MONAT DEFAULT SY-DATUM+4(2)
                                     OBLIGATORY.
-* Adatszolgáltatás azonosító
+* Data service identifier
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 01(31) TEXT-103.
 PARAMETERS: P_BSZNUM LIKE /ZAK/BEVALLD-BSZNUM  OBLIGATORY.
@@ -269,7 +269,7 @@ SELECTION-SCREEN END OF LINE.
 * Bizonylat fajta
 SELECT-OPTIONS: S_BLART FOR BKPF-BLART NO INTERVALS.
 *++0003 2009.05.22 BG
-* Kizárt bizonylatok
+* Excluded documents
 SELECTION-SCREEN BEGIN OF LINE.
 SELECTION-SCREEN COMMENT 1(31) TEXT-104.
 PARAMETERS P_KBELNR AS CHECKBOX MODIF ID DIS.
@@ -278,7 +278,7 @@ SELECTION-SCREEN END OF LINE.
 *--0003 2009.05.22 BG
 *SELECT-OPTIONS: S_KBLART FOR BKPF-BLART NO INTERVALS.
 
-* Teszt futás
+* Test run
 PARAMETERS: P_TESZT AS CHECKBOX DEFAULT 'X' .
 
 SELECTION-SCREEN: END OF BLOCK BL01.
@@ -287,7 +287,7 @@ SELECTION-SCREEN BEGIN OF BLOCK B105 WITH FRAME TITLE TEXT-T05.
 SELECT-OPTIONS S_SAKNR FOR /ZAK/SZJA_CUST-SAKNR.
 SELECTION-SCREEN: END OF BLOCK B105.
 
-*Feltöltés módjának kiválasztása
+*Select upload mode
 SELECTION-SCREEN BEGIN OF BLOCK B102 WITH FRAME TITLE TEXT-T02.
 PARAMETERS: P_NORM  RADIOBUTTON GROUP R01 USER-COMMAND NORM
                                                   DEFAULT 'X',
@@ -297,7 +297,7 @@ PARAMETERS: P_NORM  RADIOBUTTON GROUP R01 USER-COMMAND NORM
 
 SELECTION-SCREEN END OF BLOCK B102.
 
-*Könyvelési excel fájl
+*Accounting Excel file
 SELECTION-SCREEN BEGIN OF BLOCK B104 WITH FRAME TITLE TEXT-T04.
 PARAMETERS: P_OUTF LIKE FC03TAB-PL00_FILE."  OBLIGATORY.
 PARAMETERS: P_SPLIT TYPE I NO-DISPLAY.
@@ -310,7 +310,7 @@ SELECTION-SCREEN END OF BLOCK B104.
 *&---------------------------------------------------------------------*
 INITIALIZATION.
   GET PARAMETER ID 'BUK' FIELD P_BUKRS.
-*  Megnevezések meghatározása
+*  Determine descriptions
   PERFORM READ_ADDITIONALS.
 
   PERFORM S_BLART_INIT.
@@ -320,7 +320,7 @@ INITIALIZATION.
   WRITE ICON_DISPLAY_MORE TO KBL AS ICON.
 *--0003 2009.05.22 BG
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -328,7 +328,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You are not authorized to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -347,17 +347,17 @@ AT SELECTION-SCREEN.
 
 AT SELECTION-SCREEN OUTPUT.
 *++0003 2009.05.22 BG
-* Meghatározzuk ban e kizárt bizonylatszám
+* Determine whether there are excluded document numbers
   PERFORM GET_KBELNR TABLES I_KBELNR
                      USING  P_BUKRS
                             P_KBELNR.
 *--0003 2009.05.22 BG
 
-*  Képernyő attribútomok beállítása
+*  Set screen attributes
   PERFORM SET_SCREEN_ATTRIBUTES.
 
 AT SELECTION-SCREEN ON P_BTYPAR.
-*  SZJA bevallás típus ellenőrzése
+*  Check SZJA declaration type
   PERFORM VER_BTYPEART USING P_BUKRS
                              P_BTYPAR
                              C_BTYPART_SZJA
@@ -365,8 +365,8 @@ AT SELECTION-SCREEN ON P_BTYPAR.
 
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE E019.
-*   Kérem SZJA típusú bevallás azonosítót adjon meg!
-*  Meghatározzuk a bevallás típust
+*   Please provide an SZJA-type declaration identifier!
+*  Determine the declaration type
   ELSE.
     CALL FUNCTION '/ZAK/GET_BTYPES_FROM_BTYPART'
       EXPORTING
@@ -386,7 +386,7 @@ AT SELECTION-SCREEN ON P_BTYPAR.
 
 AT SELECTION-SCREEN ON P_BSZNUM.
   MOVE SY-REPID TO V_REPID.
-*  Szolgáltatás azonosító ellenőrzése
+*  Validate service identifier
   PERFORM VER_BSZNUM   USING P_BUKRS
                              P_BTYPAR
                              P_BSZNUM
@@ -394,20 +394,20 @@ AT SELECTION-SCREEN ON P_BSZNUM.
                     CHANGING V_SUBRC.
 
 AT SELECTION-SCREEN ON P_MONAT.
-*  Periódus ellenőrzése
+*  Period validation
   PERFORM VER_PERIOD   USING P_MONAT.
 
 AT SELECTION-SCREEN ON BLOCK B102.
-*  Blokk ellenőrzése
+*  Check block
   PERFORM VER_BLOCK_B102 USING P_NORM
                                P_ISMET
                                P_PACK.
 
 AT SELECTION-SCREEN ON P_OUTF.
-* Éles futásnál kell fájl név
+* File name is required for live run
   IF P_TESZT IS INITIAL AND P_OUTF IS INITIAL.
     MESSAGE E146.
-*   Kérem adja meg a könyvelési fájl nevét!
+*   Please provide the accounting file name!
   ENDIF.
 
 AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_OUTF.
@@ -420,17 +420,17 @@ START-OF-SELECTION.
 *++ 2010.06.10 RN
 * az AT SELECTION SCREEN mellett ide is be kellett rakni, mert ott csak
 * akkor fut le, ha Entert is nyomnak a selection screen-en
-* Meghatározzuk ban e kizárt bizonylatszám
+* Determine whether there are excluded document numbers
   PERFORM GET_KBELNR TABLES I_KBELNR
                      USING  P_BUKRS
                             P_KBELNR.
 *-- 2010.06.10 RN
 
 *++0004 BG 2009.10.29
-**  Vállalat forgatás
+**  Company rotation
 *  PERFORM ROTATE_BUKRS_OUTPUT USING P_BUKRS
 *                                    V_SEL_BUKRS.
-*  Vállalat forgatás
+*  Company rotation
   PERFORM ROTATE_BUKRS_OUTPUT(/ZAK/SZJA_SAP_SEL)
                               TABLES I_AD_BUKRS
                               USING  P_BUKRS
@@ -457,12 +457,12 @@ START-OF-SELECTION.
     ENDIF.
   ENDIF.
 
-* Jogosultság vizsgálat
+* Authorization check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 P_BTYPAR
                                 C_ACTVT_01.
 
-* Ha a BYTPE üres, akkor meghatározzuk
+* If BTYPE is empty, determine it
   IF R_BTYPE[] IS INITIAL.
     CALL FUNCTION '/ZAK/GET_BTYPES_FROM_BTYPART'
       EXPORTING
@@ -480,52 +480,52 @@ START-OF-SELECTION.
     ENDIF.
   ENDIF.
 
-* Vállalati adatok beolvasása
+* Read company data
   PERFORM GET_T001 USING P_BUKRS
                          V_SUBRC.
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE A036 WITH P_BUKRS.
-*   Hiba a & vállalati adatok meghatározásánál! (T001 tábla)
+*   Error while retrieving the company data for &! (table T001)
   ENDIF.
 
-* Start dátum meghatározása
+* Determine start date
   PERFORM GET_START USING P_BUKRS
                           V_SUBRC.
   IF NOT V_SUBRC IS INITIAL.
     MESSAGE A281 WITH P_BUKRS.
-*   Hiányzó beállítás & vállalat kezdődátum meghatározásához!
+*   Missing setting for determining the start date of company &!
   ENDIF.
 
-* Utolsó futás LOG beolvasása
+* Read the log from the last run
   PERFORM GET_LAST_LOG USING P_BUKRS.
 
-* Beállítási adatok meghatározása
+* Determine configuration data
   PERFORM GET_UREPI_DATA TABLES I_UREPI_DATA
                          USING  P_BUKRS.
 
 
-* Szelekció hónap utolsó napjának meghatározása
+* Determine the last day of the selection month
   PERFORM GET_LAST_DAY USING P_GJAHR
                              P_MONAT
                              V_LAST_DAY.
 
-* IDŐSZAKok meghatározása szelekcióhoz
+* Determine periods for selection
   PERFORM GET_IDSZ TABLES I_IDSZ
                    USING  /ZAK/START
                           /ZAK/UREPI_LOG
                           V_LAST_DAY.
-* Ha nincs időszak, akkor hiba
+* Error if no period exists
   IF I_IDSZ[] IS INITIAL.
     MESSAGE E282.
-*   Nem lehet feldolgozási időszakot meghatározni!
+*   Processing period cannot be determined!
   ENDIF.
 
-* Adatok leválogatása
+* Data selection
   PERFORM PROGRESS_INDICATOR USING TEXT-P01
                                    0
                                    0.
 
-* Beállítások meghatározása
+* Determine settings
   PERFORM VALOGAT_BEALLITAS TABLES I_/ZAK/SZJA_CUST
                                    R_BTYPE
                                    S_SAKNR
@@ -533,18 +533,18 @@ START-OF-SELECTION.
                                    P_BSZNUM
                                    V_SUBRC.
   IF V_SUBRC <> 0.
-*    Hiba az SZJA beállítások meghatározásánál!
+*    Error while determining the SZJA settings!
     MESSAGE E089 WITH '/ZAK/SZJA_CUST_V'.
   ENDIF.
 
-* Feldolgozattlan rekordok leválogatása
+* Filter unprocessed records
   PERFORM GET_UREPI_FELD TABLES I_UREPI_FELD
 *++0003 2009.05.22 BG
                                 I_KBELNR
 *--0003 2009.05.22 BG
                           USING P_BUKRS.
 
-* Könyvelés adatok válogatása
+* Filter accounting data
   PERFORM GET_BOOK_DATA TABLES I_/ZAK/SZJA_CUST
                                I_BKPF
                                I_BSEG
@@ -564,12 +564,12 @@ START-OF-SELECTION.
 *--0004 BG 2009.10.29
 
   IF I_BKPF[] IS INITIAL.
-*    nincs a szelekciónak megfelelő adat.
+*    No data matches the selection.
     MESSAGE I031.
     EXIT.
   ENDIF.
 
-* Arány meghatározása
+* Determine ratio
   PERFORM PROGRESS_INDICATOR USING TEXT-P03
                                    0
                                    0.
@@ -601,12 +601,12 @@ START-OF-SELECTION.
                         USING  P_BUKRS
                                P_BSZNUM.
 
-* Könyvelés fájl forgatás (költséghely)
+* Rotate accounting file (cost center)
   PERFORM ROTATION_DATA(/ZAK/SZJA_SAP_SEL)
                         TABLES I_/ZAK/SZJA_EXCEL
                         USING  P_BUKRS.
 
-* Éles futás, adatbázis módosítás, stb.
+* Live run, database update, etc.
   PERFORM INS_DATA  TABLES I_/ZAK/ANALITIKA
                            I_UREPI_FELD
                            I_UREPI_DATA
@@ -616,7 +616,7 @@ START-OF-SELECTION.
                            P_BTYPAR
                            P_BSZNUM
                            P_PACK.
-*  Könyvelési fájl letöltése
+*  Download accounting file
   IF P_TESZT IS INITIAL.
     PERFORM DOWNLOAD_FILE_V2(/ZAK/SZJA_SAP_SEL)
                 TABLES
@@ -667,7 +667,7 @@ ENDFORM.                    " set_screen_attributes
 *----------------------------------------------------------------------*
 FORM READ_ADDITIONALS.
 
-* Vállalat megnevezése
+* Company description
   IF NOT P_BUKRS IS INITIAL.
     SELECT SINGLE BUTXT INTO P_BUTXT FROM T001
        WHERE BUKRS = P_BUKRS.
@@ -757,7 +757,7 @@ FORM VER_PERIOD USING    $MONAT.
 
   IF NOT $MONAT BETWEEN '01' AND '16'.
     MESSAGE E020.
-*   Kérem a periódus értékét 01-16 között adja meg!
+*   Please provide a period value between 01 and 16!
   ENDIF.
 
 ENDFORM.                    " ver_period
@@ -778,13 +778,13 @@ FORM VER_BLOCK_B102 USING    $NORM
 
   IF NOT $NORM IS INITIAL AND NOT $PACK IS INITIAL.
     MESSAGE I021.
-*   Feltöltés azonosító figyelmen kívül hagyva!
+*   Upload ID ignored!
     CLEAR $PACK.
   ENDIF.
 
   IF NOT $ISMET IS INITIAL AND $PACK IS INITIAL.
     MESSAGE E022.
-*   Kérem adja meg a feltöltés azonosítót!
+*   Please provide the upload identifier!
   ENDIF.
 ENDFORM.                    "VER_BLOCK_B102
 
@@ -811,7 +811,7 @@ FORM FILENAME_GET USING $FILE.
 **     DEF_PATH         = 'C:\temp'
 *      MASK             = L_MASK
 *      MODE             = 'S'
-*      TITLE            = 'Könyvelési fájl'
+*      TITLE            = 'Accounting file'
 *    IMPORTING
 *      FILENAME         = $FILE
 **     RC               = DUMMY
@@ -872,7 +872,7 @@ FORM ROTATE_BUKRS_OUTPUT  USING    $BUKRS
       OTHERS        = 2.
   IF SY-SUBRC <> 0.
     MESSAGE E231 WITH P_BUKRS.
-*   Hiba a & vállalat forgatás meghatározásnál!...
+*   Error while determining the company rotation for &!...
   ENDIF.
 
 ENDFORM.                    " ROTATE_BUKRS_OUTPUT
@@ -990,30 +990,30 @@ FORM GET_IDSZ  TABLES   $I_IDSZ          LIKE   I_IDSZ
 
   REFRESH $I_IDSZ.
 
-* Nincs időszak kilépés
+* No period – exit
   IF $/ZAK/START-ZURDAT IS INITIAL AND $/ZAK/UREPI_LOG-CPUDT IS INITIAL.
     EXIT.
   ENDIF.
 
-* A nagyobb dátumtól megyük a szelekción megadottig.
+* Go from the later date back to the one provided in the selection.
   IF $/ZAK/START-ZURDAT >  $/ZAK/UREPI_LOG-CPUDT.
     L_DATUM = $/ZAK/START-ZURDAT.
   ELSE.
     CONCATENATE $/ZAK/UREPI_LOG-GJAHR $/ZAK/UREPI_LOG-MONAT '01' INTO L_DATUM.
   ENDIF.
-* Ha az kezdeti időszak nagyobb, akkor kilépés
+* Exit if the initial period is greater
   IF L_DATUM > $LAST_DAY.
     EXIT.
   ENDIF.
 
-* Kezdeti időszak
+* Initial period
   CLEAR W_IDSZ.
   W_IDSZ-GJAHR = L_DATUM(4).
   W_IDSZ-MONAT = L_DATUM+4(2).
   CONCATENATE W_IDSZ-GJAHR W_IDSZ-MONAT INTO W_IDSZ-GJMON.
   APPEND W_IDSZ TO $I_IDSZ.
 
-* IDŐSZAK feltöltése
+* Populate period
   DO.
     ADD 1 TO W_IDSZ-MONAT.
     IF W_IDSZ-MONAT > 16.
@@ -1128,7 +1128,7 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
                              $SEL_BUKRS.
 *--0004 BG 2009.10.29
 
-*  átmeneti táblák a leválogatáshoz.
+*  Temporary tables for filtering.
   DATA LI_BSEG TYPE STANDARD TABLE OF BSEG INITIAL SIZE 0.
   DATA LI_BKPF TYPE STANDARD TABLE OF BKPF INITIAL SIZE 0.
   DATA L_SUBRC LIKE SY-SUBRC.
@@ -1147,14 +1147,14 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
   REFRESH:  $I_BKPF, $I_BSEG, LI_UREPI_FELD_NEW.
 
 
-* BKPF, BSEG leválogatása normál tételek (utolsó futás szerint)
+* Filter BKPF and BSEG for normal items (based on last run)
   LOOP AT $I_/ZAK/SZJA_CUST INTO W_/ZAK/SZJA_CUST.
-*   Adatok leválogatása
+*   Data selection
     PERFORM PROGRESS_INDICATOR USING TEXT-P01
                                      L_LINES
                                      SY-TABIX.
     REFRESH: LI_BSEG, LI_BKPF, LI_BSIS.
-*   BSIS rekordok meghatározása
+*   Determine BSIS records
     PERFORM GET_BSIS TABLES LI_BSIS
                             $S_BLART
                             $I_IDSZ
@@ -1165,7 +1165,7 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
                             W_/ZAK/SZJA_CUST-AUFNR
                             W_/ZAK/SZJA_CUST-SAKNR
                    CHANGING L_SUBRC.
-*   BKPF rekordok meghatározása
+*   Determine BKPF records
     PERFORM GET_BKPF TABLES LI_BSIS
                             LI_BKPF
                             LI_UREPI_FELD_NEW
@@ -1174,16 +1174,16 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
                             $UREPI_LOG
                             $UREPI_LOG_SAVE
                    CHANGING L_SUBRC.
-*   Ha nincs BKPF rekord, akkor jöhet a következő
+*   If there is no BKPF record, continue with the next one
     IF LI_BKPF[] IS INITIAL.
       CONTINUE.
     ENDIF.
-*   BSEG rekord leválogatása
+*   Filter BSEG records
     PERFORM BSEG_KER(/ZAK/SZJA_SAP_SEL) TABLES LI_BSIS
                                               LI_BSEG
                                      CHANGING L_SUBRC.
     IF L_SUBRC <> 0.
-*      nincs a feltételnek megfelelő adat, jöhet a következő
+*      No data matches the condition, continue with the next one
       CONTINUE.
     ENDIF.
 *   Ha minden rendben,akkor elteszem az adatokat
@@ -1196,7 +1196,7 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
   REFRESH: LI_BSEG, LI_BKPF, LI_BSIS.
 * Feldolgozatlan rekordok
   IF NOT $I_UREPI_FELD[] IS INITIAL.
-*   Feldolgozatlan tételek BSIS leválogatása
+*   Filter BSIS records for unprocessed items
     SELECT * INTO TABLE LI_BSIS
              FROM BSIS
              FOR ALL ENTRIES IN $I_UREPI_FELD
@@ -1214,17 +1214,17 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
                                      0
                                      0.
 
-* BKPF rekordok meghatározása
+* Determine BKPF records
     PERFORM GET_BKPF TABLES LI_BSIS
                             LI_BKPF
                             LI_UREPI_FELD_NEW
                             $I_UREPI_DATA
                       USING $BUKRS
-                            LW_UREPI_LOG      "Üres
-                            LW_UREPI_LOG_SAVE "Üres
+                            LW_UREPI_LOG      "Empty
+                            LW_UREPI_LOG_SAVE "Empty
                    CHANGING L_SUBRC.
 
-* BSEG rekord leválogatása
+* Filter BSEG records
     IF NOT LI_BSIS[] IS INITIAL.
 
       PERFORM BSEG_KER(/ZAK/SZJA_SAP_SEL) TABLES LI_BSIS
@@ -1239,21 +1239,21 @@ FORM GET_BOOK_DATA  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
     ENDIF.
   ENDIF.
 
-* Feldogozatlan rekordok mentése
+* Save unprocessed records
   IF NOT LI_UREPI_FELD_NEW[] IS INITIAL.
     APPEND LINES OF LI_UREPI_FELD_NEW TO $I_UREPI_FELD.
     SORT $I_UREPI_FELD.
     DELETE ADJACENT DUPLICATES FROM $I_UREPI_FELD.
   ENDIF.
 
-* Duplikált tételek törlése:
+* Delete duplicate items:
   SORT: $I_BKPF, $I_BSEG.
   DELETE ADJACENT DUPLICATES FROM $I_BKPF.
   DELETE ADJACENT DUPLICATES FROM $I_BSEG.
 
 
 *++0004 BG 2009.10.29
-*  BSEG rekordok szűrése forgatott vállalatkódra
+*  Filter BSEG records for the rotated company code
   LOOP AT $I_BSEG INTO W_BSEG.
     READ TABLE $I_BKPF INTO W_BKPF
                    WITH KEY BUKRS = W_BSEG-BUKRS
@@ -1301,22 +1301,22 @@ FORM GET_BKPF  TABLES   $I_BSIS  STRUCTURE BSIS
   DATA   L_CPUDTM_BKPF(14).
   DATA   L_CPUDTM_BKPF_SAVE(14).
 
-* LOG utolsó időpont
+* Last LOG timestamp
   CONCATENATE $UREPI_LOG-CPUDT $UREPI_LOG-CPUTM INTO L_CPUDTM_LOG.
-* CPU datátum és időpont szerinti szűrés
+* Filter by CPU date and time
   LOOP AT $I_BSIS INTO LW_BSIS.
-* WL bizonylat szűrés (ezeket a bizonylatokat mi könyveljük)
+* Filter WL documents (these documents are posted by us)
     IF LW_BSIS-ZUONR(2) = 'WL'.
       DELETE $I_BSIS.
       CONTINUE.
     ELSE.
-*     Elmentett utolsó időpont:
+*     Last saved timestamp:
       CONCATENATE $UREPI_LOG_SAVE-CPUDT $UREPI_LOG_SAVE-CPUTM INTO L_CPUDTM_BKPF_SAVE.
-*     Ellenőrizzük, hogy feldolgozható e.
+*     Check whether it can be processed.
       READ TABLE $I_UREPI_DATA TRANSPORTING NO FIELDS
            WITH KEY BUKRS = LW_BSIS-BUKRS
                     GJAHR = LW_BSIS-BLDAT(4).
-*     Nem feldolgozandó tétel
+*     Item not to be processed
       IF SY-SUBRC NE 0.
         MOVE-CORRESPONDING LW_BSIS TO W_UREPI_FELD.
         APPEND W_UREPI_FELD TO $I_UREPI_FELD_NEW.
@@ -1330,29 +1330,29 @@ FORM GET_BKPF  TABLES   $I_BSIS  STRUCTURE BSIS
                        AND BELNR EQ LW_BSIS-BELNR
                        AND GJAHR EQ LW_BSIS-GJAHR.
       IF SY-SUBRC EQ 0.
-*     Utolsó rekord szűréshez
+*     Last record for filtering
         CONCATENATE LW_BKPF-CPUDT LW_BKPF-CPUTM INTO L_CPUDTM_BKPF.
 *       Ha van LOG
         IF NOT $UREPI_LOG IS INITIAL AND $UREPI_LOG-GJAHR
             EQ LW_BKPF-BUDAT(4)
             AND $UREPI_LOG-MONAT EQ LW_BKPF-BUDAT+4(2).
-*       Rekord már feldolgozva
+*       Record already processed
           IF L_CPUDTM_LOG GE L_CPUDTM_BKPF.
             DELETE $I_BSIS.
             CONTINUE.
           ENDIF.
         ENDIF.
-*       LOG adatok mentése ha kell
+*       Save LOG data if necessary
         IF L_CPUDTM_BKPF > L_CPUDTM_BKPF_SAVE.
           MOVE-CORRESPONDING LW_BKPF TO $UREPI_LOG_SAVE.
         ENDIF.
-*Pénznem ellenőrzés
-*A program leválogatott nem HUF-os tételeket is amit
-*az analitikában rosszul kezelt mert a tételekből a
-*DMBTR (saját pénznem) mezőből számolt a pénznemhez
-*viszont a BKPF-WAERS (pld. EUR) értéket írta.
-*Ezért a BKPF_WAERS-be mindig a vállalat T001-WAERS-et
-*írjuk be!
+*Currency check
+*The program also filtered items that were not in HUF
+*which the analytics handled incorrectly because it took the amounts from the items
+*calculated the currency from the DMBTR (local currency) field
+*while writing the BKPF-WAERS value (e.g. EUR).
+*Therefore always place the company T001-WAERS into BKPF_WAERS
+*write that value!
         SELECT SINGLE WAERS INTO LW_BKPF-WAERS
                             FROM T001
                            WHERE BUKRS = LW_BKPF-BUKRS.
@@ -1410,13 +1410,13 @@ FORM GET_BSIS  TABLES   $I_BSIS  STRUCTURE BSIS
 
   RANGES LR_AUFNR FOR BSEG-AUFNR.
 
-*  A rendelésből feltételt csinál a szelekcióhoz
+*  Build a selection condition from the order
   REFRESH LR_AUFNR.
   IF NOT $AUFNR IS INITIAL.
     M_DEF LR_AUFNR 'I' 'EQ' $AUFNR SPACE.
   ENDIF.
 
-* BSIS szelekció
+* BSIS selection
   SELECT * INTO TABLE $I_BSIS
            FROM BSIS
            FOR ALL ENTRIES IN $I_IDSZ
@@ -1468,7 +1468,7 @@ FORM EVES_ADATOK_SUM  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
   DATA LW_BEVALL TYPE /ZAK/BEVALL.
   DATA L_TABIX LIKE SY-TABIX.
 
-* Arány meghatározása
+* Determine ratio
   DEFINE LM_GET_ARANY.
     IF NOT  $I_ARANY-&2_ALAP IS INITIAL.
       READ TABLE $I_UREPI_DATA INTO W_UREPI_DATA
@@ -1482,17 +1482,17 @@ FORM EVES_ADATOK_SUM  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
         IF L_TMP_ADOALAP <= W_UREPI_DATA-ADOMN AND
            W_UREPI_DATA-HFORG <= W_UREPI_DATA-ADOMN.
           $I_ARANY-&2_ARANY = 0.
-*       Most lépjük át a keretet
+*       We are crossing the threshold now
         ELSEIF W_UREPI_DATA-HFORG <= W_UREPI_DATA-ADOMN AND
            L_TMP_ADOALAP > W_UREPI_DATA-ADOMN.
           $I_ARANY-&2_ARANY = ( L_TMP_ADOALAP -
                                 W_UREPI_DATA-ADOMN ) /
                                 &1-&2_ALAP.
-*       Már átléptük a keretet
+*       We have already crossed the threshold
         ELSEIF W_UREPI_DATA-HFORG > W_UREPI_DATA-ADOMN AND
                L_TMP_ADOALAP > W_UREPI_DATA-ADOMN.
           $I_ARANY-&2_ARANY = 1.
-*       Visszamegyünk a keret alá
+*       We drop back below the threshold
         ELSEIF W_UREPI_DATA-HFORG > W_UREPI_DATA-ADOMN AND
                L_TMP_ADOALAP <= W_UREPI_DATA-ADOMN.
           $I_ARANY-&2_ARANY = ( W_UREPI_DATA-HFORG -
@@ -1509,7 +1509,7 @@ FORM EVES_ADATOK_SUM  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
 
   LOOP AT $R_BTYPE.
     CLEAR: $I_ARANY, L_DATAB, L_DATBI.
-*   Meghatározzuk az időszak kezdetét és végét
+*   Determine the start and end of the period
     SELECT * INTO LW_BEVALL
              FROM /ZAK/BEVALL
             WHERE BUKRS EQ $BUKRS
@@ -1524,24 +1524,24 @@ FORM EVES_ADATOK_SUM  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
 
     LOOP AT $I_/ZAK/SZJA_CUST INTO W_/ZAK/SZJA_CUST
                              WHERE BTYPE EQ $R_BTYPE-LOW.
-*     A rendelésből feltételt csinál a szelekcióhoz
+*     Build a selection condition from the order
       REFRESH LR_AUFNR.
       IF NOT W_/ZAK/SZJA_CUST-AUFNR IS INITIAL.
         M_DEF LR_AUFNR 'I' 'EQ' W_/ZAK/SZJA_CUST-AUFNR SPACE.
       ENDIF.
-*      Végig gyalogol a megfelelő BSEG tételeken
+*      Walk through the relevant BSEG items
       LOOP AT $I_BSEG INTO W_BSEG
                       WHERE HKONT = W_/ZAK/SZJA_CUST-SAKNR
                         AND AUFNR IN  LR_AUFNR.
 
-*        rákeres a fej adatra
+*        Looks up the header data
         READ TABLE $I_BKPF INTO W_BKPF
                            WITH KEY BUKRS = W_BSEG-BUKRS
                                     BELNR = W_BSEG-BELNR
                                     GJAHR = W_BSEG-GJAHR.
 
         CHECK W_BKPF-BLDAT BETWEEN L_DATAB AND L_DATBI.
-*        Az adóalapot számítja a feltételeknek megfelelően
+*        Calculates the tax base according to the conditions
         PERFORM ANALITIKA_ADOALAP_SZAMITAS(/ZAK/SZJA_SAP_SEL)
                                         USING W_BSEG
                                               W_BKPF
@@ -1552,7 +1552,7 @@ FORM EVES_ADATOK_SUM  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
                                               1  "v_a_arany
                                               1  "v_r_arany
                                      CHANGING L_TMP_ADOALAP.
-*        Adóalap halmozás
+*        Tax base accumulation
         CLEAR $I_ARANY.
         $I_ARANY-GJAHR = W_BKPF-BLDAT(4).
         IF W_/ZAK/SZJA_CUST-/ZAK/EVES = 'A'.
@@ -1565,11 +1565,11 @@ FORM EVES_ADATOK_SUM  TABLES   $I_/ZAK/SZJA_CUST STRUCTURE /ZAK/SZJA_CUST
     ENDLOOP.
   ENDLOOP.
 
-* Alapok halmozása, arány kiszámítása
+* Accumulate bases and calculate ratio
   LOOP AT $I_ARANY.
-*   Üzleti rész
+*   Business part
     LM_GET_ARANY $I_ARANY U.
-*   Repi rész
+*   Representation part
     LM_GET_ARANY $I_ARANY R.
     MODIFY $I_ARANY.
   ENDLOOP.
@@ -1617,18 +1617,18 @@ FORM SOR_SZETRAK_NEW TABLES   $I_BSEG           STRUCTURE BSEG
   DESCRIBE TABLE $I_BSEG LINES L_LINES.
 
   LOOP AT I_BSEG INTO W_BSEG.
-*    Adatok feldolgozása
+*    Processing data
     PERFORM PROGRESS_INDICATOR USING TEXT-P04
                                      L_LINES
                                      SY-TABIX.
 
-*   Rákeres a fej adatra
+*   Look up the header data
     READ TABLE $I_BKPF INTO W_BKPF
                        WITH KEY BUKRS = W_BSEG-BUKRS
                                 BELNR = W_BSEG-BELNR
                                 GJAHR = W_BSEG-GJAHR.
 
-*   Meghatározzuk az időszakhoz létezik e bevallás típust
+*   Determine whether a declaration type exists for the period
     CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
       EXPORTING
         I_BUKRS     = $BUKRS
@@ -1645,12 +1645,12 @@ FORM SOR_SZETRAK_NEW TABLES   $I_BSEG           STRUCTURE BSEG
       CONTINUE.
     ENDIF.
 
-*   Meghatározzuk az SZJA_CUST először rendelésre is.
+*   Determine SZJA_CUST first with the order as well.
     READ TABLE $I_/ZAK/SZJA_CUST INTO W_/ZAK/SZJA_CUST
                            WITH KEY BTYPE = L_BTYPE
                                     SAKNR = W_BSEG-HKONT
                                     AUFNR = W_BSEG-AUFNR.
-*   Megpróbáljuk rendelés nélkül
+*   Try without the order
     IF SY-SUBRC NE 0.
       READ TABLE $I_/ZAK/SZJA_CUST INTO W_/ZAK/SZJA_CUST
                              WITH KEY BTYPE = L_BTYPE
@@ -1664,12 +1664,12 @@ FORM SOR_SZETRAK_NEW TABLES   $I_BSEG           STRUCTURE BSEG
                                  BTYPE = W_/ZAK/SZJA_CUST-BTYPE.
     IF SY-SUBRC NE 0.
       MESSAGE E114.
-*     Bevallás típus meghatározás hiba!
+*     Error while determining the declaration type!
     ENDIF.
 
-*   Ha nem üres az ABEV azonosító, akkor kell az analitikába a sor
+*   If the ABEV ID is not empty, the row must be added to the analytics
     IF NOT W_/ZAK/SZJA_CUST-ABEVAZ IS INITIAL.
-*      KITÖLTI az analitika 1 sorát.
+*      FILLS the first row of the analytics.
       PERFORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL
                                       $I_BTYPE_ARANY
                                USING  W_/ZAK/ANALITIKA
@@ -1687,7 +1687,7 @@ FORM SOR_SZETRAK_NEW TABLES   $I_BSEG           STRUCTURE BSEG
 *     Elmenti az analitoka rekordot.
       APPEND  W_/ZAK/ANALITIKA  TO $I_/ZAK/ANALITIKA.
     ENDIF.
-*   WL-es könyvelés
+*   WL postings
     IF NOT W_/ZAK/SZJA_CUST-/ZAK/WL IS INITIAL
        AND W_BKPF-BLART = 'WL' AND W_/ZAK/SZJA_CUST-WLBOUT IS INITIAL.
 
@@ -1714,15 +1714,15 @@ FORM SOR_SZETRAK_NEW TABLES   $I_BSEG           STRUCTURE BSEG
                                W_/ZAK/SZJA_EXCEL2
                                $GJAHR
                                $MONAT.
-*Egy azonosítónak össze kell fognia a tételeket, most egy tételszám az
+*One identifier has to group the items; currently a line number is used
       L_SZAMLA_BELNR =    L_SZAMLA_BELNR + 1 .
       W_/ZAK/SZJA_EXCEL1-BIZ_AZON = L_SZAMLA_BELNR.
       W_/ZAK/SZJA_EXCEL2-BIZ_AZON = L_SZAMLA_BELNR.
-*       kiírja a rekordokat
+*       Outputs the records
       APPEND W_/ZAK/SZJA_EXCEL1 TO I_/ZAK/SZJA_EXCEL.
       APPEND W_/ZAK/SZJA_EXCEL2 TO I_/ZAK/SZJA_EXCEL.
     ENDIF.
-*   Beállítás szerinti átkönyvelés
+*   Reposting according to configuration
     IF NOT W_/ZAK/SZJA_CUST-/ZAK/ATKONYV IS INITIAL.
 *++0002 2009.04.20 BG
       PERFORM GET_SZJA_ABEV(/ZAK/SZJA_SAP_SEL)
@@ -1737,11 +1737,11 @@ FORM SOR_SZETRAK_NEW TABLES   $I_BSEG           STRUCTURE BSEG
                                     W_/ZAK/SZJA_CUST-/ZAK/ATKONYV
                                     W_/ZAK/SZJA_EXCEL1
                                     W_/ZAK/SZJA_EXCEL2.
-*Egy azonosítónak össze kell fognia a tételeket, most egy tételszám az
+*One identifier has to group the items; currently a line number is used
       L_SZAMLA_BELNR =    L_SZAMLA_BELNR + 1 .
       W_/ZAK/SZJA_EXCEL1-BIZ_AZON = L_SZAMLA_BELNR.
       W_/ZAK/SZJA_EXCEL2-BIZ_AZON = L_SZAMLA_BELNR.
-*        kiírja a rekordot
+*        Outputs the record
       APPEND W_/ZAK/SZJA_EXCEL1 TO I_/ZAK/SZJA_EXCEL.
       APPEND W_/ZAK/SZJA_EXCEL2 TO I_/ZAK/SZJA_EXCEL.
     ENDIF.
@@ -1781,17 +1781,17 @@ FORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL    STRUCTURE /ZAK/BEVALL
 
   CLEAR $W_/ZAK/ANALITIKA.
   CLEAR $SUBRC.
-*  Minden lehetséges adatot kitölt
+*  Fill every possible field
   MOVE-CORRESPONDING $W_BSEG TO $W_/ZAK/ANALITIKA.
 
   MOVE $SEL_BUKRS TO $W_/ZAK/ANALITIKA-BUKRS.
   MOVE $BUKRS TO $W_/ZAK/ANALITIKA-FI_BUKRS.
 
 
-* Könyvelési periódus  és dátum beállítása
+* Set posting period and date
   L_GJAHR = W_BKPF-BLDAT(4) + 1.
 
-* Ellenőrizzük az időszakhoz a bevallás típust
+* Check the declaration type for the period
 *  PERFORM GET_VERIFY_BTYPE_FROM_DATUM(/ZAK/SZJA_SAP_SEL) TABLES $I_/ZAK/BEVALL
 *                                      USING  $W_/ZAK/SZJA_CUST-BTYPE
 *                                             L_GJAHR
@@ -1801,7 +1801,7 @@ FORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL    STRUCTURE /ZAK/BEVALL
 *    EXIT.
 *  ENDIF.
 
-* Meghatározzuk az időszakhoz a bevallás típust
+* Determine the declaration type for the period
   CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
     EXPORTING
       I_BUKRS     = $BUKRS
@@ -1819,10 +1819,10 @@ FORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL    STRUCTURE /ZAK/BEVALL
             WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
   ENDIF.
 
-* Ha nem egyezik meg, akkor konvertálás:
+* If it does not match, then convert:
   IF $W_/ZAK/SZJA_CUST-BTYPE NE L_BTYPE.
 
-*  Megnézzük mi lenne a megfelelő ABEV
+*  Check what the appropriate ABEV would be
     CALL FUNCTION '/ZAK/ABEV_CONTACT'
       EXPORTING
         I_BUKRS        = $BUKRS
@@ -1851,23 +1851,23 @@ FORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL    STRUCTURE /ZAK/BEVALL
     $W_/ZAK/ANALITIKA-BTYPE = $W_/ZAK/SZJA_CUST-BTYPE.
   ENDIF.
 
-*  A következő év C_REPI_MONAT-ra kell beállítani
+*  Must be set to C_REPI_MONAT for the following year
   $W_/ZAK/ANALITIKA-GJAHR = W_BKPF-BLDAT(4) + 1.
   $W_/ZAK/ANALITIKA-MONAT = C_REPI_MONAT.
 
-* Mi legyen a könyvelési dátum
+* Decide what the posting date should be
   PERFORM GET_LAST_DAY_OF_PERIOD(/ZAK/SZJA_SAP_SEL)
                             USING $GJAHR
                                   $MONAT
                          CHANGING $W_/ZAK/ANALITIKA-BUDAT.
 
 
-*  a bizonylatfajata meghatározás a BKPF-BLDAT alapján kell
+*  Determine the document type based on BKPF-BLDAT
 *  CLEAR L_BLDAT.
 *  CONCATENATE $W_/ZAK/ANALITIKA-GJAHR
 *              $W_/ZAK/ANALITIKA-MONAT
 *              '01' INTO L_BLDAT.
-*  Bizonylat fajta meghatározása
+*  Determine document type
   PERFORM GET_BLART(/ZAK/SZJA_SAP_SEL) USING W_BKPF-BLDAT
                           $GJAHR
                           $W_/ZAK/BEVALL-BLART
@@ -1881,13 +1881,13 @@ FORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL    STRUCTURE /ZAK/BEVALL
   $W_/ZAK/ANALITIKA-BSEG_GJAHR = $W_BSEG-GJAHR.
   $W_/ZAK/ANALITIKA-BSEG_BELNR = $W_BSEG-BELNR.
   $W_/ZAK/ANALITIKA-BSEG_BUZEI = $W_BSEG-BUZEI.
-* HA A KÖLTSÉGHELY NEM ÜRES, AKKOR ÁTTESSZÜK AZ ANALITIKÁBA
+* IF THE COST CENTER IS NOT EMPTY, THEN COPY IT INTO THE ANALYTICS
   IF NOT $W_/ZAK/SZJA_CUST-KOSTL IS INITIAL.
     $W_/ZAK/ANALITIKA-KTOSL = $W_/ZAK/SZJA_CUST-KOSTL.
   ENDIF.
 
 *++0005 BG 2010/01/08
-*  PST elem átvétele
+*  Transfer the PST element
   IF NOT $W_BSEG-PROJK IS INITIAL.
     CALL FUNCTION 'CONVERSION_EXIT_ABPSP_OUTPUT'
       EXPORTING
@@ -1899,7 +1899,7 @@ FORM ANALITIKA_KITOLT TABLES $I_/ZAK/BEVALL    STRUCTURE /ZAK/BEVALL
 
   READ TABLE $I_BTYPE_ARANY WITH KEY GJAHR = $W_BKPF-BLDAT(4).
   IF SY-SUBRC EQ 0.
-*  Az adóalapot számítja a feltételeknek megfelelően
+*  Calculates the tax base according to the conditions
     PERFORM ANALITIKA_ADOALAP_SZAMITAS(/ZAK/SZJA_SAP_SEL)
                                        USING $W_BSEG
                                              $W_BKPF
@@ -1927,11 +1927,11 @@ FORM GEN_ANALITIKA  TABLES   $R_BTYPE          STRUCTURE  R_BTYPE
                              $BSZNUM.
 
   DATA LI_/ZAK/ANALITIKA LIKE /ZAK/ANALITIKA OCCURS 0 WITH HEADER LINE.
-*A funkcioelem áltlal generált rekordokat tartalmazza
+*Contains the records generated by the function module
   DATA LIO_/ZAK/ANALITIKA TYPE STANDARD TABLE OF /ZAK/ANALITIKA
                                                          INITIAL SIZE 0.
 
-*Szét kell bontani bevallás típusonként
+*Need to split by declaration type
   LOOP AT $R_BTYPE.
     LI_/ZAK/ANALITIKA[] = $I_/ZAK/ANALITIKA[].
     DELETE LI_/ZAK/ANALITIKA WHERE BTYPE NE $R_BTYPE-LOW.
@@ -1947,7 +1947,7 @@ FORM GEN_ANALITIKA  TABLES   $R_BTYPE          STRUCTURE  R_BTYPE
       TABLES
         I_/ZAK/ANALITIKA = LI_/ZAK/ANALITIKA
         O_/ZAK/ANALITIKA = LIO_/ZAK/ANALITIKA.
-*    A kapott rekordokat visszamásolja az eredetibe.
+*    Copy the received records back into the original.
     APPEND LINES OF LIO_/ZAK/ANALITIKA TO $I_/ZAK/ANALITIKA.
   ENDLOOP.
 
@@ -1993,15 +1993,15 @@ FORM INS_DATA  TABLES   $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 
   IF $I_/ZAK/ANALITIKA[] IS INITIAL.
     MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain any processable records!
     EXIT.
   ENDIF.
-*  Meg kell hívni a konverziót
+*  The conversion needs to be called
   CALL FUNCTION '/ZAK/ANALITIKA_CONVERSION'
     TABLES
       T_ANALITIKA = $I_/ZAK/ANALITIKA.
 
-*  Először mindig tesztben futtatjuk
+*  Always run in test mode first
   CALL FUNCTION '/ZAK/UPDATE'
     EXPORTING
       I_BUKRS     = $SEL_BUKRS
@@ -2015,28 +2015,28 @@ FORM INS_DATA  TABLES   $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
       I_ANALITIKA = $I_/ZAK/ANALITIKA
       E_RETURN    = LI_RETURN.
 
-*   Üzenetek kezelése
+*   Handle messages
   IF NOT LI_RETURN[] IS INITIAL.
     CALL FUNCTION '/ZAK/MESSAGE_SHOW'
       TABLES
         T_RETURN = LI_RETURN.
   ENDIF.
 
-*  Ha nem teszt futás, akkor ellenőrizzük van-e ERROR
+*  If not a test run, check whether there are ERROR messages
   IF NOT $TESZT IS INITIAL.
     LOOP AT LI_RETURN INTO LW_RETURN WHERE TYPE CA 'EA'.
     ENDLOOP.
     IF SY-SUBRC EQ 0.
       MESSAGE E062.
-*     Adatfeltöltés nem lehetséges!
+*     Data upload is not possible!
     ENDIF.
   ENDIF.
 
-*  Éles futás de van hibaüzent és nem ERROR, kérdés a folytatásról
+*  In live run with non-ERROR messages, ask whether to continue
   IF $TESZT IS INITIAL.
 
     IF NOT LI_RETURN[] IS INITIAL.
-*    Szövegek betöltése
+*    Load texts
       MOVE 'Adatfeltöltés folytatása'(001) TO L_TITLE.
       MOVE 'Adatfeltöltésnél előfordultak figyelmeztető üzenetek'(002)
                                            TO L_DIAGNOSETEXT1.
@@ -2085,14 +2085,14 @@ FORM INS_DATA  TABLES   $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
         MOVE 'J' TO L_ANSWER.
       ENDIF.
 *--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
-*    Egyébként mehet
+*    Otherwise it can continue
     ELSE.
       MOVE 'J' TO L_ANSWER.
     ENDIF.
 
-*    Mehet az adatbázis módosítása
+*    The database update can proceed
     IF L_ANSWER EQ 'J'.
-*      Adatok módosítása
+*      Modify data
       CALL FUNCTION '/ZAK/UPDATE'
         EXPORTING
           I_BUKRS     = $SEL_BUKRS
@@ -2105,26 +2105,26 @@ FORM INS_DATA  TABLES   $I_/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
         TABLES
           I_ANALITIKA = I_/ZAK/ANALITIKA
           E_RETURN    = LI_RETURN.
-*     Visszavezetjük az indexet
+*     Restore the index
       LOOP AT $I_/ZAK/ANALITIKA INTO W_/ZAK/ANALITIKA.
-*        Elmentjük a package azonosítót
+*        Save the package identifier
         IF L_PACK IS INITIAL.
           MOVE W_/ZAK/ANALITIKA-PACK TO L_PACK.
         ENDIF.
         INSERT INTO /ZAK/ANALITIKA VALUES W_/ZAK/ANALITIKA.
       ENDLOOP.
-*     Feldolgozatlan adatok mentése
+*     Save unprocessed data
       DELETE FROM /ZAK/UREPI_FELD WHERE BUKRS EQ $SEL_BUKRS.
       IF NOT $I_UREPI_FELD[] IS INITIAL.
         INSERT /ZAK/UREPI_FELD FROM TABLE $I_UREPI_FELD.
       ENDIF.
-*     LOG mentése
+*     Save LOG
       MODIFY /ZAK/UREPI_LOG FROM $/ZAK/UREPI_LOG.
-*     Halmozott forgalom mentése
+*     Save cumulative turnover
       MODIFY /ZAK/UREPIDATA FROM TABLE $I_UREPI_DATA.
       COMMIT WORK AND WAIT.
       MESSAGE I033 WITH L_PACK.
-*     Feltöltés & package számmal megtörtént!
+*     Upload completed with package number &!
     ENDIF.
   ENDIF.
 
@@ -2218,11 +2218,11 @@ FORM CREATE_AND_INIT_ALV CHANGING $I_/ZAK/ANALITIKA LIKE
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Exclude functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -2325,7 +2325,7 @@ MODULE USER_COMMAND_9000 INPUT.
   CASE V_SAVE_OK.
     WHEN 'EXCEL'.
       CALL SCREEN 9001.
-*    Kilépés
+*    Exit
     WHEN 'BACK'.
       PERFORM EXIT_PROGRAM.
     WHEN 'EXIT' OR 'CANCEL'.
@@ -2377,11 +2377,11 @@ FORM CREATE_AND_INIT_ALV1 CHANGING $I_/ZAK/SZJA_EXCEL LIKE
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING $FIELDCAT.
 
-* Funkciók kizárása
+* Exclude functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   $LAYOUT-CWIDTH_OPT = 'X'.
@@ -2416,7 +2416,7 @@ MODULE USER_COMMAND_9001 INPUT.
   CASE V_SAVE_OK.
     WHEN 'ANALITIKA'.
       CALL SCREEN 9000.
-* Kilépés
+* Exit
     WHEN 'BACK'.
       PERFORM EXIT_PROGRAM.
     WHEN 'EXIT' OR 'CANCEL'.

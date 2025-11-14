@@ -4,19 +4,19 @@
 
 REPORT  /ZAK/READ_MIGR_XML MESSAGE-ID /ZAK/ZAK.
 *&---------------------------------------------------------------------*
-*& Funkció leírás: __________________
+*& Function description: __________________
 *&---------------------------------------------------------------------*
-*& Szerző            : Balázs Gábor
-*& Létrehozás dátuma : 2016.07.18
-*& Funkc.spec.készítő: Balázs Gábor
-*& SAP modul neve    : ADO
-*& Program  típus    : ________
-*& SAP verzió        : ________
+*& Author            : Balázs Gábor
+*& Creation date     : 2016.07.18
+*& Functional spec author: Balázs Gábor
+*& SAP module name    : ADO
+*& Program type       : ________
+*& SAP version        : ________
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& CHANGES (Write the OSS note number at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ                   LEÍRÁS
+*& LOG#     DATE        MODIFIER                   DESCRIPTION
 *& ----   ----------   ----------     ---------------------- -----------
 INCLUDE /ZAK/COMMON_STRUCT.
 INCLUDE: /ZAK/READ_TOP.
@@ -25,7 +25,7 @@ INCLUDE <ICON>.
 CLASS LCL_EVENT_RECEIVER DEFINITION DEFERRED.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
 TABLES: T001.
 
@@ -34,20 +34,20 @@ TABLES: T001.
 *&---------------------------------------------------------------------*
 TYPE-POOLS: SLIS.
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS  (C_XXXXXXX..)                                           *
 *&---------------------------------------------------------------------*
 CONSTANTS: C_CLASS TYPE DD02L-TABCLASS VALUE 'INTTAB',
            C_A TYPE C VALUE 'A'.
 CONSTANTS: C_MAX_XLS_LINE TYPE SY-TABIX VALUE 9000.
 
 *&---------------------------------------------------------------------*
-*& Munkaterület  (W_XXX..)                                           *
+*& Work area  (W_XXX..)                                           *
 *&---------------------------------------------------------------------*
-* struktúra ellenőrzése
+* structure check
 DATA: W_DD02L TYPE DD02L.
 
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
+*& INTERNAL TABLES  (I_XXXXXXX..)                                         *
 *&   BEGIN OF I_TAB OCCURS ....                                        *
 *&              .....                                                  *
 *&   END OF I_TAB.                                                     *
@@ -57,21 +57,21 @@ DATA: W_DD02L TYPE DD02L.
 DATA: E_MESSAGE TYPE STANDARD TABLE OF BAPIRET2     INITIAL SIZE 0.
 * message
 DATA: W_MESSAGE TYPE BAPIRET2.
-* adatszerkezet hiba
+* data structure error
 DATA: W_HIBA    TYPE /ZAK/ADAT_HIBA.
 
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Ranges (Range)   -   (R_xxx...)                              *
+*      Global variables   -   (V_xxx...)                              *
+*      Work area        -   (W_xxx...)                              *
+*      Type               -   (T_xxx...)                              *
+*      Macros              -   (M_xxx...)                              *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
-*      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Object            -   (O_xxx...)                              *
+*      Class             -   (CL_xxx...)                             *
+*      Event             -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
 DATA: V_BTYPE   LIKE /ZAK/BEVALL-BTYPE.
 DATA: V_BTYPART TYPE /ZAK/BTYPART.
@@ -82,9 +82,9 @@ DATA: V_TYPE    LIKE /ZAK/BEVALLD-FILETYPE,
 DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/ANALITIKA INITIAL SIZE 0.
 DATA: W_OUTTAB  TYPE /ZAK/ANALITIKA.
 
-* Hiba adaszerkezet tábla
+* Error data structure table
 DATA: I_HIBA TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA   INITIAL SIZE 0.
-* ALV kezelési változók
+* ALV control variables
 DATA: V_OK_CODE LIKE SY-UCOMM,
       V_SAVE_OK LIKE SY-UCOMM,
       V_REPID LIKE SY-REPID,
@@ -111,12 +111,12 @@ DATA: V_OK_CODE LIKE SY-UCOMM,
 V_EVENT_RECEIVER  TYPE REF TO LCL_EVENT_RECEIVER,
 V_EVENT_RECEIVER2 TYPE REF TO LCL_EVENT_RECEIVER,
 V_STRUC     TYPE DD02L-TABNAME.
-* popup üzenethez
+* for popup message
 DATA: V_TEXT1(40) TYPE C,
       V_TEXT2(40) TYPE C,
       V_TITEL     TYPE C,
       V_ANSWER.
-* file ellenörzése
+* file validation
 DATA: LV_ACTIVE TYPE ABAP_BOOL.
 DATA: V_WNUM(30) TYPE N,
       V_WAERS LIKE T001-WAERS.
@@ -129,7 +129,7 @@ DATA: V_XLS_LINE TYPE SY-TABIX VALUE 5000.
 FIELD-SYMBOLS <FS> TYPE ANY.
 
 *++0002 BG 2007.07.02
-*MAKRO definiálás range feltöltéshez
+* Macro definition for filling ranges
 DEFINE M_DEF.
   MOVE: &2      TO &1-SIGN,
         &3      TO &1-OPTION,
@@ -143,10 +143,10 @@ DATA V_ONREV TYPE XFELD.
 *--1765 #04.
 
 *&---------------------------------------------------------------------*
-*& PARAMÉTEREK  (P_XXXXXXX..)                                          *
+*& PARAMETERS  (P_XXXXXXX..)                                          *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIÓK (S_XXXXXXX..)                                        *
+*& SELECT-OPTIONS (S_XXXXXXX..)                                        *
 *&---------------------------------------------------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
 
@@ -207,7 +207,7 @@ CLASS LCL_EVENT_RECEIVER DEFINITION.
     HANDLE_TOP_OF_PAGE
         FOR EVENT TOP_OF_PAGE OF CL_GUI_ALV_GRID
             IMPORTING E_DYNDOC_ID,
-* ez ír a képernyőre
+* this writes to the screen
     HANDLE_END_OF_PAGE
         FOR EVENT PRINT_END_OF_PAGE OF CL_GUI_ALV_GRID.
 
@@ -256,7 +256,7 @@ CLASS  LCL_EVENT_RECEIVER IMPLEMENTATION.
           S_OUT  TYPE /ZAK/ANALITIKA.
 
     CASE E_UCOMM.
-* Analitika megjelenítése
+* Display analytics
       WHEN '/ZAK/HIBA'.
         IF I_HIBA[] IS INITIAL.
           MESSAGE I005 .
@@ -286,10 +286,10 @@ ENDCLASS.                    "LCL_EVENT_RECEIVER IMPLEMENTATION
 *       INITIALIZATION
 *-----------------------------------------------------------------------
 INITIALIZATION.
-* megnevezések
+* descriptions
   PERFORM FIELD_DESCRIPT.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Authorization check
   AUTHORITY-CHECK OBJECT 'S_TCODE'
                   ID 'TCD'  FIELD SY-TCODE.
 *++1865 #03.
@@ -297,7 +297,7 @@ INITIALIZATION.
   IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
     MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
   ENDIF.
 *--1765 #19.
 
@@ -306,10 +306,10 @@ INITIALIZATION.
 ************************************************************************
 ************************************************************************
 AT SELECTION-SCREEN.
-* megnevezések
+* descriptions
   PERFORM FIELD_DESCRIPT(/ZAK/READ_FILE).
   PERFORM CHECK_PARAMS .
-*  Fájl névben vállalat kód ellenőrzés
+*  Company code check in file name
   PERFORM CHECK_BUKRS_FILENAME.
 
 ************************************************************************
@@ -325,20 +325,20 @@ AT SELECTION-SCREEN ON VALUE-REQUEST FOR P_FDIR.
 * START-OF-SELECTION
 ************************************************************************
 START-OF-SELECTION.
-* bevallás fajta meghatározása
+* determine return type
   PERFORM READ_BEVALL USING P_BUKRS
                             P_BTYPE.
-*  Jogosultság vizsgálat
+*  Authorization check
   PERFORM AUTHORITY_CHECK USING P_BUKRS
                                 W_/ZAK/BEVALL-BTYPART
                                 C_ACTVT_01.
-* vezérlő táblák olvasása
+* read control tables
   PERFORM READ_CUST_TABLE USING P_BUKRS
                                 P_BTYPE
                                 P_BSZNUM.
 
   CLEAR: V_TYPE,V_STRNAME.
-* Adatszerkezet meghatározás és meglétének ellenörzése
+* Determine data structure and check its existence
   PERFORM CHECK_BEVALLD USING P_BUKRS
                               P_BTYPE
                               P_BSZNUM
@@ -390,9 +390,9 @@ START-OF-SELECTION.
       ENDIF.
 *--1765 #01.
   ENDCASE.
-* Adatbázis tábla update
+* Database table update
   IF I_HIBA[] IS INITIAL.
-*  Vizsgálat, adatbázis módosítás. Teszt v Éles
+*  Check, database modification. Test vs. Production
     PERFORM PROCESS_IND(/ZAK/READ_FILE) USING TEXT-P04.
     PERFORM UPD_DATA USING P_TESZT.
   ENDIF.
@@ -405,7 +405,7 @@ END-OF-SELECTION.
   PERFORM PROCESS_IND(/ZAK/READ_FILE) USING TEXT-P05.
 
   SORT I_OUTTAB BY ITEM.
-*  GRID maximális sor korlátozás
+*  GRID maximum row limit
   PERFORM GET_ALV_GRID_LINE(/ZAK/READ_FILE) TABLES I_OUTTAB.
 
   PERFORM ALV_LIST.
@@ -543,14 +543,14 @@ FORM CHECK_PARAMS .
                               BTYPE EQ P_BTYPE .
     IF SY-SUBRC NE 0.
       MESSAGE E109 WITH P_BTYPE P_BUKRS  .
-*     & bevallás típus & vállalatban nem létezik!
+*     The & return type does not exist in company &!
 *++1765 #01.
 *    ELSEIF  V_BTYPART NE C_BTYPART_ONYB.
 *      MESSAGE E310.
-**   Kérem ONYB típusú bevallás azonosítót adjon meg!
+**   Please provide an ONYB return type identifier!
     ELSEIF  V_BTYPART NE C_BTYPART_ONYB AND V_BTYPART NE C_BTYPART_AFA.
       MESSAGE E364.
-*   Kérem ONYB vagy ÁFA bevallás típust adjon meg!
+*   Please provide an ONYB or VAT return type!
 *--1765 #01.
     ENDIF.
     CLEAR: W_/ZAK/BEVALLD.
@@ -573,7 +573,7 @@ FORM CHECK_PARAMS .
                   BSZNUM EQ P_BSZNUM.
     IF SY-SUBRC NE 0 OR W_/ZAK/BEVALLD-PROGRAMM NE SY-REPID.
       MESSAGE E029 WITH P_BSZNUM.
-*   Ez a program a  & adatszolgáltatáshoz nem használható!
+*   This program cannot be used for the & data provision!
     ENDIF.
   ENDIF.
 
@@ -593,7 +593,7 @@ FORM CHECK_PARAMS .
   MOVE L_RESULT TO L_RET.
   CONDENSE L_RET NO-GAPS.
   IF L_RET EQ SPACE.
-*   A megadott fájlt (&) nem lehet megnyitni!
+*   The specified file (&) cannot be opened!
     MESSAGE E004(/ZAK/ZAK) WITH P_FDIR.
   ENDIF.
 
@@ -609,8 +609,8 @@ ENDFORM.                    " CHECK_PARAMS
 *----------------------------------------------------------------------*
 FORM READ_BEVALL USING    $BUKRS
                           $BTYPE.
-* egy bevallás típus csak egy bevallás fajtához tartozhat, így
-* a bevallás fajta meghatározásánál elég az első bejegyzést vizsgálni!
+* one return type belongs to only one return category, so
+* examining the first entry is enough when determining the return category!
   SELECT SINGLE * INTO W_/ZAK/BEVALL FROM /ZAK/BEVALL
                        WHERE BUKRS EQ $BUKRS AND
                              BTYPE EQ $BTYPE.
@@ -628,7 +628,7 @@ ENDFORM.                    " READ_BEVALL
 FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
                               $BTYPE  LIKE /ZAK/BEVALL-BTYPE
                               $BSZNUM LIKE /ZAK/BEVALLD-BSZNUM.
-* Bevallás adatszolgáltatás feltöltések  !
+* Return data provision uploads!
   SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
                             WHERE BUKRS  EQ $BUKRS AND
                                   BTYPE  EQ $BTYPE AND
@@ -637,7 +637,7 @@ FORM READ_CUST_TABLE USING    $BUKRS  LIKE T001-BUKRS
 *   MESSAGE E011 WITH $BUKRS $BTYPE $BSZNUM.
   ENDIF.
 
-* Adatszerkezet-mezző összerendelés meghatározása
+* Determine data structure-field mapping
   SELECT * INTO TABLE I_/ZAK/BEVALLC FROM /ZAK/BEVALLC
                             WHERE BTYPE EQ $BTYPE AND
                                   BSZNUM EQ $BSZNUM.
@@ -666,7 +666,7 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
                             $STRNAME LIKE /ZAK/BEVALLD-STRNAME.
 
   CLEAR: W_/ZAK/BEVALLD.
-* Adatszerkezet meghatározás
+* Data structure determination
   SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
                   WHERE BUKRS  EQ $BUKRS AND
                   BTYPE  EQ $BTYPE AND
@@ -675,33 +675,33 @@ FORM CHECK_BEVALLD USING    $BUKRS LIKE T001-BUKRS
     MESSAGE E011 WITH $BUKRS $BTYPE $BSZNUM.
   ELSE.
     IF W_/ZAK/BEVALLD-FILETYPE EQ '04'.
-* SAP adatszolgáltatást jelenleg nem engedélyezett !
+* SAP data provision is currently not permitted!
       MESSAGE E006.
     ENDIF.
 
 *++2007.01.11 BG (FMC)
     IF NOT W_/ZAK/BEVALLD-XSPEC IS INITIAL.
       MESSAGE E205 WITH $BSZNUM.
-*   & adatszolgáltatás speciálisra van beállítva! (/ZAK/BEVALLD)
+*   & data provision is set to special! (/ZAK/BEVALLD)
     ENDIF.
 *--2007.01.11 BG (FMC)
 
     $STRNAME = W_/ZAK/BEVALLD-STRNAME.
     $TYPE    = W_/ZAK/BEVALLD-FILETYPE.
 
-* XML formátumnál nem kell struktúra
+* No structure is needed for XML format
     IF  W_/ZAK/BEVALLD-FILETYPE NE '03'.
-** Adatszerkezet meglétének ellenörzése!
+** Check that the data structure exists!
 *      SELECT SINGLE * INTO W_DD02L FROM DD02L
 *                      WHERE TABNAME  EQ W_/ZAK/BEVALLD-STRNAME AND
 *                            AS4LOCAL EQ C_A AND
 *                            TABCLASS EQ C_CLASS.
-** aktivált?
+** Activated?
 *      IF SY-SUBRC NE 0.
 *        MESSAGE E050 WITH W_/ZAK/BEVALLD-STRNAME .
 *      ENDIF.
       MESSAGE E311.
-*   Kérem csak XML típusú adatszolgáltatás azonosítót válasszon!
+*   Please select only XML-type data provision identifiers!
     ENDIF.
   ENDIF.
 ENDFORM.                    " check_bevalld
@@ -722,20 +722,20 @@ FORM CHECK_BUKRS_FILENAME.
   DATA  L_LENGTH TYPE I.
 
 
-*  Feldaraboljuk a fájl elérést.
+*  Split the file path.
   SPLIT P_FDIR AT '\' INTO TABLE L_SPLIT.
 
-*  Az utolsó lesz a fájl név.
+*  The last part will be the file name.
   DESCRIBE TABLE L_SPLIT LINES L_LINES.
   READ TABLE L_SPLIT INDEX L_LINES.
 
-*  Meghatározzuk a vállalat hosszát
+*  Determine the company code length
   L_LENGTH = STRLEN( P_BUKRS ).
 
-*  Ha a fáhjl név nem a vállalat kóddal kezdődik:
+*  If the file name does not start with the company code:
   IF L_SPLIT-LINE(L_LENGTH) NE P_BUKRS.
     MESSAGE E194 WITH P_BUKRS.
-*   Helytelen fájl! A fájl név nem a vállalat kóddal kezdődik! (&1)
+*   Invalid file! The file name does not start with the company code! (&1)
   ENDIF.
 
 
@@ -768,20 +768,20 @@ FORM UPD_DATA USING $TESZT.
 
   IF I_OUTTAB[] IS INITIAL.
     MESSAGE I031.
-*    Adatbázis nem tartalmaz feldolgozható rekordot!
+*    The database does not contain any records to process!
     EXIT.
   ENDIF.
 
 
-*  Először mindig tesztben futtatjuk
+*  Always run in test first
   CALL FUNCTION '/ZAK/UPDATE'
     EXPORTING
       I_BUKRS     = P_BUKRS
       I_BTYPE     = P_BTYPE
 *++1365 #11.
-*     Megadjuk a  BTYPART-ot is és majd
-*     a funkció meghatározza melyik BTYPE tartotik hozzá
-*     így egy állomány több évi adatot is tartalmazhat.
+*     We also provide BTYPART and then
+*     the function determines which BTYPE belongs to it
+*     so one file can contain data for multiple years.
       I_BTYPART   = W_/ZAK/BEVALL-BTYPART
 *--1365 #11.
       I_BSZNUM    = P_BSZNUM
@@ -796,27 +796,27 @@ FORM UPD_DATA USING $TESZT.
 *--1365 2013.01.22 Balázs Gábor (Ness)
       E_RETURN    = E_MESSAGE.
 
-*   Üzenetek kezelése
+*   Message handling
   IF NOT E_MESSAGE[] IS INITIAL.
     CALL FUNCTION '/ZAK/MESSAGE_SHOW'
       TABLES
         T_RETURN = E_MESSAGE.
   ENDIF.
 
-*  Ha nem teszt futás, akkor ellenőrizzük van ERROR
+*  If it is not a test run, check whether there is an ERROR
   IF NOT $TESZT IS INITIAL.
     LOOP AT E_MESSAGE INTO W_MESSAGE WHERE TYPE CA 'EA'.
     ENDLOOP.
     IF SY-SUBRC EQ 0.
       MESSAGE E062.
-*     Adatfeltöltés nem lehetséges!
+*     Data upload is not possible!
     ENDIF.
   ENDIF.
 
-*  Éles futás de van hibaüzent és nem ERROR, kérdés a folytatásról
+*  Production run but there is a warning instead of ERROR, ask whether to continue
   IF $TESZT IS INITIAL.
     IF NOT E_MESSAGE[] IS INITIAL.
-*    Szövegek betöltése
+*    Load texts
       MOVE 'Adatfeltöltés folytatása'(001) TO L_TITLE.
       MOVE 'Adatfeltöltésnél előfordultak figyelmeztető üzenetek'(002)
                                            TO L_DIAGNOSETEXT1.
@@ -834,15 +834,15 @@ FORM UPD_DATA USING $TESZT.
           START_ROW     = 6
         IMPORTING
           ANSWER        = L_ANSWER.
-*    Egyébként mehet
+*    Otherwise proceed
     ELSE.
       MOVE 'J' TO L_ANSWER.
     ENDIF.
 
-*    Mehet az adatbázis módosítása
+*    The database modification may continue
     IF L_ANSWER EQ 'J'.
 *++1765 #04.
-*    Ha önrevízió, akkor alap időszakok megnyitása
+*    If this is a self-revision, open the base periods
       IF NOT V_ONREV IS INITIAL.
         CLEAR    W_/ZAK/BEVALLI.
         REFRESH  I_/ZAK/BEVALLD.
@@ -869,15 +869,15 @@ FORM UPD_DATA USING $TESZT.
         ENDIF.
       ENDIF.
 *--1765 #04.
-*      Adatok módosítása
+*      Modify data
       CALL FUNCTION '/ZAK/UPDATE'
         EXPORTING
           I_BUKRS     = P_BUKRS
           I_BTYPE     = P_BTYPE
 *++1365 #11.
-*          Megadjuk a  BTYPART-ot is és majd
-*          a funkció meghatározza melyik BTYPE tartotik hozzá
-*          így egy állomány több évi adatot is tartalmazhat.
+*          We also provide BTYPART and then
+*          the function determines which BTYPE belongs to it
+*          so one file can contain data for multiple years.
           I_BTYPART   = W_/ZAK/BEVALL-BTYPART
 *--1365 #11.
           I_BSZNUM    = P_BSZNUM
@@ -895,9 +895,9 @@ FORM UPD_DATA USING $TESZT.
       READ TABLE I_OUTTAB INTO W_OUTTAB INDEX 1.
       MOVE W_OUTTAB-PACK TO L_PACK.
       MESSAGE I033 WITH L_PACK.
-*      Feltöltés & package számmal megtörtént!
+*      Upload completed with package number &!
 **++PTGSZLAA 2014.03.04 BG (Ness)
-**      Fájl mozgatása a ....\old\<filename> könyvtárba
+**      Move the file to the ....\old\<filename> directory
 *      IF NOT P_APPL IS INITIAL.
 *        REFRESH LI_TAB.
 *        CLEAR: L_FILE, L_FILE_FROM.
@@ -936,7 +936,7 @@ FORM UPD_DATA USING $TESZT.
 *            OTHERS                        = 15.
 *        IF SY-SUBRC NE 0.
 *          MESSAGE I902 WITH P_FDIR.
-**           Hiba a & fájl "OLD" könyvtárba mozgatásnál!
+**           Error while moving file & into the "OLD" directory!
 *        ENDIF.
 *      ENDIF.
 *--TGSZLAA 2014.03.04 BG (Ness)
@@ -967,7 +967,7 @@ FORM ALV_LIST.
 *     & & & &
     ENDLOOP.
     MESSAGE E101.
-*    Adatbetöltés megs/zak/zakítva!
+*    Data upload aborted!
   ENDIF.
 *--1565 #03.
 ENDFORM.                    " ALV_LIST
@@ -997,8 +997,8 @@ MODULE PBO9000 OUTPUT.
   DATA: L_NAME(20) TYPE C,
         W_RETURN LIKE BAPIRET2.
   IF V_CUSTOM_CONTAINER IS INITIAL.
-* az adatszerkezet SAP-os struktúrája a /ZAK/BEVALLD-strname táblából
-* kell venni
+* the SAP structure of the data definition must be taken from the /ZAK/BEVALLD-strname table
+* must be used
     PERFORM CREATE_AND_INIT_ALV CHANGING I_OUTTAB[]
                                          I_FIELDCAT
                                          V_LAYOUT
@@ -1010,7 +1010,7 @@ MODULE PBO9000 OUTPUT.
           TEXTLINE1 = 'Létezik Hibanapló!'.
     ENDIF.
 *     IF NOT E_MESSAGE[] IS INITIAL.
-** Üzenetek kiirása!
+** Display messages!
 *       CALL FUNCTION '/ZAK/MESSAGE_SHOW'
 *            TABLES
 *                 T_RETURN = E_MESSAGE.
@@ -1033,11 +1033,11 @@ MODULE PAI9000 INPUT.
       SET PF-STATUS 'MAIN9001' .
       SET TITLEBAR 'MAIN9001'.
       CALL SCREEN 9001.
-* Vissza
+* Back
     WHEN 'BACK'.
       SET SCREEN 0.
       LEAVE SCREEN.
-* Kilépés
+* Exit
     WHEN 'EXIT'.
       PERFORM EXIT_PROGRAM.
 
@@ -1062,7 +1062,7 @@ FORM SET_STATUS.
   DATA: TAB TYPE STANDARD TABLE OF TAB_TYPE WITH
                  NON-UNIQUE DEFAULT KEY INITIAL SIZE 10,
         WA_TAB TYPE TAB_TYPE.
-* analitika struktúra megjelenítés
+* analytics structure display
   IF SY-DYNNR = '9000'.
     SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
     SET TITLEBAR  'MAIN'.
@@ -1088,7 +1088,7 @@ FORM CREATE_AND_INIT_ALV CHANGING  PT_OUTTAB LIKE I_OUTTAB[]
 
   DATA: I_EXCLUDE TYPE UI_FUNCTIONS.
 
-*  GRID maximális sor korlátozás
+*  GRID maximum row limit
   PERFORM GET_ALV_GRID_LINE TABLES PT_OUTTAB.
 
 
@@ -1100,7 +1100,7 @@ FORM CREATE_AND_INIT_ALV CHANGING  PT_OUTTAB LIKE I_OUTTAB[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING    SY-DYNNR
                          CHANGING PT_FIELDCAT.
 
@@ -1140,7 +1140,7 @@ FORM BUILD_FIELDCAT USING    P_DYNNR     LIKE SYST-DYNNR
   DATA: S_FCAT TYPE LVC_S_FCAT.
 
   V_STRUC = V_STRNAME.
-* /ZAK/ANALITIKA tábla
+* /ZAK/ANALITIKA table
   IF P_DYNNR = '9000'.
     CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
       EXPORTING
@@ -1149,7 +1149,7 @@ FORM BUILD_FIELDCAT USING    P_DYNNR     LIKE SYST-DYNNR
       CHANGING
         CT_FIELDCAT        = PT_FIELDCAT.
 
-* túl sok mező a megjelenítésben
+* too many fields in the display
     LOOP AT PT_FIELDCAT INTO S_FCAT.
       IF S_FCAT-FIELDNAME = 'XMANU' OR
       S_FCAT-FIELDNAME = 'XDEFT' OR
@@ -1196,7 +1196,7 @@ FORM BUILD_FIELDCAT USING    P_DYNNR     LIKE SYST-DYNNR
     ENDLOOP.
 
   ELSE.
-* hiba tábla
+* error table
     CALL FUNCTION 'LVC_FIELDCATALOG_MERGE'
       EXPORTING
         I_STRUCTURE_NAME   = '/ZAK/ADAT_HIBA'
@@ -1278,11 +1278,11 @@ FORM CREATE_AND_INIT_ALV2 CHANGING PT_HIBA      LIKE I_HIBA[]
     EXPORTING
       I_PARENT = V_CUSTOM_CONTAINER2.
 
-* Mezőkatalógus összeállítása
+* Build field catalog
   PERFORM BUILD_FIELDCAT USING SY-DYNNR
                          CHANGING PT_FIELDCAT.
 
-* Funkciók kizárása
+* Exclude functions
 *  PERFORM exclude_tb_functions CHANGING lt_exclude.
 
   PS_LAYOUT-CWIDTH_OPT = 'X'.
@@ -1319,13 +1319,13 @@ FORM GET_ALV_GRID_LINE TABLES  $OUTTAB TYPE STANDARD TABLE.
   DATA: L_FROM  LIKE SY-TABIX.
 
 
-*  Meghatározzuk a sorok számát
+*  Determine the number of rows
   DESCRIBE TABLE $OUTTAB LINES L_TABIX.
 
   IF L_TABIX > C_MAX_GRID_LINE.
     MESSAGE I174 WITH C_MAX_GRID_LINE.
     L_FROM = C_MAX_GRID_LINE + 1.
-*   Memória túlcsordulás miatt megjelenítés & tételre korlátozva!
+*   Due to memory overflow, display limited to & items!
     DELETE $OUTTAB FROM L_FROM TO L_TABIX.
   ENDIF.
 
@@ -1342,7 +1342,7 @@ MODULE PAI_9001 INPUT.
   CLEAR V_OK_CODE.
   CASE V_SAVE_OK.
 
-* Vissza
+* Back
     WHEN 'BACK'.
       SET SCREEN 0.
       LEAVE SCREEN.

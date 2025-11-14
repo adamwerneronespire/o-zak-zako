@@ -251,7 +251,7 @@
 - [x] src/#zak#tabl_upd.fugr.#zak#sapltabl_upd.abap
 - [x] src/#zak#tabl_upd.fugr.#zak#update.abap
 - [x] src/#zak#table_upload.prog.abap
-- [ ] src/#zak#tech.prog.abap
+- [x] src/#zak#tech.prog.abap
 - [x] src/#zak#tech.prog.screen_9000.abap
 - [x] src/#zak#tech.prog.screen_9001.abap
 - [x] src/#zak#tech.prog.screen_9002.abap

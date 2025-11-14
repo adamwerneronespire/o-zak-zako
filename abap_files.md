@@ -196,7 +196,6 @@
 - [x] src/#zak#onyb_sap_sel.prog.abap
 - [x] src/#zak#onyb_sap_sel.prog.screen_9000.abap
 - [x] src/#zak#onyb_set_nylapazon.prog.abap
-- [ ] src/#zak#read_file.prog.abap
 - [x] src/#zak#read_kata.prog.abap
 - [ ] src/#zak#read_migr_xml.prog.abap
 - [x] src/#zak#read_migr_xml_0203.prog.abap

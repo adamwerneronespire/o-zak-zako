@@ -198,7 +198,7 @@
 - [x] src/#zak#onyb_set_nylapazon.prog.abap
 - [ ] src/#zak#read_file.prog.abap
 - [x] src/#zak#read_kata.prog.abap
-- [ ] src/#zak#read_migr_xml.prog.abap
+- [x] src/#zak#read_migr_xml.prog.abap
 - [x] src/#zak#read_migr_xml_0203.prog.abap
 - [x] src/#zak#read_top.prog.abap
 - [x] src/#zak#read_txt.fugr.#zak#csv.abap

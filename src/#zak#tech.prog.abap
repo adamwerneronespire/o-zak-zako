@@ -1,35 +1,35 @@
 *&---------------------------------------------------------------------*
-*& Program: Bevallással kapcsolatos technikai adatok beállítása,
-*&          státuszok kezelése
+*& Program: Configuring technical data related to the tax return,
+*&          managing statuses
 *&---------------------------------------------------------------------*
  REPORT /ZAK/TECH MESSAGE-ID /ZAK/ZAK.
 
 *&---------------------------------------------------------------------*
-*& Funkció leírás: A program a szelekción megadott feltételek alapján
-*& leválogatja a SAP bizonylatokból az adatokat, és a /ZAK/ANALITIKA-ba
-*& tárolja.
+*& Function description: Based on the conditions specified on the selection screen
+*& the program extracts data from SAP documents and stores them in
+*& /ZAK/ANALITIKA.
 *&---------------------------------------------------------------------*
-*& Szerző            : Dénes Károly - FMC
-*& Létrehozás dátuma : 2006.01.26
-*& Funkc.spec.készítő: ________
-*& SAP modul neve    : ADO
-*& Program  típus    : Riport
-*& SAP verzió        : 46C
+*& Author: Károly Dénes - FMC
+*& Creation date: 26.01.2006
+*& Func.spec.maker: ________
+*& SAP module name : ADO
+*& Program type: Report
+*& SAP version : 46C
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& MÓDOSÍTÁSOK (Az OSS note számát a módosított sorok végére kell írni)*
+*& MODIFICATIONS (The number of the OSS note must be written at the end of the modified lines)*
 *&
-*& LOG#     DÁTUM       MÓDOSÍTÓ             LEÍRÁS           TRANSZPORT
+*& LOG#     DATE        MODIFIER             DESCRIPTION       TRANSPORT
 *& ----   ----------   ----------    ----------------------- -----------
-*& 0001   2008/04/07   Balázs G.     ONYB szelekció törölhető
-*& 0002   2011.09.14   Balázs G.     Csoport vállalat kezelése
+*& 0001 2008/04/07 Balázs G. ONYB selection can be deleted
+*& 0002 14.09.2011 Balázs G. Group company management
 *&---------------------------------------------------------------------*
  INCLUDE /ZAK/COMMON_STRUCT.
  INCLUDE <ICON>.
  CLASS LCL_EVENT_RECEIVER DEFINITION DEFERRED.
 
 *&---------------------------------------------------------------------*
-*& TÁBLÁK                                                              *
+*& TABLES                                                              *
 *&---------------------------------------------------------------------*
  TABLES: BKPF,
          /ZAK/ANALITIKA_S,
@@ -41,19 +41,19 @@
 *&---------------------------------------------------------------------*
  TYPE-POOLS: SLIS.
 *&---------------------------------------------------------------------*
-*& KONSTANSOK  (C_XXXXXXX..)                                           *
+*& CONSTANTS (C_XXXXXXX..) *
 *&---------------------------------------------------------------------*
  CONSTANTS: C_CLASS       TYPE DD02L-TABCLASS VALUE 'INTTAB',
             C_A           TYPE C VALUE 'A',
-* file típusok
+* file types
             C_FILE_XLS(2) TYPE C VALUE   '02',
             C_FILE_TXT(2) TYPE C VALUE   '01',
             C_FILE_XML(2) TYPE C VALUE   '03',
             C_FILE_SAP(2) TYPE C VALUE   '04',
-* excel betöltéshez
+* excel for loading
             C_END_ROW     TYPE I VALUE '65536',
             C_BEGIN_ROW   TYPE I VALUE    '1',
-* file ellenörzése
+* file check
             C_FILE_X(1)   TYPE C VALUE    'X'.
 *
 *           C_KOTEL       TYPE /ZAK/KOTEL VALUE 'K',
@@ -63,11 +63,11 @@
 *--PTGSZLAA #04. 2014.04.28
 
 *&---------------------------------------------------------------------*
-*& Munkaterület  (W_XXX..)                                           *
+*& Workspace (W_XXX..) *
 *&---------------------------------------------------------------------*
-* struktúra ellenőrzése
+* structure control
  DATA: W_DD02L TYPE DD02L.
-* excel betöltéshez
+* excel for loading
  DATA: W_XLS   TYPE ALSMEX_TABLINE,
        W_DD03P TYPE DD03P,
        W_LINE  TYPE LINE.
@@ -79,7 +79,7 @@
 * message
  DATA:  W_MESSAGE  TYPE BAPIRET2.
 
-* adatszerkezet hiba
+* data structure error
  DATA: W_HIBA    TYPE /ZAK/ADAT_HIBA.
 
 
@@ -89,39 +89,39 @@
  DATA: END OF GT_OUTTAB.
  DATA: G_LIGHTS_NAME TYPE LVC_CIFNM VALUE 'LIGHT'.
 *&---------------------------------------------------------------------*
-*& BELSŐ TÁBLÁK  (I_XXXXXXX..)                                         *
-*&   BEGIN OF I_TAB OCCURS ....                                        *
+*& INTERNAL TABLES (I_XXXXXXX..) *
+*& BEGIN OF I_TAB OCCURS .... *
 *&              .....                                                  *
-*&   END OF I_TAB.                                                     *
+*& END OF I_TAB.                                                     *
 *&---------------------------------------------------------------------*
  DATA: I_XLS   TYPE STANDARD TABLE OF ALSMEX_TABLINE
                                                      INITIAL SIZE 0,
        I_DD03P TYPE STANDARD TABLE OF DD03P         INITIAL SIZE 0.
 
  DATA: I_OUTTAB TYPE STANDARD TABLE OF /ZAK/ANALITIKA INITIAL SIZE 0.
-* bevallási időszakok
+* reporting periods
  DATA: I_BEVALLI TYPE STANDARD TABLE OF /ZAK/BEVALLI  INITIAL SIZE 0,
        I_ELSO    TYPE STANDARD TABLE OF /ZAK/BEVALLI  INITIAL SIZE 0.
-* Hiba adaszerkezet tábla
+* Error data structure table
  DATA: I_HIBA TYPE STANDARD TABLE OF /ZAK/ADAT_HIBA   INITIAL SIZE 0.
-* adatszerkezetek
+* data structures
  DATA: I_SZJA001 TYPE STANDARD TABLE OF /ZAK/SZJA_001 INITIAL SIZE 0.
 
  DATA: I_LINE TYPE STANDARD TABLE OF LINE            INITIAL SIZE 0.
 
  DATA: E_MESSAGE TYPE STANDARD TABLE OF BAPIRET2     INITIAL SIZE 0.
 *&---------------------------------------------------------------------*
-*& PROGRAM VÁLTOZÓK                                                    *
-*      Sorozatok (Range)   -   (R_xxx...)                              *
-*      Globális változók   -   (V_xxx...)                              *
-*      Munkaterület        -   (W_xxx...)                              *
-*      Típus               -   (T_xxx...)                              *
-*      Makrók              -   (M_xxx...)                              *
+*& PROGRAM VARIABLES                                                    *
+*      Series (Range) - (R_xxx...) *
+*      Global variables - (V_xxx...) *
+*      Work area - (W_xxx...) *
+*      Type - (T_xxx...) *
+*      Macros - (M_xxx...) *
 *      Field-symbol        -   (FS_xxx...)                             *
 *      Methodus            -   (METH_xxx...)                           *
 *      Objektum            -   (O_xxx...)                              *
-*      Osztály             -   (CL_xxx...)                             *
-*      Esemény             -   (E_xxx...)                              *
+*      Class - (CL_xxx...) *
+*      Event               -   (E_xxx...)                              *
 *&---------------------------------------------------------------------*
  DATA: V_WRBTR       LIKE BSEG-WRBTR,
        V_WRBTR_C(16).
@@ -135,24 +135,24 @@
  DATA: V_TABNAME TYPE TABNAME.
 *-- BG 2006.03.28
 
-* változók
+* variables
  DATA: V_BTYPE   LIKE /ZAK/BEVALL-BTYPE.
  DATA: V_LAST_DATE TYPE DATUM.
 
-* szelekciós képernyő
+* selection screen
  DATA: V_BUTXT   LIKE T001-BUTXT.
 
  DATA: V_TYPE    LIKE /ZAK/BEVALLD-FILETYPE,
        V_STRNAME LIKE /ZAK/BEVALLD-STRNAME.
-* excel betöltéshez
+* excel for loading
  DATA: V_BEGIN_COL TYPE I,
        V_END_COL   TYPE I.
-* képernyőre
+* screen
  DATA: V_SCR1(70) TYPE C,
        V_SCR2(70) TYPE C,
        V_SCR3(70) TYPE C,
        V_SCR4(70) TYPE C.
-* ALV kezelési változók
+* ALV treatment variables
  DATA: V_OK_CODE           LIKE SY-UCOMM,
        V_SAVE_OK           LIKE SY-UCOMM,
        V_REPID             LIKE SY-REPID,
@@ -179,33 +179,33 @@
        V_EVENT_RECEIVER    TYPE REF TO LCL_EVENT_RECEIVER,
        V_EVENT_RECEIVER2   TYPE REF TO LCL_EVENT_RECEIVER,
        V_STRUC             TYPE DD02L-TABNAME.
-* popup üzenethez
+* for a popup message
  DATA: V_TEXT1(40) TYPE C,
        V_TEXT2(40) TYPE C,
        V_TITEL     TYPE C,
        V_ANSWER,
        V_OK.
-* file ellenörzése
+* file check
  DATA: LV_ACTIVE TYPE ABAP_BOOL.
-* dynpro mezők
+* dynpro fields
  DATA: RADIO1(1) TYPE C,
        RADIO2(1) TYPE C.
-* vállalat, bev.tip megnevezés
+* company, business type designation
  DATA: F_BUTXT LIKE T001-BUTXT,
        F_BTEXT LIKE /ZAK/ANALITIKA_S-BTEXT,
        C_BUTXT LIKE T001-BUTXT,
        C_BTEXT LIKE /ZAK/ANALITIKA_S-BTEXT.
-* dátum a másolás képernyőn
+* date on the copy screen
  DATA: V_DATBI(20) TYPE C,
        V_DATBI_T   LIKE /ZAK/BEVALL-DATBI,
        V_DATAB(20) TYPE C,
        V_DATAB_T   LIKE /ZAK/BEVALL-DATAB.
-* elengedett kötelezettség
+* released obligation
  DATA: V_FULL(1) TYPE C.
 
 *++0002 BG 2011.09.20
- DATA V_BUKCS_FLAG TYPE XFELD.     "Csoport vállalat releváns flag
- DATA V_BUKCS      TYPE /ZAK/BUKCS. "Csoport vállalat
+ DATA V_BUKCS_FLAG TYPE XFELD.     "Group company relevant flag
+ DATA V_BUKCS      TYPE /ZAK/BUKCS. "Group company
 
  DATA I_BUKRS TYPE STANDARD TABLE OF /ZAK/AFACS_BUKRS INITIAL SIZE 0
                                                      WITH HEADER LINE.
@@ -223,10 +223,10 @@
 
 
 *&---------------------------------------------------------------------*
-*& PARAMÉTEREK  (P_XXXXXXX..)                                          *
+*& PARAMETERS  (P_XXXXXXX..)                                            *
 *&---------------------------------------------------------------------*
 *&---------------------------------------------------------------------*
-*& SZELEKT-OPCIÓK (S_XXXXXXX..)                                        *
+*& SELECT-OPTIONS (S_XXXXXXX..)                                         *
 *&---------------------------------------------------------------------*
  SELECTION-SCREEN BEGIN OF BLOCK B01 WITH FRAME TITLE TEXT-B01.
 
@@ -337,7 +337,7 @@
            S_OUT  TYPE /ZAK/ANALITIKA.
 
      CASE E_UCOMM.
-* Analitika megjelenítése
+* Display analytics
        WHEN '/ZAK/HIBA'.
          IF I_HIBA[] IS INITIAL.
            MESSAGE I005 .
@@ -359,10 +359,10 @@
 *       INITIALIZATION
 *-----------------------------------------------------------------------
  INITIALIZATION.
-* megnevezések
+* designations
    PERFORM FIELD_DESCRIPT.
 *++1765 #19.
-* Jogosultság vizsgálat
+* Eligibility check
    AUTHORITY-CHECK OBJECT 'S_TCODE'
 *++2265 #02.
 *                  ID 'TCD'  FIELD SY-TCODE.
@@ -373,7 +373,7 @@
    IF SY-SUBRC NE 0 AND SY-BATCH IS INITIAL.
 *--1865 #03.
      MESSAGE E152(/ZAK/ZAK).
-*   Önnek nincs jogosultsága a program futtatásához!
+*   You do not have authorization to run the program!
    ENDIF.
 *--1765 #19.
 
@@ -381,12 +381,12 @@
 * AT SELECTION-SCREEN
 ************************************************************************
  AT SELECTION-SCREEN.
-* megnevezések
+* designations
    PERFORM FIELD_DESCRIPT.
    PERFORM CHECK_SEL_SCREEN.
-* Választó kapcsoló ellenörzése !
+* Check selector switch!
  AT SELECTION-SCREEN ON RADIOBUTTON GROUP RA01.
-* bevallás fajta, bevallás típus kötelező
+* declaration type, declaration type is mandatory
    PERFORM CHECK_BTYPE_BPART.
 ************************************************************************
 * AT SELECTION-SCREEN output
@@ -398,25 +398,25 @@
 * START-OF-SELECTION
 ************************************************************************
  START-OF-SELECTION.
-* Jogosultság vizsgálat
+* Eligibility check
    PERFORM AUTHORITY_CHECK USING P_BUKRS
                                  P_BPART
                                  C_ACTVT_01.
-* Bevallás általános adatai
+* General declaration data
    PERFORM READ_BEVALL USING P_BUKRS
                              P_BTYPE.
-* Bevallás adatszolgáltatás beállítás
+* Declaration data service setting
    PERFORM READ_BEVALLC USING P_BUKRS
                               P_BTYPE.
-* Bevallás adatszolgáltatás adatai
+* Declaration data service data
    PERFORM READ_BEVALLD USING P_BUKRS
                               P_BTYPE.
-* Bevallás nyomtatvány adatok
+* Declaration form data
    PERFORM READ_BEVALLB USING P_BTYPE.
-* adónemek tábla
+* tax codes table
    PERFORM READ_ADONEM USING P_BUKRS.
 *++0002 BG 2011.09.20
-*  Csoportos vállalat meghatározás
+*  Group company definition
    PERFORM GET_CS_BUKRS TABLES I_BUKRS
                                R_BUKRS
                          USING P_BUKRS
@@ -430,27 +430,27 @@
 ************************************************************************
  END-OF-SELECTION.
 
-* elengedett kötelezettség
+* released obligation
    IF NOT P_ELENG IS INITIAL.
      PERFORM CALL_9003.
-* bevallás adatok másolása
+* copying declaration data
    ELSEIF NOT P_MASOL IS INITIAL.
 *++0002 BG 2011.09.20
      IF NOT V_BUKCS IS INITIAL.
        MESSAGE I297 WITH V_BUKCS.
        EXIT.
-*   Ez a funkció csak csoport vállalatra (&) megengedett!
+*   This function is only allowed for group companies (&)!
      ELSE.
        PERFORM CALL_9000.
      ENDIF.
-* Nyomtatvány lezárás
+* Print closure
    ELSEIF NOT P_NYOMT IS INITIAL.
 *++1565 #03.
 **++0002 BG 2011.09.20
 *     IF NOT V_BUKCS IS INITIAL.
 *       MESSAGE I297 WITH V_BUKCS.
 *       EXIT.
-**   Ez a funkció csak csoport vállalatra (&) megengedett!
+** This function is only allowed for group companies (&)!
 *     ELSE.
 **--0002 BG 2011.09.20
 *--1565 #03.
@@ -460,14 +460,14 @@
 *     ENDIF.
 **--0002 BG 2011.09.20
 *--1565 #03.
-* APEH által ellenörzött időszak
+* Period audited by APEH
    ELSEIF NOT P_APEH IS INITIAL .
 *++1565 #03.
 **++0002 BG 2011.09.20
 *     IF NOT V_BUKCS IS INITIAL.
 *       MESSAGE I297 WITH V_BUKCS.
 *       EXIT.
-**   Ez a funkció csak csoport vállalatra (&) megengedett!
+** This function is only allowed for group companies (&)!
 *     ELSE.
 **--0002 BG 2011.09.20
 *--1565 #03.
@@ -480,13 +480,13 @@
 *   ENDIF.
 **--0002 BG 2011.09.20
 *--1565 #03.
-* Nyomtatvány törlése
+* Delete printout
    ELSEIF NOT P_DELE IS INITIAL.
 *++1565 #03.
 **++0002 BG 2011.09.20
 *     IF NOT V_BUKCS_FLAG IS INITIAL.
 *       MESSAGE I296.
-**   Ez a funkció csoport vállalatnál nem megengedett!
+** This function is not allowed at group companies!
 *     ELSE.
 **--0002 BG 2011.09.20
 *--1565 #03.
@@ -497,13 +497,13 @@
 *++1565 #03.
 *     ENDIF.
 *--1565 #03.
-* Feltöltés azonosító törlése
+* Delete upload ID
    ELSEIF NOT P_PACK IS INITIAL.
 *++1565 #03.
 **++0002 BG 2011.09.20
 *   IF NOT V_BUKCS_FLAG IS INITIAL.
 *     MESSAGE I296.
-**   Ez a funkció csoport vállalatnál nem megengedett!
+** This function is not allowed at group companies!
 *   ELSE.
 **--0002 BG 2011.09.20
 *--1565 #03.
@@ -567,7 +567,7 @@
    ENDLOOP.
  ENDFORM.                    " MODIF_SCREEN
 *&---------------------------------------------------------------------*
-*&      Module  pbo9000  OUTPUT
+*& Module pbo9000 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -575,7 +575,7 @@
    PERFORM SET_STATUS.
  ENDMODULE.                 " pbo9000  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  pbo9010  OUTPUT
+*& Module pbo9010 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -583,7 +583,7 @@
 
  ENDMODULE.                 " pbo9010  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  pai9010  INPUT
+*& Module pai9010 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -591,7 +591,7 @@
 
  ENDMODULE.                 " pai9010  INPUT
 *&---------------------------------------------------------------------*
-*&      Module  mod_screen  OUTPUT
+*& Module mod_screen OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -614,34 +614,34 @@
    DATA: TAB    TYPE STANDARD TABLE OF TAB_TYPE WITH
                   NON-UNIQUE DEFAULT KEY INITIAL SIZE 10,
          WA_TAB TYPE TAB_TYPE.
-* másolás
+* copying
    IF SY-DYNNR = '9000'.
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN9000'.
    ELSEIF SY-DYNNR EQ '9001'.
-* nyomtatvány lezárás
+* form closure
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN9001'.
    ELSEIF SY-DYNNR EQ '9002'.
-* nyomtatvány lezárás
+* form closure
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN9002'.
    ELSEIF SY-DYNNR EQ '9003'.
-* nyomtatvány lezárás
+* form closure
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN9003'.
    ELSEIF SY-DYNNR EQ '9004'.
-* feltöltés azonosító törlése
+* delete upload ID
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN9004'.
    ELSEIF SY-DYNNR EQ '9005'.
-* nyomtatvány törlése
+* cancellation of form
      SET PF-STATUS 'MAIN9000' EXCLUDING TAB.
      SET TITLEBAR  'MAIN9005'.
    ENDIF.
  ENDFORM.                    " set_status
 *&---------------------------------------------------------------------*
-*&      Module  set_dynp9000  OUTPUT
+*& Module set_dynp9000 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -657,18 +657,18 @@
 *  <--  p2        text
 *----------------------------------------------------------------------*
  FORM SET9000_FIELDS.
-********************************************************- forrás
+***********************************************************- source
    PERFORM SET_BUTXT_BTEXT.
-******************************************************** cél
-* Vállalat megnevezés
+******************************************************* goal
+* Company name
    SELECT SINGLE BUTXT INTO C_BUTXT FROM  T001
           WHERE  BUKRS  = /ZAK/BEVALL-BUKRS.
 
-* Bevallás típus megnevezés
+* Declaration type designation
    SELECT SINGLE BTEXT INTO C_BTEXT FROM  /ZAK/BEVALLT
           WHERE  LANGU  = SY-LANGU
           AND    BTYPE  = /ZAK/BEVALL-BTYPE.
-* bevallás típus érvényes időszaka!
+* valid period of declaration type!
    IF V_DATBI_T IS INITIAL.
      SELECT SINGLE DATBI DATAB INTO (V_DATBI_T ,V_DATAB_T)
             FROM /ZAK/BEVALL
@@ -686,7 +686,7 @@
    ENDIF.
  ENDFORM.                    " set9000_fields
 *&---------------------------------------------------------------------*
-*&      Form  read_bevall
+*& Form read_declare
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -709,7 +709,7 @@
 
  ENDFORM.                    " read_bevallb
 *&---------------------------------------------------------------------*
-*&      Form  read_bevallc
+*& Form read_devallc
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -725,7 +725,7 @@
 
  ENDFORM.                    " read_bevallc
 *&---------------------------------------------------------------------*
-*&      Form  read_bevalld
+*& Form read_declare
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -759,16 +759,16 @@
    CALL SCREEN 9000.
  ENDFORM.                                                   " call_9000
 *&---------------------------------------------------------------------*
-*&      Module  check_inp  INPUT
+*& Module check_inp INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
  MODULE CHECK_INP INPUT.
-* másolásnál a cél adatok ellenörzése!
+* check the target data when copying!
    PERFORM COPY_CHECK.
  ENDMODULE.                 " check_inp  INPUT
 *&---------------------------------------------------------------------*
-*&      Module  USER_COMMAND_9000  INPUT
+*& Module USER_COMMAND_9000 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -777,9 +777,9 @@
    CLEAR V_OK_CODE.
    CASE V_SAVE_OK.
      WHEN 'COPY'.
-* bevall táblák tartalmi ellenörzése!
+* check the content of admit boards!
        PERFORM COPY_CHECK.
-* bevall cust táblák update
+* declaration custom tables update
 *++ BG 2006.03.28
 *       CLEAR V_TABIX.
 *       PERFORM BEVALL_UPD CHANGING V_TABIX.
@@ -794,7 +794,7 @@
          MESSAGE I072.
        ELSE.
          MESSAGE I153 WITH V_TABNAME.
-*        Hiba & tábla másolásnál! Másolás megs/zak/zakítva!
+*        Error & table copying! Copy complete!
        ENDIF.
 *-- BG 2006.03.28
 
@@ -803,7 +803,7 @@
    ENDCASE.
  ENDMODULE.                 " USER_COMMAND_9000  INPUT
 *&---------------------------------------------------------------------*
-*&      Module  USER_COMMAND_9001  INPUT
+*& Module USER_COMMAND_9001 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -821,16 +821,16 @@
    ENDCASE.
  ENDMODULE.                 " USER_COMMAND_9001  INPUT
 *&---------------------------------------------------------------------*
-*&      Module  STATUS_9002  OUTPUT
+*& Module STATUS_9002 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
  MODULE STATUS_9002 OUTPUT.
-* APEH által ellenörzött PBO
+* PBO controlled by APEH
    PERFORM SET_STATUS.
  ENDMODULE.                 " STATUS_9002  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  USER_COMMAND_9002  INPUT
+*& Module USER_COMMAND_9002 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -871,7 +871,7 @@
  FORM COPY_CHECK.
    IF NOT /ZAK/BEVALL-BUKRS IS INITIAL AND
       NOT /ZAK/BEVALL-BTYPE IS INITIAL.
-* Bevallás általános adatai
+* General declaration data
      CLEAR W_/ZAK/BEVALL.
      SELECT SINGLE *  INTO W_/ZAK/BEVALL FROM  /ZAK/BEVALL
          WHERE     BUKRS EQ /ZAK/BEVALL-BUKRS AND
@@ -880,7 +880,7 @@
        SET CURSOR FIELD /ZAK/BEVALL-BTYPE.
        MESSAGE E046(/ZAK/ZAK) .
      ENDIF.
-* Bevallás adatszolgáltatás adatai
+* Declaration data service data
      CLEAR W_/ZAK/BEVALLD.
      SELECT SINGLE *  INTO W_/ZAK/BEVALLD FROM  /ZAK/BEVALLD
          WHERE     BUKRS EQ /ZAK/BEVALL-BUKRS AND
@@ -889,7 +889,7 @@
        SET CURSOR FIELD /ZAK/BEVALL-BTYPE.
        MESSAGE E046(/ZAK/ZAK) .
      ENDIF.
-* Bevallás adatszolgáltatás beállítás
+* Declaration data service setting
      CLEAR W_/ZAK/BEVALLC.
      SELECT SINGLE *  INTO W_/ZAK/BEVALLC FROM  /ZAK/BEVALLC
          WHERE BTYPE EQ /ZAK/BEVALL-BTYPE .
@@ -897,9 +897,9 @@
        SET CURSOR FIELD /ZAK/BEVALL-BTYPE.
        MESSAGE E046(/ZAK/ZAK) .
      ENDIF.
-* Bevallás nyomtatvány adatok
-*     CLEAR W_/ZAK/BEVALLB.
-*     SELECT SINGLE *  INTO W_/ZAK/BEVALLB FROM  /ZAK/BEVALLB
+* Declaration form data
+*     CLEAR W_/ZAK/ADMITTED.
+*     SELECT SINGLE * INTO W_/ZAK/BEVALLB FROM /ZAK/BEVALLB
 *         WHERE BTYPE EQ /ZAK/BEVALL-BTYPE .
 *     IF SY-SUBRC NE 0.
 *       MESSAGE E046(/ZAK/ZAK) .
@@ -917,7 +917,7 @@
    ENDIF.
  ENDFORM.                    " copy_check
 *&---------------------------------------------------------------------*
-*&      Form  bevall_upd
+*& Form declare_upd
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -948,7 +948,7 @@
    CLEAR $TABNAME.
 *-- BG 2006.03.28
 
-* update bevall
+* update admits
    SELECT *  INTO W_UPD_BEVALL FROM /ZAK/BEVALL
    WHERE BUKRS EQ P_BUKRS AND
          BTYPE EQ P_BTYPE AND
@@ -973,12 +973,12 @@
    ENDSELECT.
 * message
 *   PERFORM MESSAGE_HANDLING USING '/ZAK/ZAK' 'I' '072'
-*                                '/ZAK/BEVALL'
+*                                '/ZAK/ADMIT'
 *                                SY-MSGV2
 *                                SY-MSGV3
 *                                SY-MSGV4 .
 
-* update bevallt
+* update admitted
    SELECT *  INTO W_UPD_BEVALLT FROM /ZAK/BEVALLT
    WHERE LANGU EQ SY-LANGU AND
          BUKRS EQ P_BUKRS AND
@@ -998,7 +998,7 @@
      ENDIF.
    ENDSELECT.
 
-* update bevallc
+* update declaration
    LOOP AT I_/ZAK/BEVALLC INTO W_UPD_BEVALLC.
 *     W_UPD_BEVALLC-BUKRS = /ZAK/BEVALL-BUKRS.
      W_UPD_BEVALLC-BTYPE = /ZAK/BEVALL-BTYPE.
@@ -1016,7 +1016,7 @@
      ENDIF.
    ENDLOOP.
 
-* update bevalld
+* update confess
    LOOP AT I_/ZAK/BEVALLD INTO W_UPD_BEVALLD.
      W_UPD_BEVALLD-BUKRS = /ZAK/BEVALL-BUKRS.
      W_UPD_BEVALLD-BTYPE = /ZAK/BEVALL-BTYPE.
@@ -1034,7 +1034,7 @@
      ENDIF.
    ENDLOOP.
 
-* update bevalldt
+* update admitted
    LOOP AT I_/ZAK/BEVALLDT INTO W_UPD_BEVALLDT.
      W_UPD_BEVALLDT-BUKRS = /ZAK/BEVALL-BUKRS.
      W_UPD_BEVALLDT-BTYPE = /ZAK/BEVALL-BTYPE.
@@ -1049,9 +1049,9 @@
      ENDIF.
    ENDLOOP.
 
-* UPDATE BEVALLB
+* UPDATE DECLARE
    LOOP AT I_/ZAK/BEVALLB INTO W_UPD_BEVALLB.
-*     SELECT SINGLE * FROM /ZAK/BEVALLB
+*     SELECT SINGLE * FROM /ZAK/DEVALLB
 *     WHERE BTYPE EQ /ZAK/BEVALL-BTYPE.
 *     IF SY-SUBRC EQ 0.
 *       EXIT.
@@ -1068,9 +1068,9 @@
      ENDIF.
    ENDLOOP.
 
-* update bevallbt
+* update admitted
    LOOP AT I_/ZAK/BEVALLBT INTO W_UPD_BEVALLBT.
-*     SELECT SINGLE * FROM /ZAK/BEVALLB
+*     SELECT SINGLE * FROM /ZAK/DEVALLB
 *     WHERE BTYPE EQ /ZAK/BEVALL-BTYPE.
 *     IF SY-SUBRC EQ 0.
 *       EXIT.
@@ -1088,7 +1088,7 @@
    ENDLOOP.
 
 *++ BG 2006.03.28
-*  SZJA CUST másolása
+*  Copying SZJA CUST
    SELECT *  INTO W_UPD_SZJA_CUST FROM /ZAK/SZJA_CUST
    WHERE BUKRS EQ P_BUKRS AND
          BTYPE EQ P_BTYPE.
@@ -1106,7 +1106,7 @@
    ENDSELECT.
 
 *++ BG 2006.04.20
-*  /ZAK/SZJA_ABEV másolása
+*  Copy /ZAK/SZJA_ABEV
    SELECT * INTO W_UPD_SZJA_ABEV FROM /ZAK/SZJA_ABEV
    WHERE BUKRS EQ P_BUKRS
      AND BTYPE EQ P_BTYPE.
@@ -1121,7 +1121,7 @@
    ENDSELECT.
 *-- BG 2006.04.20
 
-*  Nyomtatvány default értékek
+*  Printout default values
    SELECT *  INTO W_UPD_BEVALLDEF FROM /ZAK/BEVALLDEF
    WHERE BUKRS EQ P_BUKRS AND
          BTYPE EQ P_BTYPE.
@@ -1135,7 +1135,7 @@
      ENDIF.
    ENDSELECT.
 
-*  Áfa beállítások
+*  VAT settings
    SELECT *  INTO W_UPD_AFA_CUST FROM /ZAK/AFA_CUST
    WHERE BTYPE EQ P_BTYPE.
      W_UPD_AFA_CUST-BTYPE = /ZAK/BEVALL-BTYPE.
@@ -1150,7 +1150,7 @@
      ENDIF.
    ENDSELECT.
 
-*  ÁFA ABEV azonosító átvezetések (előleg) beállítása
+*  Setting up VAT ABEV identification transfers (advance payment).
    SELECT *  INTO W_UPD_AFA_ATV FROM /ZAK/AFA_ATV
    WHERE BUKRS EQ P_BUKRS AND
          BTYPE EQ P_BTYPE.
@@ -1179,7 +1179,7 @@
 
  ENDFORM.                    " bevall_upd
 *&---------------------------------------------------------------------*
-*&      Module  check_monat  INPUT
+*& Module check_month INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -1188,43 +1188,43 @@
    PERFORM CHECK_MONAT.
 *   IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '16'.
 *     MESSAGE E020.
-**   Kérem a periódus értékét 01-16 között adja meg!
+** Please enter the value of the period between 01-16!
 *   ENDIF.
-** van már bevallás az adott időszakra ?
-*   CLEAR W_/ZAK/BEVALLI.
-** /ZAK/BEVALL
-*   CLEAR:V_LAST_DATE, W_/ZAK/BEVALL.
-** Bevallás utolsó napjának meghatározás
+** is there already a tax return for the given period?
+*   CLEAR W_/ZAK/ADMIT.
+** /ZAK/ADMIT
+*   CLEAR:V_LAST_DATE, W_/ZAK/ADVALL.
+** Determination of the last day of declaration
 *   PERFORM GET_LAST_DAY_OF_PERIOD USING /ZAK/ANALITIKA-GJAHR
-*                                        /ZAK/ANALITIKA-MONAT
+*                                        /ZAK/ANALYTICS-MONAT
 *                                   CHANGING V_LAST_DATE.
 *
-*   SELECT * UP TO 1 ROWS INTO W_/ZAK/BEVALL FROM  /ZAK/BEVALL
+*   SELECT * UP TO 1 ROWS INTO W_/ZAK/BEVALL FROM /ZAK/BEVALL
 *       WHERE     BUKRS  = P_BUKRS
 *          AND    BTYPE  = P_BTYPE
 *          AND    DATBI  >= V_LAST_DATE.
 *   ENDSELECT.
-** ...negyedéves
+** ...quarterly
 *   IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 *     CASE /ZAK/ANALITIKA-MONAT.
 *       WHEN '01' OR '02' OR '03'.
 *         PERFORM SET_RANGES USING '01'
 *                                  '03'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '03'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '03'.
 *         ENDIF.
 *       WHEN '04' OR '05' OR '06'.
 *         PERFORM SET_RANGES USING '04'
 *                                  '06'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '06'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '06'.
 *         ENDIF.
 *       WHEN '07' OR '08' OR '09'.
 *         PERFORM SET_RANGES USING '07'
 *                                  '09'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '09'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '09'.
 *         ENDIF.
@@ -1232,28 +1232,28 @@
 *       WHEN '10' OR '11' OR '12'.
 *         PERFORM SET_RANGES USING '10'
 *                                  '12'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '12'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '12'.
 *         ENDIF.
 *     ENDCASE.
-** ...éves
+** ...annual
 *   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
 *     PERFORM SET_RANGES USING '01'
 *                              '12'
-*                              /ZAK/ANALITIKA-MONAT.
+*                              /ZAK/ANALYTICS-MONAT.
 *     IF /ZAK/ANALITIKA-MONAT NE '12'.
 *       MESSAGE E064 WITH P_BUKRS P_BTYPE '12'.
 *     ENDIF.
-** ...havi
+** ...monthly
 *   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'H'.
 *     PERFORM SET_RANGES USING '01'
 *                              '01'
-*                              /ZAK/ANALITIKA-MONAT.
+*                              /ZAK/ANALYTICS-MONAT.
 *   ENDIF.
-*--PTGSZLAA #04. 2014.04.28
+*--PTGSZLAA #04. 28/04/2014
 
-* normál bevallás
+* normal declaration
    IF NOT RADIO1 IS INITIAL.
      SELECT SINGLE * INTO W_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
             WHERE  BUKRS EQ P_BUKRS AND
@@ -1263,7 +1263,7 @@
                    ZINDEX EQ '000' AND
                    FLAG   EQ 'Z' .
      IF SY-SUBRC EQ 0.
-*normál már le va zárva.
+*normal is already closed.
        MESSAGE E108 WITH /ZAK/ANALITIKA-GJAHR
                          /ZAK/ANALITIKA-MONAT
                          'normál'.
@@ -1276,8 +1276,8 @@
               ZINDEX EQ '000' AND
               FLAG   EQ 'T' .
      IF SY-SUBRC NE 0.
-* APEH filekészítés már futott, de vannak új feltöltött
-* bejegyzések
+* APEH file creation has already been run, but there are new ones uploaded
+* entries
        SELECT SINGLE * INTO W_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
               WHERE  BUKRS EQ P_BUKRS AND
                      BTYPE EQ P_BTYPE AND
@@ -1286,7 +1286,7 @@
                      ZINDEX EQ '000' AND
                      FLAG   EQ 'T' .
        IF SY-SUBRC EQ 0.
-*Az APEH állománykészítő programot kérem, futtassa.
+*Please run the APEH file creation program.
          MESSAGE E086 .
        ELSE.
          MESSAGE E048 WITH /ZAK/ANALITIKA-GJAHR
@@ -1294,7 +1294,7 @@
        ENDIF.
      ENDIF.
 
-* önrevizós bevallás
+* self-audited declaration
    ELSE.
      SELECT * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
      UP TO 1 ROWS
@@ -1316,8 +1316,8 @@
                          /ZAK/ANALITIKA-MONAT.
      ELSE.
        IF W_/ZAK/BEVALLI-FLAG NE 'T'.
-* APEH filekészítés már futott, de vannak új feltöltött
-* bejegyzések
+* APEH file creation has already been run, but there are new ones uploaded
+* entries
          SELECT * INTO W_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
          UP TO 1 ROWS
                 WHERE  BUKRS EQ P_BUKRS AND
@@ -1329,7 +1329,7 @@
                        ORDER BY ZINDEX DESCENDING.
          ENDSELECT.
          IF SY-SUBRC EQ 0.
-*Az APEH állománykészítő programot kérem, futtassa.
+*Please run the APEH file creation program.
            MESSAGE E086 .
          ELSE.
            MESSAGE E049 WITH /ZAK/ANALITIKA-GJAHR
@@ -1355,7 +1355,7 @@
 *----------------------------------------------------------------------*
  FORM CHECK_SEL_SCREEN.
 
-* Van már bevallás?
+* Do you already have a confession?
    IF NOT P_MASOL IS INITIAL.
 *     SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
 *        WHERE BUKRS = P_BUKRS AND
@@ -1365,7 +1365,7 @@
 *     ENDIF.
    ENDIF.
 
-* nyomtatvány lezárás
+* form closure
    IF NOT P_NYOMT IS INITIAL.
 *     SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
 *        WHERE BUKRS = P_BUKRS AND
@@ -1376,44 +1376,44 @@
 *     ENDIF.
    ENDIF.
 
-* apeh ellenörzött
+* apeh checked
    IF NOT P_APEH IS INITIAL AND
       NOT P_BTYPE IS INITIAL.
      SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
         WHERE BUKRS = P_BUKRS AND
               BTYPE = P_BTYPE AND
               FLAG  = 'Z' .
-* apeh file készítés futott?
+* did apeh file creation run?
      IF SY-SUBRC NE 0.
        MESSAGE E052 WITH P_BUKRS P_BTYPE.
      ENDIF.
    ENDIF.
 
-* másolás
+* copying
    IF NOT P_MASOL IS INITIAL.
 
    ENDIF.
-* elengedett kötelezettség
+* released obligation
    IF NOT P_ELENG IS INITIAL.
 *     SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
 *        WHERE BUKRS = P_BUKRS AND
 *              BTYPE = P_BTYPE AND
 *              zindex = '000' and
 *              FLAG  = ' ' .
-** apeh file készítés futott?
+** did apeh file creation run?
 *     IF SY-SUBRC NE 0.
 *       MESSAGE E066 WITH P_BUKRS P_BTYPE.
 *     ENDIF.
    ENDIF.
 
-* nyomtatvány törlés
+* Form cancellation
    IF NOT P_DELE IS INITIAL AND
       NOT P_BTYPE IS INITIAL.
      SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
         WHERE BUKRS = P_BUKRS AND
               BTYPE = P_BTYPE.
 *              FLAG EQ 'X'.
-* nyomtatvány elkészült?
+* is the form ready?
      IF SY-SUBRC EQ 0.
        MESSAGE E095 WITH P_BUKRS P_BTYPE.
      ENDIF.
@@ -1426,7 +1426,7 @@
        MESSAGE E068 WITH P_BUKRS.
      ENDIF.
    ENDIF.
-* bevallás típus ellenörzése
+* checking the declaration type
    IF NOT P_BTYPE IS INITIAL AND
       NOT P_BUKRS IS INITIAL.
      SELECT SINGLE * FROM /ZAK/BEVALL
@@ -1436,12 +1436,12 @@
        MESSAGE E069 WITH P_BUKRS P_BTYPE.
      ENDIF.
    ENDIF.
-* bevallás fajta vagy bevallás típus kitöltése kötelező!
+* declaration type or declaration type is mandatory!
    IF P_BTYPE IS INITIAL AND
       P_BPART IS INITIAL.
      MESSAGE E119 .
    ENDIF.
-* technikai funkciók előfeltétele!
+* prerequisite for technical functions!
    IF P_ELENG NE SPACE OR
       P_NYOMT NE SPACE OR
       P_APEH  NE SPACE.
@@ -1449,13 +1449,13 @@
    ELSEIF P_PACK  NE SPACE OR
           P_MASOL NE SPACE OR
           P_DELE  NE SPACE.
-* csak bevallás típus kitöltése esetén használható a funkció!
+* the function can only be used if the declaration type is filled in!
      IF P_BTYPE IS INITIAL.
        MESSAGE E121.
      ENDIF.
    ENDIF.
 
-* vállalat, bevallás fajta, bevallás típus összerendelés
+* company, declaration type, declaration type matching
    IF NOT P_BTYPE IS INITIAL AND
       NOT P_BPART IS INITIAL AND
       NOT P_BUKRS IS INITIAL.
@@ -1471,7 +1471,7 @@
 
  ENDFORM.                    " check_sel_screen
 *&---------------------------------------------------------------------*
-*&      Form  lock_bevalli
+*& Form lock_bevalli
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -1484,7 +1484,7 @@
    DATA: G_ERROR LIKE SY-SUBRC.
    DATA: W_UPD_BEVALLI  LIKE /ZAK/BEVALLI,
          W_UPD_BEVALLSZ LIKE /ZAK/BEVALLSZ.
-* esedékesség dátum meghatározás
+* due date determination
 
    DATA: L_DATUM    LIKE SY-DATUM,
          L_DATC(10) TYPE C.
@@ -1493,7 +1493,7 @@
    CLEAR $TABIX.
    IF NOT RADIO1 IS INITIAL.
      REFRESH I_/ZAK/BEVALLI.
-* zárolt?
+* locked?
      SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
         WHERE BUKRS EQ P_BUKRS AND
               BTYPE EQ P_BTYPE AND
@@ -1547,14 +1547,14 @@
               FLAG IN ('E','T').
    ENDIF.
 *++0002 BG 2011.09.27
-*  Csoport vállalatnál ellenőrizzük minden normál vállalat státuszát
+*  For group companies, we check the status of all normal companies
    IF NOT V_BUKCS_FLAG IS INITIAL.
      READ TABLE I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI
           WITH KEY BUKRS = P_BUKRS.
      LOOP AT I_BUKRS.
        READ TABLE I_/ZAK/BEVALLI TRANSPORTING NO FIELDS
           WITH KEY BUKRS = I_BUKRS-BUKRS.
-*      Nincs adat létrehozzuk
+*      No data will be created
        IF SY-SUBRC NE 0.
          W_/ZAK/BEVALLI-BUKRS = I_BUKRS-BUKRS.
          APPEND W_/ZAK/BEVALLI TO I_/ZAK/BEVALLI.
@@ -1564,8 +1564,8 @@
 *--0002 BG 2011.09.27
    SORT I_/ZAK/BEVALLI BY BUKRS BTYPE GJAHR MONAT ZINDEX.
 
-* /zak/bevall
-* Bevallás utolsó napjának meghatározás
+* /zak/adv
+* Determination of the last day of declaration
    PERFORM GET_LAST_DAY_OF_PERIOD USING /ZAK/ANALITIKA-GJAHR
                                         /ZAK/ANALITIKA-MONAT
 *++PTGSZLAA #04. 2014.04.28
@@ -1578,7 +1578,7 @@
      EXIT.
    ENDLOOP.
 
-* /zak/bevallsz
+* /zak/you confess
    REFRESH: I_/ZAK/BEVALLSZ.
    SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
    FOR ALL ENTRIES IN I_/ZAK/BEVALLI
@@ -1591,7 +1591,7 @@
 *++BG 2006/03/30
                  FLAG  IN ('E','T','B').
 *--BG 2006/03/30
-* más adatszolgáltatás ellenörzése (önrevíziónál nem kell)
+* checking other data provision (not necessary for self-audit)
    IF NOT RADIO1 IS INITIAL.
      LOOP AT I_/ZAK/BEVALLD INTO W_/ZAK/BEVALLD
                            WHERE XSPEC EQ SPACE .
@@ -1616,18 +1616,18 @@
    ENDIF.
 
 *++0002 BG 2011.09.27
-**  Csoport vállalatnál ellenőrizzük minden normál vállalat státuszát
+** For group companies, we check the status of all normal companies
 *   IF NOT V_BUKCS_FLAG IS INITIAL.
-*     LOOP AT I_/ZAK/BEVALLSZ INTO W_/ZAK/BEVALLSZ
+*     LOOP AT I_/ZAK/DEVALLSZ INTO W_/ZAK/DEVALLSZ
 *                           WHERE BUKRS EQ P_BUKRS.
 *       LOOP AT I_BUKRS.
-*         READ TABLE  I_/ZAK/BEVALLSZ TRANSPORTING NO FIELDS
+*         READ TABLE I_/ZAK/BEVALLSZ TRANSPORTING NO FIELDS
 *                           WITH KEY BUKRS  = I_BUKRS-BUKRS
 *                                    BSZNUM = W_/ZAK/BEVALLSZ-BSZNUM.
-**         Létrehozzuk
+**         Create it
 *         IF SY-SUBRC NE 0.
 *           W_/ZAK/BEVALLSZ-BUKRS = I_BUKRS-BUKRS.
-*           APPEND W_/ZAK/BEVALLSZ TO I_/ZAK/BEVALLSZ.
+*           APPEND W_/ZAK/RECLAIM TO I_/ZAK/RECLAIM.
 *         ENDIF.
 *       ENDLOOP.
 *     ENDLOOP.
@@ -1637,7 +1637,7 @@
    READ TABLE I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI
                           WITH KEY BUKRS = P_BUKRS.
 *--0002 2011.11.30 BG (Ness)
-* minden adatszolgáltatás, összes időszakra
+* all data services, for all periods
    PERFORM FULL_PERIOD USING
                        I_/ZAK/BEVALLI[]
                        I_/ZAK/BEVALLSZ[]
@@ -1646,11 +1646,11 @@
                        /ZAK/ANALITIKA-GJAHR
                        W_/ZAK/BEVALLI-ZINDEX.
 
-** /zak/bevalli státusz
+** /zak/bevalli status
 *   IF NOT I_/ZAK/BEVALLI[] IS INITIAL.
 *     LOOP AT I_/ZAK/BEVALLI INTO W_UPD_BEVALLI.
-*       W_UPD_BEVALLI-FLAG  = $FLAG.
-*       W_UPD_BEVALLI-DATUM = SY-DATUM.
+*       W_UPD_DEVALLI-FLAG = $FLAG.
+*       W_UPD_BEVALLI-DATE = SY-DATE.
 *       W_UPD_BEVALLI-UZEIT = SY-UZEIT.
 *       W_UPD_BEVALLI-UNAME = SY-UNAME.
 *
@@ -1672,25 +1672,25 @@
 *       ENDIF.
 *     ENDLOOP.
 *   ENDIF.
-** /zak/bevallsz státusz
+** /zak/devalsz status
 *   IF NOT I_/ZAK/BEVALLSZ[] IS INITIAL.
 *     LOOP AT I_/ZAK/BEVALLSZ INTO W_UPD_BEVALLSZ
 *                           .
-*       SELECT SINGLE * FROM /ZAK/BEVALLSZ
+*       SELECT SINGLE * FROM /ZAK/DEVALLSZ
 *     WHERE BUKRS EQ W_UPD_BEVALLSZ-BUKRS AND
 *           BTYPE EQ W_UPD_BEVALLSZ-BTYPE AND
 *           BSZNUM EQ W_UPD_BEVALLSZ-BSZNUM AND
 *           GJAHR EQ W_UPD_BEVALLSZ-GJAHR AND
 *           MONAT EQ W_UPD_BEVALLSZ-MONAT AND
 *           ZINDEX EQ W_UPD_BEVALLSZ-ZINDEX AND
-*           PACK   EQ W_UPD_BEVALLSZ-PACK.
+*           PACK EQ W_UPD_BEVALLSZ-PACK.
 *       IF SY-SUBRC EQ 0.
-*         DELETE /ZAK/BEVALLSZ.
+*         DELETE /ZAK/ADMISSION
 *       ELSE.
 *         CLEAR W_UPD_BEVALLSZ-PACK.
 *       ENDIF.
 *       W_UPD_BEVALLSZ-FLAG = $FLAG.
-*       W_UPD_BEVALLSZ-DATUM = SY-DATUM.
+*       W_UPD_BEVALLSZ-DATE = SY-DATE.
 *       W_UPD_BEVALLSZ-UZEIT = SY-UZEIT.
 *       W_UPD_BEVALLSZ-UNAME = SY-UNAME.
 *       PERFORM SET_LARUN CHANGING W_UPD_BEVALLSZ-LARUN.
@@ -1704,7 +1704,7 @@
 *   ENDIF.
 
    CLEAR G_ERROR.
-* CST: Átvezetés kezelése
+* CST: Conveyance management
    IF P_BPART = C_BTYPART_ATV.
 
      SELECT * INTO TABLE I_/ZAK/BEVALLO FROM /ZAK/BEVALLO
@@ -1719,7 +1719,7 @@
               ZINDEX EQ I_/ZAK/BEVALLI-ZINDEX.
 
      IF NOT I_/ZAK/BEVALLO[] IS INITIAL.
-* Excel könyvelés feladás
+* Excel accounting posting
        READ TABLE I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
        IF SY-SUBRC = 0.
          CALL FUNCTION '/ZAK/ATV_BOOK_EXCEL'
@@ -1742,12 +1742,12 @@
            G_ERROR = 4.
          ENDIF.
        ENDIF.
-* Csak akkor kell könyvelni, ha a fájl jól letöltődött
+* It should only be posted if the file has been successfully downloaded
 *++FI20070222
        IF G_ERROR = 0.
 *--FI20070222
 
-* Adófolyószámla könyvelése
+* Tax current account posting
          READ TABLE I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
          IF SY-SUBRC = 0.
            CALL FUNCTION '/ZAK/ATV_POST_ADONSZA'
@@ -1772,7 +1772,7 @@
            ENDIF.
          ENDIF.
 *++FI20070222
-       ENDIF. "Nem volt hiba
+       ENDIF. "There was no mistake
 *--FI20070222
 
      ENDIF.
@@ -1792,8 +1792,8 @@
        READ TABLE I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI
             WITH KEY BUKRS = I_BUKRS-BUKRS.
        CHECK SY-SUBRC EQ 0.
-** kitölti az adónemenkénti kötelezettséget is a /ZAK/ADONSZA táblában
-** Minden kötelezettségnél egy új bizonylatszámot kell meghatározni
+** also fills in the obligation by tax type in the /ZAK/ADONSZA table
+** A new document number must be defined for each obligation
 *     SELECT * INTO TABLE I_/ZAK/BEVALLO FROM /ZAK/BEVALLO
 *     FOR ALL ENTRIES IN I_/ZAK/BEVALLI
 *        WHERE BUKRS EQ I_/ZAK/BEVALLI-BUKRS AND
@@ -1815,7 +1815,7 @@
 
 *++ BG 2006/04/05
 
-** esedékesség dátuma meghatározás abevazonosító alapján!
+** due date determination based on abev identifier!
 *       SELECT * INTO W_/ZAK/BEVALLB FROM /ZAK/BEVALLB
 *        WHERE BTYPE EQ P_BTYPE AND
 *              ESDAT_FLAG NE SPACE.
@@ -1830,18 +1830,18 @@
 *       SORT I_/ZAK/BEVALLO BY ABEVAZ.
 *       LOOP AT I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO
 *               WHERE NOT FIELD_NRK IS INITIAL.
-** ABEV azonosítóhoz adónem !
-*         LOOP AT I_/ZAK/BEVALLB INTO W_/ZAK/BEVALLB
+** Gender assigned to ABEV identifier!
+*         LOOP AT I_/ZAK/DEVALLB INTO W_/ZAK/DEVALLB
 *                WHERE ABEVAZ EQ W_/ZAK/BEVALLO-ABEVAZ AND
 *                      ADONEM NE SPACE.
 *           IF L_DATC IS INITIAL .
 *             READ TABLE I_/ZAK/ADONEM INTO W_/ZAK/ADONEM
-*                WITH KEY ADONEM = W_/ZAK/BEVALLB-ADONEM.
+*                WITH KEY ADONEM = W_/ZAK/DEVALLB-ADONEM.
 *             IF SY-SUBRC EQ 0 AND
 *                NOT W_/ZAK/ADONEM-FIZHAT IS INITIAL.
 *               CLEAR L_DATUM.
-** alap esetben így számoljuk az esedékesség dátumát!???????
-*               W_/ZAK/BEVALLO-MONAT = W_/ZAK/BEVALLO-MONAT + 1.
+** this is basically how we calculate the due date!???????
+*               W_/ZAK/VALUE-MONAT = W_/ZAK/VALUE-MONAT + 1.
 *               CONCATENATE W_/ZAK/BEVALLO-GJAHR
 *                           W_/ZAK/BEVALLO-MONAT
 *                           '01'
@@ -1859,10 +1859,10 @@
 **           CONCATENATE L_DATC+0(4) L_DATC+5(2) L_DATC+8(2)
 **           INTO W_/ZAK/ADONSZA-ESDAT.
 *           ENDIF.
-** bizonylatszám számkör
+** receipt number range
 *           CALL FUNCTION '/ZAK/NEW_BELNR'
 *                EXPORTING
-*                     I_BUKRS          = W_/ZAK/BEVALLO-BUKRS
+*                     I_BUKRS = W_/ZAK/BEVALLO-BUKRS
 *                IMPORTING
 *                     E_BELNR          = W_/ZAK/ADONSZA-BELNR
 *                EXCEPTIONS
@@ -1873,20 +1873,20 @@
 *                     WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
 *           ENDIF.
 *
-*           W_/ZAK/ADONSZA-BUKRS =  W_/ZAK/BEVALLO-BUKRS.
-*           W_/ZAK/ADONSZA-GJAHR =  W_/ZAK/BEVALLO-GJAHR.
-*           W_/ZAK/ADONSZA-ADONEM = W_/ZAK/BEVALLB-ADONEM.
-*           W_/ZAK/ADONSZA-BTYPE =  W_/ZAK/BEVALLO-BTYPE.
-*           W_/ZAK/ADONSZA-MONAT =  W_/ZAK/BEVALLO-MONAT.
-*           W_/ZAK/ADONSZA-ZINDEX = W_/ZAK/BEVALLO-ZINDEX.
+*           W_/ZAK/ADONSZA-BUKRS = W_/ZAK/BEVALLO-BUKRS.
+*           W_/ZAK/ADONSZA-GJAHR = W_/ZAK/BEVALLO-GJAHR.
+*           W_/ZAK/ADONSZA-ADONEM = W_/ZAK/DEVALLB-ADONEM.
+*           W_/ZAK/DONATE-BTYPE = W_/ZAK/BEVALLO-BTYPE.
+*           W_/ZAK/DONATION-MONAT = W_/ZAK/CLAIM-MONAT.
+*           W_/ZAK/DONOR-ZINDEX = W_/ZAK/BEVALLO-ZINDEX.
 *           IF W_/ZAK/BEVALL-BTYPART EQ C_BTYPART_ATV.
 *             W_/ZAK/ADONSZA-KOTEL  = C_KOTEL_T.
 *           ELSE.
 *             W_/ZAK/ADONSZA-KOTEL  = C_KOTEL.
 *           ENDIF.
 **         W_/ZAK/ADONSZA-ESDA =
-*           W_/ZAK/ADONSZA-WRBTR =  W_/ZAK/BEVALLO-FIELD_NRK.
-*           W_/ZAK/ADONSZA-WAERS =  W_/ZAK/BEVALLO-WAERS.
+*           W_/ZAK/ADONSZA-WRBTR = W_/ZAK/BEVALLO-FIELD_NRK.
+*           W_/ZAK/ADONSZA-WAERS = W_/ZAK/BEVALLO-WAERS.
 *           W_/ZAK/ADONSZA-DATUM =  SY-DATUM.
 *           W_/ZAK/ADONSZA-UZEIT =  SY-UZEIT.
 *           W_/ZAK/ADONSZA-UNAME =  SY-UNAME.
@@ -1919,16 +1919,16 @@
            CASE SY-SUBRC.
              WHEN 2.
                MESSAGE I154.
-*      Önellenőrzési pótlék könyvelés beállítás hiba! Fájl nem készült!
+*      Self-check allowance accounting setting error! File not created!
                G_ERROR = 4.
              WHEN 3.
                MESSAGE I155.
-*      Önellenőrzési pótlék könyvelési fájl létrehozás hiba!
+*      Self-check allowance accounting file creation error!
                G_ERROR = 4.
 *++BG 2008.04.16
              WHEN 4.
                MESSAGE E231 WITH '&'.
-*   Hiba a & vállalat forgatás meghatározásnál! (/ZAK/ROTATE_BUKRS_OUTPU
+*   Error in defining & company rotation! (/ZAK/ROTATE_BUKRS_OUTPU
 *--BG 2008.04.16
            ENDCASE .
          ENDIF.
@@ -1936,16 +1936,16 @@
 ENHANCEMENT-POINT /ZAK/ZAK_MOL_TECH SPOTS /ZAK/TECH_ES .
 
 *++FI20070222
-*      Csak akkor kell könyvelni, ha a fájl hiba nélkül letöltődött
+*      It should only be posted if the file has been downloaded without errors
          IF G_ERROR = 0.
            READ TABLE I_/ZAK/BEVALLO INTO W_/ZAK/BEVALLO INDEX 1.
 
-*++BG 2008.01.07 ÁFA arányosítás könyvelés feladás
+*++BG 07.01.2008 VAT rationing, posting of accounting
            IF P_BPART = C_BTYPART_AFA.
              CALL FUNCTION '/ZAK/AFAR_BOOK_EXCEL'
                EXPORTING
 *++0002 BG 2011.09.20
-*                I_BUKRS             = W_/ZAK/BEVALLO-BUKRS
+*                I_BUKRS = W_/ZAK/BEVALLO-BUKRS
                  I_BUKRS             = I_BUKRS-BUKRS
 *--0002 BG 2011.09.20
                  I_BTYPE             = W_/ZAK/BEVALLO-BTYPE
@@ -1965,12 +1965,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_MOL_TECH SPOTS /ZAK/TECH_ES .
                MOVE SY-SUBRC TO G_ERROR.
              ENDIF.
            ENDIF.
-*--BG 2008.01.07 ÁFA arányosítás könyvelés
+*--BG 2008.01.07 VAT rationing accounting
            IF G_ERROR = 0.
              CALL FUNCTION '/ZAK/POST_ADONSZA'
                EXPORTING
 *++0002 BG 2011.09.20
-*                I_BUKRS       = W_/ZAK/BEVALLO-BUKRS
+*                I_BUKRS = W_/ZAK/BEVALLO-BUKRS
                  I_BUKRS       = I_BUKRS-BUKRS
 *--0002 BG 2011.09.20
                  I_BTYPE       = W_/ZAK/BEVALLO-BTYPE
@@ -1985,7 +1985,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MOL_TECH SPOTS /ZAK/TECH_ES .
                  OTHERS        = 3.
              IF SY-SUBRC <> 0.
                MESSAGE E160 WITH SY-SUBRC.
-*        Súlyos hiba az adófolyószámla tételek könyvelésénél! (&)
+*        Serious error in the accounting of tax current account items! (&)
                G_ERROR = 4.
              ENDIF.
 *-- BG 2006/04/05
@@ -2006,13 +2006,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_MOL_TECH SPOTS /ZAK/TECH_ES .
 *--0002 BG 2011.09.20
    ENDIF.
 
-* ++CST 2006.06.04: Ha hiba történt az adófolyószámla könyvelésnél
-*       Státuszt nem szabad átállítani...
+* ++CST 06.04.2006: If an error occurred in the tax current account posting
+*       Status cannot be changed...
    IF G_ERROR = 0.
 *++0002 BG 2011.09.20
      MESSAGE I077 WITH /ZAK/ANALITIKA-GJAHR /ZAK/ANALITIKA-MONAT.
 *--0002 BG 2011.09.20
-* /zak/bevalli státusz
+* /zak/bevalli status
      IF NOT I_/ZAK/BEVALLI[] IS INITIAL.
        LOOP AT I_/ZAK/BEVALLI INTO W_UPD_BEVALLI.
          W_UPD_BEVALLI-FLAG  = $FLAG.
@@ -2038,7 +2038,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_MOL_TECH SPOTS /ZAK/TECH_ES .
          ENDIF.
        ENDLOOP.
      ENDIF.
-* /zak/bevallsz státusz
+* /zak/devalsz status
      IF NOT I_/ZAK/BEVALLSZ[] IS INITIAL.
        LOOP AT I_/ZAK/BEVALLSZ INTO W_UPD_BEVALLSZ
                              .
@@ -2075,7 +2075,7 @@ ENDIF.
 
  ENDFORM.                    " lock_bevalli
 *&---------------------------------------------------------------------*
-*&      Module  CHECK_MONAT_9002  INPUT
+*& Module CHECK_MONAT_9002 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2084,40 +2084,40 @@ ENDIF.
    PERFORM CHECK_MONAT.
 *   IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '16'.
 *     MESSAGE E020.
-**   Kérem a periódus értékét 01-16 között adja meg!
+** Please enter the value of the period between 01-16!
 *   ENDIF.
-*   CLEAR W_/ZAK/BEVALLI.
-** Bevallás utolsó napjának meghatározás
+*   CLEAR W_/ZAK/ADMIT.
+** Determination of the last day of declaration
 *   PERFORM GET_LAST_DAY_OF_PERIOD USING /ZAK/ANALITIKA-GJAHR
-*                                        /ZAK/ANALITIKA-MONAT
+*                                        /ZAK/ANALYTICS-MONAT
 *                                   CHANGING V_LAST_DATE.
 *
-*   SELECT * UP TO 1 ROWS INTO W_/ZAK/BEVALL FROM  /ZAK/BEVALL
+*   SELECT * UP TO 1 ROWS INTO W_/ZAK/BEVALL FROM /ZAK/BEVALL
 *       WHERE     BUKRS  = P_BUKRS
 *          AND    BTYPE  = P_BTYPE
 *          AND    DATBI  >= V_LAST_DATE.
 *   ENDSELECT.
-** ...negyedéves
+** ...quarterly
 *   IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
 *     CASE /ZAK/ANALITIKA-MONAT.
 *       WHEN '01' OR '02' OR '03'.
 *         PERFORM SET_RANGES USING '01'
 *                                  '03'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '03'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '03'.
 *         ENDIF.
 *       WHEN '04' OR '05' OR '06'.
 *         PERFORM SET_RANGES USING '04'
 *                                  '06'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '06'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '06'.
 *         ENDIF.
 *       WHEN '07' OR '08' OR '09'.
 *         PERFORM SET_RANGES USING '07'
 *                                  '09'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '09'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '09'.
 *         ENDIF.
@@ -2125,27 +2125,27 @@ ENDIF.
 *       WHEN '10' OR '11' OR '12'.
 *         PERFORM SET_RANGES USING '10'
 *                                  '12'
-*                                  /ZAK/ANALITIKA-MONAT.
+*                                  /ZAK/ANALYTICS-MONAT.
 *         IF /ZAK/ANALITIKA-MONAT NE '12'.
 *           MESSAGE E063 WITH P_BUKRS P_BTYPE '12'.
 *         ENDIF.
 *     ENDCASE.
-** ...éves
+** ...annual
 *   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
 *     PERFORM SET_RANGES USING '01'
 *                              '12'
-*                              /ZAK/ANALITIKA-MONAT.
+*                              /ZAK/ANALYTICS-MONAT.
 *     IF /ZAK/ANALITIKA-MONAT NE '12'.
 *       MESSAGE E064 WITH P_BUKRS P_BTYPE '12'.
 *     ENDIF.
-** ...havi
+** ...monthly
 *   ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'H'.
 *     PERFORM SET_RANGES USING '01'
 *                              '01'
-*                              /ZAK/ANALITIKA-MONAT.
+*                              /ZAK/ANALYTICS-MONAT.
 *   ENDIF.
 *--PTGSZLAA #04. 2014.04.28
-* bevallás
+* confession
    SELECT SINGLE * INTO W_/ZAK/BEVALLI FROM /ZAK/BEVALLI
       WHERE BUKRS EQ P_BUKRS AND
             BTYPE EQ P_BTYPE AND
@@ -2184,12 +2184,12 @@ ENDIF.
 
  ENDMODULE.                 " CHECK_MONAT_9002  INPUT
 *&---------------------------------------------------------------------*
-*&      Form  LOCK_BEVALLIX
+*& Form LOCK_BEVALLIX
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
 *      -->P_1137   text
-*      <--P_V_TABIX  text
+*      <--P_V_TABIX text
 *----------------------------------------------------------------------*
  FORM LOCK_BEVALLIX USING    $FLAG LIKE /ZAK/BEVALLI-FLAG
                     CHANGING $TABIX LIKE SY-TABIX.
@@ -2199,7 +2199,7 @@ ENDIF.
    CLEAR $TABIX.
 
    REFRESH: I_/ZAK/BEVALLI,I_/ZAK/BEVALLSZ.
-* zárolt?
+* locked?
    SELECT * INTO TABLE I_/ZAK/BEVALLI FROM /ZAK/BEVALLI
 *++0002 BG 2011.09.20
 *      WHERE BUKRS EQ P_BUKRS AND
@@ -2237,7 +2237,7 @@ ENDIF.
          $TABIX = $TABIX + 1.
        ENDIF.
      ENDLOOP.
-* /zak/bevallsz státusz
+* /zak/devalsz status
      IF NOT I_/ZAK/BEVALLSZ[] IS INITIAL.
        LOOP AT I_/ZAK/BEVALLSZ INTO W_UPD_BEVALLSZ
                              WHERE ZINDEX NE '999'.
@@ -2269,7 +2269,7 @@ ENDIF.
    ENDIF.
  ENDFORM.                    " LOCK_BEVALLIX
 *&---------------------------------------------------------------------*
-*&      Module  user_command_9003  INPUT
+*& Module user_command_9003 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2304,22 +2304,22 @@ ENDIF.
    IF P_BTYPE EQ C_PTGSZLAA.
      IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '52'.
        MESSAGE E402.
-*   Kérem a periódus értékét 01-52 között adja meg!
+*   Please enter the value of the period between 01-52!
      ENDIF.
    ELSE.
      IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '16'.
        MESSAGE E020.
-*   Kérem a periódus értékét 01-16 között adja meg!
+*   Please enter the value of the period between 01-16!
      ENDIF.
    ENDIF.
 *   IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '16'.
 *     MESSAGE E020.
-**   Kérem a periódus értékét 01-16 között adja meg!
+** Please enter the value of the period between 01-16!
 *   ELSE.
 *--PTGSZLAA #04. 2014.04.28
-* /ZAK/BEVALL
+* /ZAK/ADMITTED
    CLEAR: V_LAST_DATE, W_/ZAK/BEVALL.
-* Bevallás utolsó napjának meghatározás
+* Determination of the last day of declaration
    PERFORM GET_LAST_DAY_OF_PERIOD USING /ZAK/ANALITIKA-GJAHR
                                         /ZAK/ANALITIKA-MONAT
 *++PTGSZLAA #04. 2014.04.28
@@ -2333,7 +2333,7 @@ ENDIF.
           AND    DATBI  >= V_LAST_DATE.
    ENDSELECT.
 
-* ...negyedéves
+* ...quarterly
    IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      CASE /ZAK/ANALITIKA-MONAT.
        WHEN '01' OR '02' OR '03'.
@@ -2353,7 +2353,7 @@ ENDIF.
            MESSAGE E063 WITH P_BUKRS P_BTYPE '12'.
          ENDIF.
      ENDCASE.
-* ...éves
+* ...annual
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      IF /ZAK/ANALITIKA-MONAT NE '12'.
        MESSAGE E064 WITH P_BUKRS P_BTYPE '12'.
@@ -2362,7 +2362,7 @@ ENDIF.
 *++PTGSZLAA #04. 2014.04.28
 *   ENDIF.
 *--PTGSZLAA #04. 2014.04.28
-* /zak/bevalld
+* /zak/confess
    IF V_FULL IS INITIAL.
      SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
         WHERE BUKRS EQ P_BUKRS AND
@@ -2374,7 +2374,7 @@ ENDIF.
      ENDIF.
    ENDIF.
    CLEAR W_/ZAK/BEVALLSZ.
-* bevallás
+* confession
    SELECT SINGLE * INTO W_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
       WHERE BUKRS EQ P_BUKRS AND
             BTYPE EQ P_BTYPE AND
@@ -2403,11 +2403,11 @@ ENDIF.
 
  ENDMODULE.                 " user_command_9003  INPUT
 *&---------------------------------------------------------------------*
-*&      Form  LOCK_BEVALLSZ
+*& Form LOCK_REF
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      <--P_V_TABIX  text
+*      <--P_V_TABIX text
 *----------------------------------------------------------------------*
  FORM LOCK_BEVALLSZ CHANGING $TABIX LIKE SY-TABIX.
 
@@ -2424,7 +2424,7 @@ ENDIF.
    RANGES LR_FLAG_Z FOR /ZAK/BEVALLI-FLAG.
 
    DEFINE LM_GET_ZINDEX.
-*      Nyitott státusz
+*      Open status
      SELECT SINGLE MAX( ZINDEX ) INTO /ZAK/ANALITIKA-ZINDEX
                                  FROM /ZAK/BEVALLI
                          WHERE BUKRS EQ &1 AND
@@ -2432,7 +2432,7 @@ ENDIF.
                                GJAHR EQ /ZAK/ANALITIKA-GJAHR AND
                                MONAT EQ /ZAK/ANALITIKA-MONAT AND
                                 FLAG IN LR_FLAG_O.
-*      Ha nincs keressük a zároltakat
+*      If not, we look for the locked ones
      IF /ZAK/ANALITIKA-ZINDEX IS INITIAL.
        SELECT SINGLE MAX( ZINDEX ) INTO /ZAK/ANALITIKA-ZINDEX
                                    FROM /ZAK/BEVALLI
@@ -2441,12 +2441,12 @@ ENDIF.
                                  GJAHR EQ /ZAK/ANALITIKA-GJAHR AND
                                  MONAT EQ /ZAK/ANALITIKA-MONAT AND
                                   FLAG IN LR_FLAG_Z.
-*        Van a következő időszak kell
+*        There is the next period you need
        IF NOT /ZAK/ANALITIKA-ZINDEX IS INITIAL.
          L_ZINDEX = /ZAK/ANALITIKA-ZINDEX.
          ADD 1 TO L_ZINDEX.
          /ZAK/ANALITIKA-ZINDEX =  L_ZINDEX.
-*        Ha így sincs akkor 000
+*        If not, then 000
        ELSE.
          /ZAK/ANALITIKA-ZINDEX = '000'.
        ENDIF.
@@ -2454,7 +2454,7 @@ ENDIF.
    END-OF-DEFINITION.
 
 
-*  Meghatározzuk az utolsó nem lezárt időszakot!
+*  We determine the last open period!
    M_DEF LR_FLAG_O 'E' 'EQ' 'Z' ''.
    M_DEF LR_FLAG_O 'E' 'EQ' 'X' ''.
    M_DEF LR_FLAG_Z 'I' 'EQ' 'Z' ''.
@@ -2462,9 +2462,9 @@ ENDIF.
 *--2008 #04.
 
    IF NOT V_FULL IS INITIAL.
-* minden adatszolgáltatás elengedett kötelezettség legyen, ha nem adott
-* fel analitikát
-* outer join kell !!!
+* all data provision should be a released obligation, if not given
+* up analytics
+* outer join is required !!!
      SELECT * INTO TABLE I_/ZAK/BEVALLD FROM /ZAK/BEVALLD
 *++0002 BG 2011.09.20
 *       WHERE BUKRS EQ P_BUKRS AND
@@ -2489,8 +2489,8 @@ ENDIF.
               ZINDEX EQ /ZAK/ANALITIKA-ZINDEX.
 *-- E09324753 20200213
        IF SY-SUBRC NE 0.
-* nincs  az adatszolgáltatáshoz feltöltés!
-* /zak/bevallsz insert
+* no upload for data service!
+* /zak/bavalsz insert
          CLEAR W_UPD_BEVALLSZ.
 *++0002 BG 2011.09.20
 *         W_UPD_BEVALLSZ-BUKRS = P_BUKRS.
@@ -2559,7 +2559,7 @@ ENDIF.
 *++2008 #04.
        LM_GET_ZINDEX I_BUKRS-BUKRS.
 *--2008 #04.
-* volt már bevallás az időszakra
+* there was already a return for the period
        SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
 *++0002 BG 2011.09.20
 *        WHERE BUKRS EQ P_BUKRS AND
@@ -2651,7 +2651,7 @@ ENDIF.
    CALL SCREEN 9003.
  ENDFORM.                                                   " call_9003
 *&---------------------------------------------------------------------*
-*&      Form  READ_BEVALLB
+*& Form READ_BEVALLB
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2730,7 +2730,7 @@ ENDIF.
 *--PTGSZLAA #04. 2014.04.28
  ENDFORM.                    " GET_LAST_DAY_OF_PERIOD
 *&---------------------------------------------------------------------*
-*&      Module  SET_DYNP9001  OUTPUT
+*& Module SET_DYNP9001 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2740,7 +2740,7 @@ ENDIF.
 
  ENDMODULE.                 " SET_DYNP9001  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  SET_DYNP9003  OUTPUT
+*& Module SET_DYNP9003 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2750,7 +2750,7 @@ ENDIF.
 
  ENDMODULE.                 " SET_DYNP9003  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  pbo9001  OUTPUT
+*& Module pbo9001 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2758,7 +2758,7 @@ ENDIF.
    PERFORM SET_STATUS.
  ENDMODULE.                 " pbo9001  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  pbo9002  OUTPUT
+*& Module pbo9002 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2766,7 +2766,7 @@ ENDIF.
    PERFORM SET_STATUS.
  ENDMODULE.                 " pbo9002  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  SET_DYNP9002  OUTPUT
+*& Module SET_DYNP9002 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2785,17 +2785,17 @@ ENDIF.
 
    /ZAK/ANALITIKA-BUKRS = P_BUKRS.
    /ZAK/ANALITIKA-BTYPE = P_BTYPE.
-* Vállalat megnevezés
+* Company name
    SELECT SINGLE BUTXT INTO F_BUTXT FROM  T001
           WHERE  BUKRS  = P_BUKRS.
 
-* Bevallás típus megnevezés
+* Declaration type designation
    SELECT SINGLE BTEXT INTO F_BTEXT FROM  /ZAK/BEVALLT
           WHERE  LANGU  = SY-LANGU
           AND    BTYPE  = P_BTYPE.
  ENDFORM.                    " set_butxt_btext
 *&---------------------------------------------------------------------*
-*&      Module  pbo9003  OUTPUT
+*& Module pbo9003 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2803,7 +2803,7 @@ ENDIF.
    PERFORM SET_STATUS.
  ENDMODULE.                 " pbo9003  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  SET_V_DATAB_T  INPUT
+*& Module SET_V_DATAB_T INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2849,7 +2849,7 @@ ENDIF.
    APPEND W_MESSAGE TO E_MESSAGE.
  ENDFORM.                    " MESSAGE_HANDLING
 *&---------------------------------------------------------------------*
-*&      Module  PBO9004  OUTPUT
+*& Module PBO9004 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -2857,14 +2857,14 @@ ENDIF.
    PERFORM SET_STATUS.
  ENDMODULE.                 " PBO9004  OUTPUT
 *&---------------------------------------------------------------------*
-*&      Module  SET_DYNP9004  OUTPUT
+*& Module SET_DYNP9004 OUTPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
  MODULE SET_DYNP9004 OUTPUT.
 
    /ZAK/BEVALLP-BUKRS = P_BUKRS.
-* Vállalat megnevezés
+* Company name
    SELECT SINGLE BUTXT INTO F_BUTXT FROM  T001
           WHERE  BUKRS  = P_BUKRS.
 
@@ -2874,7 +2874,7 @@ ENDIF.
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      <--P_V_TABIX  text
+*      <--P_V_TABIX text
 *----------------------------------------------------------------------*
  FORM DELETE_PACK CHANGING $TABIX LIKE SY-TABIX.
 
@@ -2893,17 +2893,17 @@ ENDIF.
    ENDLOOP.
    IF SY-SUBRC EQ 0.
      MESSAGE E079.
-*     Adatfeltöltés nem lehetséges!
+*     Data upload is not possible!
    ENDIF.
    IF NOT E_MESSAGE[] IS INITIAL.
-*    Szövegek betöltése
+*    Loading texts
      MOVE 'Törlés folytatása'(001) TO L_TITLE.
      MOVE 'Ellenörzésnél előfordultak figyelmeztető üzenetek'(002)
                                           TO L_DIAGNOSETEXT1.
      MOVE 'Folytatja a feldolgozást?'(003)
                                           TO L_TEXTLINE1.
 
-*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp – E09324753 – Gábor Balázs (Ness) - 12.07.2016
 *     CALL FUNCTION 'POPUP_TO_CONFIRM_WITH_MESSAGE'
 *       EXPORTING
 *         DEFAULTOPTION = 'N'
@@ -2940,19 +2940,19 @@ ENDIF.
        MOVE 'J' TO L_ANSWER.
      ENDIF.
 *--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.1
-*    Egyébként mehet
+*    You can go anyway
    ELSE.
      MOVE 'J' TO L_ANSWER.
    ENDIF.
-*    Mehet az adatbázis törlése
+*    You can delete the database
    IF L_ANSWER EQ 'J'.
-* /zak/bevallp törléskód legyen 'X'
+* /zak/devallp deletion code should be 'X'
      SELECT SINGLE * INTO W_/ZAK/BEVALLP FROM  /ZAK/BEVALLP
      WHERE BUKRS EQ P_BUKRS AND
            PACK  EQ /ZAK/BEVALLP-PACK.
      IF SY-SUBRC EQ 0.
 *++1765 #01.
-*       W_/ZAK/BEVALLP-DATUM = SY-DATUM.
+*       W_/ZAK/ENVALLP-DATE = SY-DATE.
 *       W_/ZAK/BEVALLP-UZEIT = SY-UZEIT.
 *       W_/ZAK/BEVALLP-UNAME = SY-UNAME.
        W_/ZAK/BEVALLP-DELDATE = SY-DATUM.
@@ -2964,33 +2964,33 @@ ENDIF.
      ENDIF.
 ENHANCEMENT-POINT /ZAK/TECH_MOL_01 SPOTS /ZAK/TECH_ES .
 
-* a statisztikai flag módosítás, csak teljes adatszolgáltatás
-* ismétlésnél lehettséges.
+* the statistical flag modification, only full data provision
+* possible with repetition.
      SELECT SINGLE * INTO W_/ZAK/BEVALLD FROM /ZAK/BEVALLD
      WHERE BUKRS  EQ P_BUKRS AND
            BTYPE  EQ P_BTYPE AND
            BSZNUM EQ W_/ZAK/BEVALLSZ-BSZNUM AND
            XFULL  EQ 'X'.
      IF SY-SUBRC EQ 0.
-* Szja bevall. Önrev.-ra feltöltésnél előző indexű, azonos
-* adaszolgáltatás és adószámhoz tartozó tételeket statisztikai tételként
-* kell megjelölni.
+* He admits. When uploading to self-rev., it is the same as the previous index
+* tax service and tax number items as statistical items
+* must be marked.
        CALL FUNCTION '/ZAK/STAPO_EXIT'
          EXPORTING
            I_BUKRS = P_BUKRS
            I_BTYPE = P_BTYPE
            I_PACK  = /ZAK/BEVALLP-PACK.
 *          TABLES
-*               T_ANALITIKA = I_ANALITIKA[].
+*               T_ANALYTICS = I_ANALYTICS[].
      ENDIF.
-* Bevallás adatszolgáltatás törlések
+* Declaration data service cancellations
      SELECT * INTO TABLE I_/ZAK/BEVALLSZ FROM /ZAK/BEVALLSZ
 *++2165 #07.
 *        WHERE BUKRS EQ P_BUKRS AND
         WHERE
 *--2165 #07.
               PACK  EQ /ZAK/BEVALLP-PACK.
-* Bevallás analitika törlések
+* Declaration analytics cancellations
      SELECT * INTO TABLE I_/ZAK/ANALITIKA FROM /ZAK/ANALITIKA
 *++2165 #07.
 *        WHERE BUKRS EQ P_BUKRS AND
@@ -3006,14 +3006,14 @@ ENHANCEMENT-POINT /ZAK/TECH_MOL_01 SPOTS /ZAK/TECH_ES .
 *++1365 #16.
 *++2165 #07.
 *     DELETE FROM /ZAK/AFA_SZLA WHERE BUKRS EQ P_BUKRS
-*                                AND PACK  EQ /ZAK/BEVALLP-PACK.
+*                                AND PACK EQ /ZAK/BEVALLP-PACK.
      DELETE FROM /ZAK/AFA_SZLA WHERE  PACK  EQ /ZAK/BEVALLP-PACK.
 *--2165 #07.
 *--1365 #16.
 ENHANCEMENT-POINT /ZAK/TECH_TELENOR_01 SPOTS /ZAK/TECH_ES .
 
      IF NOT I_/ZAK/BEVALLSZ[] IS INITIAL.
-* a /zak/bevalli tábla flag-et üresre kell állítani
+* the /zak/bevalli table flag must be set to empty
        SORT I_/ZAK/BEVALLSZ BY BUKRS BTYPE GJAHR MONAT.
        SELECT * INTO TABLE I_/ZAK/BEVALLI FROM /ZAK/BEVALLI
        FOR ALL ENTRIES IN I_/ZAK/BEVALLSZ
@@ -3029,13 +3029,13 @@ ENHANCEMENT-POINT /ZAK/TECH_TELENOR_01 SPOTS /ZAK/TECH_ES .
        ENDLOOP.
 
 *++BG 2010/01/08
-*      Vegig kell menni a BEVALLI bejegyzéseken, mert nem biztos,hogy
-*      egy feltöltés azonosító csak egy időszakban van!!!
+*      You have to go through the BEVALLI posts, because it is not certain
+*      an upload ID is only valid for one period!!!
        LOOP AT I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI.
 *       READ TABLE I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI INDEX 1.
 *       IF SY-SUBRC EQ 0.
-*Új státusz megatározása ha van rekord akkor 'F' ha nincs akkor
-*kitöröljük
+*Define a new status if there is a record then 'F' if there is not
+*we delete it
          SELECT COUNT( * ) FROM /ZAK/BEVALLSZ
                           WHERE BUKRS = W_/ZAK/BEVALLI-BUKRS
                             AND BTYPE = W_/ZAK/BEVALLI-BTYPE
@@ -3049,7 +3049,7 @@ ENHANCEMENT-POINT /ZAK/TECH_TELENOR_01 SPOTS /ZAK/TECH_ES .
            W_/ZAK/BEVALLI-UZEIT = SY-UZEIT.
            W_/ZAK/BEVALLI-UNAME = SY-UNAME.
            MODIFY /ZAK/BEVALLI FROM W_/ZAK/BEVALLI.
-*        Nincs rekord kitöröljük a sort
+*        There is no record, we will delete the line
          ELSE.
 *          DELETE /ZAK/BEVALLI FROM TABLE I_/ZAK/BEVALLI.
            DELETE /ZAK/BEVALLI FROM W_/ZAK/BEVALLI.
@@ -3102,7 +3102,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    CALL SCREEN 9004.
  ENDFORM.                                                   " CALL_9004
 *&---------------------------------------------------------------------*
-*&      Module  user_command_9004  INPUT
+*& Module user_command_9004 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -3119,7 +3119,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    ENDCASE.
  ENDMODULE.                 " user_command_9004  INPUT
 *&---------------------------------------------------------------------*
-*&      Module  USER_COMMAND  INPUT
+*& Module USER_COMMAND INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -3151,7 +3151,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 
    CONCATENATE 'Szeretné a' /ZAK/BEVALLP-PACK 'adatait'
    INTO L_TEXT SEPARATED BY SPACE.
-*++MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*++MOL_UPG_ChangeImp – E09324753 – Gábor Balázs (Ness) - 12.07.2016
 *   CALL FUNCTION 'POPUP_TO_CONFIRM_STEP'
 *     EXPORTING
 *       DEFAULTOPTION = 'N'
@@ -3197,11 +3197,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    ELSE.
      L_ANSWER = 'N'.
    ENDIF.
-*--MOL_UPG_ChangeImp – E09324753 – Balázs Gábor (Ness) - 2016.07.12
+*--MOL_UPG_ChangeImp – E09324753 – Gábor Balázs (Ness) - 2016.07.12
 
  ENDFORM.                    " popup
 *&---------------------------------------------------------------------*
-*&      Module  CHECK_PACK9004  INPUT
+*& Module CHECK_PACK9004 INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -3220,7 +3220,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    DATA: I_BEVALLSZ TYPE STANDARD TABLE OF /ZAK/BEVALLSZ  INITIAL SIZE 0.
    REFRESH: E_MESSAGE,I_BEVALLSZ,I_/ZAK/BEVALLD.
 
-* /zak/bevallp ellenörzése
+* Check /zak/bevallp
    SELECT SINGLE * INTO W_/ZAK/BEVALLP FROM  /ZAK/BEVALLP
    WHERE BUKRS EQ P_BUKRS AND
          PACK  EQ /ZAK/BEVALLP-PACK.
@@ -3232,11 +3232,11 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 *++1665 #16.
    IF NOT W_/ZAK/BEVALLP-ALOADED IS INITIAL.
      MESSAGE E363 WITH /ZAK/BEVALLP-PACK.
-*   & package átadásra került másik rendszerbe, kérem először ott törölje!
+*   & package has been transferred to another system, please delete it there first!
    ENDIF.
 *--1665 #16.
 
-* bevallás
+* confession
    SELECT * INTO TABLE I_BEVALLSZ FROM /ZAK/BEVALLSZ
 *++2165 #07.
 *      WHERE BUKRS EQ P_BUKRS AND
@@ -3244,14 +3244,14 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 *--2165 #07.
             PACK  EQ /ZAK/BEVALLP-PACK.
 
-* A feltöltött adatok törlése ne legyen végrehajtható olyan package-re,
-* amelynek a BEVALLSZ-ben lévő adatszolgáltatás azonosítója a
-* BEVALLD-ben a /ZAK/AFA_SAP_SEL programot tartalmazza.
+* Deletion of the uploaded data should not be performed on a package that
+* whose data service identifier in BEVALLSZ is a
+* BEVALLD contains the program /ZAK/AFA_SAP_SEL.
 *++0004 BG 2007.04.04
-* vagy a /ZAK/ONYB_SAP_SEL programot tartalmazza.
+* or contains the program /ZAK/ONYB_SAP_SEL.
 *--0004 BG 2007.04.04
 *++2010.06.04 BG
-* vagy /ZAK/ZAK_UREP_AP_SEL
+* or /ZAK/ZAK_UREP_AP_SEL
 *--2010.06.04 BG
 
 
@@ -3305,7 +3305,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    SORT E_MESSAGE BY TYPE ID NUMBER MESSAGE_V1 MESSAGE_V2.
    DELETE ADJACENT DUPLICATES FROM E_MESSAGE
        COMPARING TYPE ID NUMBER MESSAGE_V1 MESSAGE_V2.
-*   Üzenetek kezelése
+*   Manage messages
    IF NOT E_MESSAGE[] IS INITIAL.
      CALL FUNCTION '/ZAK/MESSAGE_SHOW'
        TABLES
@@ -3366,16 +3366,16 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    DATA L_ANSWER.
    CLEAR $OK.
    IF P_DELE IS INITIAL.
-*    Szövegek betöltése
+*    Loading texts
      MOVE 'Feldolgozás folytatása' TO L_TITLE.
-*'APEH által ellenőrzött időszakot állít be, a funkció nem
-* visszavonható'
+*'Sets a period controlled by APEH, the function does not
+* revocable'
      MOVE TEXT-010 TO L_DIAGNOSETEXT1.
    ELSE.
-*    Szövegek betöltése
+*    Loading texts
      MOVE 'Feldolgozás folytatása' TO L_TITLE.
-*'APEH által ellenőrzött időszakot állít be, a funkció nem
-* visszavonható'
+*'Sets a period controlled by APEH, the function does not
+* revocable'
      MOVE TEXT-011 TO L_DIAGNOSETEXT1.
    ENDIF.
    MOVE 'Biztos, hogy végrehajtja?'
@@ -3400,7 +3400,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    ENDIF.
  ENDFORM.                    " call_popup
 *&---------------------------------------------------------------------*
-*&      Form  DELETE_CUST_TABLE
+*& Form DELETE_CUST_TABLE
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -3430,15 +3430,15 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
      DELETE /ZAK/BEVALLBT FROM TABLE I_/ZAK/BEVALLBT.
    ENDIF.
 *++ BG 2006.03.28
-*  SZJA_CUST Törlése
+*  Delete SZJA_CUST
    DELETE FROM /ZAK/SZJA_CUST WHERE BUKRS EQ P_BUKRS
                                AND BTYPE EQ P_BTYPE.
-*  BEVALLDEF törlése
+*  Delete BEVALLDEF
    DELETE FROM /ZAK/BEVALLDEF WHERE BUKRS EQ P_BUKRS
                                AND BTYPE EQ P_BTYPE.
-*  AFA_CUST Törlése
+*  Delete AFA_CUST
    DELETE FROM /ZAK/AFA_CUST  WHERE BTYPE EQ P_BTYPE.
-*  AFA_ATV  Törlése
+*  Delete AFA_ATV
    DELETE FROM /ZAK/AFA_ATV   WHERE BUKRS EQ P_BUKRS
                                AND BTYPE EQ P_BTYPE.
 *-- BG 2006.03.28
@@ -3476,8 +3476,8 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 *       text
 *----------------------------------------------------------------------*
 *      -->P_R_MONAT  text
-*      -->P_I_/ZAK/BEVALLI[]  text
-*      -->P_I_/ZAK/BEVALLSZ[]  text
+*      -->P_I_/ZAK/BEVALLI[] text
+*      -->P_I_/ZAK/BEVALLSZ[] text
 *----------------------------------------------------------------------*
  FORM FULL_PERIOD USING    $/ZAK/BEVALLI  LIKE I_/ZAK/BEVALLI
                            $/ZAK/BEVALLSZ LIKE I_/ZAK/BEVALLSZ
@@ -3489,7 +3489,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    DATA: L_NUM   LIKE W_/ZAK/BEVALLSZ-MONAT,
          L_INDEX LIKE W_/ZAK/BEVALLI-ZINDEX.
 
-* bevallási időszakok
+* reporting periods
    DATA: SET_BEVI  TYPE STANDARD TABLE OF /ZAK/BEVALLI    INITIAL SIZE 0,
          SET_BEVSZ TYPE STANDARD TABLE OF /ZAK/BEVALLSZ  INITIAL SIZE 0.
 
@@ -3522,7 +3522,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
                     GJAHR = $GJAHR
                     MONAT = L_NUM.
          IF SY-SUBRC NE 0.
-* nincs az adatszolgáltatás-időszakra bevallás tehát zárolom!
+* there is no declaration for the data provision period, so I close it!
            MOVE-CORRESPONDING W_/ZAK/BEVALLD TO W_/ZAK/BEVALLSZ.
 *++0002 2011.11.30 BG (Ness)
            W_/ZAK/BEVALLSZ-BUKRS = I_BUKRS-BUKRS.
@@ -3559,7 +3559,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 *--0002 BG 2011.09.20
 
 *++BG 2006/06/27
-*  Nem kell feltölteni!!!
+*  No need to upload!!!
 *   APPEND LINES OF SET_BEVI TO $/ZAK/BEVALLI.
 *--BG 2006/06/27
 *++2365 #03.
@@ -3579,7 +3579,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 *--0002 2011.11.30 BG (Ness)
 
 *++BG 2006/06/27
-*  Ez is felesleges .....
+*  This is also unnecessary...
 *   SORT $/ZAK/BEVALLI BY BUKRS BTYPE GJAHR MONAT.
 *   DELETE ADJACENT DUPLICATES FROM $/ZAK/BEVALLI
 *                         COMPARING BUKRS BTYPE GJAHR MONAT.
@@ -3591,12 +3591,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
-*      <--P_W_UPD_BEVALLSZ_LARUN  text
+*      <--P_W_UPD_BEVALLSZ_LARUN text
 *----------------------------------------------------------------------*
  FORM SET_LARUN CHANGING $LARUN.
    DATA: L_STAMP LIKE  TZONREF-TSTAMPS.
    CLEAR L_STAMP.
-* Utolsó futás ideje - timestamp /ZAK/BEVALLSZ-LARUN
+* Last run time - timestamp /ZAK/BEVALLSZ-LARUN
    CALL FUNCTION 'IB_CONVERT_INTO_TIMESTAMP'
      EXPORTING
        I_DATLO     = SY-DATLO
@@ -3606,12 +3606,12 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
    $LARUN = L_STAMP.
  ENDFORM.                    " SET_LARUN
 *&---------------------------------------------------------------------*
-*&      Module  check_bpart  INPUT
+*& Module check_bpart INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
  MODULE CHECK_BPART INPUT.
-* bevallás típushoz meghatározom a bevallás fajtát!
+* I define the type of declaration for declaration type!
    IF NOT P_BTYPE IS INITIAL AND
           P_BPART IS INITIAL.
      PERFORM SET_BPART USING    P_BUKRS
@@ -3678,17 +3678,17 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
        .
      $BTYPE = L_BTYPE.
 
-* aktualizálom a vezérlő táblákat, mert megváltozott a btype!
-* Bevallás általános adatai
+* I am updating the control tables because the btype has changed!
+* General declaration data
      PERFORM READ_BEVALL USING $BUKRS
                                $BTYPE.
-* Bevallás adatszolgáltatás beállítás
+* Declaration data service setting
      PERFORM READ_BEVALLC USING $BUKRS
                                 $BTYPE.
-* Bevallás adatszolgáltatás adatai
+* Declaration data service data
      PERFORM READ_BEVALLD USING $BUKRS
                                 $BTYPE.
-* Bevallás nyomtatvány adatok
+* Declaration form data
      PERFORM READ_BEVALLB USING $BTYPE.
    ENDIF.
  ENDFORM.                    " GET_BTYPE
@@ -3720,13 +3720,13 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
                 BTYPE EQ $BTYPE.
  ENDFORM.                    " SET_BPART
 *&---------------------------------------------------------------------*
-*&      Module  CHECK_ANALITIKA  INPUT
+*& Module CHECK_ANALYTICS INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
  MODULE CHECK_ANALITIKA INPUT.
 
-* normál bevallás
+* normal declaration
    IF NOT RADIO1 IS INITIAL.
      SELECT SINGLE * INTO W_/ZAK/ANALITIKA FROM /ZAK/ANALITIKA
             WHERE  BUKRS EQ P_BUKRS AND
@@ -3740,7 +3740,7 @@ ENHANCEMENT-POINT /ZAK/ZAK_ZF_TECH_01 SPOTS /ZAK/TECH_ES .
                          /ZAK/ANALITIKA-MONAT.
      ENDIF.
 
-* önrevizós bevallás
+* self-audited declaration
    ELSE.
      SELECT * INTO W_/ZAK/ANALITIKA FROM /ZAK/ANALITIKA
      UP TO 1 ROWS
@@ -3814,19 +3814,19 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
    IF P_BTYPE EQ C_PTGSZLAA.
      IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '52'.
        MESSAGE E402.
-*   Kérem a periódus értékét 01-52 között adja meg!
+*   Please enter the value of the period between 01-52!
      ENDIF.
    ELSE.
      IF NOT /ZAK/ANALITIKA-MONAT BETWEEN '01' AND '16'.
        MESSAGE E020.
-*   Kérem a periódus értékét 01-16 között adja meg!
+*   Please enter the value of the period between 01-16!
      ENDIF.
    ENDIF.
-* van már bevallás az adott időszakra ?
+* is there already a return for the given period?
    CLEAR W_/ZAK/BEVALLI.
-* /ZAK/BEVALL
+* /ZAK/ADMITTED
    CLEAR:V_LAST_DATE, W_/ZAK/BEVALL.
-* Bevallás utolsó napjának meghatározás
+* Determination of the last day of declaration
 
    PERFORM GET_LAST_DAY_OF_PERIOD USING /ZAK/ANALITIKA-GJAHR
                                         /ZAK/ANALITIKA-MONAT
@@ -3840,7 +3840,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
           AND    BTYPE  = P_BTYPE
           AND    DATBI  >= V_LAST_DATE.
    ENDSELECT.
-* ...negyedéves
+* ...quarterly
    IF W_/ZAK/BEVALL-BIDOSZ = 'N'.
      CASE /ZAK/ANALITIKA-MONAT.
        WHEN '01' OR '02' OR '03'.
@@ -3873,7 +3873,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
            MESSAGE E063 WITH P_BUKRS P_BTYPE '12'.
          ENDIF.
      ENDCASE.
-* ...éves
+* ...annual
    ELSEIF W_/ZAK/BEVALL-BIDOSZ = 'E'.
      PERFORM SET_RANGES USING '01'
                               '12'
@@ -3901,7 +3901,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
    ENDIF.
 
  ENDFORM.                    " CHECK_MONAT
-*--PTGSZLAA #04. 2014.04.28
+*--PTGSZLAA #04. 28/04/2014
 
 *&---------------------------------------------------------------------*
 *&      Form  GET_CS_BUKRS
@@ -3937,16 +3937,16 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
      TABLES
        T_BUKRS      = $I_BUKRS.
 
-* Feltöltjük a csoport vállalatot is
+* We also upload the group company
    $I_BUKRS-BUKRS = $BUKRS.
    APPEND $I_BUKRS.
 
-*Range feltöltése:
+*Upload Range:
    LOOP AT $I_BUKRS.
      M_DEF $R_BUKRS 'I' 'EQ' $I_BUKRS-BUKRS SPACE.
    ENDLOOP.
 
-*Meghatározzuk a csoport vállalatot
+*We define the group company
    CALL FUNCTION '/ZAK/GET_AFCS'
      EXPORTING
        I_BUKRS = $BUKRS
@@ -3961,7 +3961,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
  ENDFORM.                    " GET_CS_BUKRS
 *++1565 #03.
 *&---------------------------------------------------------------------*
-*&      Module  CHECK_BUKCS  INPUT
+*& Module CHECK_BUKCS INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -3986,7 +3986,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
 
    CONCATENATE $GJAHR $MONAT '01' INTO L_DATUM.
 
-*  Meghatározzuk a csoport vállalatot
+*  We define the group company
    CALL FUNCTION '/ZAK/GET_AFCS'
      EXPORTING
        I_BUKRS = P_BUKRS
@@ -4005,7 +4005,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
 *--1565 #03.
 *++2465 #03.
 *&---------------------------------------------------------------------*
-*&      Module  GET_BUKCS  INPUT
+*& Module GET_BUKCS INPUT
 *&---------------------------------------------------------------------*
 *       text
 *----------------------------------------------------------------------*
@@ -4041,7 +4041,7 @@ ENHANCEMENT-POINT /ZAK/KATA_BOOK SPOTS /ZAK/TECH_ES .
      TABLES
        T_BUKRS = LI_BUKRS.
 
-* ellenőrizzük, hogy az adott időszakban szerepel e a csoportban!
+* let's check if he is in the group in the given period!
    LOOP AT  LI_BUKRS INTO LW_BUKRS.
      READ TABLE I_BUKRS TRANSPORTING NO FIELDS WITH KEY BUKRS = LW_BUKRS.
      IF SY-SUBRC NE 0.

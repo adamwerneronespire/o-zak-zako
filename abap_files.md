@@ -246,7 +246,7 @@
 - [x] src/#zak#szja_stat_hiba.prog.abap
 - [x] src/#zak#szja_stat_hiba.prog.screen_9000.abap
 - [x] src/#zak#szja_xml_download.prog.abap
-- [ ] src/#zak#tabl_upd.fugr.#zak#ltabl_updf01.abap
+- [x] src/#zak#tabl_upd.fugr.#zak#ltabl_updf01.abap
 - [x] src/#zak#tabl_upd.fugr.#zak#ltabl_updtop.abap
 - [x] src/#zak#tabl_upd.fugr.#zak#sapltabl_upd.abap
 - [x] src/#zak#tabl_upd.fugr.#zak#update.abap

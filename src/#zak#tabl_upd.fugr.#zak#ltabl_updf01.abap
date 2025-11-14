@@ -76,7 +76,7 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--BG 2006/08/11
 
 *++BG 2006/08/31
-* Kulcsmezők gyűjtése
+* Collecting key fields
   TYPES: BEGIN OF LT_KEY,
            BUKRS  TYPE BUKRS,
            BTYPE  TYPE /ZAK/BTYPE,
@@ -98,7 +98,7 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--BG 2006/08/31
 
 *++BG 2011.09.14
-* Csoport vállalatok
+* Group companies
   DATA LI_CS_BUKRS LIKE /ZAK/AFACS_BUKRS OCCURS 0 WITH HEADER LINE.
   DATA L_BUKCS     TYPE /ZAK/BUKCS.
   DATA L_DATUM     TYPE DATUM.
@@ -109,11 +109,11 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 
   SORT $ANALITIKA BY BUKRS BTYPE GJAHR MONAT.
 *++BG 2006/08/31
-* Dialógus futásidő túllépés miatt PROCESS INDICATOR meghívása:
-* !!! ÁTÍRNI: az $ANALITIKA táblából össze kell állítani egy
-*  belső táblát, (BUKRS, BTYPE, GJAHR, MONAT, BSZNUM) és a
-*  /ZAK/BEVALLI, /ZAK/BEVALLSZ, /ZAK/BEVALLD táblákat
-*  FOR ALL ENTRIES utasítással a fenti tábla alapján kell
+* Call PROCESS INDICATOR due to dialog runtime overrun:
+* !!! CHANGE: need to build an internal table from the $ANALITIKA table
+*  (BUKRS, BTYPE, GJAHR, MONAT, BSZNUM) and read the
+*  /ZAK/BEVALLI, /ZAK/BEVALLSZ, /ZAK/BEVALLD tables
+*  with the FOR ALL ENTRIES statement based on the above table!!!!
 *  olvasni!!!!
   LOOP AT $ANALITIKA INTO W_/ZAK/ANALITIKA.
     CLEAR LW_KEY.
@@ -127,7 +127,7 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--BG 2006/08/31
 
 *++BG 2011.09.14
-*  Csoport vállalat ellenőrzés
+*  Group company verification
   LOOP AT LI_KEY INTO LW_KEY.
     REFRESH LI_CS_BUKRS.
     CLEAR:  L_BUKCS, L_DATUM.
@@ -151,7 +151,7 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
       ENDIF.
     ELSE.
 *--PTGSZLAA #02. 2014.03.05
-*    Hónap utolsó napja
+*    Last day of the month
       CONCATENATE LW_KEY-GJAHR LW_KEY-MONAT '01' INTO L_DATUM.
       CALL FUNCTION 'LAST_DAY_OF_MONTHS'  "#EC CI_USAGE_OK[2296016]
         EXPORTING
@@ -162,7 +162,7 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
     ENDIF.
 *--PTGSZLAA #02. 2014.03.05
 
-*    Csoport vállalatok
+*    Group companies
     CALL FUNCTION '/ZAK/GET_AFCS'
       EXPORTING
         I_BUKRS = LW_KEY-BUKRS
@@ -186,14 +186,14 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--BG 2011.09.14
 
 *++BG 2006/08/11
-* Dialógus futás biztosításhoz
+* Ensuring dialog runtime
   CLEAR L_INDEX.
   PERFORM PROCESS_IND_ITEM USING '1'
                                  L_INDEX
                                  TEXT-P02.
 *--BG 2006/08/11
 
-* Bevallás adatszolgáltatás indexek
+* Return data service indices
   SELECT * FROM /ZAK/BEVALLI
            INTO TABLE I_/ZAK/BEVALLI
 *++BG 2006/08/31
@@ -210,13 +210,13 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--BG 2006/08/31
 
 *++BG 2006/08/09
-* Dialógus futás biztosításhoz
+* Ensuring dialog runtime
   CLEAR L_INDEX.
   PERFORM PROCESS_IND_ITEM USING '1'
                                  L_INDEX
                                  TEXT-P02.
 *--BG 2006/08/11
-* Bevallás adatszolgáltatás feltöltések
+* Return data service uploads
   SELECT * FROM /ZAK/BEVALLSZ
            INTO TABLE I_/ZAK/BEVALLSZ
 *++BG 2006/08/31
@@ -234,14 +234,14 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
                  MONAT  EQ LI_KEY-MONAT.
 *--BG 2006/08/31
 *++BG 2006/08/09
-* Dialógus futás biztosításhoz
+* Ensuring dialog runtime
   CLEAR L_INDEX.
   PERFORM PROCESS_IND_ITEM USING '1'
                                  L_INDEX
                                  TEXT-P02.
 *--BG 2006/08/11
 
-* Bevallás adatszolgáltatás adatai
+* Return data service data
   SELECT * FROM /ZAK/BEVALLD
            INTO TABLE I_/ZAK/BEVALLD
 *++BG 2006/08/31
@@ -256,15 +256,14 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--BG 2006/08/31
 
 *++BG 2008/05/20
-*Abban az esetben, ha az időszak közben egy új betöltés keletkezik
-*vagy nem lett elengedve az adatszolgáltatás, akkor a funkció nem
-*megfelelően működött, mivel mindig a BEVALLSZ BSZNUM és időszak
-*alapján határozta meg a következő azonosítót.
-*Ezért megvizsgáljuk, hogy az ANALITIKA-ban szereplő BSZNUM
-*szerepel-e a BEVALLSZ-ben a BEVALLI-ben beolvasott "Z" vagy "X"
-*státusszal. Ha nem akkor létrehozzuk.
+*In the event that a new load is created during the period or the data
+*service was not released, the function did not work properly because it
+*always determined the next identifier based on the BEVALLSZ BSZNUM and
+*period.
+*Therefore we check whether the BSZNUM in ANALITIKA appears in BEVALLSZ
+*with a "Z" or "X" status read in from BEVALLI. If not, we create it.
 *++1765 #31.
-* Minden státuszt vizsgálunk, hogy létezik e a BEVALLSZ-ben!
+* We check every status to see if it exists in BEVALLSZ!
 *  LOOP AT I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI WHERE FLAG CA 'ZX'.
   LOOP AT I_/ZAK/BEVALLI INTO W_/ZAK/BEVALLI.
 *++1765 #31.
@@ -287,7 +286,7 @@ FORM CHECK_BEVALL USING $ANALITIKA LIKE I_/ZAK/ANALITIKA[]
   ENDLOOP.
 *--BG 2008/05/20
 
-* a legnagyobb ZINDEX bejegyzéseket vizsgálom
+* I examine the largest ZINDEX entries
   SORT I_/ZAK/BEVALLI BY BUKRS BTYPE GJAHR MONAT ZINDEX DESCENDING.
   DELETE ADJACENT DUPLICATES FROM I_/ZAK/BEVALLI
                         COMPARING BUKRS BTYPE GJAHR MONAT.
@@ -296,7 +295,7 @@ DESCENDING.
   DELETE ADJACENT DUPLICATES FROM I_/ZAK/BEVALLSZ
                         COMPARING BUKRS BTYPE BSZNUM GJAHR MONAT.
 
-* manuális rögzítés! külön kezelem, mert még változhat!
+* Manual entry! I handle it separately because it may still change!
   IF $GEN IS INITIAL.
     PERFORM MANUAL USING $ANALITIKA
                          I_/ZAK/BEVALLI
@@ -305,7 +304,7 @@ DESCENDING.
                          $UPD_BEVALLSZ
                          $BSZNUM.
   ELSE.
-* item beállítása
+* Item setup
 *    PERFORM GET_ITEM CHANGING $ANALITIKA.
     PERFORM GENERAL USING $ANALITIKA
                           I_/ZAK/BEVALLI
@@ -346,7 +345,7 @@ FORM INSERT_ABEV_TABLE USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *-- BG 2006.03.23
 
 
-* Utolsó futás ideje - timestamp /ZAK/BEVALLSZ-LARUN
+* Last run time - timestamp /ZAK/BEVALLSZ-LARUN
   CLEAR W_/ZAK/BEVALLSZ.
 
   CALL FUNCTION 'IB_CONVERT_INTO_TIMESTAMP'
@@ -411,7 +410,7 @@ FORM INSERT_ABEV_TABLE USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
   CLEAR L_INDEX.
 *-- BG 2006.03.23
   LOOP AT $INS_ANALITIKA INTO W_/ZAK/ANALITIKA.
-* Dialógus futás biztosításhoz
+* Ensuring dialog runtime
     PERFORM PROCESS_IND_ITEM USING '10000'
                                    L_INDEX
                                    TEXT-P01.
@@ -423,16 +422,16 @@ FORM INSERT_ABEV_TABLE USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
       W_/ZAK/ANALITIKA-ZINDEX = '000'.
     ENDIF.
 
-* ha kialakul a végleges eljárás akkor,
-*  /ZAK/READ_FILE_EXIT használni!
+* when the final procedure is established,
+*  use /ZAK/READ_FILE_EXIT!
 *++BG 2006/05/24
     IF W_/ZAK/ANALITIKA-LAPSZ IS INITIAL.
       W_/ZAK/ANALITIKA-LAPSZ = C_LAPSZ.
     ENDIF.
 *--BG 2006/05/24
-* manuálisnál nincs packade generálás, tehát módosítjuk az itemet!
+* no package generation for manual mode, so we adjust the item!
     IF NOT $GEN IS INITIAL.
-*++ BG 2006.03.23  ITEM léptetés
+*++ BG 2006.03.23  ITEM increment
       ADD 1 TO L_ITEM.
       MOVE L_ITEM TO W_/ZAK/ANALITIKA-ITEM.
 *-- BG 2006.03.23
@@ -443,9 +442,9 @@ FORM INSERT_ABEV_TABLE USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *-- BG 2006.03.23
                                                               .
     ENDIF.
-* manuális ha nincs packade azonosító!
-* manuális rögzítésnél ellenőrizni kell a kulcsot, mert
-* az item számot a meglévő bejegyzéstől eltérően kell megadni!
+* manual case if there is no package identifier!
+* need to verify the key for manual entry because
+* the item number must be provided differently from the existing entry!
     IF $OLD_PACK IS INITIAL AND
        $GEN IS INITIAL.
       SELECT SINGLE * FROM /ZAK/ANALITIKA
@@ -498,15 +497,15 @@ FORM INSERT_ABEV_TABLE USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 *--1365 #8.
       W_/ZAK/AFA_SZLA-PACK = $INS_PACK.
 *++1365 #8.
-*     Meghatározzuk az időszakot:
+*     Determine the period:
       CLEAR W_/ZAK/ANALITIKA.
 *++1365 #23.
 *++1765 #14.
 *      IF w_/zak/afa_szla-bseg_gjahr IS INITIAL AND
 *         w_/zak/afa_szla-bseg_belnr IS INITIAL.
-*     Csak az évet figyeljük mert az AFA_SZLA-ban a BELNR fel van töltve
-*     az tétel index-el így pld. 901-ből betöltésnél nem talált
-*     értéket és az ZINDEX így mindig 000 volt.
+*     We only look at the year because BELNR in AFA_SZLA is filled with
+*     the item index, so for example when loading from 901 it could not
+*     find a value and therefore the ZINDEX was always 000.
       IF W_/ZAK/AFA_SZLA-BSEG_GJAHR IS INITIAL.
 *++1765 #14.
 *--1365 #23.
@@ -579,9 +578,9 @@ FORM INSERT_ABEV_TABLE USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
             ZINDEX EQ W_/ZAK/BEVALLI-ZINDEX.
 *--BG 2006/06/08
 *++2009.11.09 BG
-*     ONJF-Önellenőrzési jegyzőkönyv flag nem lehet töltve ha itt
-*     módosítjuk a BEVALLI-t mert csak lezárt időszakra teszi majd
-*     be az önellenőrzési jegyzőkönyv:
+*     ONJF self-audit log flag cannot be filled if we modify BEVALLI
+*     here because the self-audit log will only be added for a closed
+*     period:
       CLEAR W_/ZAK/BEVALLI-ONJF.
 *--2009.11.09 BG
       IF SY-SUBRC EQ 0.
@@ -672,8 +671,7 @@ FORM DELETE_ABEV_TABLEN USING    $INS_ANALITIKA LIKE I_/ZAK/ANALITIKA[]
 
   LOOP AT $INS_ANALITIKA INTO W_/ZAK/ANALITIKA.
 *++BG 2006/06/08
-* Csak azokat a rekorodkat töröljük amik a régi package azonosítóhoz
-* tartoznak
+* Only delete those records that belong to the old package identifier
 *--BG 2006/06/08
     SELECT * FROM /ZAK/ANALITIKA
            WHERE BUKRS EQ W_/ZAK/ANALITIKA-BUKRS AND
@@ -734,7 +732,7 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
                                   GJAHR = W_/ZAK/ANALITIKA-GJAHR
                                   MONAT = W_/ZAK/ANALITIKA-MONAT.
     IF SY-SUBRC EQ 0.
-* csak nyitott periódusnál van manuális bevitel!
+* Manual input exists only for open periods!
       IF NOT W_/ZAK/ANALITIKA-ZINDEX IS INITIAL AND
          NOT W_/ZAK/ANALITIKA-ITEM   IS INITIAL.
       ELSE.
@@ -745,7 +743,7 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
                                       GJAHR = W_/ZAK/ANALITIKA-GJAHR
                                       MONAT = W_/ZAK/ANALITIKA-MONAT.
         IF SY-SUBRC NE 0.
-* új bejegyzés bevallsz
+* New BEVALLSZ entry
           MOVE-CORRESPONDING W_/ZAK/ANALITIKA TO W_/ZAK/BEVALLSZ.
           MOVE SY-DATUM               TO W_/ZAK/BEVALLSZ-DATUM.
           MOVE SY-UZEIT               TO W_/ZAK/BEVALLSZ-UZEIT.
@@ -753,13 +751,13 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
           W_/ZAK/ANALITIKA-ZINDEX = '000'.
           IF W_/ZAK/BEVALLI-FLAG EQ 'Z' .
             IF W_/ZAK/BEVALLI-ZINDEX EQ '000'.
-* a következő nyitott periódusra kell könyvelni!
+* Must post to the next open period!
               W_/ZAK/ANALITIKA-ZINDEX = '001'.
               W_/ZAK/BEVALLSZ-ZINDEX  = '001'.
               W_/ZAK/BEVALLI-ZINDEX   = '001'.
             ELSEIF W_/ZAK/BEVALLI-ZINDEX NE '000' AND
                    W_/ZAK/BEVALLI-ZINDEX NE '999'.
-* index + 1 önrevízió
+* Index + 1 self-audit
 *++1765 #25.
 *              L_INDEX =  W_/ZAK/BEVALLSZ-ZINDEX + 1.
               L_INDEX =  W_/ZAK/BEVALLI-ZINDEX + 1.
@@ -776,13 +774,13 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
         ELSE.
           IF W_/ZAK/BEVALLSZ-FLAG EQ 'Z' .
             IF W_/ZAK/BEVALLSZ-ZINDEX EQ '000'.
-* a következő nyitott periódusra kell könyvelni!
+* Must post to the next open period!
               W_/ZAK/ANALITIKA-ZINDEX = '001'.
               W_/ZAK/BEVALLSZ-ZINDEX  = '001'.
               W_/ZAK/BEVALLI-ZINDEX   = '001'.
             ELSEIF W_/ZAK/BEVALLSZ-ZINDEX NE '000' AND
                    W_/ZAK/BEVALLSZ-ZINDEX NE '999'.
-* index + 1 önrevízió
+* Index + 1 self-audit
               L_INDEX =  W_/ZAK/BEVALLSZ-ZINDEX + 1.
               W_/ZAK/ANALITIKA-ZINDEX = L_INDEX. CLEAR L_INDEX.
               W_/ZAK/BEVALLSZ-ZINDEX = W_/ZAK/ANALITIKA-ZINDEX.
@@ -803,7 +801,7 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
       IF NOT W_/ZAK/ANALITIKA-ZINDEX IS INITIAL AND
          NOT W_/ZAK/ANALITIKA-ITEM   IS INITIAL.
       ELSE.
-* új bejegyzés bevalli
+* New BEVALLI entry
         MOVE W_/ZAK/ANALITIKA-BUKRS TO W_UPD_BEVALLI-BUKRS.
         MOVE W_/ZAK/ANALITIKA-BTYPE TO W_UPD_BEVALLI-BTYPE.
         MOVE W_/ZAK/ANALITIKA-GJAHR TO W_UPD_BEVALLI-GJAHR.
@@ -813,7 +811,7 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
         MOVE SY-UZEIT              TO W_UPD_BEVALLI-UZEIT.
         MOVE SY-UNAME              TO W_UPD_BEVALLI-UNAME.
         APPEND W_UPD_BEVALLI TO $UPD_BEVALLI.
-* új bejegyzés bevallsz
+* New BEVALLSZ entry
         MOVE W_/ZAK/ANALITIKA-BUKRS TO W_UPD_BEVALLSZ-BUKRS.
         MOVE W_/ZAK/ANALITIKA-BTYPE TO W_UPD_BEVALLSZ-BTYPE.
         MOVE W_/ZAK/ANALITIKA-GJAHR TO W_UPD_BEVALLSZ-GJAHR.
@@ -831,7 +829,7 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
     ENDIF.
     MODIFY $ANALITIKA FROM W_/ZAK/ANALITIKA TRANSPORTING ZINDEX.
   ENDLOOP.
-* duplikáció!
+* Duplication!
   SORT $UPD_BEVALLI BY BUKRS BTYPE GJAHR MONAT ZINDEX.
   DELETE ADJACENT DUPLICATES FROM $UPD_BEVALLI
                              COMPARING BUKRS BTYPE GJAHR MONAT ZINDEX.
@@ -841,7 +839,7 @@ FORM MANUAL USING    $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
                                                                ZINDEX.
 
 *++BG 2011.09.14
-* Csoport vállalat bővítések
+* Group company extensions
   PERFORM GET_CS_BUKRS TABLES $UPD_BEVALLI
                               $UPD_BEVALLSZ.
 *--BG 2011.09.14
@@ -897,16 +895,16 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
                                   SY-MSGV4 .
 
 *++BG 2006/06/20
-* Nem helyes, mert "X" státusznál is a következő
-* sorszámot adta, nem a következő időszak első sorszámát.
+* Incorrect because with status "X" it also gave the next serial number
+* instead of the first serial number of the next period.
 *          IF W_/ZAK/BEVALLSZ-ZINDEX EQ '000'.
-** a következő nyitott periódusra kell könyvelni!
+** Must post to the next open period!
 *            W_/ZAK/ANALITIKA-ZINDEX = '001'.
 *            W_/ZAK/BEVALLSZ-ZINDEX  = '001'.
 *            W_/ZAK/BEVALLI-ZINDEX   = '001'.
 *          ELSEIF W_/ZAK/BEVALLSZ-ZINDEX NE '000' AND
 *                 W_/ZAK/BEVALLSZ-ZINDEX NE '999'.
-** index + 1 önrevízió
+** Index + 1 self-audit
 *            L_INDEX =  W_/ZAK/BEVALLSZ-ZINDEX + 1.
 *            W_/ZAK/ANALITIKA-ZINDEX = L_INDEX. CLEAR L_INDEX.
 *            W_/ZAK/BEVALLSZ-ZINDEX = W_/ZAK/ANALITIKA-ZINDEX.
@@ -926,14 +924,14 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
                                   SY-MSGV4 .
           IF W_/ZAK/BEVALLSZ-ZINDEX EQ '000'.
 
-* önrevízió! 001
+* Self-audit! 001
             W_/ZAK/ANALITIKA-ZINDEX = '001'.
             W_/ZAK/BEVALLSZ-ZINDEX  = '001'.
             W_/ZAK/BEVALLI-ZINDEX   = '001'.
           ELSEIF W_/ZAK/BEVALLSZ-ZINDEX NE '000' AND
                  W_/ZAK/BEVALLSZ-ZINDEX NE '999'.
 
-*         index + 1 önrevízió
+*         Index + 1 self-audit
             L_INDEX =  W_/ZAK/BEVALLSZ-ZINDEX + 1.
 
             W_/ZAK/ANALITIKA-ZINDEX = L_INDEX. CLEAR L_INDEX.
@@ -951,8 +949,8 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
         ELSEIF W_/ZAK/BEVALLSZ-FLAG EQ 'F'.
 *++2508 #04.
 **++1908 #03.
-**         Ráolvasunk az adatbázisban is mert lehet, hogy a megtalált rekord generált,
-**         de csak időszakonként 1x.
+**         Also read from the database because the found record might be generated,
+**         but only once per period.
 *          IF LW_SAVE_BEVALLSZ NE W_/ZAK/BEVALLSZ.
 *            SELECT SINGLE COUNT( * ) FROM /ZAK/BEVALLSZ
 *                                    WHERE BUKRS  EQ W_/ZAK/BEVALLSZ-BUKRS
@@ -994,15 +992,15 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
           MOVE W_/ZAK/BEVALLSZ-ZINDEX TO W_/ZAK/ANALITIKA-ZINDEX.
 *--BG 2006/06/12
 *++2308 #06.
-*       Ilyen pld. "E" elengedett adatszolgáltatás, ha már van is beállítva akkor is
-*       át kell venni az index-et mert különben a 000-ra kerül ami hibát okoz!
+*       For example, in the case of "E" released data service, even if it is already set
+*       the index must be taken over because otherwise it becomes 000, which causes an error!
         ELSE.
           MOVE W_/ZAK/BEVALLSZ-ZINDEX TO W_/ZAK/ANALITIKA-ZINDEX.
 *--2308 #06.
         ENDIF.
 *++2508 #04.
-*         Ráolvasunk az adatbázisban is mert lehet, hogy a megtalált rekord generált,
-*         de csak időszakonként 1x.
+*         Also read from the database because the found record might be generated,
+*         but only once per period.
         IF LW_SAVE_BEVALLSZ NE W_/ZAK/BEVALLSZ.
           SELECT SINGLE COUNT( * ) FROM /ZAK/BEVALLSZ
                                   WHERE BUKRS  EQ W_/ZAK/BEVALLSZ-BUKRS
@@ -1044,7 +1042,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
 *                                      MONAT = W_/ZAK/ANALITIKA-MONAT
 *                                      .
 *        IF W_/ZAK/BEVALLSZ-FLAG EQ 'E'.
-** az adott periódusra nem tölthet fel adatot!
+** Cannot upload data for the given period!
 *          PERFORM ERROR_HANDLING USING '/ZAK/ZAK' 'E' '027'
 *                                       W_/ZAK/ANALITIKA-GJAHR
 *                                       W_/ZAK/ANALITIKA-MONAT
@@ -1080,14 +1078,14 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
           MOVE SY-UZEIT              TO W_UPD_BEVALLI-UZEIT.
           MOVE SY-UNAME              TO W_UPD_BEVALLI-UNAME.
           APPEND W_UPD_BEVALLI TO $UPD_BEVALLI.
-* új bejegyzés bevallsz
+* New BEVALLSZ entry
           MOVE-CORRESPONDING W_UPD_BEVALLI TO W_UPD_BEVALLSZ.
           MOVE $BSZNUM               TO W_UPD_BEVALLSZ-BSZNUM.
           APPEND W_UPD_BEVALLSZ TO $UPD_BEVALLSZ.
           W_/ZAK/ANALITIKA-ZINDEX = W_UPD_BEVALLI-ZINDEX.
         ELSE.
 *--1565 #12.
-* új bejegyzés bevalli
+* New BEVALLI entry
           MOVE W_/ZAK/ANALITIKA-BUKRS TO W_UPD_BEVALLI-BUKRS.
           MOVE W_/ZAK/ANALITIKA-BTYPE TO W_UPD_BEVALLI-BTYPE.
           MOVE W_/ZAK/ANALITIKA-GJAHR TO W_UPD_BEVALLI-GJAHR.
@@ -1098,7 +1096,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
           MOVE SY-UZEIT              TO W_UPD_BEVALLI-UZEIT.
           MOVE SY-UNAME              TO W_UPD_BEVALLI-UNAME.
           APPEND W_UPD_BEVALLI TO $UPD_BEVALLI.
-* új bejegyzés bevallsz
+* New BEVALLSZ entry
           MOVE W_/ZAK/ANALITIKA-BUKRS TO W_UPD_BEVALLSZ-BUKRS.
           MOVE W_/ZAK/ANALITIKA-BTYPE TO W_UPD_BEVALLSZ-BTYPE.
           MOVE W_/ZAK/ANALITIKA-GJAHR TO W_UPD_BEVALLSZ-GJAHR.
@@ -1116,7 +1114,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
 *--1565 #12.
       ENDIF.
     ELSE.
-* ismételt betöltés!
+* Repeated load!
       IF SY-SUBRC EQ 0.
         IF W_/ZAK/BEVALLSZ-FLAG EQ 'X' OR
            W_/ZAK/BEVALLSZ-FLAG EQ 'Z'.
@@ -1142,7 +1140,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
 *                                      MONAT = W_/ZAK/ANALITIKA-MONAT
 *                                      .
 *        IF W_/ZAK/BEVALLSZ-FLAG EQ 'E'.
-** az adott periódusra nem tölthet fel adatot!
+** Cannot upload data for the given period!
 *          PERFORM ERROR_HANDLING USING '/ZAK/ZAK' 'E' '027'
 *                                       W_/ZAK/ANALITIKA-GJAHR
 *                                       W_/ZAK/ANALITIKA-MONAT
@@ -1189,14 +1187,14 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
           MOVE SY-UZEIT              TO W_UPD_BEVALLI-UZEIT.
           MOVE SY-UNAME              TO W_UPD_BEVALLI-UNAME.
           APPEND W_UPD_BEVALLI TO $UPD_BEVALLI.
-* új bejegyzés bevallsz
+* New BEVALLSZ entry
           MOVE-CORRESPONDING W_UPD_BEVALLI TO W_UPD_BEVALLSZ.
           MOVE $BSZNUM               TO W_UPD_BEVALLSZ-BSZNUM.
           APPEND W_UPD_BEVALLSZ TO $UPD_BEVALLSZ.
           W_/ZAK/ANALITIKA-ZINDEX = W_UPD_BEVALLI-ZINDEX.
         ELSE.
 *--1565 #12.
-* új bejegyzés bevalli
+* New BEVALLI entry
           MOVE W_/ZAK/ANALITIKA-BUKRS TO W_UPD_BEVALLI-BUKRS.
           MOVE W_/ZAK/ANALITIKA-BTYPE TO W_UPD_BEVALLI-BTYPE.
           MOVE W_/ZAK/ANALITIKA-GJAHR TO W_UPD_BEVALLI-GJAHR.
@@ -1207,7 +1205,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
           MOVE SY-UZEIT              TO W_UPD_BEVALLI-UZEIT.
           MOVE SY-UNAME              TO W_UPD_BEVALLI-UNAME.
           APPEND W_UPD_BEVALLI TO $UPD_BEVALLI.
-* új bejegyzés bevallsz
+* New BEVALLSZ entry
           MOVE W_/ZAK/ANALITIKA-BUKRS TO W_UPD_BEVALLSZ-BUKRS.
           MOVE W_/ZAK/ANALITIKA-BTYPE TO W_UPD_BEVALLSZ-BTYPE.
           MOVE W_/ZAK/ANALITIKA-GJAHR TO W_UPD_BEVALLSZ-GJAHR.
@@ -1224,7 +1222,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
         ENDIF.
 *--1565 #12.
       ENDIF.
-* ismételt vége
+* End of repeated load
     ENDIF.
 *++2009.09.18 BG (NESS)
 *    MODIFY $ANALITIKA FROM W_/ZAK/ANALITIKA TRANSPORTING GJAHR
@@ -1240,7 +1238,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
   ENDLOOP.
 
 
-* duplikáció!
+* Duplication!
   SORT $UPD_BEVALLI BY BUKRS BTYPE GJAHR MONAT ZINDEX.
   DELETE ADJACENT DUPLICATES FROM $UPD_BEVALLI
                              COMPARING BUKRS BTYPE GJAHR MONAT ZINDEX.
@@ -1249,7 +1247,7 @@ FORM GENERAL  USING  $ANALITIKA    LIKE I_/ZAK/ANALITIKA[]
                              COMPARING BUKRS BTYPE BSZNUM GJAHR MONAT.
 
 *++BG 2011.09.14
-* Csoport vállalat bővítések
+* Group company extensions
   PERFORM GET_CS_BUKRS TABLES $UPD_BEVALLI
                               $UPD_BEVALLSZ.
 *--BG 2011.09.14
@@ -1267,7 +1265,7 @@ FORM GET_ITEM CHANGING $UPD_ANALITIKA TYPE /ZAK/ANALITIKA.
   DATA: L_ITEM LIKE /ZAK/ANALITIKA-ITEM.
   CLEAR /ZAK/ANALITIKA.
 
-* Utolsó Tételszám
+* Last item number
   SELECT MAX( ITEM ) INTO L_ITEM FROM /ZAK/ANALITIKA
      WHERE BUKRS   = $UPD_ANALITIKA-BUKRS
        AND BTYPE   = $UPD_ANALITIKA-BTYPE
@@ -1394,7 +1392,7 @@ FORM GET_BTYPE TABLES   $ANALITIKA STRUCTURE /ZAK/ANALITIKA
                USING    $BUKRS
                         $BTYPART.
 
-* Bevallás típus időszakonként
+* Return type per period
   DATA: BEGIN OF LI_BTYPE OCCURS 0,
           GJAHR TYPE GJAHR,
           MONAT TYPE MONAT,
@@ -1403,11 +1401,11 @@ FORM GET_BTYPE TABLES   $ANALITIKA STRUCTURE /ZAK/ANALITIKA
 
 
   LOOP AT $ANALITIKA INTO W_/ZAK/ANALITIKA.
-* Beolvassuk, hogy milyen BTYPE tartozik hozzá
+* Read which BTYPE belongs to it
     READ TABLE LI_BTYPE WITH KEY GJAHR = W_/ZAK/ANALITIKA-GJAHR
                                  MONAT = W_/ZAK/ANALITIKA-MONAT
                                  BINARY SEARCH.
-*   Nincs meg, meghatározzuk
+*   If not found, determine it
     IF SY-SUBRC NE 0.
       CLEAR LI_BTYPE.
       CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
@@ -1431,7 +1429,7 @@ FORM GET_BTYPE TABLES   $ANALITIKA STRUCTURE /ZAK/ANALITIKA
       MOVE  W_/ZAK/ANALITIKA-MONAT TO LI_BTYPE-MONAT.
       APPEND LI_BTYPE. SORT LI_BTYPE BY GJAHR MONAT.
     ENDIF.
-*   BTYPE visszaírása
+*   Write back the BTYPE
     MOVE LI_BTYPE-BTYPE TO W_/ZAK/ANALITIKA-BTYPE.
     MODIFY $ANALITIKA FROM W_/ZAK/ANALITIKA TRANSPORTING BTYPE.
   ENDLOOP.
@@ -1449,7 +1447,7 @@ ENDFORM.                    " GET_BTYPE
 FORM PROCESS_IND_ITEM USING   $VALUE
                               $INDEX
                               $TEXT.
-*  Csak dialógus futtatásnál
+*  Only during dialog execution
   CHECK SY-BATCH IS INITIAL.
   ADD 1 TO $INDEX.
   IF $INDEX EQ $VALUE.
@@ -1502,22 +1500,22 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 *++2009.09.18 BG (NESS)
 
 
-*Ha a FLAG 'X', akkor a következő időszak kell.
+*If the FLAG is 'X', the next period is needed.
   IF $/ZAK/BEVALLSZ-FLAG EQ 'X'.
-*  Meghatározzuk a következő nyitott periódust.
+*  Determine the next open period.
     IF $/ZAK/BEVALLSZ-MONAT = '12'.
       L_GJAHR = $/ZAK/BEVALLSZ-GJAHR + 1.
       L_MONAT = '01'.
-*     Konvertálni kell a BTYPE-ot
+*     Need to convert the BTYPE
       SELECT SINGLE BTYPART INTO L_BTYPART
                             FROM /ZAK/BEVALL
                            WHERE BUKRS = $/ZAK/BEVALLSZ-BUKRS
                              AND BTYPE = $/ZAK/BEVALLSZ-BTYPE.
       IF SY-SUBRC NE 0.
         MESSAGE A180(/ZAK/ZAK) WITH $/ZAK/BEVALLSZ-BTYPE.
-*       Hiba a & bevallás típus fajtájának meghatározásánál!
+*       Error determining the & return type variant!
       ENDIF.
-*     Meghatározzuk a bevallás típust.
+*     Determine the return type.
       CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
         EXPORTING
           I_BUKRS     = $/ZAK/BEVALLSZ-BUKRS
@@ -1544,7 +1542,7 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
 *++2008.11.21 BG (Fmc)
 *  Nem volt helyes a SELECT mivel a GROUP BY elrontotta
 *  Pld. volt a /ZAK/BEVALLI-ben 001 Z, 002 Z, 003 Z ebben az
-*  esetben a SELECT a 001 Z adta vissza eredményül a 003 Z helyett
+*  In this case the SELECT returned 001 Z instead of 003 Z
 *      SELECT  MAX( ZINDEX ) FLAG
 *                             INTO (LW_BEVALLI-ZINDEX,
 *                                   LW_BEVALLI-FLAG)
@@ -1563,17 +1561,17 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
                             AND GJAHR = L_GJAHR
                             AND MONAT = L_MONAT.
 *--2008.11.21 BG (Fmc)
-*     Nincs következő időszak még nyitva '000'-ra kerül.
+*     No next period is open yet; it becomes '000'.
 *++2009.09.18 BG (NESS)
-*     A SY-SUBRC akkor is 0 ha nincs a kulcsnak megfelelő bejegyzés
-*     ezért nem ezt kell vizsgálni:
+*     SY-SUBRC is 0 even if no entry matches the key
+*     therefore this must not be checked:
 *     IF SY-SUBRC NE 0.
       IF LW_BEVALLI-ZINDEX IS INITIAL.
 *--2009.09.18 BG (NESS)
         L_ZINDEX = '000'.
 *++2008.11.21 BG (Fmc)
       ELSE.
-*       Meghatározzuk a FLAG-et
+*       Determine the FLAG
         SELECT SINGLE FLAG   INTO LW_BEVALLI-FLAG
                              FROM /ZAK/BEVALLI
                             WHERE BUKRS = $/ZAK/BEVALLSZ-BUKRS
@@ -1581,26 +1579,26 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
                               AND GJAHR = L_GJAHR
                               AND MONAT = L_MONAT
                               AND ZINDEX = LW_BEVALLI-ZINDEX.
-*       Következő időszak is APEH által ellenőrzött megyünk tovább
+*       If the next period is also audited by the tax authority we continue
 *       ELSEIF LW_BEVALLI-FLAG CA 'X'.
         IF LW_BEVALLI-FLAG CA 'X'.
 *--2008.11.21 BG (Fmc)
           CLEAR   L_ZINDEX.
-*       Meghatározzuk a következő nyitott periódust.
+*       Determine the next open period.
           IF L_MONAT = '12'.
             L_GJAHR = L_GJAHR + 1.
             L_MONAT = '01'.
 
-*     Konvertálni kell a BTYPE-ot
+*     Need to convert the BTYPE
             SELECT SINGLE BTYPART INTO L_BTYPART
                                   FROM /ZAK/BEVALL
                                  WHERE BUKRS = $/ZAK/BEVALLSZ-BUKRS
                                    AND BTYPE = L_BTYPE.
             IF SY-SUBRC NE 0.
               MESSAGE A180(/ZAK/ZAK) WITH $/ZAK/BEVALLSZ-BTYPE.
-*       Hiba a & bevallás típus fajtájának meghatározásánál!
+*       Error determining the & return type variant!
             ENDIF.
-*     Meghatározzuk a bevallás típust.
+*     Determine the return type.
             CALL FUNCTION '/ZAK/GET_BTYPE_FROM_BTYPART'
               EXPORTING
                 I_BUKRS     = $/ZAK/BEVALLSZ-BUKRS
@@ -1617,7 +1615,7 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
               MESSAGE ID SY-MSGID TYPE 'A' NUMBER SY-MSGNO
                       WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
 *++2009.09.18 BG (NESS)
-*           BTYPE váltás, indulunk előről
+*           BTYPE change, start over
             ELSE.
               L_MONAT = 1.
 *--2009.09.18 BG (NESS)
@@ -1625,34 +1623,34 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
           ELSE.
             L_MONAT = L_MONAT + 1.
           ENDIF.
-*     Következő időszak lezárt
+*     Next period closed
         ELSEIF LW_BEVALLI-FLAG EQ 'Z'.
           L_ZINDEX = LW_BEVALLI-ZINDEX + 1.
-*     Következő időszak nyitott erre tesszük
+*     Next period open, assign it here
         ELSE.
           L_ZINDEX = LW_BEVALLI-ZINDEX.
         ENDIF.
 *++2008.11.21 BG (Fmc)
       ENDIF.
 *--2008.11.21 BG (Fmc)
-*     Ha megvan kilépünk
+*     Exit once found
       IF NOT L_ZINDEX IS INITIAL.
         EXIT.
       ENDIF.
     ENDDO.
 
-* vezető 0-ák feltöltése
+* Fill leading zeros
     CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
       EXPORTING
         INPUT  = L_ZINDEX
       IMPORTING
         OUTPUT = L_ZINDEX.
 *++2009.09.18 BG (NESS)
-*   Ha volt BTYPE váltás, konvertálni kell az ABEVAZ-t.
+*   If there was a BTYPE change, convert the ABEVAZ.
     IF $/ZAK/BEVALLI-BTYPE NE L_BTYPE.
       $/ZAK/BEVALLI-BTYPE  = L_BTYPE.
       $/ZAK/BEVALLSZ-BTYPE = L_BTYPE.
-*     ABEV forgatás
+*     Rotate ABEV
       CALL FUNCTION '/ZAK/ABEV_CONTACT'
         EXPORTING
           I_BUKRS        = $/ZAK/ANALITIKA-BUKRS
@@ -1671,7 +1669,7 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
         MESSAGE ID SY-MSGID TYPE SY-MSGTY NUMBER SY-MSGNO
                 WITH SY-MSGV1 SY-MSGV2 SY-MSGV3 SY-MSGV4.
       ENDIF.
-*     Utolsó sor meghatározása
+*     Determine the last row
       DESCRIBE TABLE LI_ABEV_CONTACT LINES L_TABIX.
       IF NOT L_TABIX IS INITIAL.
         READ TABLE LI_ABEV_CONTACT INDEX L_TABIX.
@@ -1681,7 +1679,7 @@ FORM GET_NEXT_ZINDEX USING    $/ZAK/ANALITIKA STRUCTURE /ZAK/ANALITIKA
     ENDIF.
 *--2009.09.18 BG (NESS)
 
-*  Értékek visszaírása
+*  Write back the values
     $/ZAK/ANALITIKA-GJAHR  = L_GJAHR.
     $/ZAK/ANALITIKA-MONAT  = L_MONAT.
     $/ZAK/ANALITIKA-ZINDEX = L_ZINDEX.
@@ -1753,7 +1751,7 @@ FORM CHECK_BEVALLI  TABLES   $I_BEVALLI STRUCTURE /ZAK/BEVALLI.
   END-OF-DEFINITION.
 
 
-*Végigolvassuk a rekordokat
+*Read through the records
   LOOP AT $I_BEVALLI INTO W_/ZAK/BEVALLI.
 *++PTGSZLAA #02. 2014.03.05
     IF W_/ZAK/BEVALLI-BTYPE EQ C_PTGSZLAA.
@@ -1775,7 +1773,7 @@ FORM CHECK_BEVALLI  TABLES   $I_BEVALLI STRUCTURE /ZAK/BEVALLI.
       ENDIF.
     ELSE.
 *--PTGSZLAA #02. 2014.03.05
-*   IDŐSZAK utolsó napjának meghatározása
+*   Determine the last day of the period
       CONCATENATE W_/ZAK/BEVALLI-GJAHR W_/ZAK/BEVALLI-MONAT '01' INTO
       L_DATUM.
       CALL FUNCTION 'LAST_DAY_OF_MONTHS'  "#EC CI_USAGE_OK[2296016]
@@ -1787,7 +1785,7 @@ FORM CHECK_BEVALLI  TABLES   $I_BEVALLI STRUCTURE /ZAK/BEVALLI.
     ENDIF.
 *--PTGSZLAA #02. 2014.03.05
 
-*   BEVALL meghatározása
+*   Determine BEVALL
     CLEAR W_/ZAK/BEVALL.
     SELECT SINGLE * INTO W_/ZAK/BEVALL
                     FROM /ZAK/BEVALL
@@ -1795,7 +1793,7 @@ FORM CHECK_BEVALLI  TABLES   $I_BEVALLI STRUCTURE /ZAK/BEVALLI.
                      AND BTYPE EQ W_/ZAK/BEVALLI-BTYPE
                      AND DATBI GE L_DATUM
                      AND DATAB LE L_DATUM.
-*   Ha negyedéves vagy éves
+*   If quarterly or yearly
     CHECK SY-SUBRC EQ 0 AND W_/ZAK/BEVALL-BIDOSZ CA 'EN'.
     REFRESH LI_MONAT.
     LM_GET_MONAT W_/ZAK/BEVALL-BIDOSZ W_/ZAK/BEVALLI-MONAT.
@@ -1831,7 +1829,7 @@ ENDFORM.                    " CHECK_BEVALLI
 FORM GET_CS_BUKRS  TABLES   $UPD_BEVALLI  STRUCTURE /ZAK/BEVALLI
                             $UPD_BEVALLSZ STRUCTURE /ZAK/BEVALLSZ.
 
-* Csoport vállalatok
+* Group companies
   DATA LI_CS_BUKRS LIKE /ZAK/AFACS_BUKRS OCCURS 0 WITH HEADER LINE.
   DATA L_BUKCS     TYPE /ZAK/BUKCS.
   DATA L_DATUM     TYPE DATUM.
@@ -1868,7 +1866,7 @@ FORM GET_CS_BUKRS  TABLES   $UPD_BEVALLI  STRUCTURE /ZAK/BEVALLI
       ENDIF.
     ELSE.
 *--PTGSZLAA #02. 2014.03.05
-*    Hónap utolsó napja
+*    Last day of the month
       CONCATENATE &1-GJAHR
                   &1-MONAT
                   '01' INTO L_DATUM.
@@ -1880,7 +1878,7 @@ FORM GET_CS_BUKRS  TABLES   $UPD_BEVALLI  STRUCTURE /ZAK/BEVALLI
 *++PTGSZLAA #02. 2014.03.05
     ENDIF.
 *--PTGSZLAA #02. 2014.03.05
-*    Csoport vállalatok
+*    Group companies
     CALL FUNCTION '/ZAK/GET_AFCS'
       EXPORTING
         I_BUKRS = &1-BUKRS
